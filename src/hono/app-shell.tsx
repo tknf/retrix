@@ -83,7 +83,7 @@ export const AppShell = ({
       </header>
       <div class="body" data-aside={aside != null ? "true" : undefined}>
         {aside != null && <div class="aside">{aside}</div>}
-        <div class="main">
+        <div class="main" style={depth > 0 ? `--rx-trail-count: ${depth}` : undefined}>
           {depth > 0 && trail && (
             <nav class="trail" aria-label="上の階層">
               <ol>

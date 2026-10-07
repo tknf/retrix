@@ -15,9 +15,8 @@
       手前のシートは親のシートと同じ幅のまま、右へ21px・下へ60pxずれて重なる。
     */
     --rx-trail-shift: 1.3125rem;
-    /* 見えている帯の高さ。手本は60pxだが、見出しを18pxに下げたので帯も詰める（ユーザーの指定）。 */
+    /* 上の帯の見えている高さ。手本は60pxだが、見出しを小さくしたので帯も詰める（ユーザーの指定）。 */
     --rx-trail-visible: 2.75rem;
-    --rx-trail-overlap: var(--rx-space-4);
     container: rx-app-shell / inline-size;
     display: grid;
     justify-items: center;
@@ -167,47 +166,57 @@
       }
     }
     /*
-      背後に重ねたシート。親のシートは手前のシートと同じ幅で、上の階層ほど左上へずれる。
-      淡い灰色の面に1pxの枠で、影は付けない。見出しは上の階層へのリンク（24pxの太字、2pxの下線）。
+      背後に重ねたシート（BC2の実測、structure.md「背後に重ねた親のシート」）。
+      親のシートは手前のシートと同じ幅のまま左上へずれ、手前のシートの後ろを下端まで続く。
+      上の帯に上の階層へのリンクの見出しを置き、左の細い帯は下端まで見える。淡い灰色の面に1pxの枠で、影は付けない。
+      AppShellが.mainに--rx-trail-count（段の数）、各項目に--rx-trail-depth（今のページから数えた段）を置く。
     */
-    & > .body > .main > .trail > ol {
-      display: grid;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      & > li {
-        /* 奥行きの段。AppShellが各項目のstyleで、今のページから数えた段を上書きする。 */
-        --rx-trail-depth: 1;
-        position: relative;
-        inline-size: 100%;
-        min-inline-size: 0;
-        min-block-size: calc(var(--rx-trail-visible) + var(--rx-trail-overlap));
-        margin-inline-start: calc(-1 * var(--rx-trail-depth) * var(--rx-trail-shift));
-        padding-block: var(--rx-space-3) calc(var(--rx-space-3) + var(--rx-trail-overlap));
-        padding-inline: 1.9375rem;
-        border: var(--rx-stroke-width) solid var(--rx-sheet-behind-edge);
-        border-radius: var(--rx-radius-sheet);
-        background: var(--rx-sheet-behind);
-        /* 見出しは18pxの太字（手本は24pxだが、画面の見出しより目立たないよう小さくする）。 */
-        font-size: var(--rx-section-title);
-        font-weight: 700;
-        line-height: 1.2;
-        & > a {
-          color: var(--rx-link);
-          text-decoration-thickness: var(--rx-stroke-width);
-          text-underline-offset: 0.15em;
-          &:hover {
-            color: var(--rx-link-hover);
+    & > .body > .main {
+      --rx-trail-count: 0;
+      position: relative;
+    }
+    & > .body > .main > .trail {
+      position: absolute;
+      inset: 0;
+      & > ol {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        & > li {
+          --rx-trail-depth: 1;
+          position: absolute;
+          inset-block: calc(
+              (var(--rx-trail-count) - var(--rx-trail-depth)) * var(--rx-trail-visible)
+            )
+            0;
+          inset-inline-start: calc(-1 * var(--rx-trail-depth) * var(--rx-trail-shift));
+          inline-size: 100%;
+          padding-block-start: var(--rx-space-3);
+          padding-inline: 1.9375rem;
+          border: var(--rx-stroke-width) solid var(--rx-sheet-behind-edge);
+          border-radius: var(--rx-radius-sheet);
+          background: var(--rx-sheet-behind);
+          /* 見出しは18pxの太字（手本は24px。シートの見出しより目立たないよう小さくする。ユーザーの指定）。 */
+          font-size: var(--rx-title);
+          font-weight: 700;
+          line-height: 1.2;
+          & > a {
+            color: var(--rx-link);
+            text-decoration-thickness: var(--rx-stroke-width);
+            text-underline-offset: 0.15em;
+            &:hover {
+              color: var(--rx-link-hover);
+            }
           }
         }
       }
-      & > li + li {
-        margin-block-start: calc(-1 * var(--rx-trail-overlap));
-      }
+    }
+    /* 手前のシートは、段の数だけの帯を空けた下から置き、背後のシートに重ねる。 */
+    & > .body > .main > .trail ~ :is(.workspace, .rx-wing, .footer) {
+      position: relative;
     }
     & > .body > .main > .trail + :is(.workspace, .rx-wing) {
-      position: relative;
-      margin-block-start: calc(-1 * var(--rx-trail-overlap));
+      margin-block-start: calc(var(--rx-trail-count) * var(--rx-trail-visible));
     }
     & > .body > .main > .workspace,
     & > .body > .main > .rx-wing > .layout > .main > .workspace {
@@ -291,8 +300,10 @@
       & > .body {
         inline-size: calc(100% - var(--rx-space-4));
       }
-      & > .body > .main > .trail > ol > li {
+      & > .body > .main {
         --rx-trail-shift: var(--rx-space-2);
+      }
+      & > .body > .main > .trail > ol > li {
         padding-inline: var(--rx-space-4);
         font-size: var(--rx-section-title);
       }

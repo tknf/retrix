@@ -905,7 +905,7 @@ export default () => (
           </div>
         </header>
         <div class="body">
-          <div class="main">
+          <div class="main" style="--rx-trail-count: 1">
             <nav class="trail" aria-label="上の階層">
               <ol>
                 <li style="--rx-trail-depth: 1">
