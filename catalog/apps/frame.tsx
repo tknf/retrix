@@ -1,12 +1,5 @@
 import type { PropsWithChildren } from "hono/jsx";
-import {
-  ActionLink,
-  AppShell,
-  Avatar,
-  CommandMenu,
-  type AppShellProps,
-  type IconName,
-} from "../../src/hono";
+import { AppShell, Avatar, CommandMenu, type AppShellProps, type IconName } from "../../src/hono";
 
 /** 利用例のアプリ「つむぐ」の画面。小さな制作チームが、ヘルプセンターを作り直す仕事を進めている。 */
 export type AppScreen =
@@ -104,7 +97,7 @@ export const screens: readonly ScreenEntry[] = [
 
 export const appPath = (screen: AppScreen) => `/apps/${screen}`;
 
-/** アプリの画面の枠。上部中央のコマンドメニューで画面を切り替え、中央の作業面に画面を置く。sizeは作業面の幅。 */
+/** アプリの画面の枠。ヘッダーの移動先で画面を切り替え、中央のシートに画面を置く。sizeは作業面の幅。 */
 export const AppFrame = ({
   current,
   size,
@@ -112,7 +105,12 @@ export const AppFrame = ({
 }: PropsWithChildren<{ current: AppScreen; size?: AppShellProps["size"] }>) => (
   <AppShell
     size={size}
-    home={<ActionLink href={appPath("project")}>つむぐ</ActionLink>}
+    home={<a href={appPath("project")}>つむぐ</a>}
+    navigation={screens.map((screen) => ({
+      label: screen.label,
+      href: appPath(screen.id),
+      current: screen.id === current,
+    }))}
     commands={
       <CommandMenu
         id="app-commands"
@@ -155,7 +153,13 @@ export const AppFrame = ({
         ]}
       />
     }
-    account={<Avatar name="田中 遥" initials="遥" tone="coral" title="田中 遥 · つむぐチーム" />}
+    account={
+      <>
+        <Avatar name="田中 遥" initials="遥" tone="coral" size="small" />
+        <a href={appPath("settings")}>田中 遥</a>
+        <a href="/">コンポーネントカタログ</a>
+      </>
+    }
   >
     {children}
   </AppShell>

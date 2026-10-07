@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from "hono/jsx";
-import { ActionLink, AppShell, CommandMenu, stylesheets, type IconName } from "../src/hono/index";
+import { AppShell, CommandMenu, stylesheets, type IconName } from "../src/hono/index";
 import { screens, appPath } from "./apps/frame";
 import { componentGroups } from "./component-groups";
 
@@ -43,7 +43,7 @@ export const Document = ({ title, children }: PropsWithChildren<{ title: string 
 );
 
 /**
- * カタログの枠。Retrixのアプリと同じく、上部中央のCommandMenuでコンポーネントを探して移動し、中央の作業面に置く。
+ * カタログの枠。Retrixのアプリと同じく、ヘッダーに名前・主な移動先・CommandMenuを並べ、中央のシートに中身を置く。
  * カタログのトップページはコンポーネントの分類、一覧は全コンポーネントと利用例のアプリの画面。
  */
 export const CatalogFrame = ({
@@ -52,7 +52,11 @@ export const CatalogFrame = ({
   children,
 }: PropsWithChildren<{ components: readonly ComponentEntry[]; current?: string }>) => (
   <AppShell
-    home={<ActionLink href="/">Retrix</ActionLink>}
+    home={<a href="/">Retrix</a>}
+    navigation={[
+      { label: "コンポーネント", href: "/", current: true },
+      { label: "利用例", href: appPath("project") },
+    ]}
     commands={
       <CommandMenu
         id="catalog-commands"
@@ -98,7 +102,7 @@ export const CatalogFrame = ({
         ]}
       />
     }
-    account={<ActionLink href={appPath("project")}>利用例</ActionLink>}
+    footer={<span>Retrix · Basecamp 2の頃の37signalsの画面を手本にしたデザインシステム</span>}
   >
     {children}
   </AppShell>
