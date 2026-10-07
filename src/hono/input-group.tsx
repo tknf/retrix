@@ -15,7 +15,7 @@ export type InputGroupProps = Omit<ElementProps<"input">, "children" | "prefix" 
   prefix?: Child;
   /** 入力の後に置く単位や接尾辞（「人」「.example.jp」など）。入力の説明として読み上げる。 */
   suffix?: Child;
-  /** defaultは通常の高さ、largeは高く大きい文字にする。actionのボタンも同じ大きさにそろえる。 */
+  /** defaultは通常の高さ、largeは14pxの文字で高さ32pxにする。actionのボタンも同じ大きさにそろえる。 */
   size?: "default" | "large";
   /** 枠の外の末尾に並べる操作のボタン。入力がdisabledの時はボタンも使えなくする。 */
   action?: InputGroupAction;

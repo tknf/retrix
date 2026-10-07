@@ -17,7 +17,7 @@ export type ComposerProps = Omit<ElementProps<"form">, "children"> & {
   placeholder?: string;
   /**
    * 本文の欄の行数。field-sizingに対応しないブラウザでの高さになる。
-   * 対応するブラウザでは4行から書いた分だけ伸び（20行まで）、この値は使わない。
+   * 対応するブラウザでは3行分の高さから書いた分だけ伸び（20行まで）、この値は使わない。
    */
   rows?: number;
   /** 本文が空の時に送信を止める。editorを渡した時は使わない。 */

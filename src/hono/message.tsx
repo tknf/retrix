@@ -6,8 +6,8 @@ export type MessageProps = PropsWithChildren<
     /** 投稿者の名前。見出しの行に太字で置く。 */
     author: string;
     /**
-     * 見せ方。conversationは本文を淡い吹き出しにし、documentは一通を一枚のカードにして日付を見出しの行の末尾に寄せる。
-     * documentを続けて置くと、カードを少し重ねてひとまとまりに見せる。
+     * 見せ方。conversationは本文を吹き出しにせず作業面の上にそのまま書き、documentは一通を一枚のカードにして日付を見出しの行の末尾に寄せる。
+     * documentを続けて置くと、カードの角を立てて1px重ね、一枚のカードの続きに見せる。
      */
     layout?: "conversation" | "document";
     /** 投稿者のアバター（Avatarなど）。名前の行の横に置き、読み上げからは外す（名前はauthorで読む）。 */

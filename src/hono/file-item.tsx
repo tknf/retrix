@@ -5,7 +5,7 @@ import { classes, type ElementProps } from "./types";
 export type FileItemProps = ElementProps<"div"> & {
   /** ファイル名。長い名前も省略せずに折り返す。 */
   name: string;
-  /** 名前の下に淡い文字で添える形式・サイズ・日付など。エラーの時は直し方を書く。 */
+  /** 名前の下に灰色の小さな文字で添える形式・サイズ・日付など。エラーの時は直し方を書く。 */
   description: string;
   /** 渡すと名前をリンクにする。開く・ダウンロードするURLは利用側が用意する。 */
   href?: string;

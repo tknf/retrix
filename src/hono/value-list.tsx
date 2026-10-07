@@ -8,9 +8,9 @@ export type ValueItem = {
   value: Child;
   /** 値の下に添える淡い補足。 */
   description?: string;
-  /** 項目名の前に置くアイコン。塗りつぶしのアイコンを淡い色の丸に入れる。 */
+  /** 項目名の前に置くアイコン。面を付けずに小さく添える。 */
   icon?: Child;
-  /** アイコンの丸の色。iconを渡した時だけ効き、省略時はblueにする。 */
+  /** アイコンの色。iconを渡した時だけ効く。greenは緑、amberは黄土色、coralは赤茶で、blueと省略した時は項目名と同じ灰色にする。 */
   accent?: Accent;
 };
 export type ValueListProps = ElementProps<"dl"> & {

@@ -6,13 +6,13 @@ export type GridColumn = {
   id: string;
   /** 列の見出しの文字。 */
   label: string;
-  /** 今日の列。見出しを蛍光ペンの黄のピルで囲み、aria-current="date"を付ける。 */
+  /** 今日の列。見出しのセルを黄色で塗り、aria-current="date"を付ける。 */
   current?: boolean;
 };
 export type GridCell = {
   /** セルの中身。 */
   content: Child;
-  /** 使えないセル。斜線で示し、aria-disabledを付ける。キーでの移動先には残る。 */
+  /** 使えないセル。文字だけを灰色にし、aria-disabledを付ける。キーでの移動先には残る。 */
   disabled?: boolean;
 };
 export type GridRow = {

@@ -100,7 +100,7 @@
 - [Calendar](calendar.md)：月・週・年の表示を切り替えて、日付と予定を確認します。
 - [Board](board.md)：タスクを状態ごとの列に分けて表示します。
 - [Statistic](statistic.md)：集計値と単位をまとめて表示します。
-- [Countdown](countdown.md)：期限や残りの数を、大きな数字の丸いバッジで示します。
+- [Countdown](countdown.md)：期限や残りの数を、大きな数字の丸いマークで示します。
 
 ## 状態と結果
 

@@ -1,9 +1,9 @@
 export type PageLink = {
   /** 表示する文字（「1」「次へ」など）。「…」は省略記号として、無効の扱いにせず文字だけを出す。 */
   label: string;
-  /** 移動先のURL。省略した項目は押せないページ送りとして、aria-disabled="true"の斜線のピルで出す。 */
+  /** 移動先のURL。省略した項目は押せないページ送りとして、aria-disabled="true"を付け、形はそのままに文字だけを灰色にして出す。 */
   href?: string;
-  /** 今のページ。hrefがあってもリンクにせず、aria-current="page"を付けて塗りのピルで出す。 */
+  /** 今のページ。hrefがあってもリンクにせず、aria-current="page"を付けて面の無い黒い太字で出す。 */
   current?: boolean;
 };
 export const Pagination = ({

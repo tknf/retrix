@@ -18,7 +18,7 @@ export const TagGroup = ({
 export type TagProps = ElementProps<"span"> & {
   /** タグの文言。長い文言は省略せずに折り返す。 */
   label: string;
-  /** 縁と文字の色。分類を見分けるために使う。渡さなければ淡い灰のタグにする。 */
+  /** 縁と文字の色。分類を見分けるために使う。渡さなければ淡い灰色の枠と灰色の文字のタグにする。 */
   accent?: Accent;
 } & (
     | {

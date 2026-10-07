@@ -118,14 +118,14 @@ application.register("table-resize", TableResizeController);
 
 - 狭い幅（375px前後）と文字サイズ200%で、はみ出しや重なりがないか。
 - 右から左に読む言語（`dir="rtl"`）で、配置と矢印キーの向きが逆になるか。
-- 強制カラーモードと、アニメーションを減らす設定でも、状態と操作が分かるか。
+- 強制カラーモードでも、状態と操作が分かるか。
 - ブラウザはPopover APIへの対応が必要です。Popover・Toast・DropdownMenu・CommandMenuが使います。
 
 ## 参照
 
 - [references/components.md](references/components.md)：分類ごとのコンポーネントの一覧と、controllerの登録名。
 - [導入](https://github.com/tknf/retrix/blob/main/docs/getting-started.md)：CSSだけで使う方法、Honoで使う方法、controllerの登録。
-- [デザインの原則](https://github.com/tknf/retrix/blob/main/docs/principles.md)：形・面・色・状態・余白・動きの決まり。
+- [デザインの原則](https://github.com/tknf/retrix/blob/main/docs/principles.md)：画面構成・色・形・文字・状態・余白の決まり。
 - [トークン](https://github.com/tknf/retrix/blob/main/docs/tokens.md)：`--rx-*`の種類。
 - [CSSの構造](https://github.com/tknf/retrix/blob/main/docs/css.md)：読み込み順、レイヤー、クラス名。
 - [controller](https://github.com/tknf/retrix/blob/main/docs/controllers.md)：登録の決まりとイベントの規約。

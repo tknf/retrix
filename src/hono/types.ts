@@ -5,8 +5,8 @@ export type ElementProps<Tag extends keyof JSX.IntrinsicElements> = JSX.Intrinsi
 export type Accent = "blue" | "green" | "amber" | "coral";
 export type Tone = "neutral" | "info" | "success" | "warning" | "danger";
 /**
- * 操作の見た目の役割。primaryは青の塗り、secondaryは白い面と枠、dangerは赤の塗り、
- * linkは面も枠も持たない青い文字。形はどれもピルで、違いは塗りの色で出す。
+ * 操作の見た目の役割。primaryは平らな緑の塗りに白い太字（角丸4px）、secondaryは平らな白い面と1pxの灰色の枠（角丸5px）、
+ * dangerは平らな赤の塗りに白い文字（角丸4px）、linkは面も枠も持たない青緑の文字に下線。
  */
 export type ButtonVariant = "primary" | "secondary" | "danger" | "link";
 

@@ -6,7 +6,7 @@ export type PageHeaderProps = ElementProps<"header"> & {
   title: string;
   /** 見出しの下の補足の一文。 */
   description?: string;
-  /** 見出しの先頭側に置く大きなアイコン（Iconなど）。淡い背景の角丸の枠に収める。 */
+  /** 見出しの先頭側に置く大きなアイコン（Iconなど）。淡い灰色の面に白い縁と浅い影を付けた48pxの四角に収める。 */
   icon?: Child;
   /** 見出しの末尾側に並べる操作。狭い場所では見出しの下の行へ回す。 */
   actions?: Child;

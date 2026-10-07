@@ -14,7 +14,7 @@ export type PromptChoice = {
   href?: string;
 };
 export type PromptProps = ElementProps<"section"> & {
-  /** 問い。層の見出し（h3）に書き、読み上げ名（aria-label）にもする。 */
+  /** 問い。上端の見出しの帯（h3）に書き、読み上げ名（aria-label）にもする。 */
   question: string;
   /** 答えの行。並べた順に上から置く。 */
   choices: readonly PromptChoice[];
@@ -22,13 +22,13 @@ export type PromptProps = ElementProps<"section"> & {
   name?: string;
   /** 選ばずに閉じる操作（「今は答えない」など）。見出しの行の末尾に置く。 */
   dismiss?: Child;
-  /** 層の下に尾を付けて、すぐ下の要素を指す。falseで尾を外す。 */
+  /** カードの下に尾を付けて、すぐ下の要素を指す。カードの枠は尾の縁へつながる。falseで尾を外す。 */
   pointer?: boolean;
 };
 
 /**
- * 判断を依頼する問いかけ。LayerCardの淡い青の層に問いを見出しとして置き、白いカードに選択肢の行を並べる。
- * 行は丸いアイコン・太字の要点・淡い説明・進む矢印を持ち、押すとその答えを選ぶ。尾ですぐ下の対象を指せる。
+ * 判断を依頼する問いかけ。1px #bbbの枠のLayerCardの淡い灰色の見出しの帯に問いを置き、その下の白い面に選択肢の行を並べる。
+ * 行は輪のマーク・太字の要点・灰色の説明・進む矢印を持ち、押すとその答えを選ぶ。尾ですぐ下の対象を指せる。
  * 選択肢の行は複数行の文を持つ専用の操作で、文字の指定はprompt.cssが持つ。
  */
 export const Prompt = ({

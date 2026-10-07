@@ -13,7 +13,7 @@ export type ImageFrameProps = ElementProps<"figure"> & {
   missingLabel?: string;
   /** 画像の下に中央そろえで書く名前（ファイル名など）。 */
   caption?: string;
-  /** 説明の下に淡い文字で添えるサイズや日付。 */
+  /** 名前の下に灰色の小さな文字で添えるサイズや日付。 */
   meta?: string;
 };
 export const ImageFrame = ({

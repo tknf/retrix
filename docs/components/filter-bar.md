@@ -11,9 +11,9 @@
 
 ## 使い方
 
-`label` と `items`（`label`・`href`・`current`・任意の `count`・`icon`）を渡します。各条件は `Button` と同じ見た目の `ActionLink` になり、`current` の条件は `Button` のオンと同じ青緑の縦の塗りに白い文字にします。`count` は名前の後に灰色の数字で出し（選んでいる条件では白）、0も表示します。
+`label` と `items`（`label`・`href`・`current`・任意の `count`・`icon`）を渡します。各条件は `Button` と同じ文字の大きさ（12px）と高さ（22px）の `ActionLink` になります。`count` は名前の後に数字で出し、0も表示します。
 
-`appearance` の `chips` は各リンクを角の小さなボタンの形のまま0.25remの間隔で並べて折り返し、`segmented` は `ButtonGroup` と同じく隙間なくつなげて間を1本の線にし、外側の角だけを丸めた一組として一行に並べます。
+`appearance` の `chips` は、各条件を枠も面も無い黒い文字にして0.25remの間隔で並べて折り返します。件数は淡い青の数字（#5574b0）で、ホバーすると条件名に下線を引きます。`current` の条件は、メニューの選んでいる項目と同じ淡い青（`--rx-option-active`、#ddeefe）の面に黒い文字（件数も黒）にし、ピルで囲みません。`segmented` は控えめなボタンを `ButtonGroup` と同じく隙間なくつなげて間を1本の線にし、外側の角だけを丸めた一組として一行に並べます。件数は灰色の数字で、`current` の条件は黒い塗りに白い文字にします。
 
 条件を含むURLと、どれを選んでいるかはサーバーが決めて渡します。`items` の代わりに `children` でリンクを直接並べることもできます。その時は `a` 要素を直接の子にし、現在地の `aria-current`・`data-current="true"` は利用側で付けます。
 

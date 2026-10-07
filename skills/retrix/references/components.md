@@ -100,7 +100,7 @@
 - [Calendar](https://github.com/tknf/retrix/blob/main/docs/components/calendar.md)：月・週・年の表示を切り替えて、日付と予定を確認します。
 - [Board](https://github.com/tknf/retrix/blob/main/docs/components/board.md)：タスクを状態ごとの列に分けて表示します。
 - [Statistic](https://github.com/tknf/retrix/blob/main/docs/components/statistic.md)：集計値と単位をまとめて表示します。
-- [Countdown](https://github.com/tknf/retrix/blob/main/docs/components/countdown.md)：期限や残りの数を、大きな数字の丸いバッジで示します。
+- [Countdown](https://github.com/tknf/retrix/blob/main/docs/components/countdown.md)：期限や残りの数を、大きな数字の丸いマークで示します。
 
 ## 状態と結果
 

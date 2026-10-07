@@ -6,20 +6,20 @@ export type ProfileHeaderProps = ElementProps<"header"> & {
   name: string;
   /** 大きなアバター（Avatarのlarge）。 */
   avatar: Child;
-  /** 名前の下の淡い補足（メールアドレスなど）。 */
+  /** 名前の下の灰色の補足（メールアドレスなど）。 */
   detail?: Child;
-  /** 先頭側の上の角に置く小さなバッジ（所属など）。 */
+  /** detailの下に置く小さなバッジ（所属など）。 */
   badge?: Child;
   /** 末尾側の上の角に置く操作（編集など）。 */
   actions?: Child;
-  /** 名前の下に並べる、この人への設定（通知・振り分けなど）。DropdownMenuやButtonを渡す。 */
+  /** 罫線の下に枠と面を持たない形で並べる、この人への設定（通知・振り分けなど）。DropdownMenuやButtonを渡す。 */
   preferences?: Child;
   /** 名前の見出しの段（既定はh1）。 */
   headingLevel?: 1 | 2 | 3;
 };
 
 /**
- * 大きなアバターと名前を中央に据え、その下に、この人への設定を灰色の領域にまとめて並べる。
+ * 先頭側の四角い大きなアバターの横に名前・補足・バッジを積み、その下の罫線の後ろに、この人への設定を並べる。
  */
 export const ProfileHeader = ({
   name,

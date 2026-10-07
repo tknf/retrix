@@ -9,7 +9,7 @@ export type ActionListItem = {
   href: string;
   /** 名前の下に淡い文字で添える一文。 */
   description?: string;
-  /** 名前の前に置くアイコン。accentの色を淡く敷いた丸に載せる。塗りつぶしのIconを想定する。 */
+  /** 名前の前に置くアイコン。面に入れず、accentの色で名前の一行目の前に小さく添える。塗りつぶしのIconを想定する。 */
   icon?: Child;
   /** 説明の下に置く中身の見本（直近の数件など）。リンクの中に入るので、ボタンやリンクを入れない。 */
   preview?: Child;
@@ -21,7 +21,7 @@ export type ActionListItem = {
 export type ActionListProps = ElementProps<"ul"> & {
   /** 並べる項目。 */
   items: readonly ActionListItem[];
-  /** listは淡いパネルに行を積み、行の間を細い線で区切る。gridは各項目を角丸のタイルにして格子に並べる。 */
+  /** listは背景を持たずに行を積み、行の間を細い線で区切る。gridは各項目を白いセルにして1pxの格子で区切って並べる。 */
   layout?: "list" | "grid";
 };
 export const ActionList = ({

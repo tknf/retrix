@@ -95,7 +95,7 @@ export const Carousel = ({
           </div>
           {interactive && (
             <div class="controls" role="group" aria-label="スライド操作">
-              {/* 前後の丸いボタンはカードの左右の縁をまたいで載せる。位置はButtonではなく包む要素が持つ。 */}
+              {/* 前後のアイコンだけのボタンはカードの左右の縁をまたいで載せる。位置はButtonではなく包む要素が持つ。 */}
               <span class="step previous">
                 <Button
                   class="previous"

@@ -41,7 +41,7 @@ export type AppShellProps = PropsWithChildren<
      */
     wings?: Pick<WingProps, "start" | "end" | "storageKey" | "savedState">;
     /**
-     * 作業面の幅の上限。compactは46rem（本文の行の長さ--rx-measureに左右の余白を足した幅）、defaultは61.25rem（--rx-page）、wideは90rem。
+     * 作業面の幅の上限。compactは46rem（本文の行の長さ--rx-measureに左右の余白を足した幅）、defaultは60rem（--rx-page）、wideは90rem。
      * 設定画面など入力が中心の画面はcompact、Boardや年の予定など横に広い画面はwideにする。
      */
     size?: "compact" | "default" | "wide";

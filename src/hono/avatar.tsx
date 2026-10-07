@@ -8,7 +8,7 @@ export type AvatarProps = ElementProps<"span"> & {
   initials: string;
   /** 顔写真などのURL。AvatarControllerが読み込めたと確かめてから表示し、それまでは略称を見せる。 */
   src?: string;
-  /** アバターの大きさ。inlineは20px、smallは28px、defaultは36px、largeは48px。 */
+  /** アバターの大きさ。inlineは20px、smallは22px、defaultは30px、largeは48px。 */
   size?: "inline" | "small" | "default" | "large";
   /** 略称のアバターの塗り。人を見分ける補助で、名前の代わりにはしない。 */
   tone?: Accent;
@@ -42,13 +42,13 @@ export type AvatarGroupProps = PropsWithChildren<
   ElementProps<"span"> & {
     /** まとまりの名前。読み上げで「誰と誰か」を伝える。 */
     label: string;
-    /** 並べきれない残りの人数。最後に「+n」の円で示す。 */
+    /** 並べきれない残りの人数。最後に「+n」の灰色のピルで示す。 */
     more?: number;
-    /** 並べるAvatarと同じ大きさ。残りの人数の円をこの大きさにする。 */
+    /** 並べるAvatarと同じ大きさ。残りの人数のピルの高さをこの大きさにする。 */
     size?: "small" | "default" | "large";
   }
 >;
-/** アバターを少しずつ重ねて並べる。childrenにはAvatarだけを置く。 */
+/** アバターを重ねずに少し空けて並べる。childrenにはAvatarだけを置く。 */
 export const AvatarGroup = ({
   label,
   more,

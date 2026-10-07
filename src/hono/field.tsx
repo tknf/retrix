@@ -18,7 +18,7 @@ export type FieldProps = {
   id: string;
   /** 入力の上に出すラベル。読み上げの名前になる。 */
   label: string;
-  /** 入力の下に出す淡い補足。入力の説明として読み上げる。現在値は置かない。 */
+  /** 入力の下に出す灰色の小さな補足。入力の説明として読み上げる。現在値は置かない。 */
   help?: string;
   /** 直す所を書くエラー文。渡すと入力をaria-invalidにし、説明として読み上げる。 */
   error?: string;
@@ -108,9 +108,9 @@ export const Select = ({ class: className, ...attributes }: ElementProps<"select
 export type ChoiceProps = ElementProps<"input"> & {
   /** 選択肢の名前。マークの横に出し、labelで包んで押せる範囲にする。 */
   label: string;
-  /** 名前の下に添える淡い説明。渡すと名前を太字にする。 */
+  /** 名前の下に添える灰色の小さな説明。渡すと名前を太字にする。 */
   description?: Child;
-  /** plainはマークと名前だけ、optionは説明を伴う選択肢を淡い背景に載せ、選ぶと淡い青にする。 */
+  /** plainはマークと名前だけ、optionは説明を伴う選択肢を枠で囲んだ白い面に載せ、選ぶと淡い青緑の面と青緑の枠にする。 */
   kind?: "plain" | "option";
   /** checkboxは個別のオン・オフ、radioは同じnameの中から一つを選ぶ。 */
   type?: "checkbox" | "radio";
