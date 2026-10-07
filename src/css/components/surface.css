@@ -1,9 +1,12 @@
 @layer components {
   /*
-    作業面（シート）。白い面・角丸・輪郭と浅い影は、AppShellの作業面と共通の定義（layout.css）が持つ。
-    ここでは中の余白だけを決める。Basecamp 2のシートと同じく、左右32px・上下24pxに詰める。
+    作業面（シート）。白い面・角丸・影は、AppShellの作業面と共通の定義（layout.css）が持つ。
+    ここでは中の余白だけを決める。実測: structure.md「シート」の内側の余白は左右30px。
+    「余白の段」の表のとおり4pxの段に寄せて左右32pxにし、上下は左右より狭い24pxにする（check-cssの規則）。
+    上下は行の高さの余りと合わせ、上端から題名の大文字の上までが手本の35.5pxに近くなる。
   */
   .rx-surface {
+    --rx-surface-gutter: var(--rx-space-8);
     container: rx-surface / inline-size;
     min-inline-size: 0;
     /* 寸法を保つため枠の幅は残し、線は見せない。輪郭は影が描く。 */
@@ -12,7 +15,7 @@
     & > .rx-context-bar {
       min-block-size: calc(var(--rx-control-size) + var(--rx-space-6) + var(--rx-space-2));
       padding-block-start: var(--rx-space-6);
-      padding-inline: var(--rx-space-8);
+      padding-inline: var(--rx-surface-gutter);
       border-block-end: 0;
       @container rx-surface (inline-size < 40rem) {
         min-block-size: calc(var(--rx-control-size) + var(--rx-space-5) + var(--rx-space-2));
@@ -47,13 +50,13 @@
     }
     /* 文書の配置では、パンくずも本文と同じ行長の書き始めにそろえる。 */
     &[data-layout="document"] > .rx-context-bar {
-      padding-inline: max(var(--rx-space-8), calc((100% - 42rem) / 2));
+      padding-inline: max(var(--rx-surface-gutter), calc((100% - 42rem) / 2));
       @container rx-surface (inline-size < 40rem) {
         padding-inline: var(--rx-space-4);
       }
     }
     &[data-layout="document"] > .body {
-      padding-inline: max(var(--rx-space-8), calc((100% - 42rem) / 2));
+      padding-inline: max(var(--rx-surface-gutter), calc((100% - 42rem) / 2));
       @container rx-surface (inline-size < 40rem) {
         padding-inline: var(--rx-space-4);
       }

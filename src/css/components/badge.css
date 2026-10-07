@@ -1,25 +1,27 @@
 @layer components {
   /*
-    状態は小さなピル。役割の色を淡く混ぜた背景に、役割の色で文字を書く。枠線・影・アイコンは付けない。
-    役割の色が無いものと、まだ確定していない下書きは、中立の灰色の背景に--rx-mutedの文字にする。
+    状態は小さなピル。BC2のピル（実測: lists.md「BC2 To-do」の件数・担当者と期日のピル）と同じく、
+    高さ18px・角丸9px・12pxの文字・左右の余白 約9pxの平らな塗りにし、枠線・影・アイコンは付けない。
+    役割の色が無いものと、まだ確定していない下書きは、担当者と期日の灰色のピル（--rx-pill-meta）にする。
+    情報は件数の淡い青のピル（--rx-pill-count）にする。成功・注意・危険は、役割の色を淡く混ぜた面に役割の色の文字（推測）。
   */
   .rx-badge {
-    --rx-badge-ink: var(--rx-muted);
+    --rx-badge-ink: var(--rx-pill-meta-text);
+    --rx-badge-face: var(--rx-pill-meta);
     display: inline-grid;
     inline-size: fit-content;
     justify-self: start;
     align-items: start;
     max-inline-size: 100%;
     /*
-      一行の高さは20px。折り返した行の間（行の余り2つ分）と、上下の縁から文字まで（余白＋行の余り）を
+      一行の高さは18px。折り返した行の間（行の余り2つ分）と、上下の縁から文字まで（余白＋行の余り）を
       同じにするため、行の高さを「一行の高さと文字の大きさの間」に詰め、残りを上下に半分ずつ取る。
     */
-    padding-block: calc((1.25rem - 1lh) / 2);
-    /* 左右は角丸の大きさに近く取り、折り返した時も文字が角のカーブに寄らないようにする。 */
-    padding-inline: 0.5rem;
+    padding-block: calc((1.125rem - 1lh) / 2);
+    padding-inline: 0.5625rem;
     /* 一行では高さの半分の角丸でピルになる。 */
-    border-radius: 0.625rem;
-    background: color-mix(in srgb, var(--rx-badge-ink) 11%, var(--rx-surface));
+    border-radius: 0.5625rem;
+    background: var(--rx-badge-face);
     /* 透明な輪郭は、強制カラーで背景が消えた時だけ見える縁になる。 */
     outline: var(--rx-stroke-width) solid transparent;
     outline-offset: calc(var(--rx-stroke-width) * -1);
@@ -27,28 +29,31 @@
     font-family: var(--rx-control-font-family);
     font-size: var(--rx-small);
     font-weight: 400;
-    line-height: calc((1.25rem + 1em) / 2);
+    line-height: calc((1.125rem + 1em) / 2);
     overflow-wrap: anywhere;
     /* 日本語は文節の切れ目で折り返し、行末に一、二文字だけを残さない。 */
     word-break: auto-phrase;
     &[data-tone="info"] {
-      --rx-badge-ink: var(--rx-info);
+      --rx-badge-ink: var(--rx-pill-count-text);
+      --rx-badge-face: var(--rx-pill-count);
     }
     /* 緑は淡い面の上で4.5:1に届かないので、文字だけ濃い緑にする。 */
     &[data-tone="success"] {
       --rx-badge-ink: var(--rx-green-dark);
+      --rx-badge-face: color-mix(in srgb, var(--rx-badge-ink) 11%, var(--rx-surface));
     }
     &[data-tone="warning"] {
       --rx-badge-ink: var(--rx-warning);
-      background: var(--rx-mark);
+      --rx-badge-face: var(--rx-mark);
     }
     &[data-tone="danger"] {
       --rx-badge-ink: var(--rx-danger);
+      --rx-badge-face: color-mix(in srgb, var(--rx-badge-ink) 11%, var(--rx-surface));
     }
     /* 下書きは役割の色を持たせず、中立の見た目にする。 */
     &[data-draft="true"] {
-      --rx-badge-ink: var(--rx-muted);
-      background: color-mix(in srgb, var(--rx-badge-ink) 11%, var(--rx-surface));
+      --rx-badge-ink: var(--rx-pill-meta-text);
+      --rx-badge-face: var(--rx-pill-meta);
     }
     /* タイルのアイコンの上などに重ねる小さなバッジ。一行の高さは16px。 */
     &[data-size="small"] {

@@ -1,11 +1,12 @@
 @layer components {
   .rx-image-frame {
+    --rx-image-frame-meta: #767676;
     inline-size: min(100%, 8rem);
     min-inline-size: 0;
     margin: 0;
     /*
       画像は灰色の枠で余白を埋めない。比率の枠は並べた時の位置をそろえるためだけに使い、色を持たせない。
-      画像はHighriseの写真と同じく、細い白い縁（台紙）と灰色の輪郭で囲み、紙を置いた分の浅い影を付ける。
+      画像はBC2の添付の縮小画像と同じく1px #ccccccの枠で囲み（lists.md「BC2 議論の一覧」）、影は付けない。
       全体を表示する時は画像を枠の中央に置き、縁は画像そのものに沿わせる。角丸は付けない。
     */
     & > .image {
@@ -21,11 +22,8 @@
         inline-size: auto;
         block-size: auto;
         min-block-size: 0;
-        padding-block: 0.1875rem;
-        padding-inline: 0.1875rem;
-        border: var(--rx-stroke-width) solid var(--rx-gray-200);
+        border: var(--rx-stroke-width) solid var(--rx-gray-300);
         background: var(--rx-surface);
-        box-shadow: 0 0.0625rem 0.125rem color-mix(in srgb, var(--rx-ink) 10%, transparent);
       }
       /* 画像がない時だけ、淡い灰色の面に罫線の輪郭と文言を置いて場所を示す。 */
       & > span {
@@ -43,7 +41,10 @@
         overflow-wrap: anywhere;
       }
     }
-    /* 説明は中央にそろえ、名前を濃い色のMedium、大きさや日付を茶色の小さな文字で添える。 */
+    /*
+      説明はBC2のFilesの格子と同じく中央にそろえ、名前を黒い太字の13px、大きさや日付を灰色の12pxで添える。
+      実測の#999999は白地で4.5:1に届かないので、色合いを保って#767676にする。
+    */
     & > figcaption {
       display: grid;
       justify-items: center;
@@ -53,11 +54,11 @@
       & > .name {
         color: var(--rx-text);
         font-size: var(--rx-label);
-        font-weight: 500;
+        font-weight: 700;
         line-height: var(--rx-label-leading);
       }
       & > .meta {
-        color: var(--rx-meta);
+        color: var(--rx-image-frame-meta);
         font-size: var(--rx-small);
         line-height: var(--rx-small-leading);
       }

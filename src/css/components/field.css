@@ -144,11 +144,11 @@
     & > li:hover:not([data-state="disabled"]) {
       background: var(--rx-background);
     }
-    /* キーボードで注目している候補は、メニューと同じ青の縦の塗りに白い文字。 */
+    /* キーボードで注目している候補は、メニューと同じ淡い青のピル（実測: overlays.md「メニュー」）。 */
     & > li[data-state="active"] {
-      background: var(--rx-fill-selection);
-      color: var(--rx-surface);
-      text-shadow: var(--rx-deboss);
+      border-radius: var(--rx-radius-pill);
+      background: var(--rx-pill-selected);
+      color: var(--rx-pill-selected-text);
     }
     & > li[data-state="selected"] {
       background: var(--rx-info-soft);
@@ -244,68 +244,20 @@
     font-size: var(--rx-label);
     line-height: calc(10 / 7);
     cursor: pointer;
+    /*
+      チェックボックスとラジオは、Basecamp 2・Highriseと同じくOSの標準の部品のまま使う（実測でも独自の装飾は無い）。
+      大きさは手本の13pxにし、名前の一行目と上下の中央をそろえる。
+    */
     & > input {
-      appearance: none;
-      display: grid;
-      place-items: center;
-      /* インジケーターは一行の高さと同じ大きさにし、名前の一行目と上下を揃える。 */
-      inline-size: calc(10em / 7);
-      block-size: calc(10em / 7);
+      appearance: auto;
+      inline-size: 0.8125rem;
+      block-size: 0.8125rem;
       margin: 0;
-      border: var(--rx-stroke-width) solid var(--rx-control-border);
-      border-block-start-color: color-mix(in srgb, var(--rx-control-border) 75%, var(--rx-ink));
-      border-radius: var(--rx-radius-mark);
-      /* インジケーターの枠は浮かせず、入力欄と同じく内側へ少し沈めた四角にする。 */
-      background: var(--rx-surface);
-      box-shadow: var(--rx-shadow-input);
-      color: var(--rx-surface);
+      margin-block-start: calc((10em / 7 - 0.8125rem) / 2);
       cursor: inherit;
-      &::before {
-        content: "";
-        inline-size: 0.875rem;
-        block-size: 0.875rem;
-        background: currentColor;
-        mask: url("../assets/check.svg") center / contain no-repeat;
-        /* チェックはペンで描くように、書き始めの側から線を出す。 */
-        clip-path: inset(0 100% 0 0);
-      }
-      &:dir(rtl)::before {
-        clip-path: inset(0 0 0 100%);
-      }
-      &:checked,
-      &:indeterminate {
-        background: linear-gradient(180deg, var(--rx-teal) 0%, var(--rx-teal-dark) 100%);
-        border-color: var(--rx-teal-dark);
-        box-shadow: none;
-      }
-      &:checked::before,
-      &:indeterminate::before {
-        clip-path: inset(0);
-      }
-      &[type="radio"] {
-        border-radius: 50%;
-      }
-      &[type="radio"]::before {
-        inline-size: 0.5rem;
-        block-size: 0.5rem;
-        mask: none;
-        border-radius: 50%;
-      }
-      &:indeterminate::before {
-        inline-size: 0.5625rem;
-        block-size: 0.125rem;
-        mask: none;
-      }
-      &:disabled {
-        background: var(--rx-background);
-        border-color: var(--rx-border);
-        color: var(--rx-muted);
-      }
       &:focus-visible {
-        outline: 0.125rem solid transparent;
-        outline-offset: 0;
-        border-color: var(--rx-focus-border);
-        box-shadow: var(--rx-focus-glow);
+        outline: 0.125rem solid var(--rx-focus-border);
+        outline-offset: var(--rx-stroke-width);
       }
     }
     & > span {
@@ -324,9 +276,6 @@
       color: var(--rx-muted);
       font-size: var(--rx-small);
       margin-block-start: var(--rx-space-1);
-    }
-    &:hover > input:not(:disabled) {
-      border-color: var(--rx-link);
     }
     &:has(> input:disabled) {
       color: var(--rx-muted);
@@ -356,38 +305,40 @@
       box-shadow: none;
     }
   }
+  /*
+    入力欄はBasecamp 2の日付の欄の実測（docs/visual-reference.md）に合わせる。
+    1px #dedede の枠、角丸 2px、内側の影なし、高さ 24px、12px の黒い文字、左右の余白 6px。
+  */
   .rx-input {
-    /* Buttonと同じ高さ。上下の余白は高さから行高と枠を引いた残りを半分ずつにし、文字を中央に置く。 */
-    --rx-input-size: var(--rx-button-size);
+    /* 12px の文字で高さ 24px。枠の内側（22px）との差を偶数にし、文字の上下の余りを整数pxに保つ。 */
+    --rx-input-size: calc(24em / 12);
     --rx-input-border-size: var(--rx-stroke-width);
     inline-size: 100%;
     min-inline-size: 0;
     min-block-size: var(--rx-input-size);
     padding-block: calc((var(--rx-input-size) - 10em / 7 - 2 * var(--rx-input-border-size)) / 2);
     padding-inline: 0.5em;
-    /* 上の枠を濃くし、欄が面より一段沈んで見えるようにする。 */
-    border: var(--rx-input-border-size) solid var(--rx-control-border);
-    border-block-start-color: color-mix(in srgb, var(--rx-control-border) 75%, var(--rx-ink));
-    border-radius: var(--rx-radius-control);
+    border: var(--rx-input-border-size) solid var(--rx-input-border);
+    border-radius: var(--rx-radius-mark);
     background: var(--rx-surface);
     color: var(--rx-text);
     box-shadow: var(--rx-shadow-input);
     font-family: var(--rx-control-font-family);
-    font-size: var(--rx-label);
+    font-size: var(--rx-small);
     font-weight: 400;
     line-height: calc(10 / 7);
-    /* Mac OS XのAquaと同じく、青い縁の外にぼかした青い光を広げる。 */
+    /* フォーカスは、Safariの入力欄と同じ青い縁と、外側の淡い青の輪。 */
     &:focus-visible {
       outline: 0.125rem solid transparent;
       outline-offset: 0;
       border-color: var(--rx-focus-border);
-      box-shadow: var(--rx-focus-glow), var(--rx-shadow-input);
+      box-shadow: var(--rx-focus-glow);
     }
     &[data-size="short"] {
       max-inline-size: 8rem;
     }
     &::placeholder {
-      color: var(--rx-muted);
+      color: var(--rx-placeholder);
       opacity: 1;
     }
 
@@ -400,16 +351,17 @@
       background: var(--rx-gray-20);
     }
 
+    /* 使えない入力は、Buttonと同じく形と面をそのままにし、文字だけを灰色にする。 */
     &:disabled {
-      background: var(--rx-hatch), var(--rx-surface);
-      color: var(--rx-muted);
+      color: var(--rx-disabled-text);
       box-shadow: none;
     }
+    /* 大きな入力は14pxの文字で高さ32px（largeのButtonと同じ）。 */
     &:where([data-size="large"]) {
-      --rx-input-size: var(--rx-button-large);
+      --rx-input-size: calc(32em / 14);
       padding-block: calc((var(--rx-input-size) - 10em / 7 - 2 * var(--rx-input-border-size)) / 2);
       padding-inline: 0.5em;
-      font-size: var(--rx-body);
+      font-size: calc(var(--rx-small) * 7 / 6);
       line-height: var(--rx-control-leading);
     }
   }
@@ -445,48 +397,32 @@
       line-height: calc(var(--rx-input-size) - 2 * var(--rx-input-border-size));
     }
   }
+  /* 複数行の入力は、BC2のコメント欄と同じく #c1c1c1 の枠と角丸 5px、本文と同じ大きさの文字。 */
   textarea.rx-input {
+    padding-block: var(--rx-space-2);
+    padding-inline: var(--rx-space-3);
+    border-color: var(--rx-textarea-border);
+    border-radius: var(--rx-radius-control);
+    font-size: var(--rx-body);
+    line-height: var(--rx-leading);
     resize: vertical;
   }
 }
 @layer components {
   /*
-    一つを選ぶ欄は、Mac OS Xのポップアップボタンと同じく、ボタンと同じ縦の塗りと浮き彫りの文字にし、末尾に下向きの矢印を置く。
+    一つを選ぶ欄は、Basecamp 2・Highriseと同じくOSの標準のポップアップボタンのまま使う（実測でも独自の装飾は無い）。
   */
   select.rx-input:not([multiple]):not([size]) {
-    appearance: none;
-    overflow: clip;
-    text-overflow: ellipsis;
-    padding-inline-end: 2.5em;
-    border-block-start-color: var(--rx-control-border);
-    border-block-end-color: color-mix(in srgb, var(--rx-control-border) 70%, var(--rx-ink));
-    background-color: var(--rx-surface);
-    background-image: url("../assets/caret.svg"), var(--rx-fill-control);
-    background-repeat: no-repeat, repeat;
-    background-size: calc(6em / 7), auto;
-    background-position:
-      right 0.75em center,
-      0 0;
-    box-shadow: var(--rx-shadow-control);
-    text-shadow: var(--rx-emboss);
+    all: revert;
+    justify-self: start;
+    max-inline-size: 100%;
+    font-family: var(--rx-control-font-family);
+    font-size: var(--rx-small);
     cursor: pointer;
-    &:dir(rtl) {
-      background-position:
-        left 0.75em center,
-        0 0;
-    }
-    &:hover:not(:disabled) {
-      background-image: url("../assets/caret.svg"), var(--rx-fill-control-hover);
-    }
     &:focus-visible {
-      box-shadow: var(--rx-focus-glow), var(--rx-shadow-control);
-    }
-    /* 使えない時はButtonと同じく、形と塗りを残したまま全体を薄くする。 */
-    &:disabled {
-      background-image: url("../assets/caret.svg"), var(--rx-fill-control);
-      opacity: var(--rx-disabled-opacity);
+      outline: 0.125rem solid var(--rx-focus-border);
+      outline-offset: var(--rx-stroke-width);
       box-shadow: none;
-      cursor: default;
     }
   }
   .rx-input[type="file"] {
@@ -503,18 +439,6 @@
       font: inherit;
       font-weight: 600;
       cursor: pointer;
-    }
-  }
-  @media (forced-colors: active) {
-    .rx-choice > input {
-      appearance: auto;
-    }
-    .rx-choice > input::before {
-      display: none;
-    }
-    select.rx-input:not([multiple]):not([size]) {
-      appearance: auto;
-      background-image: none;
     }
   }
 }

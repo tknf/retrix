@@ -1,7 +1,10 @@
 @layer components {
   /*
-    一つの対象の属性。Highriseの右の列のように、項目名と値を一行ずつ並べ、各行の下に罫線を行の幅いっぱいに引いて区切る。
-    項目名は灰色の小さな太字、値は本文の黒い文字にする。項目名の前には、小さなアイコンを面を付けずに添えられる。
+    一つの対象の属性。実測: structure.md「Highrise 2011 の構成」の右の列と、lists.md「Highrise Latest activity（2011）」の「Regarding:」。
+    - 項目名と値を一行ずつ並べ、各行の下に1pxの罫線（手本 #efefef、Retrixの罫線 #ececec）を行の幅いっぱいに引いて区切る。
+    - 項目名は灰色（手本 #888 前後。白地で4.5:1に届かないので --rx-muted の #666）の小さな太字、値は黒。
+    手本の11px・行の高さ14pxは、Retrixの文字の段に合わせて13px（値）と12px（項目名）にする。
+    項目名の前には、小さなアイコンを面を付けずに添えられる（推測）。
   */
   .rx-value-list {
     container: rx-value-list / inline-size;

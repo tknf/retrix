@@ -4,43 +4,41 @@
     min-inline-size: 0;
     max-inline-size: 100%;
     /*
-      開く操作は、Basecamp 2のヘッダーの「Jump to a project, person, label, or search...」と同じく、
-      枠のある白い検索欄に見せる。上の枠を少し濃くして沈んだ欄にし、虫めがねと灰色の文言を先頭から並べる。
-      欄に見せるので、開くことを示す下向きの矢印は出さない。
+      開く操作は、Basecamp 2のヘッダーの検索欄（「Jump to a project, person, label, or search…」）の実測に合わせる。
+      枠線は無く、シートと同じぼかした影で浮かせた白い欄（幅326px・高さ33px・角丸3px）。
+      先頭に濃い灰色の虫めがね、続けて淡い灰色の文言を置く。欄に見せるので、開くことを示す下向きの矢印は出さない。
     */
     & > .rx-button {
       justify-content: start;
-      min-inline-size: min(16rem, 100%);
-      padding-inline: 0.625em;
-      border-color: var(--rx-control-border);
-      border-block-start-color: color-mix(in srgb, var(--rx-control-border) 80%, var(--rx-ink));
-      border-block-end-color: var(--rx-control-border);
+      gap: var(--rx-space-2);
+      min-inline-size: min(20.375rem, 100%);
+      padding-inline: 0.625rem;
+      border-color: transparent;
+      border-radius: var(--rx-radius-sheet);
       background: var(--rx-surface);
-      background-image: none;
-      color: var(--rx-muted);
-      box-shadow: var(--rx-shadow-input);
+      color: var(--rx-gray-500);
+      box-shadow: var(--rx-shadow-sheet);
+      & > .rx-icon:first-child {
+        color: var(--rx-muted);
+      }
       &:hover:not(:disabled) {
-        border-color: color-mix(in srgb, var(--rx-control-border) 75%, var(--rx-ink));
+        border-color: transparent;
         background: var(--rx-surface);
-        background-image: none;
-        color: var(--rx-text);
-        box-shadow: var(--rx-shadow-input);
+        color: var(--rx-muted);
+        box-shadow: var(--rx-shadow-sheet);
       }
       &:active:not(:disabled) {
         background: var(--rx-surface);
-        background-image: none;
-        box-shadow: var(--rx-shadow-input);
+        box-shadow: var(--rx-shadow-sheet);
       }
       & > .rx-icon:last-child:not(:first-child) {
         display: none;
       }
     }
-    /* パネルを開いている間は、欄にフォーカスがある時と同じ青緑の枠と淡い輪を付ける。 */
+    /* パネルを開いている間は、入力欄のフォーカスと同じ青い縁と淡い青の輪を付ける。 */
     &:has(> .panel:popover-open) > .rx-button {
-      border-color: var(--rx-link);
-      box-shadow:
-        var(--rx-shadow-input),
-        0 0 0 0.1875rem var(--rx-focus-ring);
+      border-color: var(--rx-focus-border);
+      box-shadow: var(--rx-focus-glow);
     }
     & > .panel {
       container: rx-command-panel / inline-size;
@@ -56,8 +54,14 @@
       margin: 0;
       margin-inline: auto;
       padding: 0;
+      /*
+        実測: overlays.md「1f. ジャンプ（検索）の候補」。濃い枠は無く、縁が#c0bdb6になる約10pxの影で机から浮かせる。
+        角丸はポップオーバーと同じ（overlay.css）。
+      */
+      --rx-command-rule: #f5f5f5;
+      --rx-command-active: #ddeefe;
       border: 0;
-      border-radius: var(--rx-radius-surface);
+      border-radius: var(--rx-popover-radius);
       background: var(--rx-surface);
       color: var(--rx-text);
       font-family: var(--rx-control-font-family);
@@ -65,7 +69,7 @@
       font-size: var(--rx-label);
       line-height: 1.5;
       letter-spacing: normal;
-      box-shadow: var(--rx-shadow-menu);
+      box-shadow: 0 0 0.625rem rgb(0 0 0 / 30%);
       &:popover-open {
         display: block;
       }
@@ -110,9 +114,10 @@
         & > .group {
           padding-block-start: var(--rx-space-2);
           padding-inline: var(--rx-space-3);
+          /* まとまりの境は1px #f5f5f5（1fの分類の列の境）。 */
           & + .group {
             margin-block-start: var(--rx-space-3);
-            border-block-start: var(--rx-stroke-width) solid var(--rx-border);
+            border-block-start: var(--rx-stroke-width) solid var(--rx-command-rule);
           }
           /* まとまりの名前は小さな灰色の太字。 */
           & > h2 {
@@ -121,9 +126,10 @@
             font-weight: 600;
             line-height: var(--rx-small-leading);
           }
+          /* 候補の行は高さ25pxで隙間なく並べる（1f）。 */
           & > .list {
             display: grid;
-            gap: var(--rx-space-1);
+            gap: 0;
             margin-block-start: var(--rx-space-1);
             padding: 0;
             list-style: none;
@@ -142,18 +148,21 @@
               &[data-accent="coral"] {
                 --rx-command-accent: var(--rx-coral);
               }
-              &[data-disabled="true"] {
-                opacity: 0.5;
+              /* 使えない候補は文字とアイコンだけを灰色にする。 */
+              &[data-disabled="true"] > :is(.link, .command) {
+                color: var(--rx-disabled-text);
+                & > :is(.icon, .context, .current) {
+                  color: inherit;
+                }
               }
               & > .link {
                 display: flex;
                 align-items: center;
                 gap: var(--rx-space-2);
                 min-inline-size: 0;
-                min-block-size: var(--rx-control-size);
-                padding-block: var(--rx-space-1);
+                min-block-size: 1.5625rem;
+                padding-block: 0.1875rem;
                 padding-inline: var(--rx-space-2);
-                border-radius: var(--rx-radius-control);
                 color: var(--rx-text);
                 font-size: var(--rx-label);
                 /* 項目はMedium。アイコンは塗りつぶし版。 */
@@ -196,21 +205,23 @@
                 inline-size: 100%;
                 justify-content: start;
                 gap: var(--rx-space-2);
-                border-radius: var(--rx-radius-control);
+                border-color: transparent;
+                border-radius: 0;
+                background: transparent;
                 color: var(--rx-text);
                 text-decoration: none;
+                box-shadow: none;
               }
               /*
-                ホバーした項目と矢印キーで選んでいる項目は、DropdownMenuと同じく青緑で塗って白い文字にする。
-                アイコン・補足・現在地の印も白へそろえる。
+                ホバーした候補と矢印キーで選んでいる候補は、1fの選んだ候補と同じ角の無い淡い青（#ddeefe）で塗る。
+                文字は黒のまま、アイコンと補足の色も変えない。
               */
               &:not([data-disabled="true"]) > :is(a.link, .command):hover,
               &[data-active="true"] > :is(.link, .command) {
-                background: var(--rx-menu-active);
-                color: var(--rx-surface);
-                & > :is(.icon, .context, .current) {
-                  color: inherit;
-                }
+                border-color: transparent;
+                background: var(--rx-command-active);
+                color: var(--rx-text);
+                box-shadow: none;
               }
             }
           }
@@ -228,7 +239,7 @@
         gap: var(--rx-space-2) var(--rx-space-4);
         padding-block: var(--rx-space-2);
         padding-inline: var(--rx-space-3);
-        border-block-start: var(--rx-stroke-width) solid var(--rx-border);
+        border-block-start: var(--rx-stroke-width) solid var(--rx-command-rule);
         color: var(--rx-muted);
         font-size: var(--rx-small);
         line-height: var(--rx-small-leading);

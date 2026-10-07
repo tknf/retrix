@@ -30,16 +30,16 @@
       min-inline-size: 0;
     }
 
-    /* 画像を置く台は、淡い灰色の面に罫線の輪郭を付ける。 */
+    /* 画像を置く台は、BC2の背後に重ねた親のシートと同じ面（#f9f9f9、1px #e5e5e5、影なし。structure.md）。 */
     & > .layout > .stage {
       display: grid;
       place-items: center;
       min-inline-size: 0;
       padding-block: var(--rx-space-4);
       padding-inline: var(--rx-space-5);
-      border: var(--rx-stroke-width) solid var(--rx-border);
+      border: var(--rx-stroke-width) solid var(--rx-sheet-behind-edge);
       border-radius: var(--rx-radius-surface);
-      background: var(--rx-gray-20);
+      background: var(--rx-sheet-behind);
     }
 
     & > .layout > .stage > .viewport {
@@ -104,6 +104,8 @@
       border: 0;
       border-radius: 50%;
       background: transparent;
+      /* 押せる範囲の丸は見せず、中の小さな四角だけを描く。Buttonの下の影を外す。 */
+      box-shadow: none;
       cursor: nwse-resize;
       touch-action: none;
     }
@@ -116,7 +118,8 @@
       border: 0.125rem solid var(--rx-link);
       border-radius: var(--rx-radius-mark);
       background: var(--rx-surface);
-      box-shadow: var(--rx-shadow-hardware);
+      /* 控えめなButtonと同じ、下に1pxの平らな影（ぼかしなし）。 */
+      box-shadow: var(--rx-shadow-control);
     }
 
     & > .layout > .stage > .viewport > :is(.selection, .resize):focus-visible {
@@ -173,9 +176,9 @@
       min-inline-size: 0;
       padding-block: var(--rx-space-4) var(--rx-space-3);
       padding-inline: var(--rx-space-5);
-      border: var(--rx-stroke-width) solid var(--rx-border);
+      border: var(--rx-stroke-width) solid var(--rx-sheet-behind-edge);
       border-radius: var(--rx-radius-surface);
-      background: var(--rx-gray-20);
+      background: var(--rx-sheet-behind);
       color: var(--rx-muted);
       font-size: var(--rx-label);
     }

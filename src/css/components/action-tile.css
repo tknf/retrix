@@ -2,6 +2,7 @@
   /*
     グリッドに並べるリンクや操作のタイル。塗りつぶしのアイコンを上・名前を下に置く。
     普段は白い面に罫線の色の細い枠を付けた小さな四角にし、ホバーすると淡い黄色の面にし、押すと面が内側へへこむ。
+    手本に同じ部品は無い（推測）。角丸は控えめなボタンと同じ5px、押した時のへこみもボタンと同じ影にする（controls.md 1章）。
     枠の色は面の色から作るので、ActionDockの操作バーのように面を透明にした時は枠も消える。
     文字の指定（書体・大きさ・太さ・行高）はこのファイルが持つ（共通Buttonとは別の専用の操作）。
   */
@@ -55,12 +56,14 @@
       box-shadow: var(--rx-shadow-control-pressed);
     }
     &:focus-visible {
-      outline: 0.125rem solid var(--rx-link);
+      outline: 0.125rem solid var(--rx-focus-border);
       outline-offset: -0.125rem;
     }
+    /* 使えない操作は、形・枠・塗りをそのままにし、文字とアイコンだけを灰色にする（controls.md 13・15章）。 */
     &:is(:disabled, [data-disabled="true"]) {
-      cursor: not-allowed;
-      opacity: 0.5;
+      --rx-action-tile-accent: var(--rx-disabled-text);
+      cursor: default;
+      color: var(--rx-disabled-text);
     }
     & > .icon {
       position: relative;

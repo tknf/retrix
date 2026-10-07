@@ -1,4 +1,9 @@
 @layer components {
+  /*
+    一件の発言。実測: structure.md「文字（BC2）」のコメント。本文は16〜17pxの黒で行の高さ21px、投稿者の名前は同じ大きさの太字の黒。
+    「Posted on Oct 26」は13pxの茶色（実測 #a89d7d。白地で4.5:1に届かないので --rx-meta）。吹き出しにせず、紙の上にそのまま書く。
+    アバターの大きさと、返信をつなぐ線は手本に無い（推測）。
+  */
   .rx-message {
     /* アバターの列の幅。アバターをこの大きさにそろえ、返信の線の位置もここから決める。 */
     --rx-message-avatar: 2rem;
@@ -11,8 +16,8 @@
     max-inline-size: 48rem;
     padding-block: var(--rx-space-2);
     color: var(--rx-text);
-    font-size: var(--rx-label);
-    line-height: var(--rx-label-leading);
+    font-size: 1rem;
+    line-height: calc(21 / 16);
     &:has(> .avatar) {
       grid-template-columns: var(--rx-message-avatar) minmax(0, 1fr);
     }
@@ -38,10 +43,10 @@
     & > .replies {
       grid-row: 4;
     }
-    /* Highriseのノートと同じく、名前は黒い太字、日時は茶色の小さな文字にする。 */
+    /* 名前は本文と同じ大きさの黒い太字、日時は13pxの茶色にする。 */
     & > .heading > strong {
       color: var(--rx-ink);
-      font-weight: 600;
+      font-weight: 700;
     }
     & > .heading {
       display: flex;
@@ -50,7 +55,7 @@
       gap: var(--rx-space-2);
       & > time {
         color: var(--rx-meta);
-        font-size: var(--rx-small);
+        font-size: var(--rx-label);
       }
     }
     &:has(> .avatar) > :is(.heading, .body, .actions, .replies) {
@@ -74,9 +79,9 @@
     & > .body {
       min-inline-size: 0;
       overflow-wrap: anywhere;
-      /* 段落の間は、行の間より少し広いだけにする。 */
+      /* 段落の間は、行の間より少し広いだけにする（推測）。 */
       & > * + * {
-        margin-block-start: var(--rx-space-1);
+        margin-block-start: var(--rx-space-2);
       }
       /* 本文に添えたファイルは、行の上下の余白を持ち込まず、本文から少しだけ離して添える。 */
       & > .rx-file-item {
@@ -92,7 +97,7 @@
       gap: var(--rx-space-2);
     }
     /*
-      文書の形は、一通を白い紙に書く。日付は見出しの行の終わりに寄せる。
+      文書の形は、一通を白い紙（BC2のプロジェクトのカードと同じ、枠なし・4〜5pxの影・角丸3px）に書く。日付は見出しの行の終わりに寄せる。
       続くメッセージは同じ紙の続きにし、間に罫線を一本だけ引いてスレッドを一枚の紙に見せる。
       後ろの紙が前の紙の影より上に来るよう、配置済みにしてDOMの順に重ねる。
     */
@@ -122,8 +127,6 @@
         padding: 0;
         border-radius: 0;
         background: transparent;
-        font-size: var(--rx-body);
-        line-height: 1.6;
         & > * + * {
           margin-block-start: var(--rx-space-2);
         }

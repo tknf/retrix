@@ -1,10 +1,11 @@
 @layer components {
   /*
-    見出しの帯を持つ白い紙。カード全体は輪郭と浅い影の白い紙（--rx-shadow-paper）にし、
-    上端にごく淡い縦の塗りの帯を置いて見出しを書く。帯と中身の間には罫線を一本引く。
+    見出しの帯を持つ白い紙。カード全体は枠の無い、四方へのぼかし影の白い紙（--rx-shadow-paper。structure.md「BC2 のプロジェクトのカード」）。
+    見出しの帯は overlays.md「1b. カレンダーの予定のパネル」の帯と同じ、平らな #f7f7f7 に下の1px #dedede。
     中身は帯の下の白い面にそのまま書き、内側にもう一枚カードを重ねない。
   */
   .rx-layer-card {
+    --rx-layer-card-band: #f7f7f7;
     /* 見出しの帯の上下の余白。 */
     --rx-layer-card-gap: var(--rx-space-1);
     /* カードの内側はCardと同じ左右の余白にする。同じ種類のカードで余白を変えない。 */
@@ -23,7 +24,7 @@
     line-height: var(--rx-label-leading);
     overflow-wrap: anywhere;
     /*
-      見出しの帯。白から淡い灰色へのごく淡い縦の塗りに、下の罫線。
+      見出しの帯。平らな淡い灰色に、下の罫線。角丸は上の角だけで、罫線は角丸の無い下の辺に引く。
       題名が折り返しても操作は一行目の終わりに残し、題名の幅が8remを割る時（狭いカードや大きな文字）だけ操作を次の行へ送る。
       題名は中身の文字と同じ書き始めに置く。
     */
@@ -34,10 +35,10 @@
       gap: var(--rx-space-3);
       padding-block: var(--rx-layer-card-gap);
       padding-inline: var(--rx-layer-card-inline) var(--rx-layer-card-gap);
-      border-block-end: var(--rx-stroke-width) solid var(--rx-border);
+      border-block-end: var(--rx-stroke-width) solid var(--rx-gray-200);
       border-start-start-radius: var(--rx-radius-surface);
       border-start-end-radius: var(--rx-radius-surface);
-      background: var(--rx-emphasis-neutral);
+      background: var(--rx-layer-card-band);
       /* 次の行へ送っても入らない時（狭いカードや大きな文字）は、ボタンの中で文言を折り返す。 */
       & > .actions {
         display: flex;

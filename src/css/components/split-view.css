@@ -1,10 +1,12 @@
 @layer components {
   /*
-    二つの面は一枚の白い紙（輪郭と浅い影のカード）に並べ、境目には細い罫線を一本だけ引く。
+    二つの面は一枚の白い紙（四方へのぼかし影のカード）に並べ、境目には細い罫線を一本だけ引く。
+    境目の線は structure.md「Highrise 2011 の構成 / 右の列」の本文の列と右の列の間の縦の線 1px #eeeeee。
     内側の余白はカードと同じ上下16px・左右20pxに詰める。狭い幅では上下に積み、罫線は横になる。
   */
   .rx-split-view {
     --splitter-value: 50;
+    --rx-split-view-rule: #eeeeee;
     container: rx-split-view / inline-size;
     min-inline-size: 0;
     & > .panes {
@@ -21,10 +23,8 @@
         padding-inline: var(--rx-space-5);
         overflow-wrap: anywhere;
       }
-      /* 縦に積んだ時の境目はハンドルを持たないので、枠線の色の半分ほどの淡さにする。 */
       & > .secondary {
-        border-block-start: var(--rx-stroke-width) solid
-          color-mix(in srgb, var(--rx-border) 55%, var(--rx-surface));
+        border-block-start: var(--rx-stroke-width) solid var(--rx-split-view-rule);
       }
     }
     @container rx-split-view (inline-size < 32rem) {
@@ -38,15 +38,11 @@
         grid-template-columns: minmax(0, 1fr) minmax(16rem, 0.5fr);
         & > .secondary {
           border-block-start: 0;
-          border-inline-start: var(--rx-stroke-width) solid var(--rx-border);
+          border-inline-start: var(--rx-stroke-width) solid var(--rx-split-view-rule);
         }
       }
       &[data-layout="reader"] > .panes {
         grid-template-columns: minmax(18rem, 0.6fr) minmax(0, 1fr);
-      }
-      /* 幅を変えない時の境目は、ハンドルの目印にならないので、縦に積んだ時と同じ淡い色にする。 */
-      &:not([data-resizable="true"][data-state]) > .panes > .secondary {
-        border-inline-start-color: color-mix(in srgb, var(--rx-border) 55%, var(--rx-surface));
       }
       /* 幅を変えられる時は、境目の罫線の上にハンドルを重ねる。 */
       &[data-resizable="true"][data-state] > .panes {
@@ -60,7 +56,7 @@
       }
     }
     /*
-      ハンドルは、境目の罫線の中ほどに置いた、ボタンと同じ手触りの細いつまみ。
+      ハンドルは、境目の罫線の中ほどに置いた、ボタンと同じ平らな白・1px #ccc・下に1px #ddd の影の細いつまみ（推測。手本に無い）。
       境目全体をつかめるように、ハンドルは面の上下いっぱいに重ねる。
     */
     & > .panes > .handle {

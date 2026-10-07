@@ -3,8 +3,15 @@
     --rx-calendar-scroll-size: min(40rem, 75dvh);
     --rx-calendar-meta-size: clamp(0.6875rem, calc(0.666667rem + 0.104167vw), 0.75rem);
     --rx-calendar-quiet: var(--rx-gray-20);
-    /* 日の区切りの線。表の罫線より一段濃い、暖かい灰色の細い線にする。 */
-    --rx-calendar-line: color-mix(in srgb, var(--rx-border) 55%, var(--rx-gray-200));
+    /* 日の区切りの線。BC2のカレンダーの暖かい灰色の1pxの罫線（lists.md「BC2 カレンダー」の#dcd9d2）。 */
+    --rx-calendar-line: var(--rx-calendar-rule);
+    /*
+      前後の月の日付と予定の時刻の淡い灰色。実測（2013年版の前月の日・時刻の#bbbbbb前後）は白地で4.5:1に届かないので、
+      色合いを保って明るさを下げる。
+    */
+    --rx-calendar-faint: #767676;
+    /* 今日の「今日 21」の文字。実測の#333333。 */
+    --rx-calendar-today-text: #333333;
     /* 今日の列（週の時間割）に敷く、ごく淡い黄色。 */
     --rx-calendar-today-soft: color-mix(in srgb, var(--rx-mark) 45%, var(--rx-surface));
     min-inline-size: 0;
@@ -85,13 +92,13 @@
           clip-path: inset(50%);
           white-space: nowrap;
         }
-        /* 曜日は灰色の小さな文字を中央に置き、下に日の区切りと同じ線を引く。 */
+        /* 曜日は#666の11pxの文字を中央に置き、塗らずに下に日の区切りと同じ線を引く（実測）。 */
         & > thead > tr > th {
           padding-block: var(--rx-space-2);
           padding-inline: var(--rx-space-1);
           border-block-end: var(--rx-stroke-width) solid var(--rx-calendar-line);
           color: var(--rx-muted);
-          font-size: var(--rx-label);
+          font-size: 0.6875rem;
           font-weight: 400;
           line-height: 1rem;
           text-align: center;
@@ -106,12 +113,11 @@
           background: var(--rx-surface);
           text-align: end;
           vertical-align: top;
+          /* 外周の縦線は引かない。縦線は列の間だけ（実測）。 */
           &:last-child {
             border-inline-end: 0;
           }
-          &[data-outside="true"] {
-            background: var(--rx-calendar-quiet);
-          }
+          /* 今日はセル全体を黄色で塗る（実測の#ffffcbを、黄色のハイライトの#ffffccにそろえる）。 */
           &[data-current="true"] {
             background: var(--rx-mark);
           }
@@ -135,9 +141,13 @@
         & > tbody > tr:last-child > :is(td, th) {
           border-block-end: 0;
         }
-        /* 使えない日は斜線。 */
-        & > tbody > tr > td[data-disabled="true"] {
-          background-image: var(--rx-hatch);
+        /* 前後の月の日は塗らず、日付の数字を淡い灰色にする（2013年版の前月の日）。 */
+        & > tbody > tr > td[data-outside="true"] > :is(a, time).day {
+          color: var(--rx-calendar-faint);
+        }
+        /* 使えない日は、使えない操作と同じく面をそのままにして、日付の文字だけを灰色にする。 */
+        & > tbody > tr > td[data-disabled="true"] > :is(a, time, .rx-button).day {
+          color: var(--rx-disabled-text);
         }
         /* 週番号は日付の数字と同じ高さの、小さな茶色の数字の列。 */
         & > thead > tr > th.week-number {
@@ -186,15 +196,14 @@
             [data-state="range-start"],
             [data-state="range-end"]
           ) {
-          color: var(--rx-ink);
+          color: var(--rx-calendar-today-text);
         }
-        /* 選んだ日はオンのボタンと同じ青緑の塗り、期間の間の日は淡い青緑の面。 */
+        /* 選んだ日は、選んでいる状態のButtonと同じ平らな青緑の塗り。期間の間の日は淡い青緑の面。 */
         &:is([data-state="selected"], [data-state="range-start"], [data-state="range-end"]) {
           border-color: var(--rx-teal-dark);
           background: var(--rx-teal);
-          background-image: linear-gradient(180deg, var(--rx-teal) 0%, var(--rx-teal-dark) 100%);
           color: var(--rx-surface);
-          box-shadow: var(--rx-shadow-control-primary);
+          box-shadow: 0 var(--rx-stroke-width) 0 var(--rx-teal-dark);
         }
         &[data-state="in-range"] {
           border-color: color-mix(in srgb, var(--rx-teal) 35%, var(--rx-surface));
@@ -204,8 +213,9 @@
       }
     }
     /*
-      予定はBasecamp 2のカレンダーと同じく、分類の色（既定は青）の「• 時刻 題名」の文字で置く。面は塗らない。
-      終日の予定（月の日と週の終日の行）は、分類の色で塗った角丸の帯に白い文字で書く（下の規則）。
+      予定はBasecamp 2のカレンダーと同じく、分類の色（既定は青）の「• 題名」の通常の太さの文字で置く。面は塗らない。
+      時刻は淡い灰色にする（実測）。分類の青は実測の#2a81c4では白地と今日の黄色の上で4.5:1に届かないので、--rx-blueにする。
+      終日の予定（月の日と週の終日の行）は、分類の色で塗った両端の丸い帯に白い太字で書く（下の規則）。
       過去の予定は文字を淡くする。
     */
     & > .viewport > table > tbody > tr > td > .events > li > .event,
@@ -213,6 +223,11 @@
     & > .viewport > .week > .column > .timed > ol > li > .event,
     & > .agenda > .agenda-group > .events > li > .event {
       --rx-calendar-event-color: var(--rx-blue);
+      /*
+        終日の帯の塗り。実測の#2b84c6は白い文字との対比が4.0なので、色合いを保って4.5:1まで明るさを下げる。
+        他の分類は分類の色のまま塗る（どれも白い文字と4.5:1以上）。
+      */
+      --rx-calendar-event-band: #277abb;
       --rx-calendar-event-soft: var(--rx-cover);
       --rx-calendar-event-fill: transparent;
       display: flex;
@@ -249,14 +264,17 @@
       }
       &[data-accent="green"] {
         --rx-calendar-event-color: var(--rx-green);
+        --rx-calendar-event-band: var(--rx-green);
         --rx-calendar-event-soft: var(--rx-success-soft);
       }
       &[data-accent="amber"] {
         --rx-calendar-event-color: var(--rx-amber);
+        --rx-calendar-event-band: var(--rx-amber);
         --rx-calendar-event-soft: var(--rx-warning-soft);
       }
       &[data-accent="coral"] {
         --rx-calendar-event-color: var(--rx-coral);
+        --rx-calendar-event-band: var(--rx-coral);
         --rx-calendar-event-soft: var(--rx-danger-soft);
       }
       /* 題名の前の点。分類の色の小さな丸で、一行の題名の高さの中ほどに置く。 */
@@ -270,6 +288,7 @@
       }
       & > .time {
         flex: none;
+        color: var(--rx-calendar-faint);
         font-size: var(--rx-calendar-meta-size);
         font-variant-numeric: tabular-nums;
       }
@@ -289,22 +308,27 @@
       }
     }
     /*
-      終日の予定は、分類の色で塗った角丸の帯に白い文字。Basecamp 2の複数日の予定の帯に合わせる。
+      終日の予定は、Basecamp 2の複数日の予定の帯（lists.md）。高さ16px・角丸8px（両端が丸い）、分類の色の塗りに、
+      白の太字の12px、左の余白9px。
       仮の予定は塗らずに分類の色の破線で囲み、過去の予定は淡い面に分類の色の文字にする。
     */
     & > .viewport > table > tbody > tr > td > .events > li > .event[data-all-day="true"],
     & > .viewport > .week > .column > .all-day > ul > li > .event[data-all-day="true"] {
-      --rx-calendar-event-fill: var(--rx-calendar-event-color);
-      padding-block: 0.125rem;
-      padding-inline: 0.375rem;
-      border-radius: var(--rx-radius-surface);
+      --rx-calendar-event-fill: var(--rx-calendar-event-band);
+      padding-block: 0;
+      padding-inline: 0.5625rem 0.375rem;
+      border-radius: var(--rx-radius-pill);
       color: var(--rx-surface);
-      font-weight: 600;
+      font-weight: 700;
+      line-height: 1rem;
       & > .bar {
         display: none;
       }
+      & > .time {
+        color: inherit;
+      }
       &:hover {
-        background: color-mix(in srgb, var(--rx-calendar-event-color) 86%, var(--rx-ink));
+        background: color-mix(in srgb, var(--rx-calendar-event-band) 86%, var(--rx-ink));
       }
       &[data-tentative="true"] {
         --rx-calendar-event-fill: var(--rx-surface);
@@ -452,14 +476,14 @@
             background: var(--rx-mark);
           }
           & > .heading > .date {
-            color: var(--rx-ink);
+            color: var(--rx-calendar-today-text);
           }
           & > :is(.all-day, .timed) {
             background-color: var(--rx-calendar-today-soft);
           }
         }
         &[data-weekend="true"]:not([data-current="true"]) > .heading > .date > :is(.weekday, .day) {
-          color: color-mix(in srgb, var(--rx-muted) 65%, var(--rx-surface));
+          color: var(--rx-calendar-faint);
         }
         &[data-outside="true"] > .heading > .date > :is(.weekday, .day) {
           color: var(--rx-muted);
@@ -915,7 +939,7 @@
     }
   }
   /* 月の表と週の見出しの日付は同じ見た目。経路をまとめても詳細度が上がらないよう:whereで包む。 */
-  /* 日付は灰色の数字だけ。今日は太字の黒にし、月の初日には月の名前を添える。 */
+  /* 日付は#666の数字だけを、セルの末尾側の上に、右端から8pxで置く（実測）。今日は#333の太字にし、月の初日には月の名前を添える。 */
   :where(
     .rx-calendar > .viewport > table > tbody > tr > td,
     .rx-calendar > .viewport > .week > .column > .heading > .date
@@ -929,14 +953,14 @@
       padding-inline: 0.25rem;
       border-radius: var(--rx-radius-mark);
       color: var(--rx-muted);
-      font-size: var(--rx-label);
+      font-size: var(--rx-small);
       font-weight: 400;
       line-height: 1rem;
       font-variant-numeric: tabular-nums;
       text-decoration: none;
       vertical-align: middle;
       &[data-current="true"] {
-        color: var(--rx-ink);
+        color: var(--rx-calendar-today-text);
         font-weight: 700;
       }
     }

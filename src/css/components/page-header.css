@@ -1,4 +1,11 @@
 @layer components {
+  /*
+    シートの見出し。実測: structure.md「シートの中の見出し（BC2 のプロジェクト画面）」。
+    - 題名は太字の黒。手本は24pxだが、ユーザーの指定で--rx-title（20px）に下げてある。大きくしない。
+    - 題名の下に1px #dedede の罫線を内側の幅いっぱいに引く。手本は題名のベースラインから罫線まで31px。
+    - 補足の行は、2012年版の題名の下のカーキの説明（「Print and online marketing strategy…」）に合わせ、
+      日付・補足の茶色（--rx-meta。実測#a89c80を4.5:1に届くよう濃くした色）にする。
+  */
   .rx-page-header {
     container: rx-page-header / inline-size;
     display: flex;
@@ -6,10 +13,10 @@
     align-items: center;
     gap: var(--rx-space-3);
     min-inline-size: 0;
-    /* 見出しの下に罫線を引き、ここからシートの中身が始まることを示す。 */
-    padding-block-end: var(--rx-space-4);
-    border-block-end: var(--rx-stroke-width) solid var(--rx-border);
-    /* アイコンはHighriseの写真の枠と同じく、白い枠に輪郭と浅い影を付けた四角に収める。 */
+    /* 見出しの下に罫線を引き、ここからシートの中身が始まることを示す。題名の大きさを下げた分、罫線までの間も24pxに詰める。 */
+    padding-block-end: var(--rx-space-6);
+    border-block-end: var(--rx-stroke-width) solid var(--rx-gray-200);
+    /* アイコンはHighriseの写真と同じく、白い縁取りと四方への浅い影の四角に収める。 */
     & > .icon {
       display: grid;
       place-items: center;
@@ -48,8 +55,8 @@
     }
     & > .heading > p {
       max-inline-size: var(--rx-measure);
-      margin-block-start: var(--rx-space-2);
-      color: var(--rx-muted);
+      margin-block-start: var(--rx-space-1);
+      color: var(--rx-meta);
       font-size: var(--rx-label);
       line-height: var(--rx-label-leading);
     }
@@ -80,7 +87,7 @@
           flex: 1 1 1.5rem;
           min-inline-size: 1.5rem;
           block-size: var(--rx-stroke-width);
-          background: var(--rx-border);
+          background: var(--rx-gray-200);
         }
       }
       & > .heading > p {

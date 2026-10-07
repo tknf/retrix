@@ -1,15 +1,16 @@
 @layer components {
   /*
-    結果の通知は、画面の右下（末尾側の下）から出して浮かべる小さなパネル。37signalsの黄色の通知と同じく、
-    黄色（--rx-mark）の面に黒い文字で出し、輪郭と浮かぶパネルの影を付ける。
-    成功は黄色の面のまま、輪郭とアイコンを緑にする。注意と失敗は、面をそれぞれの役割の淡い色にし、
-    輪郭とアイコンを役割の色にして見分ける。
+    結果の通知は、画面の右下（末尾側の下）に浮かべる黄色の箱。
+    実測: overlays.md「4a. 黄色の案内の箱（BC2）」。塗り#ffffcc、1px #eac73bの枠で下だけ3px、角丸4px、黒い約13pxの字で、
+    1行目は太字。Highriseの保存後の通知（4c）も同じ#ffffccの黄色。4aは影を持たないので、浮かべても影は付けない。
+    成功は黄色の箱のまま、アイコンを緑にする。注意と失敗は手本に無い（推測）。面をそれぞれの役割の淡い色にし、
+    枠とアイコンを役割の色にして見分ける。
     文と操作は一行に並べ、入らなければ文を先に折り返して操作を末尾側へ送る。
     角の閉じる操作が入る分だけ、末尾側を空ける。
   */
   .rx-toast {
     --rx-toast-fill: var(--rx-mark);
-    --rx-toast-edge: color-mix(in srgb, var(--rx-note-edge) 70%, var(--rx-gray-500));
+    --rx-toast-edge: #eac73b;
     --rx-toast-accent: var(--rx-ink);
     --rx-overlay-heading-start: var(--rx-space-3);
     position: fixed;
@@ -26,20 +27,15 @@
     padding-block: var(--rx-space-3);
     padding-inline: var(--rx-space-4)
       calc(var(--rx-overlay-close-size) + var(--rx-overlay-close-inset) + var(--rx-space-1));
+    border: var(--rx-stroke-width) solid var(--rx-toast-edge);
+    border-block-end-width: 0.1875rem;
+    border-radius: 0.25rem;
     background: var(--rx-toast-fill);
     color: var(--rx-text);
-    /* 輪郭は役割の色にし、影は--rx-shadow-menuと同じ落ち方にする。 */
-    box-shadow:
-      0 0 0 var(--rx-stroke-width) var(--rx-toast-edge),
-      0 0.25rem 0.875rem rgb(38 38 36 / 20%);
+    box-shadow: none;
     /* 日本語は文節の切れ目で折り返し、行末に一、二文字だけを残さない。 */
     word-break: auto-phrase;
-    /* 出入りの動きはoverlay.cssの共通の定義。下から出して置き、閉じる時は同じ向きへ下げながら消す。 */
-    &:not(:popover-open) {
-      translate: 0 0.5rem;
-    }
     &[data-tone="success"] {
-      --rx-toast-edge: color-mix(in srgb, var(--rx-success) 45%, var(--rx-surface));
       --rx-toast-accent: var(--rx-success);
     }
     &[data-tone="warning"] {
@@ -73,7 +69,8 @@
         align-items: start;
         /* アイコンと文は一つの塊として読ませるので、段の間より詰める。Noticeのピルと同じ間隔。 */
         gap: 0.375rem;
-        font-weight: 500;
+        /* 4aの1行目と同じ太字。 */
+        font-weight: 600;
         & > .rx-icon {
           flex: none;
           color: var(--rx-toast-accent);

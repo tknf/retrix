@@ -2,8 +2,10 @@
   /*
     判断を依頼する問いかけ。形はLayerCardのまま（沈んだ層に問いの見出し、白いカードに中身）で、
     カードの中に選択肢の行を並べる。行は丸いマーク・太字の要点・灰色の説明・進む矢印で、ActionListの行と同じく
-    普段は平らにし、ホバーすると淡い青緑の面を出してマークを青緑で塗り、押すと内側へへこむ。
-    尾（下向きの三角）はカードと同じ白に輪郭の色の縁を付け、すぐ下の対象を指す。
+    普段は平らにし、ホバーするとBC2のメニューの選んだ項目と同じ淡い青（overlays.md「1c」の#dde4f5）の面を出して
+    マークを青緑で塗り、押すと内側へへこむ。
+    尾（下向きの三角）は、BC2のポップオーバーのしっぽ（overlays.md「1d」）と同じ45°で、深さ11px・付け根22px。
+    中はカードと同じ白、縁は1dのしっぽの縁と同じ#cccccc。すぐ下の対象を指す。
     選択肢の行の文字の指定はこのファイルが持つ（共通Buttonとは別の専用の操作）。
   */
   .rx-prompt {
@@ -15,13 +17,13 @@
       position: absolute;
       inset-block-start: 100%;
       inset-inline-start: calc(var(--rx-space-6) + var(--rx-space-1));
-      border-inline: var(--rx-space-3) solid transparent;
-      border-block-start: var(--rx-space-3) solid var(--rx-surface);
+      border-inline: 0.6875rem solid transparent;
+      border-block-start: 0.6875rem solid var(--rx-surface);
     }
     /* 縁の三角を一段外側に置き、白い三角の下から覗かせる。 */
     &[data-pointer="true"]::before {
       inset-block-start: calc(100% + var(--rx-stroke-width));
-      border-block-start-color: color-mix(in srgb, var(--rx-ink) 18%, var(--rx-surface));
+      border-block-start-color: var(--rx-gray-300);
     }
     /* カードは行の面を端近くまで広げ、行の要点を層の見出しと同じ書き始めにそろえる。 */
     & > .body {
@@ -92,7 +94,7 @@
         }
       }
       &:hover {
-        background: var(--rx-cover);
+        background: var(--rx-pill-selected);
         & > .mark::before {
           border-color: var(--rx-teal-dark);
           background: var(--rx-teal);
@@ -103,7 +105,7 @@
         }
       }
       &:active {
-        background: color-mix(in srgb, var(--rx-link) 14%, var(--rx-surface));
+        background: color-mix(in srgb, var(--rx-pill-selected) 85%, var(--rx-pill-selected-text));
         box-shadow: var(--rx-shadow-control-pressed);
       }
       &:focus-visible {

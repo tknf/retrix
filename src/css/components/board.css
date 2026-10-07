@@ -23,8 +23,11 @@
     font-size: var(--rx-label);
     line-height: var(--rx-label-leading);
     /*
-      列は淡い灰色の面に罫線の輪郭を付けた枠で、その中に白い紙のカード（BoardItem）を重ねる。
-      列の色は、列の上端の細い線と、項目の番号の文字にだけ出す。カードは色で染めない。
+      BC2にBoardの手本は無い（推測）。BC2の部品を組み合わせる。
+      - 列: 背後に重ねた親のシート（#f9f9f9、1px #e5e5e5、影なし。structure.md）と同じ面。
+      - 列の名前: セクションの見出しの赤（18px・400）に、件数の淡い青のピル（lists.md「BC2 のピル」）。
+      - 項目: プロジェクトのカード（白、枠なし、短いぼかし影、角丸3px）をBoardItemが持つ。
+      列の色は、列の上端の細い線と、項目の番号の文字にだけ出す（推測）。カードは色で染めない。
     */
     & > section {
       --rx-lane-accent: var(--rx-muted);
@@ -32,10 +35,10 @@
       min-inline-size: 16rem;
       padding-block: 0 var(--rx-space-2);
       padding-inline: var(--rx-space-2);
-      border: var(--rx-stroke-width) solid var(--rx-border);
+      border: var(--rx-stroke-width) solid var(--rx-sheet-behind-edge);
       /* 上端に列の色の線を引くので、角は丸めない（線の端が丸く欠けないようにする）。 */
       border-radius: 0;
-      background-color: var(--rx-gray-20);
+      background-color: var(--rx-sheet-behind);
       box-shadow: var(--rx-board-lane-edge);
       &[data-tone="neutral"]:not([data-current="true"]) {
         --rx-board-lane-edge: none;
@@ -71,18 +74,21 @@
         font-weight: 400;
         line-height: var(--rx-small-leading);
         overflow-wrap: anywhere;
-        /* 件数は淡い青のピルに青緑の数字。 */
+        /*
+          件数はBC2の議論の件数のピル（lists.md）。高さ18px・角丸9px・12pxの通常の太さで、淡い青に青緑の数字。
+          2桁で幅21pxになるよう、左右の余白を小さくする。
+        */
         & > small {
           display: inline-grid;
           place-items: center;
-          min-inline-size: 1.25rem;
-          block-size: 1.25rem;
-          padding-inline: 0.375rem;
+          min-inline-size: 1.3125rem;
+          block-size: 1.125rem;
+          padding-inline: 0.3125rem;
           border-radius: var(--rx-radius-pill);
-          background: var(--rx-info-soft);
-          color: var(--rx-link);
+          background: var(--rx-pill-count);
+          color: var(--rx-pill-count-text);
           font-size: var(--rx-small);
-          font-weight: 600;
+          font-weight: 400;
           line-height: 1;
           font-variant-numeric: tabular-nums;
         }
@@ -124,11 +130,10 @@
     &:not([data-movable="true"]) > section > .empty::after {
       display: none;
     }
-    /* 受け付けない列は、無効なFieldと同じ斜線を列に引く。 */
+    /* 受け付けない列は、使えない操作と同じく面をそのままにして、列の名前の文字だけを灰色にする。 */
     & > section[data-disabled="true"] {
-      background: var(--rx-hatch), var(--rx-gray-20);
       & > .title {
-        color: var(--rx-muted);
+        color: var(--rx-disabled-text);
       }
       /* 破線は受け入れ先を示すので、受け付けない列には引かない。 */
       & > .empty::after {

@@ -1,14 +1,16 @@
 @layer components {
   /*
-    本文のそばに置く「ここを見て」の案内。Basecamp 2・Highriseの黄色の案内と同じく、黄色の紙に細い枠を付け、
-    アイコンと太字の題名を一行目に、本文と操作をその下に並べる。
-    基本（info）と注意（warning）は黄色。成功と危険は、役割の色の淡い面と枠にし、アイコンと題名を役割の色で書く。
+    本文のそばに置く「ここを見て」の案内。実測: overlays.md「4a. 黄色の案内の箱（BC2）」。
+    - 塗り #ffffcc、枠 1px #eac73b で下だけ3px、角丸4px。字は黒の13px、1行目（題名）は太字、2行目（本文）は標準の太さ。
+    - 下だけ3pxの枠は、片側の線と角丸を組み合わせないよう、全周の1pxの枠に下へ2pxずらした同じ色の影を重ねて描く。
+    手本は中央寄せだが、アイコンや操作を並べ、長い文も置くので、書き始めの側にそろえる（推測）。
+    基本（info）と注意（warning）は同じ黄色の箱。成功と危険は、同じ形のまま役割の色の淡い面と枠にし、アイコンと題名を役割の色で書く（推測）。
   */
   .rx-notice {
     --rx-notice-accent: var(--rx-ink);
     --rx-notice-icon: var(--rx-info);
-    --rx-notice-face: var(--rx-note);
-    --rx-notice-edge: var(--rx-note-edge);
+    --rx-notice-face: var(--rx-mark);
+    --rx-notice-edge: #eac73b;
     display: grid;
     /* 列はカードの幅に収め、長い題名やURLでも中身の最小幅でカードを押し広げない。 */
     grid-template-columns: minmax(0, 1fr);
@@ -17,8 +19,9 @@
     padding-block: var(--rx-space-3);
     padding-inline: var(--rx-space-4);
     border: var(--rx-stroke-width) solid var(--rx-notice-edge);
-    border-radius: var(--rx-radius-surface);
+    border-radius: 0.25rem;
     background: var(--rx-notice-face);
+    box-shadow: 0 calc(2 * var(--rx-stroke-width)) 0 var(--rx-notice-edge);
     color: var(--rx-text);
     font-size: var(--rx-label);
     line-height: var(--rx-label-leading);
@@ -72,20 +75,17 @@
       margin-block-start: 0;
     }
     &[data-tone="warning"] {
-      --rx-notice-face: var(--rx-mark);
-      --rx-notice-edge: color-mix(in srgb, var(--rx-warning) 30%, var(--rx-note-edge));
-      --rx-notice-accent: var(--rx-ink);
       --rx-notice-icon: var(--rx-warning);
     }
     &[data-tone="success"] {
       --rx-notice-face: var(--rx-success-soft);
-      --rx-notice-edge: color-mix(in srgb, var(--rx-success) 28%, var(--rx-surface));
+      --rx-notice-edge: color-mix(in srgb, var(--rx-success) 40%, var(--rx-surface));
       --rx-notice-accent: var(--rx-green-dark);
       --rx-notice-icon: var(--rx-success);
     }
     &[data-tone="danger"] {
       --rx-notice-face: var(--rx-danger-soft);
-      --rx-notice-edge: color-mix(in srgb, var(--rx-danger) 28%, var(--rx-surface));
+      --rx-notice-edge: color-mix(in srgb, var(--rx-danger) 40%, var(--rx-surface));
       --rx-notice-accent: var(--rx-danger);
       --rx-notice-icon: var(--rx-danger);
     }
@@ -94,6 +94,7 @@
     .rx-notice {
       border-color: CanvasText;
       background: Canvas;
+      box-shadow: none;
     }
   }
 }

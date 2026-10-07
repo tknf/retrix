@@ -1,9 +1,11 @@
 @layer components {
   /*
-    Highriseのノートの入力欄と同じく、太字の見出しの下に枠付きの白い本文の欄を置き、その下に添付と小さなボタンを並べる。
-    Composerそのものは面も影も持たず、本文の欄だけがInputと同じ枠・沈んだ影・フォーカスの輪を持つ。
+    構成はHighriseのノート欄（controls.md 7b・14）と同じく、太字の見出しの下に白い本文の欄を置き、その下に添付と小さなボタンを並べる。
+    本文の欄の見た目はBC2のコメント欄（controls.md 7a）: 1px #c1c1c1・角丸5px・内側と外の影なし・左の余白14px・
+    16pxの文字・プレースホルダー#999。Composerそのものは面も影も持たない。
   */
   .rx-composer {
+    --rx-composer-placeholder: #999999;
     container: rx-composer / inline-size;
     display: grid;
     /* 欄・添付・操作の段の間。 */
@@ -44,15 +46,20 @@
   }
 
   /*
-    本文の欄は本文の大きさと行間で書く。枠・沈んだ影・フォーカスの輪はInputと同じにする。
+    本文の欄はBC2のコメントの本文と同じ16pxの文字と21pxの行高。上下10px・左右14pxの余白で、一行の時に高さ43px（実測の閉じた高さ）になる。
+    BC2のように閉じた欄を開く仕組みは無いので、最小の高さはHighriseのノート欄（68px）に近い3行にする。
     field-sizingに対応するブラウザでは、入力した分だけ欄が伸びる。
   */
   .rx-composer > .rx-field > :is(.rx-input, .editor) {
-    min-block-size: calc(4lh + 2 * var(--rx-space-2));
-    padding-block: var(--rx-space-2);
-    padding-inline: var(--rx-space-3);
-    font-size: var(--rx-body);
-    line-height: var(--rx-leading);
+    min-block-size: calc(3lh + 2 * 0.625rem + 2 * var(--rx-stroke-width));
+    padding-block: 0.625rem;
+    padding-inline: 0.875rem;
+    font-size: 1rem;
+    line-height: calc(21 / 16);
+  }
+
+  .rx-composer > .rx-field > .rx-input::placeholder {
+    color: var(--rx-composer-placeholder);
   }
 
   .rx-composer > .rx-field > .rx-input {
@@ -61,21 +68,28 @@
     field-sizing: content;
   }
 
-  /* 差し替えたエディターの囲みにも、Inputと同じ枠と沈んだ影を付ける。 */
+  /* 差し替えたエディターの囲みにも、複数行の入力欄と同じ枠とフォーカスの輪を付ける。 */
   .rx-composer > .rx-field > .editor {
-    border: var(--rx-stroke-width) solid var(--rx-control-border);
-    border-block-start-color: color-mix(in srgb, var(--rx-control-border) 75%, var(--rx-ink));
+    border: var(--rx-stroke-width) solid var(--rx-textarea-border);
     border-radius: var(--rx-radius-control);
     background: var(--rx-surface);
-    box-shadow: var(--rx-shadow-input);
     &:focus-within {
-      border-color: var(--rx-blue);
-      box-shadow:
-        0 0 0 0.125rem var(--rx-focus-ring),
-        var(--rx-shadow-input);
+      border-color: var(--rx-focus-border);
+      box-shadow: var(--rx-focus-glow);
     }
     &[data-invalid="true"] {
       border-color: var(--rx-danger);
+    }
+    /* TextEditorを入れた時は、TextEditorが枠とフォーカスの輪を持つので、囲みの枠と余白を外して二重にしない。 */
+    &:has(> .rx-text-editor) {
+      min-block-size: 0;
+      padding-block: 0;
+      padding-inline: 0;
+      border: 0;
+      background: transparent;
+      &:focus-within {
+        box-shadow: none;
+      }
     }
   }
 
@@ -85,7 +99,7 @@
   */
   .rx-composer > .rx-field > .editor {
     & [contenteditable] {
-      min-block-size: 4lh;
+      min-block-size: 3lh;
       outline: none;
       line-height: inherit;
       & :is(p, ul, ol, blockquote, h1, h2, h3, h4, pre) {
@@ -98,7 +112,7 @@
       }
       &:empty::before {
         content: attr(data-placeholder);
-        color: var(--rx-muted);
+        color: var(--rx-composer-placeholder);
       }
     }
   }

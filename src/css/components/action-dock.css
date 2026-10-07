@@ -1,11 +1,14 @@
 @layer components {
   /*
     操作バー。白いパネルを下の中央に浮かべ、アイコン・名前・ショートカットキーの表示を縦に積んだ操作を横に並べる。
+    パネルは overlays.md「1. BC2 のポップオーバー」と同じ白・1px #bbbbbb・角丸5px・外へ約8pxの柔らかい影（しっぽは無し）。
     操作バーの中の操作は面を持たないActionTileで、ホバー時だけ淡い面を出し、押すと内側へへこむ。
     stickyは置いた場所の下端に留め、fixedは画面の下に浮かべる。狭い画面では横にスクロールする。
     外側は置き場所の幅いっぱいの透明な枠（中身の幅で親を押し広げない）で、白いパネルは中の並びに塗る。
   */
   .rx-action-dock {
+    --rx-action-dock-edge: #bbbbbb;
+    --rx-action-dock-shadow: 0 var(--rx-stroke-width) 0.5rem rgb(0 0 0 / 15%);
     position: sticky;
     inset-block-end: 0;
     z-index: var(--rx-z-menu);
@@ -29,9 +32,10 @@
       margin-inline: auto;
       padding-block: var(--rx-space-1);
       padding-inline: var(--rx-space-1);
-      border-radius: var(--rx-radius-surface);
+      border: var(--rx-stroke-width) solid var(--rx-action-dock-edge);
+      border-radius: var(--rx-radius-control);
       background: var(--rx-surface);
-      box-shadow: var(--rx-shadow-menu);
+      box-shadow: var(--rx-action-dock-shadow);
       list-style: none;
       & > li {
         flex: none;
@@ -46,7 +50,8 @@
   }
   @media (forced-colors: active) {
     .rx-action-dock > ul {
-      outline: var(--rx-stroke-width) solid CanvasText;
+      border-color: CanvasText;
+      box-shadow: none;
     }
   }
 }

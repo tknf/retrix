@@ -2,7 +2,8 @@
   /*
     コードは名前とコピーをLayerCardの層の見出しに置き、層の上のカードに書く（層とカードの見た目はLayerCardが持つ）。
     ここではコードの書き方だけを決める。コードの面は淡い灰色にし、等幅の文字で書く。
-    ハイライト行は平らな淡い黄色の背景にし、行番号は余白に小さく書いてコピーには含めない。
+    ハイライト行は37signalsの黄色のハイライト（#ffffcc。lists.md「黄色のハイライトの正確な色」）で塗り、
+    行番号は余白に小さく書いてコピーには含めない。
   */
   .rx-code-block {
     --rx-code-block-paper: var(--rx-gray-20);
@@ -46,7 +47,7 @@
         & > .line {
           display: block;
           &[data-highlighted="true"] {
-            background: color-mix(in srgb, var(--rx-mark) 45%, var(--rx-surface));
+            background: var(--rx-mark);
           }
         }
       }
@@ -72,7 +73,7 @@
       > pre
       > code
       > .line[data-highlighted="true"]::before {
-      background: color-mix(in srgb, var(--rx-mark) 45%, var(--rx-surface));
+      background: var(--rx-mark);
     }
   }
   @media (forced-colors: active) {

@@ -1,7 +1,8 @@
 @layer components {
   /*
-    段階の並び。番号はButtonと同じ枠を持つ小さな角の四角に書き、名前と状態の文言を続ける。
-    済んだ段階は緑のチェック、今の段階は青緑の縦の塗りに白い数字と黒い太字の名前、これからの段階は破線の枠。
+    段階の並び。手本に同じ部品は無い（推測）。番号は控えめなボタン（controls.md 1章: 平らな白、1px #ccc、角丸5px）と
+    同じ枠の小さな四角に書き、名前と状態の文言を続ける。
+    済んだ段階は緑のチェック、今の段階は平らな青緑の塗りに白い数字と黒い太字の名前、これからの段階は破線の枠。
   */
   .rx-steps {
     display: grid;
@@ -26,7 +27,7 @@
       margin-block-start: calc((1lh - 1.375rem) / 2);
       border: var(--rx-stroke-width) solid var(--rx-control-border);
       border-radius: var(--rx-radius-control);
-      background: var(--rx-surface) var(--rx-fill-control);
+      background: var(--rx-surface);
       color: var(--rx-muted);
       font-size: var(--rx-small);
       font-variant-numeric: tabular-nums;
@@ -59,7 +60,7 @@
     }
     & > li[data-state="current"] > .number {
       border-color: var(--rx-teal-dark);
-      background: var(--rx-teal) linear-gradient(180deg, var(--rx-teal), var(--rx-teal-dark));
+      background: var(--rx-teal);
       color: var(--rx-surface);
       font-weight: 600;
     }

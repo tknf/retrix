@@ -1,5 +1,5 @@
 @layer components {
-  /* タグはHighriseと同じく、間を詰めて並べる。 */
+  /* タグはHighriseと同じく、間を4pxに詰めて並べる（実測: lists.md「Highrise 連絡先一覧（2011）」のタグの間 4px）。 */
   .rx-tag-group {
     display: flex;
     flex-wrap: wrap;

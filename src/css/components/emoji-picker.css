@@ -1,7 +1,8 @@
 @layer components {
   /*
     絵文字パネル。上に検索欄（InputGroup）、下に種類の淡い見出しと絵文字のグリッドを並べる。
-    絵文字は枠も影もない平らなセルに置き、ホバーすると淡い面、押すと内側へへこむ。種類の見出しは小さな灰色の太字。
+    絵文字は枠も影もない平らなセルに置き、ホバーするとBC2のメニューの選んだ項目と同じ淡い青（overlays.md「1c」の#dde4f5）の面、
+    押すと内側へへこむ（ホバーと押した時は手本に無い。推測）。種類の見出しは小さな灰色の太字。
     格子はセルの大きさを保って入る数だけ並べ、狭い場所では列を減らす。文字の指定はこのファイルが持つ（専用の操作）。
   */
   .rx-emoji-picker {
@@ -57,10 +58,14 @@
               display: none;
             }
             &:hover {
-              background: color-mix(in srgb, var(--rx-ink) 5%, transparent);
+              background: var(--rx-pill-selected);
             }
             &:active {
-              background: color-mix(in srgb, var(--rx-ink) 7%, transparent);
+              background: color-mix(
+                in srgb,
+                var(--rx-pill-selected) 85%,
+                var(--rx-pill-selected-text)
+              );
               box-shadow: var(--rx-shadow-control-pressed);
             }
             &:focus-visible {

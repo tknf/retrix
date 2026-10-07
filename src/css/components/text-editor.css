@@ -1,26 +1,24 @@
 @layer components {
   /*
-    書式ツールを並べた入力エリア。Inputと同じ濃い枠（上の枠を少し濃く）と内側の浅い影で沈める。
-    ツールバーは淡い灰色の帯にして、罫線で入力エリアと分ける。書式ツールは枠と縦の淡い塗りを持つ小さなボタンにし、
-    まとまりの間は間隔だけで分ける。今の書式のツールは、オンのボタンと同じ青緑の塗りにする。
+    書式ツールを並べた入力エリア。枠はBC2のコメント欄（controls.md 7a）と同じ1px #c1c1c1・角丸5pxで、内側の影も外の影も持たない。
+    本文は16pxの文字で、左の余白14px、プレースホルダーは#999（同じ実測）。
+    ツールバーは淡い灰色の帯にして、罫線で入力エリアと分ける（帯は推測）。書式ツールは控えめなButtonと同じ見た目の小さなボタンにし、
+    まとまりの間は間隔だけで分ける。今の書式のツールは、選んでいる状態のButtonと同じ平らな青緑の塗りにする。
     フォーカスは他の欄と同じく、青い縁の外に淡い青の輪を広げる。
   */
   .rx-text-editor {
+    --rx-text-editor-placeholder: #999999;
     container-type: inline-size;
     display: grid;
     grid-template-rows: auto minmax(0, 1fr);
     min-inline-size: 0;
     overflow: hidden;
-    border: var(--rx-stroke-width) solid var(--rx-control-border);
-    border-block-start-color: color-mix(in srgb, var(--rx-control-border) 75%, var(--rx-ink));
+    border: var(--rx-stroke-width) solid var(--rx-textarea-border);
     border-radius: var(--rx-radius-control);
     background: var(--rx-surface);
-    box-shadow: var(--rx-shadow-input);
     &:focus-within {
-      border-color: var(--rx-blue);
-      box-shadow:
-        0 0 0 0.125rem var(--rx-focus-ring),
-        var(--rx-shadow-input);
+      border-color: var(--rx-focus-border);
+      box-shadow: var(--rx-focus-glow);
     }
     & > .toolbar {
       display: flex;
@@ -38,41 +36,36 @@
         align-items: center;
         gap: var(--rx-space-1);
         /*
-          書式ツールは文字だけの操作（link）として渡されるので、ここで普通のボタンと同じ枠・縦の塗り・影を付け直す。
+          書式ツールは文字だけの操作（link）として渡されるので、ここで控えめなButtonと同じ平らな白・1px #ccc・下に1px #dddの影を付け直す。
           文字の指定と高さは共通のButtonのまま変えない。
         */
         & > .rx-button {
           border-color: var(--rx-control-border);
-          border-block-end-color: color-mix(in srgb, var(--rx-control-border) 80%, var(--rx-ink));
           background: var(--rx-surface);
           background-image: var(--rx-fill-control);
           color: var(--rx-text);
           box-shadow: var(--rx-shadow-control);
-          &:hover:not(:disabled) {
+          &:hover:not(:disabled, [data-active="true"]) {
             border-color: color-mix(in srgb, var(--rx-control-border) 75%, var(--rx-ink));
-            background-image:
-              linear-gradient(rgb(38 38 36 / 4%), rgb(38 38 36 / 4%)), var(--rx-fill-control);
+            background-image: var(--rx-fill-control-hover);
             color: var(--rx-text);
             box-shadow: var(--rx-shadow-control-hover);
           }
-          &:active:not(:disabled) {
-            background-color: color-mix(in srgb, var(--rx-ink) 8%, var(--rx-surface));
-            background-image: none;
+          &:active:not(:disabled, [data-active="true"]) {
+            background-color: var(--rx-gray-50);
+            background-image: var(--rx-fill-control-pressed);
             box-shadow: var(--rx-shadow-control-pressed);
           }
           /* 現在の書式の表示。接続したエディターが、選択範囲の書式ツールにdata-active="true"を付ける。 */
           &[data-active="true"] {
             border-color: var(--rx-teal-dark);
             background: var(--rx-teal);
-            background-image: linear-gradient(180deg, var(--rx-teal) 0%, var(--rx-teal-dark) 100%);
             color: var(--rx-surface);
-            box-shadow: var(--rx-shadow-control-primary);
+            box-shadow: 0 var(--rx-stroke-width) 0 var(--rx-teal-dark);
           }
+          /* 使えない書式ツールは、形・枠・塗りをそのままにして文字だけを灰色にする。 */
           &:disabled {
-            border-color: var(--rx-border);
-            background: var(--rx-hatch), var(--rx-surface);
-            color: var(--rx-muted);
-            box-shadow: none;
+            color: var(--rx-disabled-text);
           }
         }
       }
@@ -85,31 +78,31 @@
     }
     & > .area {
       min-inline-size: 0;
+      /* 本文はBC2のコメントの本文と同じ16pxの文字と21pxの行高。左右の余白はコメント欄の14px。 */
       & > :is(.input, [contenteditable]) {
         display: block;
         inline-size: 100%;
         min-block-size: 8rem;
-        padding-block: var(--rx-space-3);
-        padding-inline: var(--rx-space-4);
+        padding-block: 0.625rem;
+        padding-inline: 0.875rem;
         border: 0;
         background: transparent;
         color: var(--rx-text);
         font-family: var(--rx-font);
-        font-size: var(--rx-body);
-        line-height: 1.6;
+        font-size: 1rem;
+        line-height: calc(21 / 16);
         outline: 0;
         resize: vertical;
         &::placeholder {
-          color: var(--rx-muted);
+          color: var(--rx-text-editor-placeholder);
+          opacity: 1;
         }
       }
     }
-    /* 使えない時は、他の使えない欄と同じ斜線を入力エリアに敷く（書式ツールも押せない）。 */
+    /* 使えない時は、他の使えない欄と同じく面と枠をそのままにして、文字だけを灰色にする（書式ツールも押せない）。 */
     &:has(> .area > .input:disabled) {
-      background: var(--rx-hatch), var(--rx-surface);
-      box-shadow: none;
       & > .area > .input {
-        color: var(--rx-muted);
+        color: var(--rx-disabled-text);
         cursor: not-allowed;
       }
     }

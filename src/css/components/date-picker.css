@@ -69,40 +69,40 @@
     &[data-kind="range"] {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+    /* 編集中の欄は、一行の入力欄のフォーカス（field.css）と同じ青い縁にする。フォーカスの輪はInputが持つ。 */
     & > .rx-input[data-active="true"]:not([data-invalid="true"]) {
-      border-color: var(--rx-link);
+      border-color: var(--rx-focus-border);
       background: var(--rx-surface);
-    }
-    & > .rx-input:focus-visible {
-      outline: 0.125rem solid var(--rx-link);
-      outline-offset: -0.125rem;
     }
   }
   .rx-date-picker > .panel > .editor-error {
     color: var(--rx-danger);
     font-size: var(--rx-small);
   }
+  /*
+    白いパネル。実測: overlays.md「1a. 担当者と期日のパネル」。枠と影はポップオーバーと同じ（overlay.css）。
+    1aは幅190pxで7列の日付が162px、左右の余白が約14px。入力欄と月の見出しを一行に収めるため、少しだけ広くする。
+  */
   .rx-date-picker > .panel {
     position: fixed;
-    /* 白いパネル。開閉のアニメーションはoverlay.cssの共通の定義で、欄の下の先頭側の角を支点にする。 */
     inset-block: 0 auto;
     inset-inline: 0 auto;
     margin: 0;
-    inline-size: min(22rem, calc(100vw - 1rem));
+    inline-size: min(13rem, calc(100vw - 1rem));
     container: rx-date-picker-calendar / inline-size;
     max-block-size: calc(100dvh - 1rem);
     overflow: auto;
     padding-block: var(--rx-space-3) var(--rx-space-2);
-    padding-inline: var(--rx-space-3);
-    border: 0;
-    border-radius: var(--rx-radius-surface);
+    padding-inline: 0.875rem;
+    border: var(--rx-stroke-width) solid var(--rx-popover-edge);
+    border-radius: var(--rx-popover-radius);
     background: var(--rx-surface);
     color: var(--rx-text);
     font-family: var(--rx-control-font-family);
     font-size: var(--rx-label);
     line-height: calc(10 / 7);
     letter-spacing: 0;
-    box-shadow: var(--rx-shadow-menu);
+    box-shadow: var(--rx-popover-shadow);
     &:popover-open {
       display: grid;
       gap: var(--rx-space-2);
@@ -112,16 +112,21 @@
     }
   }
 
+  /* 月を送る矢印は黒（1aの← →は#0e0d0e）。枠も塗りも持たない。 */
   .rx-date-picker > .panel > .month > .rx-button {
-    padding-inline: var(--rx-space-2);
+    padding-inline: var(--rx-space-1);
     border-color: transparent;
     background: transparent;
-    color: var(--rx-muted);
+    color: var(--rx-text);
     box-shadow: none;
     text-decoration: none;
     &:hover:enabled {
-      background: var(--rx-background);
-      color: var(--rx-text);
+      border-color: transparent;
+      background: var(--rx-gray-50);
+      box-shadow: none;
+    }
+    &:disabled {
+      background: transparent;
     }
   }
   .rx-date-picker > .panel > .month {
@@ -131,9 +136,10 @@
     gap: var(--rx-space-1);
     text-align: start;
 
+    /* 月の見出しは黒の通常の太さ（1a「January 2014」）。 */
     & > strong {
       padding-inline: var(--rx-space-1);
-      font-weight: 600;
+      font-weight: 400;
     }
     & > .previous > .rx-icon {
       transform: rotate(90deg);
@@ -152,7 +158,7 @@
     }
   }
 
-  @container rx-date-picker-calendar (inline-size < 18rem) {
+  @container rx-date-picker-calendar (inline-size < 11rem) {
     .rx-date-picker > .panel > .month {
       grid-template-columns: minmax(0, 1fr) auto auto;
       & > strong {
@@ -171,12 +177,14 @@
     white-space: nowrap;
   }
 
+  /* 日付のマスは列の間に隙間を置かず、行と行の間だけを白い2pxで区切る（1a）。 */
   .rx-date-picker > .panel > .grid {
     inline-size: 100%;
     table-layout: fixed;
     border-collapse: separate;
-    border-spacing: 0.125rem;
+    border-spacing: 0 0.125rem;
 
+    /* 曜日は灰色の小さな字（1aは#777〜#888で約11px。白地で4.5:1に届く--rx-mutedにする）。 */
     & th {
       padding-block: var(--rx-space-1);
       padding-inline: 0;
@@ -192,21 +200,25 @@
   }
 
   /*
-    日付のセル。Basecamp 2の日付の選択と同じく、その月の日を淡い青の小さな升にして白い隙間で区切り、
-    前後の月の日は塗らずに灰色の文字にする。今日は黄色（--rx-mark）、選んだ日は青緑で塗る。
-    期間の途中の日は、淡い青より濃い青緑の面にする。
+    日付のマス。実測: 1aのカレンダー。その月の日は角の無い淡い青（#e3ebf8）の高さ24pxのマスに濃い紺の数字、
+    前後の月の日は塗らずに灰色の字（1aの#888は白地で4.5:1に届かないため--rx-muted）、今日は黄色（#ffe582）。
+    選んだ日と期間の途中の日は手本に無い（BC2は選ぶとパネルを閉じる）。推測で、選んだ日は平らな青緑に白い字、
+    期間の途中は淡い青より濃い青緑の面にする。
   */
   .rx-date-picker > .panel > .grid > tbody > tr > td > .day {
+    --rx-date-picker-day: #e3ebf8;
+    --rx-date-picker-day-text: #15223b;
+    --rx-date-picker-today: #ffe582;
     appearance: none;
     position: relative;
     display: block;
     inline-size: 100%;
-    min-block-size: 2rem;
+    min-block-size: 1.5rem;
     padding: 0;
     border: var(--rx-stroke-width) solid transparent;
-    border-radius: var(--rx-radius-mark);
-    background: var(--rx-info-soft);
-    color: var(--rx-text);
+    border-radius: 0;
+    background: var(--rx-date-picker-day);
+    color: var(--rx-date-picker-day-text);
     font: inherit;
     font-variant-numeric: tabular-nums;
     text-align: center;
@@ -218,9 +230,7 @@
     }
 
     &[data-today="true"] {
-      border-color: var(--rx-note-edge);
-      background: var(--rx-mark);
-      font-weight: 600;
+      background: var(--rx-date-picker-today);
     }
 
     &[data-state="in-range"] {
@@ -247,7 +257,6 @@
     &[data-state="range-end"] {
       border-color: var(--rx-teal-dark);
       background: var(--rx-teal);
-      background-image: linear-gradient(180deg, var(--rx-teal) 0%, var(--rx-teal-dark) 100%);
       color: var(--rx-surface);
       font-weight: 600;
     }
@@ -258,11 +267,10 @@
       z-index: 1;
     }
 
-    /* 選べない日は斜線。 */
+    /* 選べない日は、マスの塗りをそのままにして数字だけを灰色にする（controls.md 13・15章）。 */
     &:disabled {
-      background: var(--rx-hatch), var(--rx-surface);
-      color: var(--rx-muted);
-      cursor: not-allowed;
+      color: var(--rx-disabled-text);
+      cursor: default;
     }
   }
 
@@ -275,8 +283,11 @@
     padding-block-start: var(--rx-space-1);
 
     gap: var(--rx-space-2);
+    /* 終了日の切り替えは、クリア（共通Buttonの12pxの文字）と同じ文字の大きさと行の高さにそろえる。 */
     & > .rx-switch {
       min-block-size: var(--rx-date-picker-control-size);
+      font-size: var(--rx-button-font);
+      line-height: calc(17 / 12);
       align-items: center;
       grid-template-columns: minmax(0, 1fr) auto;
       & > input {

@@ -1,9 +1,13 @@
 @layer components {
   /*
-    添付したファイルの一件。Basecamp 2のファイルと同じく、紙の形のアイコン、太字のファイル名、
-    茶色の小さなメタ情報（種類・大きさ・日付）を並べる。
+    添付したファイルの一件。実測: lists.md「BC2 Files のグリッド」「BC2 黄色のテキスト文書のカード」。
+    - ファイル名は13px前後の黒い太字。メタ「Added by … · 216 KB」は12px前後の #999（白地で4.5:1に届かないので、
+      同じ無彩色で明るさを下げた #757575。BC2の「Saved by …」の #777 とほぼ同じ）。
+    - アイコンの紙は、テキスト文書のカードと同じく1px #e0e0e0 の枠と外へ1pxの淡い影。サムネイルは1px #ccc の枠。
+    一覧の行の形（アイコンと名前を横に並べる）は、2012年版のFilesの縦の一覧に合わせる。
   */
   .rx-file-item {
+    --rx-file-item-meta: #757575;
     container: rx-file-item / inline-size;
     display: grid;
     /* アイコンの背景とサムネイルは同じ40pxの正方形の列に置き、混ぜても名前の書き始めをそろえる。 */
@@ -15,7 +19,7 @@
     color: var(--rx-text);
     font-size: var(--rx-label);
     line-height: var(--rx-label-leading);
-    /* ファイルのアイコンは、机に置いた白い紙のように輪郭と浅い影を持つ縦長の四角に置く。 */
+    /* ファイルのアイコンは、縦長の白い紙に置く。 */
     & > .icon {
       display: grid;
       place-items: center;
@@ -23,9 +27,9 @@
       justify-self: center;
       inline-size: 2rem;
       block-size: 2.5rem;
-      border-radius: var(--rx-radius-mark);
+      border: var(--rx-stroke-width) solid var(--rx-note-edge);
       background: var(--rx-surface);
-      box-shadow: var(--rx-shadow-paper);
+      box-shadow: 0 0 var(--rx-stroke-width) rgb(0 0 0 / 12%);
       color: var(--rx-teal);
     }
     /*
@@ -37,7 +41,7 @@
       inline-size: 2.5rem;
       block-size: 2.5rem;
       overflow: hidden;
-      border: var(--rx-stroke-width) solid var(--rx-gray-200);
+      border: var(--rx-stroke-width) solid var(--rx-control-border);
       background: var(--rx-gray-20);
       & > :is(img, svg:not(.rx-icon)) {
         display: block;
@@ -62,11 +66,11 @@
       grid-column: 2;
       min-inline-size: 0;
       overflow-wrap: anywhere;
-      /* ファイル名は黒い太字。リンクのファイル名はホバーした時だけ赤茶の文字と下線にする。 */
+      /* ファイル名は黒い太字。リンクのファイル名はホバーした時だけ赤茶の文字と下線にする（ホバーは推測）。 */
       & > .title {
         color: var(--rx-ink);
         font-size: var(--rx-label);
-        font-weight: 600;
+        font-weight: 700;
         line-height: var(--rx-label-leading);
         & > strong {
           font-weight: inherit;
@@ -82,7 +86,7 @@
       }
       & > .description {
         margin-block-start: 0.125rem;
-        color: var(--rx-meta);
+        color: var(--rx-file-item-meta);
         font-size: var(--rx-small);
         line-height: var(--rx-small-leading);
       }

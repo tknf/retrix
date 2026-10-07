@@ -1,9 +1,10 @@
 @layer components {
   /*
-    読み込み中のインジケーターは、文字の横に置く小さなアニメーション。
-    waveは三つの灰色の点が書き始めの側から順に濃くなる（既定）。点は跳ねさせず、濃さだけを変える。
-    濃くなっていない点も消さずに淡く残し、止まった瞬間でもインジケーターが読めるようにする。
-    orbitは回る丸、haloは広がって消える輪。色は灰色と青緑の控えめなものにする。
+    読み込み中のインジケーターは、文字の横に置く小さな印。手本は無い（推測）。
+    Retrixは動きを使わないので、どれも止まった形のまま「待っている」と読めるようにし、何を待つかは隣の文で伝える。
+    - wave（既定）: 三つの灰色の点を、書き始めの側から濃・中・淡に並べる。文の後に続く「…」と同じ形で、続きがあると読める。
+    - orbit: 淡い輪の上の一部だけを濃くした丸（時計の針が進む途中の形）。
+    - halo: 灰色の細い輪と、中の小さな点。
     この領域で待つ時は、面を敷かずに少し大きめのインジケーターと文を中央に縦に並べる。
   */
   .rx-loading {
@@ -43,7 +44,7 @@
         margin-block-start: 0;
       }
     }
-    /* 回る丸。淡い輪の一部だけを濃くし、一定の速さで回す。 */
+    /* 淡い輪の上の一部だけを濃くした丸。 */
     &[data-variant="orbit"] > .indicator::before {
       content: "";
       position: absolute;
@@ -52,7 +53,7 @@
       border-block-start-color: var(--rx-muted);
       border-radius: 50%;
     }
-    /* 三つの点。灰色の点を順に濃くする。 */
+    /* 三つの点。書き始めの側から濃・中・淡の灰色にする（透明度ではなく色で淡くする）。 */
     &[data-variant="wave"] > .indicator {
       inline-size: auto;
       gap: 0.1875em;
@@ -61,16 +62,28 @@
         block-size: 0.3125em;
         border-radius: 50%;
         background: var(--rx-muted);
-        opacity: 0.3;
+      }
+      & > i:nth-child(2) {
+        background: color-mix(in srgb, var(--rx-muted) 60%, var(--rx-surface));
+      }
+      & > i:nth-child(3) {
+        background: color-mix(in srgb, var(--rx-muted) 30%, var(--rx-surface));
       }
     }
-    /* 広がって消える輪。中心から外へ広がり、薄れてまた中心から始める。 */
+    /* 灰色の細い輪と、中の小さな点。 */
     &[data-variant="halo"] > .indicator::before {
       content: "";
       position: absolute;
       inset: 0.0625em;
       border: 0.125em solid var(--rx-muted);
       border-radius: 50%;
+    }
+    &[data-variant="halo"] > .indicator::after {
+      content: "";
+      inline-size: 0.25em;
+      block-size: 0.25em;
+      border-radius: 50%;
+      background: var(--rx-muted);
     }
   }
   @media (forced-colors: active) {
@@ -84,6 +97,10 @@
     }
     .rx-loading[data-variant="halo"] > .indicator::before {
       border-color: CanvasText;
+    }
+    .rx-loading[data-variant="halo"] > .indicator::after {
+      forced-color-adjust: none;
+      background: CanvasText;
     }
   }
 }

@@ -1,5 +1,14 @@
 @layer components {
+  /*
+    表はBasecamp Classicの表を手本にする（lists.md「Basecamp Classic の表」）。
+    見出しは灰色の平らな帯（#e9e9e9、高さ23px）に黒い太字、行は25px前後で、行の間を淡い罫線（#efefef）で区切る。
+    グラデーション・縦の区切り線・外枠は持たない。
+  */
   .rx-table {
+    --rx-table-band: #e9e9e9;
+    --rx-table-rule: #efefef;
+    /* ホバーした行の面。手本に無い（推測）。BC2のMeの帯の#f5f5f5を使い、選んだ行の黄色と分ける。 */
+    --rx-table-hover: #f5f5f5;
     /* 表の中の絶対配置（読み上げだけの文字など）を、スクロールする囲みの中に収める。 */
     position: relative;
     min-inline-size: 0;
@@ -15,7 +24,8 @@
       position: sticky;
       inset-block-start: 0;
       z-index: 1;
-      box-shadow: 0 var(--rx-stroke-width) var(--rx-control-border);
+      /* 固定した見出しの下は、スクロールした行と分けるため、BC2の見出しの下の罫線（#dedede）を引く。 */
+      box-shadow: 0 var(--rx-stroke-width) var(--rx-input-border);
     }
     &:not([data-state="ready"]) > table > :is(tbody, tfoot),
     &:not([data-state="ready"]) > .selection-bar:not([popover]) {
@@ -131,32 +141,31 @@
         font-weight: 600;
         line-height: 1.5;
       }
+      /* 行は13pxの文字（行高18px）に上下3pxと罫線1pxで25px。Classicの行の間隔と同じ。 */
       & > :is(thead, tbody, tfoot) > tr > :is(th, td) {
-        padding-block: var(--rx-space-2);
+        padding-block: 0.1875rem;
         padding-inline: var(--rx-space-3);
-        border-block-end: var(--rx-stroke-width) solid var(--rx-border);
+        border-block-end: var(--rx-stroke-width) solid var(--rx-table-rule);
         text-align: start;
         vertical-align: middle;
         font-weight: 400;
       }
       /*
-        列の見出しは、白から淡い灰色への縦の塗りに小さな太字。下の罫線を濃くし、見出しと行を分ける。
-        見出しの間には淡い縦の線を引き、列の区切りを示す。
+        列の見出しは、Classicのグループの見出しの帯と同じ平らな#e9e9e9に、黒い太字の12px。
+        12pxの文字（行高16px）に上下3pxと罫線1pxで23px。見出しの直後の罫線は帯と同じ色にし、帯の下端に溶かす。
       */
       & > thead > tr > th {
-        padding-block: var(--rx-space-1);
-        background: var(--rx-gray-20);
-        background-image: linear-gradient(var(--rx-surface), var(--rx-gray-50));
+        background: var(--rx-table-band);
         color: var(--rx-text);
         font-size: var(--rx-small);
-        font-weight: var(--rx-label-weight);
+        font-weight: 700;
         line-height: var(--rx-small-leading);
-        border-block-start: var(--rx-stroke-width) solid var(--rx-border);
-        border-block-end-color: var(--rx-control-border);
+        border-block-end-color: var(--rx-table-band);
         white-space: nowrap;
       }
-      & > thead > tr > th + th {
-        border-inline-start: var(--rx-stroke-width) solid var(--rx-border);
+      /* 並べ替えのボタン（高さ22px）を置いた見出しは上下の余白を0にし、帯の高さを23pxのままにする。 */
+      & > thead > tr > th:has(> .sort) {
+        padding-block: 0;
       }
       & > :is(thead, tbody, tfoot) > tr > [data-cell="numeric"] {
         text-align: end;
@@ -170,15 +179,18 @@
         min-inline-size: 14em;
         overflow-wrap: anywhere;
       }
-      /* ホバーした行は淡い黄色、操作中の行は淡い青緑。選んだ行は黄色（下のdata-selected）。 */
+      /*
+        ホバーした行は淡い灰色、キーボードで操作中の行は淡い青緑。選んだ行はHighriseの選んだ行と同じ黄色（下のdata-selected）。
+      */
       & > tbody > tr:hover {
-        background: color-mix(in srgb, var(--rx-mark) 40%, var(--rx-surface));
+        background: var(--rx-table-hover);
       }
-      & > tbody > tr:focus-within {
+      & > tbody > tr:has(:focus-visible) {
         background: var(--rx-cover);
       }
+      /* comfortableは上下8pxで35px。説明の多い表で、行の切れ目を広く取る。 */
       &[data-density="comfortable"] > tbody > tr > :is(th, td) {
-        padding-block: var(--rx-space-3);
+        padding-block: var(--rx-space-2);
       }
       /* 縞は行が多く横に長い表で、行をたどりやすくする。 */
       &[data-striped="true"] > tbody > tr:nth-child(even):not(:hover, [data-selected="true"]) {
@@ -211,10 +223,10 @@
         &:focus-visible::before {
           background: var(--rx-cover);
         }
+        /* 並べ替えられない時は、他の使えない操作と同じく文字だけを灰色にする。 */
         &:disabled {
           background: transparent;
-          color: var(--rx-muted);
-          opacity: 0.6;
+          color: var(--rx-disabled-text);
           box-shadow: none;
         }
         /* 並べ替え中の列以外は、見出しにホバーした時だけアイコンを出して見出しを静かに保つ。 */

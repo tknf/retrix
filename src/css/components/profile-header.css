@@ -1,10 +1,14 @@
 @layer components {
   /*
-    人物の見出し。Highriseの人物ページと同じく、白い枠に輪郭と浅い影を付けた写真を先頭側に置き、
-    その横に太字の黒い名前、灰色の肩書きや連絡先、所属のバッジを積む。操作は末尾側の上に置く。
-    この人への設定は、下の罫線の後ろに面を持たない操作として並べる。
+    人物の見出し。実測: structure.md「Me ページのシートの上部の帯」（名前は太字の#000、補足の行は灰色、帯の下に1px #ebebeb）と
+    「Highrise 2011 の構成 / 左の列」の写真（白い縁取り付きの四角い写真）。
+    写真を先頭側に置き、その横に太字の黒い名前、灰色の肩書きや連絡先、所属のバッジを積む。操作は末尾側の上に置く。
+    名前は手本の24pxではなく、PageHeaderの見出しと同じ--rx-title（20px）にする（ユーザーの指定）。
+    補足の行の実測#979994は白地で4.5:1に届かないため、本文の補足の灰色（--rx-muted）に濃くする。
+    この人への設定は、Meの帯の下の線と同じ1px #ebebebの罫線の後ろに、面を持たない操作として並べる。
   */
   .rx-profile-header {
+    --rx-profile-header-rule: #ebebeb;
     container: rx-profile-header / inline-size;
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
@@ -19,7 +23,7 @@
     min-inline-size: 0;
     color: var(--rx-text);
     overflow-wrap: anywhere;
-    /* 写真はPageHeaderのアイコンと同じく、白い枠と輪郭の四角に収める。丸くしない。 */
+    /* 写真はHighriseの写真と同じく、白い縁取りと四方への浅い影の四角に収める。丸くしない。 */
     & > .avatar {
       grid-area: avatar;
       display: flex;
@@ -69,7 +73,7 @@
       max-inline-size: 100%;
       margin-block-start: var(--rx-space-3);
       padding-block-start: var(--rx-space-2);
-      border-block-start: var(--rx-stroke-width) solid var(--rx-border);
+      border-block-start: var(--rx-stroke-width) solid var(--rx-profile-header-rule);
       & > .rx-button,
       & > .rx-dropdown-menu > .rx-button {
         border-color: transparent;

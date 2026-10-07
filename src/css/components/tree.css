@@ -7,11 +7,12 @@
   }
 
   /*
-    行は高さ30px・小さな角丸で、ホバーするとTableの行と同じ淡い黄色。選んだ行は黄色に塗り、黒い太字にする。
-    項目のリンクは本文と同じ青緑の文字と下線。
+    行の間隔はHighriseの左の列と同じ28px（structure.md「左の列」）。小さな角丸の面で、ホバーするとTableの行と同じ淡い灰色（推測）。
+    選んだ行は37signalsの黄色のハイライト（#ffffcc）に塗り、黒い太字にする。項目のリンクは本文と同じ青緑の文字と下線。
     階層はガイド線を引かず、字下げだけで示す。開閉のアイコンは24pxにし、子の行のアイコンを親の名前の書き始めの下に置く。
   */
   .rx-tree {
+    --rx-tree-hover: #f5f5f5;
     display: grid;
     gap: 0;
     min-inline-size: 0;
@@ -38,7 +39,7 @@
     padding-inline-end: var(--rx-space-3);
     border-radius: var(--rx-radius-mark);
     &:hover {
-      background: color-mix(in srgb, var(--rx-mark) 40%, var(--rx-surface));
+      background: var(--rx-tree-hover);
     }
     & > :is(a, .label) {
       min-inline-size: 0;
@@ -95,9 +96,11 @@
     background: var(--rx-cover);
   }
 
+  /* 使えない項目は、他の使えない操作と同じく文字だけを灰色にする。 */
   .rx-tree li[data-state="disabled"] > .row {
-    color: var(--rx-muted);
-    opacity: 0.6;
+    & > :is(a, .label) {
+      color: var(--rx-disabled-text);
+    }
   }
 
   .rx-tree li > ul {

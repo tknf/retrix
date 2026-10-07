@@ -1,10 +1,15 @@
 @layer components {
   /*
-    取り返しのつかない操作の範囲。淡い赤の面に赤茶の枠を付けた区画にし、ほかの設定と見分ける。
-    題名は危険の色の太字、説明は灰色にし、危険の色で塗ったButtonを添える。
+    取り返しのつかない操作の範囲。危険の区画そのものは手本に無い（推測）。
+    BC2の注意の箱（実測: overlays.md 2b「お客さんに見せる確認」。淡いピンク #faeeee、縁は1pxの線、角丸なし、
+    題は赤の太字で 2a の #a52a2a 系）に合わせ、ほかの設定と見分ける。
+    説明は灰色にし、危険の色で塗ったButtonを添える。
     本文がなく幅もある時は、題名と説明の末尾側に操作を置き、狭い時や本文がある時は下の段へ回す。
   */
   .rx-danger-zone {
+    --rx-danger-zone-face: #faeeee;
+    --rx-danger-zone-edge: color-mix(in srgb, var(--rx-danger) 30%, var(--rx-surface));
+    --rx-danger-zone-title: #a52a2a;
     /* 題名・本文・操作を内容幅で並べ、入らない時に次の段へ折り返すためFlex。 */
     display: flex;
     flex-wrap: wrap;
@@ -14,9 +19,9 @@
     min-inline-size: 0;
     padding-block: var(--rx-space-4);
     padding-inline: var(--rx-space-5);
-    border: var(--rx-stroke-width) solid color-mix(in srgb, var(--rx-danger) 35%, var(--rx-surface));
-    border-radius: var(--rx-radius-field);
-    background: var(--rx-danger-soft);
+    border: var(--rx-stroke-width) solid var(--rx-danger-zone-edge);
+    border-radius: 0;
+    background: var(--rx-danger-zone-face);
     color: var(--rx-text);
     font-size: var(--rx-label);
     line-height: var(--rx-label-leading);
@@ -30,7 +35,7 @@
     min-inline-size: 0;
     & > h2 {
       margin: 0;
-      color: var(--rx-danger);
+      color: var(--rx-danger-zone-title);
       font-size: var(--rx-body);
       font-weight: 600;
       line-height: var(--rx-control-leading);
@@ -73,6 +78,9 @@
 
   @media (forced-colors: active) {
     .rx-danger-zone {
+      --rx-danger-zone-face: #faeeee;
+      --rx-danger-zone-edge: color-mix(in srgb, var(--rx-danger) 30%, var(--rx-surface));
+      --rx-danger-zone-title: #a52a2a;
       border-color: CanvasText;
       background: Canvas;
     }

@@ -1,10 +1,14 @@
 @layer components {
   /*
-    出来事を時の順に読む一覧。細い罫線に沿って、出来事ごとに青緑の小さな点か、起こした人のアバターを置く。
-    時刻は茶色の小さな文字。日の区切りは縦の線から伸びるDividerの名前の付いた線。起こした人の名前は太字、題名は普通の太さ。
-    節目は、終えたものを緑のマーク、今のものを青緑のマーク、これからを破線にし、今の時はCalendarの今日と同じ黄のピルを敷く。
+    出来事を時の順に読む一覧。実測: lists.md「BC2 Progress（日付ごとの活動）」。
+    - 縦の線と日付の丸の輪は暖かい灰色 #dcd9d2（--rx-calendar-rule）。日付の丸は中が白。
+      手本の線の幅7pxは画面全体の大きさなので、一覧の部品では2pxに縮める（推測）。出来事の印は日付の丸を小さくした白い丸に同じ色の輪。
+    - 項目は「Jonas D. commented on」の太字の黒の名前に、何をしたかを続ける。時刻は茶色の小さな文字（実測 #aa9d83 は4.5:1に届かないので --rx-meta）。
+    - システムの出来事は、Highrise 2016のLatest activityと同じく #f8f8f8 の帯にする。
+    節目は、終えたものを緑のマーク、今のものを青緑のマーク、これからを破線にし（推測）、今の時はCalendarの今日と同じ黄のピルを敷く。
   */
   .rx-timeline {
+    --rx-timeline-rule: var(--rx-calendar-rule);
     container: rx-timeline / inline-size;
     min-inline-size: 0;
     margin: 0;
@@ -22,20 +26,19 @@
       min-inline-size: 0;
       padding-block: var(--rx-space-3);
       padding-inline-start: var(--rx-space-4);
-      border-inline-start: var(--rx-stroke-width) solid var(--rx-border);
-      /* マークは青緑の点。線から少し離して見せるため、紙の色の輪で囲む。 */
+      border-inline-start: var(--rx-frame-width) solid var(--rx-timeline-rule);
+      /* マークは日付の丸を小さくした形。白い丸に線と同じ色の2pxの輪。 */
       & > .marker {
         position: absolute;
-        inset-inline-start: -0.3125rem;
-        inset-block-start: 1.125rem;
+        inset-inline-start: calc(-0.3125rem - var(--rx-frame-width) / 2);
+        inset-block-start: 1.0625rem;
         display: grid;
         place-items: center;
-        inline-size: 0.5625rem;
-        block-size: 0.5625rem;
-        border: 0;
+        inline-size: 0.625rem;
+        block-size: 0.625rem;
+        border: var(--rx-frame-width) solid var(--rx-timeline-rule);
         border-radius: 50%;
-        background: var(--rx-teal);
-        box-shadow: 0 0 0 0.1875rem var(--rx-surface);
+        background: var(--rx-surface);
       }
       & > time {
         color: var(--rx-meta);
@@ -51,7 +54,7 @@
         & > .title {
           color: var(--rx-ink);
           font-size: var(--rx-label);
-          font-weight: 600;
+          font-weight: 700;
           line-height: var(--rx-label-leading);
           & > .actor {
             margin-inline-end: 0.375em;
@@ -68,7 +71,7 @@
       font-weight: 400;
     }
     /*
-      システムの出来事。線の上のマークを消し、斜線の淡い帯の中央に時刻と文を書く。
+      システムの出来事。線の上のマークを消し、淡い灰色の帯の中央に時刻と文を書く。
       人の出来事と見分けられるよう、帯は線をまたいで本文の幅いっぱいに広げる。
     */
     & > li[data-kind="system"] {
@@ -127,8 +130,8 @@
         content: "";
         flex: none;
         inline-size: var(--rx-space-3);
-        block-size: var(--rx-stroke-width);
-        background: var(--rx-border);
+        block-size: var(--rx-frame-width);
+        background: var(--rx-timeline-rule);
       }
       & > .rx-divider {
         flex: 1 1 auto;
@@ -142,7 +145,7 @@
       &[data-state="complete"] > .marker {
         inline-size: 1rem;
         block-size: 1rem;
-        inset-inline-start: -0.53125rem;
+        inset-inline-start: calc(-0.5rem - var(--rx-frame-width) / 2);
         inset-block-start: 0.9375rem;
         border: 0;
         background: var(--rx-fill-success);
@@ -156,9 +159,9 @@
         }
       }
       &[data-state="current"] > .marker {
-        box-shadow:
-          0 0 0 0.125rem var(--rx-surface),
-          0 0 0 0.3125rem var(--rx-cover);
+        border-color: var(--rx-teal);
+        background: var(--rx-teal);
+        box-shadow: 0 0 0 0.125rem var(--rx-surface);
       }
       /* 今の節目の時（「今日」など）は、Calendarの今日と同じ黄のピルを敷く。 */
       &[data-state="current"] > time {
@@ -194,7 +197,7 @@
     &[data-avatars="true"] > li:not(.day) {
       padding-inline-start: var(--rx-space-6);
       &:has(> .marker > *) > .marker {
-        inset-inline-start: calc(-0.875rem - var(--rx-stroke-width) / 2);
+        inset-inline-start: calc(-0.875rem - var(--rx-frame-width) / 2);
         inset-block-start: 0.5rem;
         inline-size: 1.75rem;
         block-size: 1.75rem;

@@ -9,16 +9,17 @@
     /* 題名・補足・バッジの段の間（4〜8px）より、カードの上下の余白をはっきり広くする。 */
     padding-block: var(--rx-space-3);
     padding-inline: var(--rx-space-3) var(--rx-space-2);
-    /* 白い紙のカード。輪郭と浅い影（--rx-shadow-paper）、小さな角丸。列の色では染めない。 */
+    /*
+      BC2のプロジェクトのカード（structure.md）と同じ、白く枠のないカードに四方の短いぼかし影と角丸3px。
+      列の色では染めない。
+    */
     border-radius: var(--rx-radius-surface);
     background: var(--rx-surface);
     box-shadow: var(--rx-shadow-paper);
     color: var(--rx-text);
-    /* 動かせる項目にホバーすると、輪郭を少し濃くする。 */
+    /* 動かせる項目にホバーすると、影を少し広げて持ち上げる（推測。手本にホバーの画像は無い）。 */
     &:not([data-disabled="true"]):hover {
-      box-shadow:
-        0 0 0 var(--rx-stroke-width) var(--rx-control-border),
-        0 0.0625rem 0.1875rem color-mix(in srgb, var(--rx-ink) 10%, transparent);
+      box-shadow: var(--rx-shadow-paper-lift);
     }
     /*
       中身は項目のグリッドに直接並べる。右上のハンドルの隣は一行目（題名）だけにし、

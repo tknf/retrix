@@ -1,8 +1,10 @@
 @layer components {
   /*
     リアクション。同じ絵文字や言葉を一つの小さなリアクションにまとめ、付けた人数を灰色の太字で添える。
-    リアクションは灰色の細い枠の小さな白いピルで、自分も付けているリアクションは淡い青緑の面と青緑の枠・青緑の数にする。
-    押せるリアクションはホバーすると淡い灰色の面、押すと内側へへこむ（ボタンと同じ手触り）。
+    リアクションそのものはBasecamp 2・Highriseの画面に手本が無い（推測）。
+    リアクションは入力欄と同じ淡い灰色の枠（実測: controls.md 6a。1px #dedede）の、平らな白い小さなピルにする。
+    自分も付けているリアクションは、メニューで選んだ項目と同じ淡い青のピル（実測: overlays.md 1c。#dde4f5 に #244960）にする。
+    押せるリアクションはホバーすると淡い灰色の面、押すと内側へへこむ（ボタンと同じ手触り。推測）。
     追加の操作はリアクションの終わりに置くPopoverで、開く操作は枠も影もない青緑のアイコン（Buttonのlink）にTooltipで名前を出す。
     中は短い言葉でリアクションする欄（開いた時に移る）とEmojiPicker。文字の指定はこのファイルが持つ（専用の操作）。
   */
@@ -60,10 +62,11 @@
           font-variant-numeric: tabular-nums;
         }
         &[data-mine="true"] {
-          border-color: color-mix(in srgb, var(--rx-teal) 45%, var(--rx-surface));
-          background: var(--rx-cover);
+          border-color: var(--rx-pill-selected);
+          background: var(--rx-pill-selected);
+          color: var(--rx-pill-selected-text);
           & > .count {
-            color: var(--rx-teal);
+            color: var(--rx-pill-selected-text);
           }
         }
       }
@@ -74,14 +77,18 @@
           background: var(--rx-gray-20);
         }
         &[data-mine="true"]:hover {
-          border-color: color-mix(in srgb, var(--rx-teal) 60%, var(--rx-surface));
-          background: color-mix(in srgb, var(--rx-teal) 14%, var(--rx-surface));
+          border-color: color-mix(
+            in srgb,
+            var(--rx-pill-selected-text) 25%,
+            var(--rx-pill-selected)
+          );
+          background: var(--rx-pill-selected);
         }
         &:active {
           box-shadow: var(--rx-shadow-control-pressed);
         }
         &:focus-visible {
-          outline: 0.125rem solid var(--rx-blue);
+          outline: 0.125rem solid var(--rx-focus-border);
           outline-offset: 0.0625rem;
         }
       }

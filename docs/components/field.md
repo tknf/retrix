@@ -190,7 +190,7 @@ Fieldが入力へ渡す属性。入力の要素へそのまま展開する。
 
 登録するcontroller：`combobox`（`ComboboxController`）
 
-読み込むCSS：`layers.css`、`reset.css`、`tokens.css`、`base.css`、`layout.css`、`components/field.css`、`components/icon.css`
+読み込むCSS：`layers.css`、`reset.css`、`tokens.css`、`base.css`、`layout.css`、`components/field.css`、`components/icon.css`、`components/suggestion.css`
 
 #### `ComboboxOption`
 

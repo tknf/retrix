@@ -10,8 +10,14 @@
     --rx-shell-width: var(--rx-page);
     /* ヘッダーの最小の幅。compactの画面でも移動先が折り返さないよう、既定の作業面の幅を保つ。 */
     --rx-shell-bar-width: 61.25rem;
-    /* 背後に重ねたシートの、手前のシートへの重なり。 */
-    --rx-trail-overlap: var(--rx-space-5);
+    /*
+      背後に重ねたシート。Basecamp 2の実測（docs/visual-reference/structure.md）では、
+      手前のシートは親のシートと同じ幅のまま、右へ21px・下へ60pxずれて重なる。
+    */
+    --rx-trail-shift: 1.3125rem;
+    /* 見えている帯の高さ。手本は60pxだが、見出しを18pxに下げたので帯も詰める（ユーザーの指定）。 */
+    --rx-trail-visible: 2.75rem;
+    --rx-trail-overlap: var(--rx-space-4);
     container: rx-app-shell / inline-size;
     display: grid;
     justify-items: center;
@@ -38,18 +44,19 @@
     & > .bar {
       display: grid;
       grid-template-columns: auto minmax(0, 1fr) auto;
+      column-gap: var(--rx-space-5);
       grid-template-areas:
         "account account account"
         "start navigation commands";
       align-items: center;
-      column-gap: var(--rx-space-6);
       row-gap: var(--rx-space-1);
       inline-size: min(
         calc(100% - var(--rx-space-8)),
         max(var(--rx-shell-width), var(--rx-shell-bar-width))
       );
       min-inline-size: 0;
-      padding-block: var(--rx-space-2) var(--rx-space-5);
+      /* 手本では、ページの上端から右上のリンクのベースラインまで約20px、シートの上端まで91px。 */
+      padding-block: var(--rx-space-2) var(--rx-space-6);
       & > .account {
         grid-area: account;
         display: flex;
@@ -58,11 +65,11 @@
         align-items: center;
         gap: var(--rx-space-3);
         min-inline-size: 0;
-        color: var(--rx-muted);
+        color: var(--rx-quiet);
         font-size: var(--rx-small);
         line-height: var(--rx-small-leading);
         & > a {
-          color: var(--rx-muted);
+          color: var(--rx-quiet);
           text-decoration: none;
           &:hover {
             color: var(--rx-link-hover);
@@ -70,25 +77,30 @@
           }
         }
       }
-      /* アプリの名前は太字の黒。ロゴの画像やアイコンを並べてもよい。 */
+      /*
+        アプリの名前は20pxの太字の濃い灰色（手本の「Basecamp」は #3d3c37）。ロゴの画像やアイコンを並べてもよい。
+        名前と主な移動先の間に、1px #ded7c7・高さ21pxの縦の線を引く。
+      */
       & > .start {
         grid-area: start;
         display: flex;
         align-items: center;
         gap: var(--rx-space-2);
         min-inline-size: 0;
-        font-size: var(--rx-section-title);
+        padding-inline-end: var(--rx-space-5);
+        border-inline-end: var(--rx-stroke-width) solid var(--rx-header-rule);
+        font-size: 1.25rem;
         font-weight: 700;
-        line-height: 1.25;
+        line-height: 1.05;
         & > a {
           display: inline-flex;
           align-items: center;
           gap: var(--rx-space-2);
-          color: var(--rx-ink);
+          color: var(--rx-logo);
           text-decoration: none;
         }
       }
-      /* 主な移動先は灰色の文字を横に並べ、今いる項目だけを黒い太字にする。 */
+      /* 主な移動先は灰色の文字を約20px空けて横に並べ、今いる項目だけを黒い太字にする（面・下線は付けない）。 */
       & > .navigation {
         grid-area: navigation;
         display: flex;
@@ -102,7 +114,7 @@
           display: inline-flex;
           align-items: center;
           gap: var(--rx-space-1);
-          color: var(--rx-muted);
+          color: var(--rx-quiet);
           text-decoration: none;
           &:hover {
             color: var(--rx-ink);
@@ -155,8 +167,8 @@
       }
     }
     /*
-      背後に重ねたシート。上の階層ほど奥にあり、幅を狭くする。各シートの見出しは上の階層へのリンク。
-      次のシートと作業面は、前のシートの下端に重ねて置く。
+      背後に重ねたシート。親のシートは手前のシートと同じ幅で、上の階層ほど左上へずれる。
+      淡い灰色の面に1pxの枠で、影は付けない。見出しは上の階層へのリンク（24pxの太字、2pxの下線）。
     */
     & > .body > .main > .trail > ol {
       display: grid;
@@ -167,21 +179,23 @@
         /* 奥行きの段。AppShellが各項目のstyleで、今のページから数えた段を上書きする。 */
         --rx-trail-depth: 1;
         position: relative;
-        justify-self: center;
-        inline-size: calc(100% - var(--rx-trail-depth) * 2 * var(--rx-space-4));
+        inline-size: 100%;
         min-inline-size: 0;
-        padding-block: var(--rx-space-4) calc(var(--rx-space-4) + var(--rx-trail-overlap));
-        padding-inline: var(--rx-space-8);
+        min-block-size: calc(var(--rx-trail-visible) + var(--rx-trail-overlap));
+        margin-inline-start: calc(-1 * var(--rx-trail-depth) * var(--rx-trail-shift));
+        padding-block: var(--rx-space-3) calc(var(--rx-space-3) + var(--rx-trail-overlap));
+        padding-inline: 1.9375rem;
+        border: var(--rx-stroke-width) solid var(--rx-sheet-behind-edge);
         border-radius: var(--rx-radius-sheet);
         background: var(--rx-sheet-behind);
-        box-shadow: var(--rx-shadow-sheet);
-        font-size: var(--rx-title);
+        /* 見出しは18pxの太字（手本は24pxだが、画面の見出しより目立たないよう小さくする）。 */
+        font-size: var(--rx-section-title);
         font-weight: 700;
         line-height: 1.2;
         & > a {
           color: var(--rx-link);
-          text-decoration-thickness: 0.125rem;
-          text-underline-offset: 0.12em;
+          text-decoration-thickness: var(--rx-stroke-width);
+          text-underline-offset: 0.15em;
           &:hover {
             color: var(--rx-link-hover);
           }
@@ -207,8 +221,9 @@
       inline-size: 100%;
       min-inline-size: 0;
       /* 左右の余白は変数にし、横スクロールするコンテンツを作業面の端まで広げる時にも使う。 */
-      --rx-workspace-gutter: var(--rx-space-8);
-      padding-block: var(--rx-space-8);
+      /* 手本のシートの内側の余白は左右30px。上下も同じくらいにする。 */
+      --rx-workspace-gutter: 1.875rem;
+      padding-block: 1.875rem;
       padding-inline: var(--rx-workspace-gutter);
       /* 白い面・角丸・影は、Surfaceと共通の作業面の定義（layout.css）が持つ。 */
       /* 先頭のContextBarは、見出しと同じ左右の位置に置き、下の区切り線を消す。 */
@@ -277,7 +292,7 @@
         inline-size: calc(100% - var(--rx-space-4));
       }
       & > .body > .main > .trail > ol > li {
-        inline-size: calc(100% - var(--rx-trail-depth) * 2 * var(--rx-space-2));
+        --rx-trail-shift: var(--rx-space-2);
         padding-inline: var(--rx-space-4);
         font-size: var(--rx-section-title);
       }

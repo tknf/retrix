@@ -1,9 +1,12 @@
 @layer components {
   /*
-    現在地の行。灰色の小さな補足として、パンくずを先頭側に、関連する操作を末尾側に並べる。
-    下に罫線を引き、ここから中身が始まることを示す。
+    現在地の行。パンくずを先頭側に、関連する操作を末尾側に並べる。
+    文字は手本のパンくずの地の文と同じ13px・#757575（overlays.md「5b. パンくず」）。
+    下の罫線はシートの見出しの下の罫線と同じ1px #dedede（structure.md「見出しの下の罫線」）。
+    シートの先頭に置いた時は、手本と同じく罫線を消す（AppShell・Surfaceが持つ）。
   */
   .rx-context-bar {
+    --rx-context-bar-text: #757575;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -13,10 +16,10 @@
     min-block-size: calc(var(--rx-control-size) + 2 * var(--rx-space-2));
     padding-block: var(--rx-space-2);
     padding-inline: var(--rx-space-4);
-    border-block-end: var(--rx-stroke-width) solid var(--rx-border);
-    color: var(--rx-muted);
-    font-size: var(--rx-small);
-    line-height: var(--rx-small-leading);
+    border-block-end: var(--rx-stroke-width) solid var(--rx-gray-200);
+    color: var(--rx-context-bar-text);
+    font-size: var(--rx-label);
+    line-height: var(--rx-label-leading);
     & > .rx-breadcrumb {
       flex: 1 1 12rem;
     }

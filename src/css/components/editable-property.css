@@ -1,12 +1,15 @@
 @layer components {
   /*
-    その場で書き換えられる値。Highriseの「Background info　Edit」のように、項目名は小さな太字、値は下線も枠もない文字にする。
+    その場で書き換えられる値。Highriseの右の列の「Background info　Edit」（structure.md）のように、項目名は小さな太字、値は下線も枠もない文字にする。
     値の行は表示でも編集でも同じ箱（文字の幅のまま、高さは欄と同じ）にし、面だけを文字の外へ張り出して描く。文字の書き始めと上下の位置は動かさない。
-    表示の箱は値と控えめな鉛筆だけを包み、ホバーすると37signalsの「押すと書き換えられる」淡い黄色の面を出す。値を押しても鉛筆を押しても編集を始める。
-    編集中は同じ箱を白い欄にし、欄と同じ濃い枠を引く。フォーカスすると青緑の縁と淡い青のリングを出す。確定・取消は一行でも複数行でも欄の下に並べる。
-    確定すると、新しい値を先頭側からペンで書き、鉛筆の領域に完了のマークをしばらく出す。
+    表示の箱は値と控えめな鉛筆だけを包み、ホバーすると37signalsの黄色のハイライト（#ffffcc）を出す（ホバーで出すのは推測）。値を押しても鉛筆を押しても編集を始める。
+    編集中は同じ箱を一行の入力欄と同じ見た目（controls.md 6a章: 1px #dedede、角丸2px、内側の影なし）にする。
+    フォーカスは他の欄と同じ青い縁と外側の淡い青の輪。確定・取消は一行でも複数行でも欄の下に並べる。
+    確定すると、鉛筆の領域に完了のマークを出す（アニメーションは使わない）。
   */
   .rx-editable-property {
+    /* 入力欄のフォーカスの輪の色（--rx-focus-glow と同じ #7cb0e2 の55%）。 */
+    --rx-editable-glow: color-mix(in srgb, var(--rx-focus-border) 55%, transparent);
     /* 値の行の高さは欄とButtonの高さ。行の文字は上下の余りを半分ずつ空けて置く。 */
     --rx-editable-row: var(--rx-button-size);
     --rx-editable-pad: calc((var(--rx-editable-row) - 10em / 7) / 2);
@@ -44,13 +47,13 @@
   .rx-editable-property > .preview,
   .rx-editable-property > .editor > .rx-input {
     --rx-editable-face: transparent;
-    border-radius: var(--rx-radius-control);
+    border-radius: var(--rx-radius-mark);
     background: var(--rx-editable-face);
   }
 
   /*
     表示の箱は値と鉛筆だけを包み、鉛筆を値から離さない。面は先頭側にだけ張り出す（鉛筆の領域が末尾側の余白になる）。
-    ホバーすると淡い黄色の面を一枚だけ出し、鉛筆にフォーカスがある時は、編集中の欄と同じ青緑の縁と淡い青のリングを出す。
+    ホバーすると黄色の面を一枚だけ出し、鉛筆にフォーカスがある時は、編集中の欄と同じ青い縁と淡い青の輪を出す。
   */
   .rx-editable-property > .preview {
     display: flex;
@@ -60,13 +63,9 @@
     max-inline-size: 100%;
     position: relative;
     box-shadow: var(--rx-editable-start) 0 0 0 var(--rx-editable-face);
-    --rx-editable-pen-start: inset(0 100% 0 0);
-    &:dir(rtl) {
-      --rx-editable-pen-start: inset(0 0 0 100%);
-    }
     /*
       完了のマークは、鉛筆と同じ領域に描く（値の後ろに場所を取らず、鉛筆を値から離さない）。
-      チェックボックスと同じく、先頭側からペンで描く。
+      確定した時（data-saved="true"）だけ出し、その間は鉛筆を隠す。
     */
     &::after {
       content: "";
@@ -77,20 +76,20 @@
       block-size: 1em;
       background: var(--rx-success);
       mask: url("../assets/check.svg") center / contain no-repeat;
-      clip-path: var(--rx-editable-pen-start);
       opacity: 0;
       pointer-events: none;
     }
     &:has(> .edit:enabled):hover {
-      --rx-editable-face: color-mix(in srgb, var(--rx-mark) 70%, var(--rx-surface));
+      --rx-editable-face: var(--rx-mark);
     }
     &:has(> .edit:focus-visible) {
       box-shadow:
         var(--rx-editable-start) 0 0 0 var(--rx-editable-face),
-        var(--rx-editable-start) 0 0 var(--rx-stroke-width) var(--rx-link),
-        0 0 0 var(--rx-stroke-width) var(--rx-link),
-        var(--rx-editable-start) 0 0 calc(var(--rx-stroke-width) + 0.125rem) var(--rx-focus-ring),
-        0 0 0 calc(var(--rx-stroke-width) + 0.125rem) var(--rx-focus-ring);
+        var(--rx-editable-start) 0 0 var(--rx-stroke-width) var(--rx-focus-border),
+        0 0 0 var(--rx-stroke-width) var(--rx-focus-border),
+        var(--rx-editable-start) 0 0 calc(var(--rx-stroke-width) + 0.1875rem)
+          var(--rx-editable-glow),
+        0 0 0 calc(var(--rx-stroke-width) + 0.1875rem) var(--rx-editable-glow);
     }
   }
 
@@ -135,15 +134,17 @@
 
   /*
     編集中の欄は、列の幅いっぱい（30remまで）に広げる。文字は箱の端から書く（表示と同じ位置）。
-    面は白い欄の色で両側へ張り出し、外周に欄と同じ濃い枠を描く。フォーカスは他の欄と同じ青緑の縁と淡い青のリングにする。
+    面は白い欄の色で両側へ張り出し、外周に一行の入力欄と同じ1px #dedede の枠を描く。フォーカスは他の欄と同じ青い縁と淡い青の輪にする。
   */
   .rx-editable-property > .editor > .rx-input {
     --rx-input-size: var(--rx-editable-row);
     --rx-input-border-size: 0rem;
     --rx-editable-face: var(--rx-surface);
-    --rx-editable-edge: var(--rx-control-border);
+    --rx-editable-edge: var(--rx-input-border);
     --rx-editable-ring: transparent;
     inline-size: 100%;
+    /* 一行の入力欄の文字（12px）ではなく表示の値と同じ大きさで書き、編集を始めても文字の大きさと位置を変えない。 */
+    font-size: var(--rx-label);
     max-inline-size: 30rem;
     padding-inline: 0;
     box-shadow:
@@ -151,18 +152,19 @@
       var(--rx-editable-end) 0 0 0 var(--rx-editable-face),
       var(--rx-editable-start) 0 0 var(--rx-stroke-width) var(--rx-editable-edge),
       var(--rx-editable-end) 0 0 var(--rx-stroke-width) var(--rx-editable-edge),
-      var(--rx-editable-start) 0 0 calc(var(--rx-stroke-width) + 0.125rem) var(--rx-editable-ring),
-      var(--rx-editable-end) 0 0 calc(var(--rx-stroke-width) + 0.125rem) var(--rx-editable-ring);
+      var(--rx-editable-start) 0 0 calc(var(--rx-stroke-width) + 0.1875rem) var(--rx-editable-ring),
+      var(--rx-editable-end) 0 0 calc(var(--rx-stroke-width) + 0.1875rem) var(--rx-editable-ring);
     &:focus-visible {
-      --rx-editable-edge: var(--rx-link);
-      --rx-editable-ring: var(--rx-focus-ring);
+      --rx-editable-edge: var(--rx-focus-border);
+      --rx-editable-ring: var(--rx-editable-glow);
       box-shadow:
         var(--rx-editable-start) 0 0 0 var(--rx-editable-face),
         var(--rx-editable-end) 0 0 0 var(--rx-editable-face),
         var(--rx-editable-start) 0 0 var(--rx-stroke-width) var(--rx-editable-edge),
         var(--rx-editable-end) 0 0 var(--rx-stroke-width) var(--rx-editable-edge),
-        var(--rx-editable-start) 0 0 calc(var(--rx-stroke-width) + 0.125rem) var(--rx-editable-ring),
-        var(--rx-editable-end) 0 0 calc(var(--rx-stroke-width) + 0.125rem) var(--rx-editable-ring);
+        var(--rx-editable-start) 0 0 calc(var(--rx-stroke-width) + 0.1875rem)
+          var(--rx-editable-ring),
+        var(--rx-editable-end) 0 0 calc(var(--rx-stroke-width) + 0.1875rem) var(--rx-editable-ring);
     }
     &[data-invalid="true"],
     &:user-invalid {
@@ -207,18 +209,16 @@
       --rx-editable-row: 2.75rem;
     }
     /* タッチ端末の欄は拡大を防ぐため16pxで書くので、表示の値も同じ大きさにし、編集を始めても文字の大きさを変えない。 */
-    .rx-editable-property > .preview > .value {
+    .rx-editable-property > .preview > .value,
+    .rx-editable-property > .editor > .rx-input {
       font-size: max(1rem, var(--rx-label));
     }
   }
-  @media (prefers-reduced-motion: reduce) {
-    .rx-editable-property[data-saved="true"] > .preview::after {
-      clip-path: inset(0);
-      opacity: 1;
-    }
-    .rx-editable-property[data-saved="true"] > .preview > .edit > .rx-icon {
-      opacity: 0;
-    }
+  .rx-editable-property[data-saved="true"] > .preview::after {
+    opacity: 1;
+  }
+  .rx-editable-property[data-saved="true"] > .preview > .edit > .rx-icon {
+    opacity: 0;
   }
   @media (forced-colors: active) {
     /* 影の面とリングは消えるので、欄と鉛筆のフォーカスは張り出す幅の輪郭で示す。 */

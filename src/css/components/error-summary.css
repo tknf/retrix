@@ -2,6 +2,7 @@
   /*
     修正が必要な箇所のまとめ。淡い赤の面と枠、アイコンと見出しはNoticeの危険の役割（.rx-notice[data-tone="danger"]）がそのまま描き、
     ここでは本文に置く、各欄へ移動するリンクの一覧だけを持つ。
+    BC2のプロジェクトの中のフォームのエラーは見つからなかった（overlays.md「4d」）。リンクの形は推測。
   */
   .rx-error-summary > .body > ul {
     display: grid;

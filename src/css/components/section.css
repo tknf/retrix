@@ -1,4 +1,9 @@
 @layer components {
+  /*
+    まとまりの見出し。実測: structure.md「セクションの見出し（Discussions / To-do lists / Files）」。
+    見出しは18px・太さ400・#990000。右に控えめなボタン（「Post a new message」）を約17px空けて並べる（controls.md 1章「見出しとの間」）。
+    見出しのベースラインから最初の行まで約16px。
+  */
   .rx-section {
     --rx-section-accent: var(--rx-heading);
     display: grid;
@@ -17,14 +22,15 @@
       --rx-section-accent: var(--rx-danger);
     }
     /*
-      見出しはBasecamp 2と同じく、赤茶の通常の太さの名前に、件数と小さな操作を続けて並べる（「議論　［新しい投稿］」）。
+      見出しの名前に、件数と小さな操作を続けて並べる（「Discussions　［Post a new message］」）。
       線は伸ばさない。続く一覧や表が罫線を持つので、線を重ねない。
+      見出しと操作の間は手本の約17pxを4pxの段に丸めた16px。
     */
     & > .heading {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      column-gap: var(--rx-space-3);
+      column-gap: var(--rx-space-4);
       row-gap: var(--rx-space-2);
       & > h2 {
         color: var(--rx-section-accent);
@@ -32,7 +38,7 @@
         font-weight: 400;
         line-height: 1.3;
       }
-      /* 件数は灰色の小さなピル。数字はピルの上下の中央に置く。 */
+      /* 件数は灰色の小さなピル（推測。手本の見出しは件数を持たない）。数字はピルの上下の中央に置く。 */
       & > .count {
         display: inline-grid;
         place-items: center;

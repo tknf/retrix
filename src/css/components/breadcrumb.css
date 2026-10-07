@@ -1,13 +1,15 @@
 @layer components {
   /*
-    パンくず。Basecamp 2の「To-doリストから：Salvaged, up-cycled materials」と同じく、
-    上の階層は下線付きの青緑のリンク、区切りは灰色の小さな記号にする。今いる場所は黒い太字。
+    パンくず。実測: overlays.md「5b. パンくず」と structure.md「背後に重ねた親のシート」。
+    「From the to-do list: Salvaged, up-cycled materials」と同じく、地の文は13px・#757575、
+    上の階層は青緑（--rx-link）の下線付きのリンクにする。区切りは淡い灰色の小さな記号（推測。手本は「:」で区切る文の形）。
   */
   .rx-breadcrumb {
+    --rx-breadcrumb-text: #757575;
     min-inline-size: 0;
-    color: var(--rx-muted);
-    font-size: var(--rx-small);
-    line-height: var(--rx-small-leading);
+    color: var(--rx-breadcrumb-text);
+    font-size: var(--rx-label);
+    line-height: var(--rx-label-leading);
     & > ol {
       display: flex;
       flex-wrap: wrap;
@@ -31,7 +33,7 @@
       min-inline-size: 0;
       overflow-wrap: anywhere;
     }
-    /* 上の階層はリンクと同じ青緑の文字に下線。ホバーで赤茶。当たり判定だけを上下に広げる。 */
+    /* 上の階層はリンクと同じ青緑の文字に1pxの下線。ホバーで赤茶。当たり判定だけを上下に広げる。 */
     & > ol > li > a {
       position: relative;
       color: var(--rx-link);
@@ -48,10 +50,9 @@
         color: var(--rx-link-hover);
       }
     }
-    /* 今いる場所は黒い太字。並びの末尾なので区切りの後ろには何も付けない。 */
+    /* 今いる場所は手本のパンくずに出ない（推測）。地の文より濃い黒の通常の太さにする。 */
     & > ol > li:last-child {
       color: var(--rx-ink);
-      font-weight: 600;
     }
   }
 }

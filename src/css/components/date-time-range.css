@@ -1,6 +1,7 @@
 @layer components {
   /*
-    開始と終了の日時。二つを罫線で囲んだ淡い灰色の一つの枠に並べ、間を矢印でつなぐ。欄そのものはInputのまま。
+    開始と終了の日時。二つを、BC2のフォームの下に置く灰色の箱（実測: overlays.md 1e。#f9f9f9、1px #dfdfdf、角丸 約8px）
+    と同じ一つの枠に並べ、間を矢印でつなぐ。欄そのものはInput（field.css。実測: controls.md 6a）のまま。
     どちらも上に淡い小さな名前、その下に日付と時刻の欄を積む。終日にすると時刻の欄を隠す。
     狭い場所では開始と終了を縦に積み、矢印を下向きにする。
   */
@@ -27,8 +28,8 @@
       gap: var(--rx-space-3);
       padding-block: var(--rx-space-3);
       padding-inline: var(--rx-space-4);
-      border: var(--rx-stroke-width) solid var(--rx-border);
-      border-radius: var(--rx-radius-field);
+      border: var(--rx-stroke-width) solid var(--rx-input-border);
+      border-radius: 0.5rem;
       background: var(--rx-gray-20);
       & > .point {
         display: grid;

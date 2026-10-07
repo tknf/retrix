@@ -1,16 +1,18 @@
 @layer components {
   /*
-    アバターはBasecamp 2と同じ丸い写真。写真がない時は、灰色で塗った丸に白い太字のイニシャルを置く（Highriseの人の丸）。
+    アバターはBasecamp 2と同じ枠の無い丸い写真（実測: lists.md「BC2 議論の一覧」30pxの円、「BC2 Catch up」22pxの円、
+    「BC2 の見出しの赤と Me のページ」枠なし）。標準は一覧の30px、smallはCatch upの22px。
+    写真がない時は、灰色で塗った丸に白い太字のイニシャルを置く（実測: lists.md「Highrise 連絡先一覧（2015〜2016）」。
+    実測の #868684 は白い文字と4.5:1に届かないので、明るさを下げた --rx-gray-650 にする）。
     色の指定（tone）は利用側が明示した時だけ使い、どれも白い文字との対比を4.5:1以上に保つ。
-    写真の縁には淡い輪郭を重ね、白い写真でも紙の上で丸く見えるようにする。
   */
   .rx-avatar {
     --rx-avatar-fill: var(--rx-gray-650);
     position: relative;
     display: inline-grid;
     place-items: center;
-    inline-size: 2.25rem;
-    block-size: 2.25rem;
+    inline-size: 1.875rem;
+    block-size: 1.875rem;
     flex: none;
     overflow: hidden;
     border-radius: 50%;
@@ -28,15 +30,6 @@
     }
     &[data-tone="coral"] {
       --rx-avatar-fill: var(--rx-coral);
-    }
-    &::after {
-      content: "";
-      position: absolute;
-      inset-block: 0;
-      inset-inline: 0;
-      border-radius: inherit;
-      box-shadow: inset 0 0 0 var(--rx-stroke-width) rgb(38 38 36 / 12%);
-      pointer-events: none;
     }
     & > .initials {
       max-inline-size: 100%;
@@ -70,9 +63,12 @@
       font-size: 1rem;
     }
     &[data-size="small"] {
-      inline-size: 1.75rem;
-      block-size: 1.75rem;
-      font-size: 0.75rem;
+      inline-size: 1.375rem;
+      block-size: 1.375rem;
+      font-size: 0.625rem;
+      & > .initials {
+        padding-inline: 0;
+      }
     }
   }
   @media (forced-colors: active) {

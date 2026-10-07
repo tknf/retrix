@@ -1,11 +1,14 @@
 @layer components {
   /*
-    判断を求める白いパネル。Basecamp 2の確認ダイアログのように、赤茶の見出しの下に罫線を一本引き、
-    本文を置いて、操作を下に並べる。飾りの面や色の帯は持たない。
+    判断を求める白いパネル。枠と影はポップオーバーと同じ（overlay.css）。
+    実測: overlays.md「2a. ポップオーバーで確認する」「2b. 画面全体を覆うモーダル」。
+    問いは#a52a2a（CSSのbrown）の太字で約15px、見出しと本文の間に罫線は引かない。操作は白いボタンを下に並べる。
+    背後は#323136を約80%で覆う。2bの淡いピンクの箱（お客さん向けの注意）は専用の色なので使わない。
   */
   .rx-dialog > .panel {
     --rx-dialog-width: 32rem;
-    --rx-overlay-title-line: calc(var(--rx-section-title) * 1.3);
+    --rx-dialog-question: #a52a2a;
+    --rx-overlay-title-line: calc(var(--rx-body) * 1.25);
     inline-size: min(var(--rx-dialog-width), calc(100% - var(--rx-space-8)));
     max-inline-size: calc(100% - var(--rx-space-8));
     max-block-size: calc(100dvh - var(--rx-space-8));
@@ -24,43 +27,40 @@
     &[data-size="wide"] {
       --rx-dialog-width: 52rem;
     }
-    /* 背後の画面は、机の色を保ったまま暗くする。 */
+    /* 背後の画面は#323136で約80%覆う（2b。白いページの上の色からの換算は推測）。 */
     &::backdrop {
-      background: rgb(38 38 36 / 32%);
+      background: rgb(50 49 54 / 80%);
     }
     &:not([open])::backdrop {
-      background: rgb(38 38 36 / 0%);
+      background: rgb(50 49 54 / 0%);
     }
   }
-  /* 見出しの下に罫線を引き、題名と説明を本文から分ける。 */
   .rx-dialog > .panel > .heading {
-    padding-block-end: var(--rx-space-3);
-    border-block-end: var(--rx-stroke-width) solid var(--rx-border);
     & > p {
       font-size: var(--rx-label);
     }
   }
-  /* 題名はSectionの見出しと同じ赤茶の通常の太さ。 */
+  /* 問いは#a52a2aの太字で約15px、行の間隔18〜19px（2a）。 */
   .rx-dialog > .panel > .heading > .heading-row > h2 {
-    color: var(--rx-heading);
-    font-size: var(--rx-section-title);
-    font-weight: 400;
+    color: var(--rx-dialog-question);
+    font-size: var(--rx-body);
+    font-weight: 700;
     &:focus-visible {
       outline-offset: 0.125rem;
     }
   }
   .rx-dialog > .panel > .body {
     min-block-size: 0;
-    padding-block: var(--rx-space-4) var(--rx-space-2);
+    padding-block: var(--rx-space-2);
     overflow: auto;
     overscroll-behavior: contain;
     font-size: var(--rx-body);
     line-height: var(--rx-leading);
   }
-  /* 本文が無い時は、見出しの罫線のすぐ下に操作を置く。 */
+  /* 本文が無い時は、問いのすぐ下に操作を置く。 */
   .rx-dialog > .panel:has(> .body:empty) > .heading,
   .rx-dialog > .panel:not(:has(> .body)) > .heading {
-    padding-block-end: var(--rx-space-3);
+    padding-block-end: var(--rx-space-2);
   }
   .rx-dialog > .panel > .actions {
     grid-row: 3;

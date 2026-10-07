@@ -1,8 +1,10 @@
 @layer components {
   /*
-    比較は、現在と変更後をそれぞれ細い枠の小さな角丸の面に入れて並べ、間の矢印を二つの面の境をまたぐ白い丸にする。
-    現在は淡い灰の面に弱い文字、変更後は37signalsの「更新した所」と同じ黄色の面にして読ませる。
-    変わらない時は両方を灰の面にし、矢印を等号にする。状態は小さなピルにする。
+    比較は、現在と変更後をそれぞれ細い枠の面に入れて並べ、間の矢印を二つの面の境をまたぐ白い丸にする（並べ方と矢印は推測）。
+    - 現在は、BC2の背後に重ねた親のシート（structure.md）と同じ #f9f9f9 に1px #e5e5e5 の枠で、弱い文字にする。
+    - 変更後は、37signalsの「更新した所」の黄色（lists.md「黄色のハイライト」#ffffcc）に、テキスト文書のカードの1px #e0e0e0 の枠。
+    - 状態は、BC2のピル（高さ18px・角丸9px・12px）。変わる時は件数の淡い青、変わらない時は担当者・期日の灰色。
+    変わらない時は両方を灰の面にし、矢印を等号にする。
   */
   .rx-comparison {
     --rx-comparison-mark: 2rem;
@@ -22,14 +24,13 @@
       font-size: inherit;
       font-weight: 600;
       & > .state {
-        padding-block: 0.125rem;
-        padding-inline: var(--rx-space-2);
+        padding-inline: 0.5625rem;
         border-radius: var(--rx-radius-pill);
-        background: var(--rx-gray-50);
-        color: var(--rx-muted);
+        background: var(--rx-pill-meta);
+        color: var(--rx-pill-meta-text);
         font-size: var(--rx-small);
         font-weight: 400;
-        line-height: var(--rx-small-leading);
+        line-height: 1.125rem;
       }
     }
     & > .pair {
@@ -42,9 +43,9 @@
         min-inline-size: 0;
         padding-block: var(--rx-space-3);
         padding-inline: var(--rx-space-4);
-        border: var(--rx-stroke-width) solid var(--rx-border);
-        border-radius: var(--rx-radius-field);
-        background: var(--rx-gray-20);
+        border: var(--rx-stroke-width) solid var(--rx-sheet-behind-edge);
+        border-radius: var(--rx-radius-surface);
+        background: var(--rx-sheet-behind);
         & > h4 {
           margin: 0;
           color: var(--rx-muted);
@@ -96,8 +97,8 @@
     /* 変わる時は、状態を件数のピルと同じ淡い青にし、変更後を黄色の面で読ませる。 */
     &[data-changed="true"] {
       & > .title > .state {
-        background: var(--rx-info-soft);
-        color: var(--rx-link);
+        background: var(--rx-pill-count);
+        color: var(--rx-pill-count-text);
       }
       & > .pair {
         & > .after {

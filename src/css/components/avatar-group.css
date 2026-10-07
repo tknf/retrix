@@ -1,19 +1,19 @@
 @layer components {
   /*
-    アバターを重ねずに、小さな丸として間を少し空けて並べる（Basecamp 2の関係者の顔の並び）。
-    並べきれない人数は、同じ大きさの淡い灰色の丸に灰色の太い数字で添える。
+    アバターを重ねずに、小さな丸として間を少し空けて並べる（実測: lists.md「BC2 Catch up」。22pxの円を2px前後の間隔で横に並べる）。
+    並べきれない人数は、同じ高さのBC2の灰色のピル（実測: lists.md「BC2 To-do」の担当者と期日のピル。平らな #eeeeee）に数字で添える。
   */
   .rx-avatar-group {
     display: inline-flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--rx-space-1);
+    gap: 0.125rem;
     /* 残りの人数の丸の大きさ。並べるAvatarの大きさ（size）にそろえる。 */
-    --rx-avatar-group-size: 2.25rem;
+    --rx-avatar-group-size: 1.875rem;
     --rx-avatar-group-font: var(--rx-small);
     &[data-size="small"] {
-      --rx-avatar-group-size: 1.75rem;
-      --rx-avatar-group-font: 0.75rem;
+      --rx-avatar-group-size: 1.375rem;
+      --rx-avatar-group-font: 0.625rem;
     }
     &[data-size="large"] {
       --rx-avatar-group-size: 3rem;
@@ -26,13 +26,15 @@
       min-inline-size: var(--rx-avatar-group-size);
       block-size: var(--rx-avatar-group-size);
       padding-inline: var(--rx-space-1);
-      border: var(--rx-stroke-width) solid var(--rx-border);
       border-radius: var(--rx-radius-pill);
-      background: var(--rx-gray-50);
-      color: var(--rx-muted);
+      /* 透明な輪郭は、強制カラーで背景が消えた時だけ見える縁になる。 */
+      outline: var(--rx-stroke-width) solid transparent;
+      outline-offset: calc(var(--rx-stroke-width) * -1);
+      background: var(--rx-pill-meta);
+      color: var(--rx-pill-meta-text);
       font-family: var(--rx-control-font-family);
       font-size: var(--rx-avatar-group-font);
-      font-weight: 700;
+      font-weight: 400;
       line-height: 1;
       font-variant-numeric: tabular-nums;
       direction: ltr;

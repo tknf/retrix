@@ -8,8 +8,23 @@
     --rx-overlay-close-offset: 0.25rem;
   }
   /*
-    浮かぶパネルは白い紙。輪郭と、カードより少し遠くまで落ちる影（--rx-shadow-menu）を持ち、角は小さくする。
-    閉じる操作は、末尾側の上の角の内側に置く小さな×。枠も塗りも持たず、灰色の×だけを見せる。
+    浮かぶパネルの共通の枠。実測: overlays.md「1. BC2 のポップオーバー」。
+    白い箱に1px #bbb（1a〜1dの#adadad〜#bcbcbcを一つにそろえた値）、角丸5px、四方へ約8pxの柔らかい影で、下側だけ少し濃い。
+    影は外へ#e3→#fbと薄れる測定からの換算（推測）。DropdownMenu・CommandMenu・DatePickerのパネルも同じ値を使う。
+  */
+  :is(
+    .rx-overlay,
+    .rx-menu,
+    .rx-command-menu > .panel,
+    .rx-date-picker > .panel,
+    .rx-suggestion > .options
+  ) {
+    --rx-popover-edge: #bbbbbb;
+    --rx-popover-radius: 0.3125rem;
+    --rx-popover-shadow: 0 var(--rx-stroke-width) 0.5rem rgb(0 0 0 / 18%);
+  }
+  /*
+    閉じる操作は、末尾側の上の角の内側に置く小さな×。枠も塗りも持たず、灰色の×だけを見せる（BC2のポップオーバーには×が無い。推測）。
     見出しの行は、×が余白より内側へ入る分だけ行末を空ける。
   */
   .rx-overlay {
@@ -18,14 +33,14 @@
     --rx-overlay-close-inset: 0.375rem;
     /* 見出しの上の余白。×は題名の一行目の上下の中央にそろえる。 */
     --rx-overlay-heading-start: var(--rx-space-4);
-    border: 0;
-    border-radius: var(--rx-radius-surface);
+    border: var(--rx-stroke-width) solid var(--rx-popover-edge);
+    border-radius: var(--rx-popover-radius);
     background: var(--rx-surface);
     color: var(--rx-text);
     font-family: var(--rx-control-font-family);
     font-size: var(--rx-label);
     line-height: var(--rx-label-leading);
-    box-shadow: var(--rx-shadow-menu);
+    box-shadow: var(--rx-popover-shadow);
     overflow-wrap: anywhere;
     & > .heading {
       display: grid;
@@ -50,6 +65,7 @@
           display: block;
           min-inline-size: 0;
         }
+        /* 見出しは黒の太字（1a「Assign this to-do to:」）。 */
         & > :is(h2, h3, strong) {
           font-size: var(--rx-label);
           font-weight: 600;

@@ -1,9 +1,12 @@
 @layer components {
   /*
-    絞り込みの条件を、枠付きの共通Buttonとして並べる。選んでいる条件はButtonのcurrentと同じ青緑の縦の塗り。
-    件数は条件名の後ろに灰色の数字で添え、選んでいる条件では白い文字のままにする。
+    絞り込みの条件。BC2の絞り込みのメニュー（実測: overlays.md 1c「All matches / Comments / Messages」）を横に並べた形にする。
+    条件は枠も面も無い黒い文字で、選んでいる条件だけを両端の丸い淡い青のピル（#dde4f5 に #244960 の文字）にする。
+    件数は条件名の後ろに淡い青の数字で添える（実測 #7f9dd2 は白地で4.5:1に届かないので、色合いを保って #5574b0）。
+    リンクの文字と高さは共通Button（button.css）のまま使う。
   */
   .rx-filter-bar {
+    --rx-filter-bar-count: #5574b0;
     /* 各リンクの自然幅で折り返すためFlex。 */
     display: flex;
     flex-wrap: wrap;
@@ -21,19 +24,65 @@
         font: inherit;
         font-variant-numeric: tabular-nums;
       }
-      &:not([data-current="true"]) > small {
-        color: var(--rx-muted);
+    }
+    &:not([data-appearance="segmented"]) > a {
+      border-color: transparent;
+      border-radius: var(--rx-radius-pill);
+      background: transparent;
+      color: var(--rx-text);
+      box-shadow: none;
+      & > small {
+        color: var(--rx-filter-bar-count);
+      }
+      /* ホバーは手本が無い（推測）。BC2のリンクと同じく下線を引く。 */
+      &:hover {
+        border-color: transparent;
+        background: transparent;
+        box-shadow: none;
+        text-decoration-line: underline;
+        text-decoration-thickness: var(--rx-stroke-width);
+        text-underline-offset: 0.15em;
+      }
+      &:active {
+        background: transparent;
+        box-shadow: none;
+      }
+      &:focus-visible {
+        border-color: var(--rx-focus-border);
+        box-shadow: var(--rx-focus-glow);
+      }
+      &[data-current="true"] {
+        border-color: var(--rx-pill-selected);
+        background: var(--rx-pill-selected);
+        color: var(--rx-pill-selected-text);
+        & > small {
+          color: var(--rx-pill-selected-text);
+        }
+        &:is(:hover, :active) {
+          border-color: var(--rx-pill-selected);
+          background: var(--rx-pill-selected);
+          box-shadow: none;
+          text-decoration-line: none;
+        }
+        &:focus-visible {
+          border-color: var(--rx-focus-border);
+          box-shadow: var(--rx-focus-glow);
+        }
       }
     }
     /*
-      表示の切り替えはButtonGroupと同じく、隙間なくつなげて間を1本の線にし、外側の角だけを丸める。
-      隣の枠線を1px重ねる。
+      表示の切り替えはToggleGroupと同じく、控えめなボタン（実測: controls.md 1）を隙間なくつなげて間を1本の線にし、
+      外側の角だけを丸める。隣の枠線を1px重ねる。選んでいる条件は、BC2の切り替えで選んだ側の黒い丸薬形
+      （実測: overlays.md 1c・3d。塗り #000 に白い文字）と同じ黒い塗りにする。
     */
     &[data-appearance="segmented"] {
       display: inline-flex;
       flex-wrap: nowrap;
       gap: 0;
       max-inline-size: 100%;
+      & > a:not([data-current="true"]) > small {
+        color: var(--rx-muted);
+      }
       & > a:not(:last-child) {
         border-start-end-radius: 0;
         border-end-end-radius: 0;
@@ -45,6 +94,23 @@
       }
       & > a:is([data-current="true"], :hover, :focus-visible) {
         z-index: 1;
+      }
+      & > a[data-current="true"] {
+        border-color: var(--rx-ink);
+        background: var(--rx-ink);
+        color: var(--rx-surface);
+        box-shadow: 0 var(--rx-stroke-width) 0 var(--rx-ink);
+        &:is(:hover, :active) {
+          border-color: var(--rx-ink);
+          background: color-mix(in srgb, var(--rx-ink) 82%, var(--rx-surface));
+          box-shadow: 0 var(--rx-stroke-width) 0 var(--rx-ink);
+        }
+        &:focus-visible {
+          border-color: var(--rx-ink);
+          box-shadow:
+            var(--rx-focus-glow),
+            0 var(--rx-stroke-width) 0 var(--rx-ink);
+        }
       }
     }
   }

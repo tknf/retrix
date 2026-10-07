@@ -1,14 +1,17 @@
 @layer components {
   /*
-    分類のタグ。Highriseのタグと同じく、淡い灰色の面に枠を付けた小さな四角にし、文字は通常の太さにする。
-    色を指定したタグは、その色を淡く混ぜた面と枠に、その色の文字にする。
-    強調するタグ（data-current="true"）は濃い灰色の面に白い文字にする。
-    一行の高さは20pxでBadgeと揃える（文字16px＋上下の余白と枠線2pxずつ）。
+    分類のタグ。Highriseのタグ（実測: lists.md「Highrise タグの比較」2015〜2016年）と同じく、塗りの無い小さな四角に
+    1px #dddddd の枠、角丸 約1.5px、#666666 の文字にする。行の地が透けるよう、面は塗らない。
+    （2011年の丸いピルは下の縁だけ濃い線で、角丸と片側の線を組み合わせることになるので使わない。）
+    一行の高さは20px（文字16px＋上下の余白と枠線2pxずつ。実測の16.5〜20pxの範囲）。
+    色を指定したタグは、その色を淡く混ぜた枠と、その色の文字にする（推測）。
+    強調するタグ（data-current="true"）はHighriseの絞り込み中のタグと同じ灰色の塗りに白い文字
+    （実測 #848484 は白い文字と4.5:1に届かないので、明るさだけ下げて #747474）。
   */
   .rx-tag {
-    --rx-tag-ink: var(--rx-text);
-    --rx-tag-face: var(--rx-gray-50);
-    --rx-tag-edge: var(--rx-gray-200);
+    --rx-tag-ink: var(--rx-muted);
+    --rx-tag-face: transparent;
+    --rx-tag-edge: #dddddd;
     display: inline-block;
     inline-size: fit-content;
     justify-self: start;
@@ -27,44 +30,40 @@
     text-decoration: none;
     &[data-accent="blue"] {
       --rx-tag-ink: var(--rx-blue-dark);
-      --rx-tag-face: color-mix(in srgb, var(--rx-blue) 7%, var(--rx-surface));
-      --rx-tag-edge: color-mix(in srgb, var(--rx-blue) 35%, var(--rx-surface));
+      --rx-tag-edge: color-mix(in srgb, var(--rx-blue) 40%, var(--rx-surface));
     }
     &[data-accent="green"] {
       --rx-tag-ink: var(--rx-green);
-      --rx-tag-face: color-mix(in srgb, var(--rx-green) 7%, var(--rx-surface));
-      --rx-tag-edge: color-mix(in srgb, var(--rx-green) 35%, var(--rx-surface));
+      --rx-tag-edge: color-mix(in srgb, var(--rx-green) 40%, var(--rx-surface));
     }
     &[data-accent="amber"] {
       --rx-tag-ink: var(--rx-amber);
-      --rx-tag-face: color-mix(in srgb, var(--rx-amber) 7%, var(--rx-surface));
-      --rx-tag-edge: color-mix(in srgb, var(--rx-amber) 35%, var(--rx-surface));
+      --rx-tag-edge: color-mix(in srgb, var(--rx-amber) 40%, var(--rx-surface));
     }
     &[data-accent="coral"] {
       --rx-tag-ink: var(--rx-coral-dark);
-      --rx-tag-face: color-mix(in srgb, var(--rx-coral) 7%, var(--rx-surface));
-      --rx-tag-edge: color-mix(in srgb, var(--rx-coral) 35%, var(--rx-surface));
+      --rx-tag-edge: color-mix(in srgb, var(--rx-coral) 40%, var(--rx-surface));
     }
     &[data-current="true"] {
       --rx-tag-ink: var(--rx-surface);
-      --rx-tag-face: var(--rx-gray-650);
-      --rx-tag-edge: var(--rx-gray-650);
+      --rx-tag-face: #747474;
+      --rx-tag-edge: #747474;
     }
-    /* 分類へ移動するタグは、ホバーすると面と枠を一段濃くする。下線は引かない。 */
+    /* 分類へ移動するタグは、ホバーすると枠を一段濃くし、淡い灰色の面を敷く（推測）。下線は引かない。 */
     &:is(a) {
       cursor: pointer;
       &:hover {
         border-color: color-mix(in srgb, var(--rx-tag-ink) 45%, var(--rx-tag-edge));
-        background: color-mix(in srgb, var(--rx-tag-ink) 8%, var(--rx-tag-face));
+        background: var(--rx-gray-50);
         color: var(--rx-tag-ink);
         text-decoration: none;
       }
       &[data-current="true"]:hover {
-        border-color: var(--rx-gray-900);
-        background: var(--rx-gray-900);
+        border-color: var(--rx-gray-650);
+        background: var(--rx-gray-650);
       }
       &:focus-visible {
-        outline: 0.125rem solid var(--rx-blue);
+        outline: 0.125rem solid var(--rx-focus-border);
         outline-offset: 0.125rem;
       }
     }
@@ -93,7 +92,7 @@
         box-shadow: none;
       }
       &:disabled {
-        opacity: 0.45;
+        color: var(--rx-disabled-text);
       }
       /* 削除の×はタグの文字と同じ色にし、太字の形で小さくても見えるようにする。 */
       &::before {

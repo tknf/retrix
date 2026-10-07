@@ -1,6 +1,7 @@
 @layer components {
   /*
-    Wingは作業面の後ろへ差し込む固定幅の白いパネル。カードと同じ輪郭と浅い影（--rx-shadow-paper）を持つ。
+    Wingは作業面の後ろへ差し込む固定幅の白いパネル。カードと同じ四方へのぼかし影（--rx-shadow-paper）を持つ。
+    影の長さは structure.md「BC2 のプロジェクトのカード」（枠なし、四方に4〜5px）の実測に合わせる。
     広い配置では開閉に関わらず作業面に合わせた全長の高さを持ち、閉じている間は作業面の縁からハンドルの幅だけを出す。
     閉じたハンドルはアイコンと開閉のマークだけを載せ、名前はツールチップで示す。開くと幅が伸び、上端に横書きの見出しが並ぶ。
   */
@@ -10,14 +11,13 @@
     --rx-wing-panel: 14rem;
     --rx-wing-tuck: var(--rx-radius-surface);
     --rx-wing-inset: var(--rx-space-6);
-    /*
-      開閉の時間はDialog・Popoverと同じにする（overlay.cssの定義）。閉じる時は短く、開く時（[open]で上書き）は少し長くする。
-      Dialog・Popoverは閉じる時にease-inで加速して消えるが、Wingのパネルは閉じても作業面の縁に見えたまま止まる。
-      加速したまま止まると最後に跳んで見えるので、閉じる時も減速して止める。中身の出入りは短いease-outで薄れる。
-    */
+    /* 見出しの帯の色。実測: overlays.md「1b. カレンダーの予定のパネル」の見出しの帯 #f7f7f7 と、下の1px #dedede。 */
+    --rx-wing-band: #f7f7f7;
+    --rx-wing-band-rule: var(--rx-gray-200);
+    /* 開閉はその場で切り替える（アニメーションは使わない）。 */
     container: rx-wing / inline-size;
     min-inline-size: 0;
-    /* 狭い配置で、閉じた高さ0から内容の高さ（auto）へ伸び縮みさせる。 */
+    /* 狭い配置では、閉じると高さ0、開くと内容の高さ（auto）になる。 */
     & > .layout {
       display: grid;
       grid-template-columns: minmax(0, 1fr);
@@ -64,8 +64,8 @@
           position: relative;
           isolation: isolate;
           /*
-            見出しの帯。LayerCardの見出しと同じく、白から淡い灰色へのごく淡い縦の塗りに、下の罫線を引く。
-            グラデーションは色の変化として動かせないので、層ごと薄れさせる。開いている間だけ見せる。
+            見出しの帯。LayerCardの見出しと同じく、平らな淡い灰色に下の罫線を引く。開いている間だけ見せる。
+            角丸は上の角だけで、罫線は角丸の無い下の辺に引くので、線の端は欠けない。
           */
           &::before {
             content: "";
@@ -73,8 +73,8 @@
             inset: 0;
             z-index: -1;
             border-radius: inherit;
-            background: var(--rx-emphasis-neutral);
-            box-shadow: inset 0 calc(var(--rx-stroke-width) * -1) var(--rx-border);
+            background: var(--rx-wing-band);
+            box-shadow: inset 0 calc(var(--rx-stroke-width) * -1) var(--rx-wing-band-rule);
             opacity: 0;
           }
           /* 名前のツールチップは、広い配置で閉じている時だけ出す。 */
@@ -91,7 +91,8 @@
             outline-offset: -0.125rem;
           }
           /*
-            ハンドルは共通Buttonのアイコンだけの形。閉じている間は控えめな白いボタン、開いている間はオンの青緑の塗りにする。
+            ハンドルは共通Buttonのアイコンだけの形。閉じている間は控えめな白いボタン、開いている間はオンの平らな青緑の塗りにする
+            （controls.md の BC2 のボタンは平らな塗り）。
             Buttonの主操作の印を持つので、塗りの変数ごと置き換え、ホバーと押した時の濃さもButtonの規則のまま効かせる。
             アイコンがない時は開閉のマークで、向きで開閉を示す。
           */
@@ -100,7 +101,6 @@
             --rx-button-fill: var(--rx-fill-control);
             flex: none;
             border-color: var(--rx-control-border);
-            border-block-end-color: color-mix(in srgb, var(--rx-control-border) 80%, var(--rx-ink));
             background: var(--rx-surface);
             background-image: var(--rx-fill-control);
             color: var(--rx-text);
@@ -122,7 +122,7 @@
           line-height: var(--rx-label-leading);
           overflow-wrap: anywhere;
         }
-        /* 閉じる間も中身を残して薄れさせ、高さを0へ縮める。 */
+        /* 閉じると中身を隠し、高さを0にする。 */
         &::details-content {
           block-size: 0;
           overflow: clip;
@@ -135,7 +135,7 @@
         &::details-content {
           block-size: auto;
         }
-        /* 開いている間は見出しの背景を見せる。閉じる時はパネルが縮むのと同じ時間で薄れる。 */
+        /* 開いている間は見出しの背景を見せる。 */
         & > summary {
           color: var(--rx-ink);
           &::before {
@@ -143,12 +143,12 @@
           }
           & > .handle {
             --rx-button-color: var(--rx-teal);
-            --rx-button-fill: linear-gradient(180deg, var(--rx-teal) 0%, var(--rx-teal-dark) 100%);
+            --rx-button-fill: linear-gradient(var(--rx-teal), var(--rx-teal));
             border-color: var(--rx-teal-dark);
             background: var(--rx-teal);
             background-image: var(--rx-button-fill);
             color: var(--rx-surface);
-            box-shadow: var(--rx-shadow-control-primary);
+            box-shadow: 0 var(--rx-stroke-width) 0 var(--rx-teal-dark);
           }
           & > .handle[data-fallback="caret"] > .rx-icon {
             rotate: 180deg;
@@ -219,7 +219,7 @@
             overflow-y: auto;
             padding-block: var(--rx-space-4);
           }
-          /* 横の配置では高さを縮めず、パネルの伸び縮みと中身の薄れだけで開閉する。 */
+          /* 横の配置では高さを縮めず、パネルの幅と中身の表示だけで開閉する。 */
           &::details-content {
             block-size: auto;
             overflow: visible;
@@ -258,7 +258,6 @@
           & > :is(.start, .end):not([open]) > summary:is(:hover, :focus-visible) > .tip {
             opacity: 1;
             visibility: visible;
-            /* 閉じた直後にポインターが残っていても、パネルが縮み切ってから出す。 */
           }
         }
         /* 開いたパネルは幅が伸び、隠れていた名前と中身が出てくる。 */

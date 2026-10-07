@@ -1,8 +1,9 @@
 @layer components {
   /*
-    切り替えの一組。枠付きの共通Buttonを隙間なくつなげ、間は1本の線、外側の角だけを丸める（カレンダーの「◀ ▶」と同じ）。
-    横に並べる時は隣の枠を1px重ね、縦に並べる時は二つ目からの上の枠を透かして、前のボタンの下の枠を1本の線にする。
-    オンは選んでいる状態（Buttonのcurrent）と同じ青緑の縦の塗り。
+    切り替えの一組。押すと状態が変わるボタンの並びなので、BC2の文の中の丸薬形（開くメニューの引き金）ではなく、
+    控えめなボタン（実測: controls.md 1。平らな白、1px #ccc、下に 1px #ddd の影、角丸 5px）を隙間なくつなげた形にする。
+    間は1本の線にし、外側の角だけを丸める。隣の枠は1px重ねる。
+    オンは、BC2の切り替えで選んだ側の黒い丸薬形（実測: overlays.md 1c・3d。塗り #000 に白い文字）と同じ黒い塗りにする。
   */
   .rx-toggle-group {
     display: flex;
@@ -23,7 +24,7 @@
     & > .rx-button:is(:hover, :focus-visible, [data-state="on"]) {
       z-index: 1;
     }
-    /* 縦に並べる時は、幅をいちばん長い名前にそろえ、名前を先頭側に寄せる。 */
+    /* 縦に並べる時は、幅をいちばん長い名前にそろえ、名前を先頭側に寄せる。二つ目からの上の枠を透かし、前のボタンの下の枠を1本の線にする。 */
     &[data-orientation="vertical"] {
       flex-direction: column;
       align-items: stretch;
@@ -33,27 +34,49 @@
         margin-inline-start: 0;
         border-radius: var(--rx-radius-control);
       }
+      /* 下の影は一番下のボタンにだけ付け、つないだ線が二重にならないようにする。 */
       & > .rx-button:not(:last-child) {
         border-end-start-radius: 0;
         border-end-end-radius: 0;
+      }
+      & > .rx-button:not(:last-child, :focus-visible) {
+        box-shadow: none;
       }
       & > .rx-button:not(:first-child) {
         border-start-start-radius: 0;
         border-start-end-radius: 0;
         border-block-start-color: transparent;
       }
+      /* オンのボタンは上の枠も黒くし、黒い塗りの上端を欠けさせない。 */
+      & > .rx-button[data-state="on"]:not(:first-child, :disabled) {
+        border-block-start-color: var(--rx-ink);
+      }
     }
     & > .rx-button[data-state="on"]:not(:disabled) {
-      border-color: var(--rx-teal-dark);
-      background: var(--rx-teal);
-      background-image: linear-gradient(180deg, var(--rx-teal) 0%, var(--rx-teal-dark) 100%);
+      border-color: var(--rx-ink);
+      background: var(--rx-ink);
       color: var(--rx-surface);
-      box-shadow: var(--rx-shadow-control-primary-pressed);
+      box-shadow: 0 var(--rx-stroke-width) 0 var(--rx-ink);
+      /* ホバーと押した時は手本が無い（推測）。黒をわずかに明るくする。 */
       &:hover {
-        background-image:
-          linear-gradient(rgb(0 0 0 / 8%), rgb(0 0 0 / 8%)),
-          linear-gradient(180deg, var(--rx-teal) 0%, var(--rx-teal-dark) 100%);
+        border-color: var(--rx-ink);
+        background: color-mix(in srgb, var(--rx-ink) 82%, var(--rx-surface));
+        box-shadow: 0 var(--rx-stroke-width) 0 var(--rx-ink);
       }
+      &:focus-visible {
+        border-color: var(--rx-ink);
+        box-shadow:
+          var(--rx-focus-glow),
+          0 var(--rx-stroke-width) 0 var(--rx-ink);
+      }
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-toggle-group > .rx-button[data-state="on"]:not(:disabled) {
+      forced-color-adjust: none;
+      border-color: Highlight;
+      background: Highlight;
+      color: HighlightText;
     }
   }
 }

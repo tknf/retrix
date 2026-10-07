@@ -19,7 +19,7 @@
     }
     /*
       スライドは全て同じ場所に重ね、見えていないスライドも場所を残す。枠の高さは一番高いスライドで決まり、切り替えても動かない。
-      切り替えると、新しいスライドは少し横から滑りながら現れ、前のスライドは薄れて消える。
+      Retrixは動きを使わないので、切り替えはその場で入れ替える。
     */
     & > .viewport > .slide {
       grid-area: 1 / 1;
@@ -31,12 +31,7 @@
     }
     & > .viewport > .slide[hidden] {
       visibility: hidden;
-      opacity: 0;
-      translate: var(--rx-space-4) 0;
       pointer-events: none;
-    }
-    & > .viewport > .slide[hidden]:dir(rtl) {
-      translate: calc(-1 * var(--rx-space-4)) 0;
     }
     & > .viewport > .slide > .rx-card {
       min-inline-size: 0;
@@ -101,10 +96,6 @@
     @container rx-carousel (inline-size < 27rem) {
       & > .viewport {
         margin-inline: 0;
-      }
-      /* カードの左右に余白がないので、横へずらさず薄れるだけにして、コンテナの外へはみ出さない。 */
-      & > .viewport > .slide[hidden] {
-        translate: 0;
       }
       & > .controls {
         display: flex;

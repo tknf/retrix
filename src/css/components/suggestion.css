@@ -10,10 +10,27 @@
     }
   }
 
+  /*
+    候補の一覧はポップオーバーと同じ枠と影（overlay.css、overlays.md「1. BC2 のポップオーバー」）。
+    矢印キーで選んでいる候補は、BC2のメニューの選んだ項目と同じ淡い青のピル（1c。#dde4f5に#244960の字）。
+    ホバーした候補は、そのピルより薄い面にする（推測）。Comboboxの共通の指定（field.css）より強く当てる。
+  */
+  .rx-combobox.rx-suggestion > .options {
+    border-color: var(--rx-popover-edge);
+    border-radius: var(--rx-popover-radius);
+    box-shadow: var(--rx-popover-shadow);
+    & > li {
+      border-radius: var(--rx-radius-pill);
+    }
+    & > li[data-state="active"] {
+      background: var(--rx-pill-selected);
+      color: var(--rx-pill-selected-text);
+      text-shadow: none;
+    }
+  }
   .rx-suggestion {
-    /* ホバーした候補は、選んでいる候補（淡い青緑）より薄い面にする。 */
-    & > .options > li:hover:not([data-state="active"]) {
-      background: color-mix(in srgb, var(--rx-cover) 55%, var(--rx-surface));
+    & > .options > li:hover:not([data-state="active"], [data-state="disabled"]) {
+      background: color-mix(in srgb, var(--rx-pill-selected) 50%, var(--rx-surface));
       color: var(--rx-text);
     }
 

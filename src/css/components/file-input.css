@@ -1,7 +1,9 @@
 @layer components {
   /*
-    ファイルを受け入れる場所。「ここに置ける」目印の灰色の破線の枠に、灰色のアイコン・ドロップの案内・選ぶ操作を
-    一行に並べる。選んだファイルはFileItemの形で枠の中に並べ、解除の操作を添える。
+    ファイルを受け入れる場所。ドロップ先の箱そのものは手本に無い（推測）。
+    「ここに置ける」目印の破線の枠は、BC2の枠の無い欄の点線（実測: controls.md 6b。1px #cccccc）と同じ太さと色にし、
+    面はBC2のフォームの下の灰色の箱（実測: overlays.md 1e。#f9f9f9）にする。
+    灰色のアイコン・ドロップの案内・選ぶ操作を一行に並べ、選んだファイルはFileItemの形で枠の中に並べて解除の操作を添える。
     ドロップを待つ間は枠を実線の青緑にして淡い青緑の面を敷く。標準の入力は隠し、フォーカスの輪は選ぶ操作に出す。
   */
   .rx-file-input {
@@ -14,7 +16,7 @@
     min-inline-size: 0;
     padding-block: var(--rx-space-3);
     padding-inline: var(--rx-space-3);
-    border: var(--rx-frame-width) dashed var(--rx-gray-200);
+    border: var(--rx-stroke-width) dashed var(--rx-control-border);
     border-radius: var(--rx-radius-field);
     background: var(--rx-gray-20);
     font-size: var(--rx-label);
@@ -29,11 +31,13 @@
       border-color: color-mix(in srgb, var(--rx-danger) 60%, var(--rx-surface));
       background: var(--rx-danger-soft);
     }
+    /* 使えない時は、Buttonと同じく形と面をそのままにし、文字とアイコンだけを灰色にする。 */
     &:has(> .rx-input:disabled) {
-      border-color: var(--rx-border);
-      background: var(--rx-hatch), var(--rx-surface);
-      color: var(--rx-muted);
+      color: var(--rx-disabled-text);
       outline: none;
+    }
+    &:has(> .rx-input:disabled) > .symbol {
+      color: var(--rx-disabled-text);
     }
     &:has(> .rx-input:disabled) > .hint {
       visibility: hidden;
@@ -82,14 +86,14 @@
       margin-inline-start: calc(-4em / 7);
     }
     &:has(> .rx-input:focus-visible) > .choose {
-      outline: 0.125rem solid var(--rx-blue);
+      outline: 0.125rem solid var(--rx-focus-border);
       outline-offset: 0.125rem;
     }
-    /* 選ぶ操作は枠のない青い文字（Buttonのlink）。使えない時は淡い文字にし、斜線は枠の面に任せる。 */
+    /* 選ぶ操作は枠のない青い文字（Buttonのlink）。使えない時は文字だけを灰色にする。 */
     &:has(> .rx-input:disabled) > .choose {
       background: transparent;
-      color: var(--rx-muted);
-      cursor: not-allowed;
+      color: var(--rx-disabled-text);
+      cursor: default;
     }
     & > .rx-input[type="file"] {
       block-size: auto;
@@ -102,40 +106,42 @@
       font-size: inherit;
       line-height: var(--rx-button-size);
 
+      /* JavaScriptが無い時に見える標準の選ぶ操作。控えめなボタン（実測: controls.md 1）と同じ形にする。 */
       &::file-selector-button {
         box-sizing: border-box;
         max-inline-size: 100%;
         min-block-size: var(--rx-button-size);
-        padding-block: calc((var(--rx-button-size) - 10em / 7 - 0.125rem) / 2);
-        padding-inline: 0.75em;
+        padding-block: 0;
+        padding-inline: calc(11em / 12);
         margin-inline-end: var(--rx-space-2);
         border: var(--rx-stroke-width) solid var(--rx-control-border);
-        border-block-end-color: color-mix(in srgb, var(--rx-control-border) 80%, var(--rx-ink));
         border-radius: var(--rx-radius-control);
-        background: var(--rx-surface) var(--rx-fill-control);
+        background: var(--rx-surface);
         box-shadow: var(--rx-shadow-control);
         color: var(--rx-text);
-        font: inherit;
+        font-family: var(--rx-control-font-family);
+        font-size: var(--rx-button-font);
+        font-weight: 400;
         line-height: calc(10 / 7);
         white-space: normal;
         cursor: pointer;
       }
-      /* 押す操作の手触りは共通Buttonと同じ。ホバーで塗りを少し濃くし、押すと内側へへこむ。 */
+      /* 押す操作の手触りは共通Buttonと同じ（推測）。ホバーで面を少し灰色にし、押すと内側へへこむ。 */
       &::file-selector-button:hover {
-        background:
-          linear-gradient(rgb(38 38 36 / 4%), rgb(38 38 36 / 4%)), var(--rx-fill-control),
-          var(--rx-surface);
+        border-color: color-mix(in srgb, var(--rx-control-border) 75%, var(--rx-ink));
+        background: #fafafa;
+        box-shadow: var(--rx-shadow-control-hover);
       }
       &::file-selector-button:active {
-        background: color-mix(in srgb, var(--rx-ink) 8%, var(--rx-surface));
+        background: var(--rx-gray-50);
         box-shadow: var(--rx-shadow-control-pressed);
       }
       &:disabled::file-selector-button {
-        border-color: var(--rx-border);
-        background: var(--rx-hatch), var(--rx-surface);
-        box-shadow: none;
-        color: var(--rx-muted);
-        cursor: not-allowed;
+        border-color: var(--rx-control-border);
+        background: var(--rx-surface);
+        box-shadow: var(--rx-shadow-control);
+        color: var(--rx-disabled-text);
+        cursor: default;
       }
     }
   }

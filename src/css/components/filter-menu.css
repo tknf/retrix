@@ -1,9 +1,9 @@
 @layer components {
   /*
-    絞り込めるメニュー。DropdownMenuと同じ白いパネルに黒い文字で、
-    上に枠のある絞り込みの欄と「新しく作る」、その下に小さな灰色の見出しと候補を並べる。
-    候補は選んだものにチェックを置き、上下の矢印キーで選んでいる候補とホバーした候補は青緑（--rx-menu-active）で塗って白い文字にする。
-    位置と出入りの動きは、Popoverと同じoverlay.cssの共通の定義に任せる。
+    絞り込めるメニュー。実測: overlays.md「1c. 絞り込みのメニュー」「1d. ラベルの選択のパネル」。
+    枠と影はポップオーバーと同じ（overlay.css）。上に絞り込みの欄と「新しく作る」、その下に小さな灰色の見出しと候補を並べる。
+    候補の間隔は28px。選んだ候補は#244960の太字にしてチェックを置き、上下の矢印キーで選んでいる候補とホバーした候補は
+    BC2の淡い青のピル（#dde4f5）で塗る。位置はPopoverと同じoverlay.cssの共通の定義に任せる。
   */
   .rx-filter-menu {
     display: grid;
@@ -14,8 +14,9 @@
     }
     & > .panel.rx-overlay {
       --rx-overlay-width: 17rem;
-      padding-block: var(--rx-space-2);
-      padding-inline: var(--rx-space-2);
+      /* パネルの内側の余白は1cと同じ12px。 */
+      padding-block: var(--rx-space-3);
+      padding-inline: var(--rx-space-3);
       background: var(--rx-surface);
       background-image: var(--rx-fill-menu);
       color: var(--rx-text);
@@ -24,7 +25,7 @@
         grid-template-rows: auto auto minmax(0, 1fr) auto;
         gap: var(--rx-space-1);
       }
-      /* 絞り込みの欄。Inputと同じく枠を持ち、上の枠を少し濃くして沈んだ欄に見せる。 */
+      /* 絞り込みの欄。一行の入力欄（controls.md 6a章）と同じく、1px #dedede・角丸2px・内側の影なし。 */
       & > .search {
         display: flex;
         align-items: center;
@@ -37,9 +38,8 @@
           gap: var(--rx-space-2);
           min-inline-size: 0;
           padding-inline: var(--rx-space-2);
-          border: var(--rx-stroke-width) solid var(--rx-control-border);
-          border-block-start-color: color-mix(in srgb, var(--rx-control-border) 80%, var(--rx-ink));
-          border-radius: var(--rx-radius-control);
+          border: var(--rx-stroke-width) solid var(--rx-input-border);
+          border-radius: var(--rx-radius-mark);
           background: var(--rx-surface);
           color: var(--rx-muted);
           box-shadow: var(--rx-shadow-input);
@@ -55,14 +55,12 @@
             line-height: var(--rx-label-leading);
             outline: 0;
             &::placeholder {
-              color: var(--rx-muted);
+              color: var(--rx-placeholder);
             }
           }
           &:has(> input:focus-visible) {
-            border-color: var(--rx-link);
-            box-shadow:
-              var(--rx-shadow-input),
-              0 0 0 0.1875rem var(--rx-focus-ring);
+            border-color: var(--rx-focus-border);
+            box-shadow: var(--rx-focus-glow);
           }
         }
         & > .create {
@@ -78,7 +76,11 @@
         font-weight: 600;
         line-height: var(--rx-small-leading);
       }
+      /* 候補はピルの高さ22pxに6pxの隙間を足して、28pxの間隔で並べる。 */
       & > .options {
+        display: grid;
+        align-content: start;
+        row-gap: 0.375rem;
         min-block-size: 0;
         margin: 0;
         padding: 0;
@@ -90,9 +92,10 @@
           align-items: center;
           gap: var(--rx-space-2);
           min-inline-size: 0;
-          padding-block: var(--rx-space-2);
+          min-block-size: 1.375rem;
+          padding-block: 0.125rem;
           padding-inline: var(--rx-space-2);
-          border-radius: var(--rx-radius-control);
+          border-radius: var(--rx-radius-pill);
           cursor: pointer;
           &[hidden] {
             display: none;
@@ -100,13 +103,13 @@
           &:hover,
           &[data-active="true"] {
             background: var(--rx-menu-active);
-            color: var(--rx-surface);
+            color: var(--rx-pill-selected-text);
           }
+          /* 使えない候補は形をそのままにし、文字だけを灰色にする。 */
           &[data-disabled="true"] {
             background: transparent;
-            color: var(--rx-muted);
-            opacity: 0.6;
-            cursor: not-allowed;
+            color: var(--rx-disabled-text);
+            cursor: default;
           }
           /* アイコンの枠。アイコンのない候補は、選んだ時だけチェックを見せる。 */
           & > .mark {
@@ -133,6 +136,10 @@
         }
         & > .option:not(:has(> .check)) > .mark > .rx-icon {
           visibility: hidden;
+        }
+        /* 選んだ候補は1cの選んだ項目と同じ#244960の太字。 */
+        & > .option[data-selected="true"]:not([data-disabled="true"]) {
+          color: var(--rx-pill-selected-text);
         }
         & > .option[data-selected="true"] {
           font-weight: 600;

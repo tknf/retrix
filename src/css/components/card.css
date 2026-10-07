@@ -5,11 +5,11 @@
     flex-direction: column;
     min-inline-size: 0;
     /*
-      Cardは机に置いた白い紙。輪郭はカードの影の一つ目で描き、枠線は別に引かない。角は小さくする。
-      余白はBasecamp 2のプロジェクトのカードと同じく詰め、上下16px・左右20pxにする。
+      実測: structure.md「BC2 のプロジェクトのカード」。白、枠なし、四方に4〜5pxのぼかし影、角丸3px、内側の余白16px。
+      影はシートより短い紙の影（--rx-shadow-paper）にする。
     */
     padding-block: var(--rx-space-4);
-    padding-inline: var(--rx-space-5);
+    padding-inline: var(--rx-space-4);
     border: 0;
     border-radius: var(--rx-radius-surface);
     background: var(--rx-surface) var(--rx-fill-paper);
@@ -18,12 +18,13 @@
     line-height: var(--rx-label-leading);
     overflow-wrap: anywhere;
     box-shadow: var(--rx-shadow-paper);
+    /* ホバーの見た目は手本に無い（推測）。リンクの題名にホバーした時だけ、影を少し遠くまで落とす。 */
     &:has(> .title > a:hover) {
       box-shadow: var(--rx-shadow-paper-lift);
     }
     & > .preview {
       overflow: hidden;
-      border-radius: var(--rx-radius-control);
+      border-radius: var(--rx-radius-surface);
       & + :is(.title, .eyebrow) {
         margin-block-start: var(--rx-space-4);
       }
@@ -48,14 +49,14 @@
       }
     }
     /*
-      題名はCardの中でいちばん強い字。Basecamp 2のプロジェクトのカードと同じく、黒い太字にする。
-      リンクの題名も普段は黒い太字のまま静かに置き、ホバーした時だけ赤茶の文字と下線でリンクだと示す。
+      実測: プロジェクトのカードのタイトルは20pxの太字の黒（行の高さ20px）。日本語の折り返しで行が重ならないよう、行の高さだけ1.25にする（推測）。
+      リンクの題名も普段は黒い太字のまま置き、ホバーした時だけ赤茶の文字と下線でリンクだと示す（ホバーは推測）。
     */
     & > .title {
       color: var(--rx-ink);
-      font-size: var(--rx-body);
-      font-weight: 600;
-      line-height: 1.4;
+      font-size: var(--rx-title);
+      font-weight: 700;
+      line-height: 1.25;
       word-break: auto-phrase;
       & > a {
         color: inherit;
@@ -66,9 +67,14 @@
         }
       }
     }
-    /* 本文は説明として灰色にする。中に置いたBadge・ボタン・リンクは、それぞれの色を持つ。 */
+    /*
+      実測: カードの説明は16px前後のカーキ（#aa9c84）、行の高さ19〜20px。白地で4.5:1に届かないので、同じ色合いの茶色（--rx-meta）にする。
+      中に置いたBadge・ボタン・リンクは、それぞれの色を持つ。
+    */
     & > .body {
-      color: var(--rx-muted);
+      color: var(--rx-meta);
+      font-size: 1rem;
+      line-height: 1.25;
     }
     & > .body:not(:empty) {
       margin-block-start: var(--rx-space-1);
@@ -84,7 +90,7 @@
       justify-content: start;
       gap: var(--rx-space-1) var(--rx-space-2);
       margin-block-start: auto;
-      /* メタ情報は本文のすぐ下に添える。本文との間はカードの余白より狭くし、カードの中の一まとまりに見せる。 */
+      /* 実測: 「Last updated …」は11〜12pxのカーキ。本文のすぐ下に添え、本文との間はカードの余白より狭くする。 */
       padding-block-start: var(--rx-space-2);
       color: var(--rx-meta);
       font-size: var(--rx-small);
@@ -102,14 +108,18 @@
         max-inline-size: calc(100% - 3rem);
       }
     }
+    /* 詰めた密度は推測。余白を12pxにし、題名を一覧の題名と同じ大きさにする。 */
     &[data-density="compact"] {
       padding-block: var(--rx-space-3);
-      padding-inline: var(--rx-space-4);
+      padding-inline: var(--rx-space-3);
+      & > .title {
+        font-size: var(--rx-body);
+      }
       & > .meta {
         padding-block-start: var(--rx-space-1);
       }
     }
-    /* 完了は縁取りではなく、淡い成功の色の背景で示す。 */
+    /* 完了は縁取りではなく、淡い成功の色の背景で示す（推測）。 */
     &[data-state="complete"] {
       background: color-mix(in srgb, var(--rx-success-soft) 60%, var(--rx-surface));
     }

@@ -27,9 +27,10 @@
     }
   }
   /*
-    操作のメニューは、輪郭と影を持つ白いパネルに黒い文字で出す。
-    ホバーした項目と矢印キーで選んでいる項目は、昔のOSのメニューのように青緑（--rx-menu-active）で塗って白い文字にする。
-    補足と区切りは文字の色の濃さで分け、塗った行の上でも同じ規則で読めるようにする。
+    操作のメニュー。実測: overlays.md「1c. 絞り込みのメニュー」。
+    枠と影はポップオーバーと同じ（overlay.css）。項目は黒い文字で、項目の間隔は28px。
+    ホバーした項目と矢印キーで選んでいる項目は、BC2の選んだ項目と同じ淡い青のピル（#dde4f5に#244960の文字、高さ約21px）にする。
+    パネルの内側の上下は12px、文字の書き始めはパネルの内側から約22px（1cの画素から）。
   */
   .rx-menu {
     position: fixed;
@@ -44,10 +45,11 @@
     overscroll-behavior: contain;
     overflow-wrap: anywhere;
     margin: 0;
-    padding-block: var(--rx-space-1);
-    padding-inline: var(--rx-space-1);
-    border: 0;
-    border-radius: var(--rx-radius-surface);
+    /* 項目の上下の隙間（--rx-menu-row-gap）の半分を差し引き、ピルの上端からパネルの内側までを12pxにする。 */
+    padding-block: calc(0.75rem - var(--rx-menu-row-gap) / 2);
+    padding-inline: 0.75rem;
+    border: var(--rx-stroke-width) solid var(--rx-popover-edge);
+    border-radius: var(--rx-popover-radius);
     background: var(--rx-surface);
     background-image: var(--rx-fill-menu);
     color: var(--rx-text);
@@ -56,8 +58,9 @@
     line-height: calc(10 / 7);
     letter-spacing: 0;
     list-style: none;
-    box-shadow: var(--rx-shadow-menu);
-    /* 開閉のアニメーションはoverlay.cssの共通の定義。支点は開いた操作の側の角にする。 */
+    box-shadow: var(--rx-popover-shadow);
+    /* ピル（22px）と項目の間の隙間で、項目の間隔を28pxにする。 */
+    --rx-menu-row-gap: 0.375rem;
     &::backdrop {
       background: transparent;
       pointer-events: none;
@@ -65,6 +68,9 @@
     &:focus-visible {
       outline: 0.125rem solid var(--rx-blue);
       outline-offset: -0.125rem;
+    }
+    & > li {
+      padding-block: calc(var(--rx-menu-row-gap) / 2);
     }
   }
   .rx-menu[data-variant="group"] {
@@ -87,9 +93,10 @@
     inline-size: 100%;
     /* 一行の高さから同量の上下余白を取る。複数行は上端を保って下へ伸ばす。 */
     padding-block: calc((var(--rx-menu-row-size) - 10em / 7 - 0.125rem) / 2);
-    padding-inline: var(--rx-space-2);
+    /* ピルの両端は完全に丸いので、文字を丸みの内側へ少し入れる（1cで文字はピルの端から約6px）。 */
+    padding-inline: 0.625rem;
     border: var(--rx-stroke-width) solid transparent;
-    border-radius: var(--rx-radius-control);
+    border-radius: var(--rx-radius-pill);
     background: transparent;
     color: inherit;
     text-align: start;
@@ -100,38 +107,40 @@
     &[data-state="active"]:not(:disabled, [data-disabled="true"]) {
       border-color: transparent;
       background: var(--rx-menu-active);
-      color: var(--rx-surface);
+      color: var(--rx-pill-selected-text);
       box-shadow: none;
     }
+    /* 押した時の色は手本に無い（推測）。ピルを文字の色へ少し寄せる。 */
     &:active:not(:disabled, [data-disabled="true"]) {
-      background: var(--rx-teal-dark);
-      color: var(--rx-surface);
+      background: color-mix(in srgb, var(--rx-menu-active) 85%, var(--rx-pill-selected-text));
+      color: var(--rx-pill-selected-text);
       box-shadow: none;
     }
     &:focus-visible {
       outline: 0.125rem solid var(--rx-focus-ring);
       outline-offset: -0.125rem;
     }
-    /* 危険の操作は赤茶の文字にし、選ぶと赤茶で塗る。 */
+    /* 危険の操作は赤茶の文字にし、選ぶと淡い赤のピルにする（推測。ピルの形は1cに合わせる）。 */
     &[data-tone="danger"] {
       color: var(--rx-danger);
       &:hover:not(:disabled, [data-disabled="true"]),
       &[data-state="active"]:not(:disabled, [data-disabled="true"]) {
-        background: var(--rx-danger);
-        color: var(--rx-surface);
+        background: var(--rx-danger-soft);
+        color: var(--rx-danger);
       }
       &:active:not(:disabled, [data-disabled="true"]) {
-        background: var(--rx-red-dark);
+        background: color-mix(in srgb, var(--rx-danger-soft) 85%, var(--rx-danger));
+        color: var(--rx-danger);
       }
     }
+    /* 使えない項目は形をそのままにし、文字だけを灰色にする（controls.md 13・15章）。 */
     &:disabled,
     &[data-disabled="true"] {
       background: transparent;
       border-color: transparent;
-      color: var(--rx-muted);
+      color: var(--rx-disabled-text);
       box-shadow: none;
-      opacity: 0.6;
-      cursor: not-allowed;
+      cursor: default;
     }
     &[data-checked="false"] > .content > .heading > .mark {
       visibility: hidden;
@@ -215,10 +224,12 @@
     padding-block-end: var(--rx-space-2);
     font-weight: 400;
   }
+  /* 区切りは1px #dddddd前後（1dの小メニューの項目の間の線）。 */
   .rx-menu > .separator {
-    margin-block-start: var(--rx-space-1);
-    padding-block-start: var(--rx-space-1);
-    border-block-start: var(--rx-stroke-width) solid var(--rx-border);
+    margin-block-start: calc(var(--rx-menu-row-gap) / 2);
+    padding-block: 0;
+    padding-block-start: calc(var(--rx-menu-row-gap) / 2);
+    border-block-start: var(--rx-stroke-width) solid var(--rx-gray-200);
   }
   @media (pointer: coarse) {
     .rx-menu > li > .item.rx-button {
@@ -237,7 +248,6 @@
     .rx-menu > li > .item.rx-button:disabled,
     .rx-menu > li > .item.rx-button[data-disabled="true"] {
       color: GrayText;
-      opacity: 1;
     }
   }
 }

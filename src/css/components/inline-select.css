@@ -1,8 +1,8 @@
 @layer components {
   /*
     文の中の選択。前後の文と同じ大きさ・行高のまま、選べる語をInputと同じ欄で囲み、終わりに小さな▾を添える。
-    枠は濃い灰色で上側をさらに濃くし、角は欄と同じ3pxにする。フォーカスは青い縁の外に淡い青の輪を広げる。
-    幅は選んだ語に合わせる。
+    枠はInputと同じ（実測: controls.md 6a。1px #dedede、角丸 2px、内側の影なし）。
+    フォーカスはInputと同じ青い縁と外側の淡い青の輪（実測: controls.md 11）。幅は選んだ語に合わせる。
   */
   .rx-inline-select {
     position: relative;
@@ -12,9 +12,8 @@
     /* 日本語の文は語の間に空白を置かないので、枠と前後の文字が触れないよう少し離す。 */
     margin-inline: 0.2em;
     max-inline-size: calc(100% - 0.4em);
-    border: var(--rx-stroke-width) solid var(--rx-control-border);
-    border-block-start-color: color-mix(in srgb, var(--rx-control-border) 75%, var(--rx-ink));
-    border-radius: var(--rx-radius-control);
+    border: var(--rx-stroke-width) solid var(--rx-input-border);
+    border-radius: var(--rx-radius-mark);
     background: var(--rx-surface);
     box-shadow: var(--rx-shadow-input);
     color: var(--rx-text);
@@ -41,8 +40,8 @@
         outline: 0.125rem solid transparent;
       }
       &:disabled {
-        color: var(--rx-muted);
-        cursor: not-allowed;
+        color: var(--rx-disabled-text);
+        cursor: default;
       }
     }
     & > .rx-icon {
@@ -54,21 +53,20 @@
       font-size: 0.7em;
       pointer-events: none;
     }
+    /* ホバーは手本が無い（推測）。枠をボタンと同じ灰色まで濃くする。 */
     &:has(> select:enabled):hover {
-      border-color: color-mix(in srgb, var(--rx-control-border) 75%, var(--rx-ink));
+      border-color: var(--rx-control-border);
     }
     &:has(> select:focus-visible) {
-      border-color: var(--rx-blue);
-      box-shadow:
-        0 0 0 0.125rem var(--rx-focus-ring),
-        var(--rx-shadow-input);
+      border-color: var(--rx-focus-border);
+      box-shadow: var(--rx-focus-glow);
     }
-    /* 使えない選択はInputと同じ斜線にする。 */
+    /* 使えない選択はInputと同じく、形と面をそのままにし、文字と▾だけを灰色にする。 */
     &:has(> select:disabled) {
-      border-color: var(--rx-border);
-      background: var(--rx-hatch), var(--rx-surface);
-      box-shadow: none;
-      color: var(--rx-muted);
+      color: var(--rx-disabled-text);
+      & > .rx-icon {
+        color: var(--rx-disabled-text);
+      }
     }
   }
   @media (forced-colors: active) {

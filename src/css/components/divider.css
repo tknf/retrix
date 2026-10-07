@@ -1,7 +1,11 @@
 @layer components {
-  /* 線は背景として描き、実線と破線を同じ位置と太さの規則で切り替える。 */
+  /*
+    線は背景として描き、実線と破線を同じ位置と太さの規則で切り替える。
+    実線はシートの見出しの下の罫線と同じ1px #dedede（structure.md「見出しの下の罫線」）。
+    名前は灰色の小さな太字（推測。Highriseの「RECENTLY VIEWED」に近い役割だが、大文字の字間は日本語に合わないので使わない）。
+  */
   .rx-divider {
-    --rx-divider-color: var(--rx-border);
+    --rx-divider-color: var(--rx-gray-200);
     --rx-divider-size: var(--rx-stroke-width);
     --rx-divider-paint: linear-gradient(var(--rx-divider-color), var(--rx-divider-color));
     display: flex;

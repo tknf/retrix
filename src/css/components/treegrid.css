@@ -1,4 +1,5 @@
 @layer components {
+  /* 見出し・行・罫線の見た目はTable（Basecamp Classicの表）が持つ。ここでは階層の字下げと開閉だけを決める。 */
   .rx-treegrid {
     --rx-treegrid-depth: 0;
     /* 開閉ボタンは題名の一行の高さにし、開閉ボタンのある行とない行を同じ高さにそろえる。 */
@@ -53,8 +54,9 @@
     background: var(--rx-mark);
   }
 
+  /* 使えない行は、他の使えない操作と同じく題名の文字だけを灰色にする。 */
   .rx-treegrid > table > tbody > tr[data-disabled="true"] > th .label {
-    color: var(--rx-muted);
+    color: var(--rx-disabled-text);
   }
 
   .rx-treegrid > table > tbody > tr > :is(th, td):focus-visible {

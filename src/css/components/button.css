@@ -1,4 +1,10 @@
 @layer components {
+  /*
+    寸法と色は Basecamp 2 の実測（docs/visual-reference.md）に合わせる。
+    - 控えめな操作（「Post a new message」）: 平らな白、1px #ccc の枠、下に 1px #ddd の影、角丸 5px、高さ 22px、12px の黒い文字。
+    - 主操作（「Start the project」）: 平らな緑、1px の濃い緑の枠と下に 1px の同じ色の影、角丸 4px、白い太字。
+    グラデーションと浮き彫りの文字は使わない。
+  */
   /* FilterBarへ直接渡された標準リンクにも、同じボタンの規則を適用する。 */
   .rx-button,
   :where(.rx-filter-bar > a) {
@@ -7,35 +13,27 @@
     align-items: center;
     justify-content: center;
     justify-self: start;
-    gap: calc(2em / 7);
+    gap: calc(4em / 12);
     /* アイコンと文言を内容幅で並べるためFlex。 */
     min-block-size: var(--rx-button-size);
     max-inline-size: 100%;
     padding-block: 0;
-    /*
-      ボタンは2011年前後のWebアプリと同じく、角の小さな長方形に白から灰色へのはっきりした縦の塗り。
-      下の枠だけを濃くして机に置いた厚みを見せ、文字は下へ白い光を落として浮き彫りにする。
-      主・控えめ・危険は塗りの色で分ける。
-    */
-    padding-inline: 0.875em;
+    padding-inline: calc(11em / 12);
     border: var(--rx-stroke-width) solid var(--rx-control-border);
-    border-block-end-color: color-mix(in srgb, var(--rx-control-border) 70%, var(--rx-ink));
     border-radius: var(--rx-radius-control);
     background: var(--rx-surface);
     background-image: var(--rx-fill-control);
     color: var(--rx-text);
-    text-shadow: var(--rx-emboss);
     font-family: var(--rx-control-font-family);
     font-size: var(--rx-button-font);
     font-weight: 400;
-    line-height: calc(10 / 7);
+    line-height: calc(17 / 12);
     text-align: center;
     text-decoration: none;
     overflow-wrap: anywhere;
     cursor: pointer;
-    /* ホバーすると塗りを少し濃くし、押すと内側へへこむ。 */
     box-shadow: var(--rx-shadow-control);
-    /* フォーカスは入力欄と同じ、青い縁の外にぼかした青い光。 */
+    /* フォーカスは入力欄と同じ、青い縁と外側の淡い青の輪。 */
     &:focus-visible {
       outline: 0.125rem solid transparent;
       outline-offset: 0;
@@ -43,83 +41,77 @@
       box-shadow: var(--rx-focus-glow), var(--rx-shadow-control);
     }
 
-    /* ホバーすると塗りを明るくし、枠を濃くする。押すと塗りの上下が反転し、内側へへこむ。 */
+    /*
+      ホバーと押した時の見た目は手本の画像に無い（推測）。ホバーは面をわずかに灰色にし、枠を濃くする。
+      押すと面をもう一段灰色にして、内側へへこませる。
+    */
     &:hover:not(:disabled) {
-      border-color: color-mix(in srgb, var(--rx-control-border) 60%, var(--rx-ink));
+      border-color: color-mix(in srgb, var(--rx-control-border) 75%, var(--rx-ink));
       background-image: var(--rx-fill-control-hover);
       box-shadow: var(--rx-shadow-control-hover);
     }
     &:active:not(:disabled) {
-      border-color: color-mix(in srgb, var(--rx-control-border) 55%, var(--rx-ink));
       background-color: var(--rx-gray-50);
       background-image: var(--rx-fill-control-pressed);
       box-shadow: var(--rx-shadow-control-pressed);
     }
 
     &[data-size="compact"] {
-      padding-inline: 0.625em;
+      padding-inline: calc(7em / 12);
     }
+    /* 大きな操作（「Edit this document」「Start the project」）。14px の文字で高さ 32px。 */
     &[data-size="large"] {
       min-block-size: var(--rx-button-large);
-      padding-inline: 1.125em;
-      font-size: calc(var(--rx-button-font) * 14 / 13);
-      line-height: var(--rx-control-leading);
+      padding-inline: calc(18em / 14);
+      font-size: calc(var(--rx-button-font) * 7 / 6);
+      line-height: calc(10 / 7);
     }
     /*
-      主操作は緑、危険は赤茶、選んでいる状態（current）は青緑の、光沢のある縦の塗り。
-      白い文字は上へ影を落として沈め、ホバーすると塗りの上に薄い黒を重ねて少し濃くし、押すと内側へへこむ。
+      主操作は緑、危険は赤、選んでいる状態（current）は青緑の、平らな塗りに白い文字。
+      枠と下の影を塗りより濃い同じ色にし、手本の主操作と同じく下だけ2pxの縁に見せる。
     */
     &[data-variant="primary"] {
-      --rx-button-color: var(--rx-green-dark);
-      --rx-button-fill: var(--rx-fill-primary);
-      background: var(--rx-green-dark);
-      background-image: var(--rx-button-fill);
-      border-color: var(--rx-green-dark);
+      --rx-button-color: var(--rx-green);
+      --rx-button-edge: var(--rx-green-dark);
+      font-weight: 700;
     }
     &[data-current="true"] {
       --rx-button-color: var(--rx-teal);
-      --rx-button-fill: var(--rx-fill-on);
-      background: var(--rx-teal);
-      background-image: var(--rx-button-fill);
-      border-color: var(--rx-teal-dark);
+      --rx-button-edge: var(--rx-teal-dark);
     }
     &[data-variant="danger"] {
       --rx-button-color: var(--rx-danger);
-      --rx-button-fill: var(--rx-fill-danger);
-      background: var(--rx-danger);
-      background-image: var(--rx-button-fill);
-      border-color: var(--rx-red-dark);
+      --rx-button-edge: var(--rx-red-dark);
     }
     &:is([data-variant="primary"], [data-variant="danger"], [data-current="true"]) {
+      border-color: var(--rx-button-edge);
+      border-radius: var(--rx-radius-primary);
+      background: var(--rx-button-color);
       color: var(--rx-surface);
-      text-shadow: var(--rx-deboss);
-      box-shadow: var(--rx-shadow-control-primary);
-
-      /* 控えめな操作の淡い面の色へ戻さず、塗りの下の色も役割の色のままにする。 */
+      box-shadow: 0 var(--rx-stroke-width) 0 var(--rx-button-edge);
       &:hover:not(:disabled) {
-        background-color: var(--rx-button-color);
-        background-image: linear-gradient(rgb(0 0 0 / 8%), rgb(0 0 0 / 8%)), var(--rx-button-fill);
+        border-color: var(--rx-button-edge);
+        background: color-mix(in srgb, var(--rx-button-color) 88%, black);
+        box-shadow: 0 var(--rx-stroke-width) 0 var(--rx-button-edge);
       }
-
       &:active:not(:disabled) {
-        background-color: var(--rx-button-color);
-        background-image:
-          linear-gradient(rgb(0 0 0 / 12%), rgb(0 0 0 / 12%)), var(--rx-button-fill);
+        background: color-mix(in srgb, var(--rx-button-color) 80%, black);
         box-shadow: var(--rx-shadow-control-primary-pressed);
+      }
+      &:focus-visible {
+        box-shadow:
+          var(--rx-focus-glow),
+          0 var(--rx-stroke-width) 0 var(--rx-button-edge);
       }
     }
 
-    /*
-      文字だけの操作は、本文のリンクと同じく青緑の文字に下線を引く。
-      ホバーすると赤茶の文字になり、面は塗らない。
-    */
+    /* 文字だけの操作は、本文のリンクと同じく青緑の文字に1pxの下線を引く。 */
     &[data-variant="link"] {
       background: transparent;
       border-color: transparent;
       color: var(--rx-link);
-      text-shadow: none;
       box-shadow: none;
-      padding-inline: calc(2em / 7);
+      padding-inline: calc(2em / 12);
       text-decoration-line: underline;
       text-decoration-thickness: var(--rx-stroke-width);
       text-underline-offset: 0.15em;
@@ -133,15 +125,22 @@
       }
       &:active:not(:disabled) {
         background: transparent;
-        color: var(--rx-red-dark);
       }
     }
 
-    /* 使えない操作は、昔のUIと同じく形と塗りを残したまま全体を薄くする。 */
+    /*
+      使えない操作は、Highriseの「First」と同じく形・枠・塗りをそのままにし、文字だけを灰色にする。
+      塗りのある操作（主・危険・選んでいる状態）は白い文字のまま灰色にできないので、控えめな操作と同じ白い面にする。
+    */
     &:disabled:not([data-busy="true"]) {
       cursor: default;
-      opacity: var(--rx-disabled-opacity);
-      box-shadow: none;
+      color: var(--rx-disabled-text);
+      &:is([data-variant="primary"], [data-variant="danger"], [data-current="true"]) {
+        border-color: var(--rx-control-border);
+        border-radius: var(--rx-radius-control);
+        background: var(--rx-surface);
+        box-shadow: var(--rx-shadow-control);
+      }
     }
 
     &[data-icon-only="true"] {
@@ -155,38 +154,16 @@
       }
     }
 
-    /*
-      処理中は、Progressの終わりが分からない時と同じく、操作そのものは動かさず、役割の色だけを一方向にゆっくり流す。
-      模様は操作の幅の二倍で繰り返し、一巡りでちょうど元の色に戻る。流す色の組はバリエーションごとに下で決める。
-      塗った操作の明るい側は、白い文字との対比が4.5:1を下回らない割合にとどめる（primary 90%、danger 82%）。
-    */
+    /* 処理中は、待っていることが分かるよう面を淡い灰色にし、ポインターを待ちの形にする。 */
     &[data-busy="true"] {
-      --rx-button-busy-from: var(--rx-surface);
-      --rx-button-busy-to: color-mix(in srgb, var(--rx-surface) 90%, var(--rx-ink));
-      background-image: linear-gradient(
-        to right,
-        var(--rx-button-busy-from),
-        var(--rx-button-busy-to),
-        var(--rx-button-busy-from)
-      );
-      background-size: 200% 100%;
-      background-repeat: repeat-x;
       cursor: progress;
-      &[data-variant="primary"] {
-        --rx-button-busy-from: var(--rx-green-dark);
-        --rx-button-busy-to: var(--rx-green);
-      }
-      &[data-current="true"] {
-        --rx-button-busy-from: var(--rx-teal-dark);
-        --rx-button-busy-to: var(--rx-teal);
-      }
-      &[data-variant="danger"] {
-        --rx-button-busy-from: var(--rx-red-dark);
-        --rx-button-busy-to: var(--rx-danger);
-      }
-      &[data-variant="link"] {
-        --rx-button-busy-from: transparent;
-        --rx-button-busy-to: color-mix(in srgb, var(--rx-link) 12%, transparent);
+      &:not(
+        [data-variant="primary"],
+        [data-variant="danger"],
+        [data-current="true"],
+        [data-variant="link"]
+      ) {
+        background: var(--rx-gray-50);
       }
     }
   }

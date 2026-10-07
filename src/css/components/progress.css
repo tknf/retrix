@@ -19,42 +19,39 @@
       }
     }
     /*
-      淡い灰色の面に沈んだ細い溝に、進んだ分だけバーを引く。バーはオンの塗りと同じ青緑の縦の塗りにし、
-      終わると成功の緑の縦の塗りになる。溝とバーの角は小さく丸める。
+      手本は無い（推測）。BC2のProgressの縦線と見出しの下の帯（lists.md「BC2 Progress」）と同じ、
+      暖かい灰色（#dcd9d2）の7pxの平らな帯を溝にし、進んだ分だけ平らな青緑を重ねる。終わると成功の緑にする。
+      溝もバーも、BC2のピルやカレンダーの帯と同じく両端を丸める。沈んだ影とグラデーションは使わない。
     */
     & > .track {
       display: block;
       position: relative;
-      block-size: 0.5rem;
+      block-size: 0.4375rem;
       margin-block-start: var(--rx-space-1);
       overflow: hidden;
-      border-radius: var(--rx-radius-mark);
-      background: var(--rx-gray-50);
-      box-shadow: var(--rx-shadow-sunken);
+      border-radius: var(--rx-radius-pill);
+      background: var(--rx-calendar-rule);
       & > .fill {
         display: block;
         block-size: 100%;
         border-radius: inherit;
         background: var(--rx-teal);
-        background-image: linear-gradient(180deg, var(--rx-teal) 0%, var(--rx-teal-dark) 100%);
       }
       &[data-state="complete"] > .fill {
         background: var(--rx-green);
-        background-image: var(--rx-fill-success);
       }
       /*
-        終わりが分からない処理は、溝いっぱいのバーの中で、淡い青緑の濃淡が途切れずにゆっくり一方向へ流れ続ける。
-        バーそのものは動かさず、色だけを流す（模様はバーの幅の二倍で繰り返し、一巡りでちょうど元の色に戻る）。
+        終わりが分からない処理は、動きを使えないので、溝いっぱいに青緑の短い区切りを等間隔に並べた止まった帯にする。
+        進んだ量を示す一本のバーと形を変え、量が分からないことを止まった表示のまま読めるようにする。
       */
       &[data-state="indeterminate"] > .fill {
         inline-size: 100%;
-        background: linear-gradient(
-            to right,
-            color-mix(in srgb, var(--rx-teal) 20%, var(--rx-surface)),
-            color-mix(in srgb, var(--rx-teal) 60%, var(--rx-surface)),
-            color-mix(in srgb, var(--rx-teal) 20%, var(--rx-surface))
-          )
-          0 0 / 200% 100% repeat-x;
+        border-radius: 0;
+        background: repeating-linear-gradient(
+          to right,
+          var(--rx-teal) 0 0.75rem,
+          transparent 0.75rem 1.125rem
+        );
       }
     }
   }
@@ -64,6 +61,13 @@
       background: Canvas;
       & > .fill {
         background: Highlight;
+      }
+      &[data-state="indeterminate"] > .fill {
+        background: repeating-linear-gradient(
+          to right,
+          Highlight 0 0.75rem,
+          Canvas 0.75rem 1.125rem
+        );
       }
     }
   }

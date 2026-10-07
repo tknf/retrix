@@ -73,7 +73,7 @@ JavaScriptが無い時は、検索欄を出さず、標準の `select` をその
 
 登録するcontroller：`combobox`（`ComboboxController`）、`picker`（`PickerController`）
 
-読み込むCSS：`layers.css`、`reset.css`、`tokens.css`、`base.css`、`layout.css`、`components/button.css`、`components/field.css`、`components/icon.css`、`components/picker.css`、`components/tag.css`
+読み込むCSS：`layers.css`、`reset.css`、`tokens.css`、`base.css`、`layout.css`、`components/button.css`、`components/field.css`、`components/icon.css`、`components/picker.css`、`components/suggestion.css`、`components/tag.css`
 
 #### `PickerOption`
 

@@ -1,64 +1,68 @@
 @layer components {
   /*
-    ページ送り。番号はButtonと同じ、枠と縦の淡い塗りを持つ小さな角の四角にする。
-    今のページは青緑の縦の塗りに白い太字、押せない前後の送りは斜線。
+    ページ送り。実測: overlays.md「5a. ページ送り（Highrise「First / Page 1 / Next →」）」。
+    - 押せる送りは丸薬形（両端が完全に丸い）、高さ約24px。
+    - 枠は上 #dddddd・横 #cecece・下 #b8b8b8（下ほど濃い）。下に1pxの淡い影（#dfdfdf）。
+    - 塗りは上が白、下へ #e7e7e7 になる縦のグラデーション。文字は黒の太字。
+    - 使えない送り（「First」）は形・枠・塗りをそのままにし、文字だけを灰色にする（--rx-disabled-text）。
+    - 今のページ（「Page 1」）は丸薬形にせず、送りの間に置く黒の太字。
+    文字は手本の約11pxを日本語が読める12pxにし、枠を除いた内側の高さとの差を偶数に保つ（24 − 2 − 12 = 10）。
   */
   .rx-pagination {
+    --rx-pagination-edge-top: #dddddd;
+    --rx-pagination-edge-side: #cecece;
+    --rx-pagination-edge-bottom: #b8b8b8;
+    --rx-pagination-fill: linear-gradient(var(--rx-surface) 35%, #e7e7e7);
+    /* ホバーと押した時の塗りは手本に無い（推測）。ホバーは一段灰色に寄せ、押すと上下を反転する。 */
+    --rx-pagination-fill-hover: linear-gradient(#fafafa 35%, #dddddd);
+    --rx-pagination-fill-pressed: linear-gradient(#e2e2e2, #f4f4f4);
+    --rx-pagination-shadow: 0 var(--rx-stroke-width) 0 rgb(0 0 0 / 7%);
     font-family: var(--rx-control-font-family);
-    font-size: var(--rx-label);
-    line-height: var(--rx-label-leading);
+    font-size: var(--rx-small);
+    font-weight: 700;
+    line-height: calc(4 / 3);
     & > ul {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: var(--rx-space-1);
+      gap: var(--rx-space-2);
       padding: 0;
       list-style: none;
     }
     & > ul > li > :is(a, span) {
       display: inline-grid;
       place-items: center;
-      min-inline-size: var(--rx-control-compact);
-      min-block-size: var(--rx-control-compact);
+      min-inline-size: 1.5rem;
+      min-block-size: 1.5rem;
       padding-block: 0;
-      padding-inline: var(--rx-space-2);
+      padding-inline: 0.625rem;
       border: var(--rx-stroke-width) solid transparent;
-      border-radius: var(--rx-radius-control);
-      color: var(--rx-muted);
+      border-radius: var(--rx-radius-pill);
+      color: var(--rx-text);
       font-variant-numeric: tabular-nums;
       text-decoration: none;
     }
-    /* 押せる番号はButtonと同じ枠と手触り。下の枠を少し濃くし、ホバーで塗りを濃く、押すと内側へへこむ。 */
+    & > ul > li > :is(a, [data-disabled="true"]) {
+      border-color: var(--rx-pagination-edge-top) var(--rx-pagination-edge-side)
+        var(--rx-pagination-edge-bottom);
+      background: var(--rx-surface) var(--rx-pagination-fill);
+      box-shadow: var(--rx-pagination-shadow);
+    }
     & > ul > li > a {
-      border-color: var(--rx-control-border);
-      border-block-end-color: color-mix(in srgb, var(--rx-control-border) 80%, var(--rx-ink));
-      background: var(--rx-surface) var(--rx-fill-control);
-      color: var(--rx-text);
-      box-shadow: var(--rx-shadow-control);
       &:hover {
-        border-color: color-mix(in srgb, var(--rx-control-border) 75%, var(--rx-ink));
-        background-image:
-          linear-gradient(rgb(38 38 36 / 4%), rgb(38 38 36 / 4%)), var(--rx-fill-control);
-        box-shadow: var(--rx-shadow-control-hover);
+        background-image: var(--rx-pagination-fill-hover);
       }
       &:active {
-        background: color-mix(in srgb, var(--rx-ink) 8%, var(--rx-surface));
-        box-shadow: var(--rx-shadow-control-pressed);
+        background-image: var(--rx-pagination-fill-pressed);
+        box-shadow: none;
       }
     }
-    /* 押せない前後の送りは、ほかの使えない操作と同じ斜線。 */
     & > ul > li > [data-disabled="true"] {
-      border-color: var(--rx-border);
-      background: var(--rx-hatch), var(--rx-surface);
-      color: var(--rx-muted);
+      color: var(--rx-disabled-text);
     }
-    /* 今のページはオンのボタンと同じ青緑の縦の塗りに白い太字。 */
-    & > ul > li > [data-current="true"] {
-      border-color: var(--rx-teal-dark);
-      background: var(--rx-teal) linear-gradient(180deg, var(--rx-teal), var(--rx-teal-dark));
-      color: var(--rx-surface);
-      font-weight: 600;
-      box-shadow: var(--rx-shadow-control-primary);
+    /* 今のページと省略記号は面を持たず、送りの間に文字だけを置く。 */
+    & > ul > li > span:not([data-disabled="true"]) {
+      padding-inline: var(--rx-space-1);
     }
     @media (pointer: coarse) {
       & > ul > li > :is(a, span) {
@@ -68,15 +72,17 @@
     }
   }
   @media (forced-colors: active) {
-    .rx-pagination > ul > li > :is(a, [data-current="true"]) {
+    .rx-pagination > ul > li > :is(a, [data-disabled="true"]) {
+      border-color: CanvasText;
       background: Canvas;
       color: CanvasText;
       box-shadow: none;
     }
+    .rx-pagination > ul > li > [data-disabled="true"] {
+      color: GrayText;
+    }
     .rx-pagination > ul > li > [data-current="true"] {
-      forced-color-adjust: none;
-      background: Highlight;
-      color: HighlightText;
+      text-decoration-line: underline;
     }
   }
 }

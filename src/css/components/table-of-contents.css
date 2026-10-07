@@ -1,5 +1,11 @@
 @layer components {
+  /*
+    目次。行は Navigation と同じく structure.md「Highrise 2011 の構成 / 左の列」に合わせる
+    （13px・#51504c、行の間隔28px、今いる行は面 #e6e3de と太字の黒）。
+  */
   .rx-table-of-contents {
+    --rx-table-of-contents-text: #51504c;
+    --rx-table-of-contents-current: #e6e3de;
     display: grid;
     gap: var(--rx-space-8);
     min-inline-size: 0;
@@ -13,7 +19,10 @@
     inline-size: fit-content;
     max-inline-size: min(100%, 24rem);
     min-inline-size: 0;
-    /* 目次の見出しは、列の小見出しと同じ字間を空けた小さな大文字の太字。線は伸ばさない。 */
+    /*
+      目次の見出しは、Highriseの「RECENTLY VIEWED」と同じ字間を空けた小さな大文字。線は伸ばさない。
+      実測の#91908cは白地で4.5:1に届かないため、同じ暖かい灰色の--rx-quietに濃くする。
+    */
     & > .heading {
       display: flex;
       align-items: center;
@@ -21,9 +30,9 @@
       margin: 0;
       padding-block-end: var(--rx-space-1);
       padding-inline: var(--rx-space-2);
-      color: var(--rx-muted);
+      color: var(--rx-quiet);
       font-size: var(--rx-small);
-      font-weight: 600;
+      font-weight: 400;
       line-height: var(--rx-small-leading);
       letter-spacing: 0.06em;
       text-transform: uppercase;
@@ -36,8 +45,8 @@
       list-style: none;
     }
     /*
-      行はNavigationと同じ作り。背景のパネルを持たず、ホバーすると名前に下線を引く。
-      今いる項目もNavigationと同じく、淡い灰色の面と黒い太字。番号は茶色の小さな数字。
+      行はNavigationと同じ作り。背景のパネルを持たず、ホバーすると名前に下線を引く（推測）。
+      今いる項目もNavigationと同じく、面 #e6e3de と黒い太字。番号は茶色の小さな数字（structure.md「日付」の茶色を濃くした--rx-meta）。
     */
     & > ol > li > a {
       display: grid;
@@ -46,11 +55,13 @@
       align-items: baseline;
       gap: var(--rx-space-2);
       min-inline-size: 0;
-      min-block-size: var(--rx-control-compact);
-      padding-block: var(--rx-space-1);
+      /* 13pxの文字の行（18px）を上下5pxで挟み、実測の行の間隔28pxにする。 */
+      min-block-size: 1.75rem;
+      padding-block: 0.3125rem;
       padding-inline: var(--rx-space-2);
-      border-radius: var(--rx-radius-control);
-      color: var(--rx-text);
+      /* Navigationと同じく、今いる行の面は角丸の無い四角。 */
+      border-radius: 0;
+      color: var(--rx-table-of-contents-text);
       font-size: var(--rx-label);
       line-height: var(--rx-label-leading);
       text-decoration: none;
@@ -70,9 +81,9 @@
         }
       }
       &[data-state="current"] {
-        background: color-mix(in srgb, var(--rx-ink) 8%, transparent);
+        background: var(--rx-table-of-contents-current);
         color: var(--rx-ink);
-        font-weight: 600;
+        font-weight: 700;
         & > .title {
           text-decoration-line: none;
         }

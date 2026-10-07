@@ -1,8 +1,12 @@
 @layer components {
   /*
-    比べる行の一覧。Basecamp 2の議論の一覧と同じく、行の幅いっぱいに罫線を引いて区切る。
-    題名は下線付きのリンク（リンクでない時は黒い太字）、説明は灰色、日付などのメタ情報は茶色の小さな文字。
-    ホバーした行は淡い黄色、今開いている行は淡い青緑の面で示す。面は角を丸めず、行の幅いっぱいに塗る。
+    比べる行の一覧。実測: lists.md「BC2 議論の一覧」。
+    - 行の下に1px #ececec の罫線。行は2行（行の高さ18px）と上下約9pxの余白で55px。左右の余白は無く、罫線は行の幅いっぱい。
+    - アバターは30pxの円で、上の罫線から5px下。投稿者・題名の列はアバターの右10pxから。
+    - 題名は14〜15pxの太字の青緑（#1c5c77）に1pxの下線。抜粋は「 - 」に続けて同じ行に流す #666。
+      リンクでない題名は、2012年版の一覧と同じく下線のない黒い太字。
+    - 日付は末尾に右寄せした茶色（実測 #ab9c85。白地で4.5:1に届かないので --rx-meta）。
+    選んだ行（今開いている行）は37signalsの黄色のハイライト（#ffffcc）で塗る。ホバーの面は手本に無い（推測）ので、その半分の淡い黄色にする。
   */
   .rx-data-list {
     container: rx-data-list / inline-size;
@@ -13,45 +17,52 @@
     padding: 0;
     color: var(--rx-text);
     font-size: var(--rx-body);
-    line-height: var(--rx-label-leading);
+    line-height: calc(18 / 15);
     list-style: none;
     & > li {
       position: relative;
       display: grid;
       grid-template-columns: minmax(0, 1fr);
-      gap: 0.125rem var(--rx-space-3);
-      align-items: center;
+      gap: 0 var(--rx-space-3);
+      align-items: start;
       min-inline-size: 0;
-      padding-block: var(--rx-space-3);
-      padding-inline: var(--rx-space-2);
+      padding-block: 0.5625rem;
+      padding-inline: 0;
       & + li {
         border-block-start: var(--rx-stroke-width) solid var(--rx-border);
       }
       &:has(> .body > a.title):hover {
         background: color-mix(in srgb, var(--rx-mark) 50%, var(--rx-surface));
       }
-      &:has(> .body > a.title:active) {
+      &:has(> .body > a.title:active),
+      &[data-current="true"] {
         background: var(--rx-mark);
       }
-      &[data-current="true"] {
-        background: var(--rx-cover);
-      }
+      /* アバターは罫線から5px下（行の上の余白9pxから4px戻す）。 */
       & > .start {
         grid-column: 1;
         grid-row: 1 / span 2;
         display: flex;
         align-items: center;
         gap: var(--rx-space-2);
+        min-block-size: calc(18em / 15);
+        & > .rx-avatar {
+          inline-size: 1.875rem;
+          block-size: 1.875rem;
+          margin-block-start: -0.25rem;
+          font-size: var(--rx-small);
+        }
       }
       & > .body {
         min-inline-size: 0;
         overflow-wrap: anywhere;
-        /* 項目の題名は黒い太字。リンクの題名は本文のリンクと同じ青緑の文字と下線にし、ホバーで赤茶にする。 */
+        /* 題名と抜粋は一続きの文として流す。 */
         & > .title {
+          display: inline;
           color: var(--rx-ink);
           font-size: var(--rx-body);
-          font-weight: 600;
-          line-height: var(--rx-label-leading);
+          font-weight: 700;
+          line-height: inherit;
         }
         /*
           題名のリンクの押せる範囲を行全体に広げる。ホバー時の面と押せる範囲をそろえ、
@@ -59,6 +70,9 @@
         */
         & > a.title {
           color: var(--rx-link);
+          text-decoration-line: underline;
+          text-decoration-thickness: var(--rx-stroke-width);
+          text-underline-offset: 0.15em;
           &:hover {
             color: var(--rx-link-hover);
           }
@@ -69,18 +83,22 @@
             inset-inline: 0;
           }
           &:focus-visible {
-            outline: 0.125rem solid var(--rx-link);
+            outline: 0.125rem solid var(--rx-focus-border);
             outline-offset: 0.125rem;
           }
         }
-        /* 説明は灰色の抜粋。題名に寄せて一人分・一件分のまとまりに見せる。 */
+        /* 抜粋は題名と同じ大きさの #666 で、「 - 」に続けて同じ行に流す。 */
         & > .description {
-          margin-block-start: 0.125rem;
+          display: inline;
+          margin: 0;
           color: var(--rx-muted);
-          font-size: var(--rx-label);
-          line-height: var(--rx-label-leading);
+          font-size: var(--rx-body);
+          line-height: inherit;
+          &::before {
+            content: " - ";
+          }
         }
-        /* 投稿者・日付などは茶色の小さな文字。 */
+        /* 投稿者・日付などは茶色の小さな文字で、題名の下に置く。 */
         & > .meta {
           margin-block-start: 0.125rem;
           color: var(--rx-meta);
@@ -96,14 +114,16 @@
         align-items: center;
         gap: var(--rx-space-2);
         min-inline-size: 0;
-        /* 末尾の日付は茶色。件数・状態はBadgeなどがそれぞれの色を持つ。 */
+        /* 末尾の日付は題名と同じ大きさの茶色。件数・状態はBadgeなどがそれぞれの色を持つ。 */
         color: var(--rx-meta);
-        font-size: var(--rx-small);
-        line-height: var(--rx-small-leading);
+        font-size: var(--rx-body);
+        line-height: inherit;
         overflow-wrap: anywhere;
       }
+      /* アバターの列は30px、題名の列までは10px。 */
       &:has(> .start) {
         grid-template-columns: auto minmax(0, 1fr);
+        column-gap: 0.625rem;
         & > :is(.body, .end) {
           grid-column: 2;
         }
@@ -116,6 +136,8 @@
         & > .end {
           grid-column: 2;
           grid-row: 1;
+          justify-content: end;
+          text-align: end;
         }
         &:has(> .start) {
           grid-template-columns: auto minmax(0, 1fr) fit-content(32%);
