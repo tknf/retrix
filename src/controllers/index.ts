@@ -33,6 +33,7 @@ export { TreegridController } from "./treegrid";
 export { CommandMenuController } from "./command-menu";
 
 export { TableController } from "./table";
+export { TableResizeController } from "./table-resize";
 
 export { BoardController } from "./board";
 export { ToastStackController } from "./toast-stack";

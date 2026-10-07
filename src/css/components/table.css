@@ -49,9 +49,8 @@
       margin: 0;
       margin-inline: auto;
       padding-block: var(--rx-space-1);
-      /* 末尾側は、角の×が重なる分を空けて、最後の操作を×の下に入れない。 */
-      padding-inline: var(--rx-space-1)
-        calc(var(--rx-overlay-close-size) - var(--rx-overlay-close-offset));
+      /* 末尾側は、×の分を空けて、最後の操作を×の下に入れない。 */
+      padding-inline: var(--rx-space-1) calc(var(--rx-overlay-close-size) + var(--rx-space-2));
       border: 0;
       border-radius: var(--rx-radius-surface);
       background: var(--rx-surface);
@@ -97,6 +96,11 @@
         & > .count {
           font-weight: 700;
           white-space: nowrap;
+        }
+        /* ×はパネルと同じく塗らずに、バーの末尾側の内側で上下の中央に置く。 */
+        & > .close {
+          inset-block-start: calc(50% - var(--rx-overlay-close-size) / 2);
+          inset-inline-end: var(--rx-space-1);
         }
       }
       /*
@@ -257,6 +261,60 @@
       }
       & > thead > tr > [data-cell="numeric"] > .sort {
         margin-inline-start: auto;
+      }
+      /*
+        列の幅を変えた表は、<col>の幅で列を固定する。長い文は折り返し、短い値は列の幅で切って末尾を省く。
+      */
+      &[data-resized="true"] {
+        table-layout: fixed;
+        & > :is(thead, tbody, tfoot) > tr > :is(th, td) {
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        & > :is(thead, tbody, tfoot) > tr > [data-cell="text"] {
+          min-inline-size: 0;
+        }
+      }
+      /* ドラッグしている間は、表の上のどこでも幅を変えるカーソルにし、文字を選ばない。 */
+      &[data-resizing="true"] {
+        cursor: col-resize;
+        user-select: none;
+      }
+      /*
+        列の幅を変えるハンドル。見出しの末尾側の縁をまたぐ細い帯で、ホバーとフォーカスの時に青緑の線を出す。
+        TableResizeControllerが接続時に置く。
+      */
+      & > thead > tr > th:has(> .resize) {
+        position: relative;
+      }
+      & > thead > tr > th > .resize {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-end: calc(-1 * var(--rx-space-1));
+        z-index: 2;
+        inline-size: var(--rx-space-2);
+        cursor: col-resize;
+        touch-action: none;
+        &::after {
+          content: "";
+          position: absolute;
+          inset-block: var(--rx-space-1);
+          inset-inline-start: calc(50% - var(--rx-stroke-width));
+          inline-size: calc(var(--rx-stroke-width) * 2);
+          border-radius: var(--rx-radius-pill);
+          background: transparent;
+          transition: background-color var(--rx-duration) ease;
+        }
+        &:hover::after,
+        &:focus-visible::after {
+          background: var(--rx-teal);
+        }
+        &:focus-visible {
+          outline: 0;
+        }
+      }
+      &[data-resizing="true"] > thead > tr > th > .resize::after {
+        background: color-mix(in srgb, var(--rx-teal) 40%, transparent);
       }
       & > tfoot > tr > :is(th, td) {
         font-weight: 600;

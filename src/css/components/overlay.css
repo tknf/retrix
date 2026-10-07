@@ -104,8 +104,10 @@
         (var(--rx-overlay-title-line) - var(--rx-overlay-close-size)) / 2
     );
   }
-  /* パネルの×は塗らない。ホバーすると淡い面を敷き、×を濃くする。 */
-  .rx-overlay > .heading > .heading-row > .close > .rx-button {
+  /* パネルと選択バーの×は塗らない。ホバーすると淡い面を敷き、×を濃くする。 */
+  :is(.rx-overlay > .heading > .heading-row, .rx-table > .selection-bar > .heading)
+    > .close
+    > .rx-button {
     border-color: transparent;
     background: transparent;
     color: var(--rx-muted);

@@ -15,6 +15,7 @@ import {
   TaskListController,
   CommandMenuController,
   TableController,
+  TableResizeController,
   TableSortController,
   TableSelectController,
   BoardController,
@@ -78,6 +79,7 @@ application.register("grid", GridController);
 application.register("treegrid", TreegridController);
 application.register("table-demo", TableDemoController);
 application.register("table", TableController);
+application.register("table-resize", TableResizeController);
 application.register("table-sort", TableSortController);
 application.register("table-select", TableSelectController);
 application.register("inbox-demo", InboxDemoController);
