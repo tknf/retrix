@@ -45,9 +45,6 @@
         font-weight: 400;
         line-height: var(--rx-label-leading);
         cursor: pointer;
-        transition:
-          background-color var(--rx-duration) ease,
-          color var(--rx-duration) ease;
         & > .icon {
           display: flex;
         }

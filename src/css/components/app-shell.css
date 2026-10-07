@@ -20,7 +20,7 @@
     min-block-size: 100dvh;
     overflow-x: clip;
     padding-block-end: var(--rx-space-12);
-    background: var(--rx-background);
+    background: var(--rx-desk-texture), var(--rx-background);
     color: var(--rx-text);
     &[data-size="compact"] {
       --rx-page: calc(var(--rx-measure) + 2 * var(--rx-space-12));

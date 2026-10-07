@@ -45,10 +45,6 @@
         font-weight: 400;
         line-height: calc((1.5rem - 2 * var(--rx-stroke-width) + 1em) / 2);
         text-align: start;
-        transition:
-          background-color var(--rx-duration) ease,
-          border-color var(--rx-duration) ease,
-          box-shadow var(--rx-duration) ease;
         /* 言葉のリアクションは太字で読ませる（絵文字は太さで変わらない）。 */
         & > .content {
           min-inline-size: 0;

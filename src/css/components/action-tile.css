@@ -38,9 +38,6 @@
     /* 名前を「プロジェク／ト」のように語の途中で折り返さない。 */
     word-break: auto-phrase;
     cursor: pointer;
-    transition:
-      background-color var(--rx-duration) ease,
-      box-shadow var(--rx-duration) ease;
     &[data-accent="green"] {
       --rx-action-tile-accent: var(--rx-green);
     }

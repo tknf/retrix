@@ -18,7 +18,6 @@
     font-size: var(--rx-small);
     line-height: var(--rx-small-leading);
     /* 操作の中央の下に出るため、上の中央を支点にする。 */
-    transform-origin: top center;
     /* 下のつなぎの領域を切り取らない。 */
     overflow: visible;
     /*

@@ -35,9 +35,6 @@
       background: var(--rx-surface) var(--rx-fill-control);
       color: var(--rx-text);
       box-shadow: var(--rx-shadow-control);
-      transition:
-        border-color var(--rx-duration) ease,
-        box-shadow var(--rx-duration) ease;
       &:hover {
         border-color: color-mix(in srgb, var(--rx-control-border) 75%, var(--rx-ink));
         background-image:

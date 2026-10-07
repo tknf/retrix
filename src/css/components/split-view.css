@@ -82,7 +82,6 @@
         inset-inline-start: calc(50% - var(--rx-stroke-width) / 2);
         inline-size: var(--rx-stroke-width);
         background: transparent;
-        transition: background-color var(--rx-duration) ease;
       }
       & > .grip {
         position: absolute;
@@ -94,7 +93,6 @@
         border-radius: var(--rx-radius-mark);
         background: var(--rx-surface) var(--rx-fill-control);
         box-shadow: var(--rx-shadow-control);
-        transition: box-shadow var(--rx-duration) ease;
       }
       &:hover > .grip {
         box-shadow: var(--rx-shadow-control-hover);

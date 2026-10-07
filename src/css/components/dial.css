@@ -80,7 +80,6 @@
         font-variant-numeric: tabular-nums;
         white-space: nowrap;
         cursor: pointer;
-        transition: color var(--rx-duration) ease;
         & > input {
           position: absolute;
           inline-size: 0.0625rem;
@@ -148,7 +147,6 @@
           transform-origin: 50% 0;
           rotate: calc(-135deg + var(--rx-dial-at) * var(--rx-dial-step) + 180deg);
           translate: -50% 0;
-          transition: rotate calc(var(--rx-duration) * 2) cubic-bezier(0.3, 1.4, 0.5, 1);
         }
       }
     }
@@ -163,11 +161,6 @@
       & > .face > .stop {
         cursor: not-allowed;
       }
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .rx-dial > .face > .knob > .pointer {
-      transition: none;
     }
   }
   @media (forced-colors: active) {

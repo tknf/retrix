@@ -72,8 +72,9 @@ test("基本色を変えてもhover・押下が既定の色へ戻らず、塗り
   expect(active).toEqual(normal);
 });
 
-test("選択中のButtonを無効にした場合も通常の無効状態として見分けられる", async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: "reduce" });
+test("選択中のButtonを無効にした場合も、通常の無効状態と同じく全体を薄くして見分けられる", async ({
+  page,
+}) => {
   await page.goto("/components/button");
   const button = page.locator('[data-example="hono"] button[data-variant="primary"]').first();
   await button.evaluate((element) => {
@@ -83,25 +84,16 @@ test("選択中のButtonを無効にした場合も通常の無効状態とし�
   const expected = await page
     .locator('[data-example="hono"]')
     .getByRole("button", { name: "変更なし", exact: true })
-    .evaluate((element) => ({
-      background: getComputedStyle(element).backgroundColor,
-      color: getComputedStyle(element).color,
-      image: getComputedStyle(element).backgroundImage,
-    }));
+    .evaluate((element) => getComputedStyle(element).opacity);
+  // 使えない操作は斜線ではなく、昔のUIと同じく形と塗りを残したまま全体を薄くする。
+  expect(Number(expected)).toBeLessThan(1);
   await expect
     .poll(() =>
-      button.evaluate((element) => {
-        const style = getComputedStyle(element);
-        return {
-          background: style.backgroundColor,
-          color: style.color,
-          image: style.backgroundImage,
-          shadow: style.boxShadow,
-        };
-      }),
+      button.evaluate((element) => ({
+        opacity: getComputedStyle(element).opacity,
+        shadow: getComputedStyle(element).boxShadow,
+      })),
     )
-    .toEqual({ ...expected, shadow: "none" });
-  // 使えない操作は斜線で示す。
-  expect(expected.image).toContain("repeating-linear-gradient");
+    .toEqual({ opacity: expected, shadow: "none" });
   await expect(button).toBeDisabled();
 });

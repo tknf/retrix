@@ -37,7 +37,6 @@
     min-block-size: var(--rx-control-size);
     padding-inline-end: var(--rx-space-3);
     border-radius: var(--rx-radius-mark);
-    transition: background-color var(--rx-duration) ease;
     &:hover {
       background: color-mix(in srgb, var(--rx-mark) 40%, var(--rx-surface));
     }
@@ -60,9 +59,6 @@
       padding-inline: 0;
       @media (pointer: fine) {
         min-inline-size: 1.5rem;
-      }
-      & > .rx-icon {
-        transition: rotate var(--rx-duration) ease;
       }
     }
   }

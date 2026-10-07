@@ -41,7 +41,6 @@
       text-decoration-line: underline;
       text-decoration-thickness: var(--rx-stroke-width);
       text-underline-offset: 0.15em;
-      transition: color var(--rx-duration) ease;
       &:hover {
         color: var(--rx-link-hover);
       }

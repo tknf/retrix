@@ -31,7 +31,6 @@
         color: inherit;
         text-decoration: none;
         overflow-wrap: anywhere;
-        transition: background-color var(--rx-duration) ease;
         &:hover {
           background: color-mix(in srgb, var(--rx-mark) 50%, var(--rx-surface));
         }
@@ -50,7 +49,6 @@
           text-decoration-line: underline;
           text-decoration-thickness: var(--rx-stroke-width);
           text-underline-offset: 0.15em;
-          transition: color var(--rx-duration) ease;
         }
         &:hover > .title {
           color: var(--rx-link-hover);

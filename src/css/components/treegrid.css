@@ -15,9 +15,6 @@
       --rx-button-size: var(--rx-treegrid-toggle-size);
       flex: none;
       padding-inline: 0;
-      & > .rx-icon {
-        transition: rotate var(--rx-duration) ease;
-      }
     }
     & > .spacer {
       flex: none;

@@ -94,7 +94,6 @@
           padding-inline: var(--rx-space-2);
           border-radius: var(--rx-radius-control);
           cursor: pointer;
-          transition: background-color var(--rx-duration) ease;
           &[hidden] {
             display: none;
           }

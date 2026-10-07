@@ -32,9 +32,6 @@
       padding-inline: var(--rx-stroke-width);
       margin: 0;
       cursor: inherit;
-      transition:
-        grid-template-columns var(--rx-duration) ease-in-out,
-        background-color var(--rx-duration) ease;
     }
 
     & > input::before {

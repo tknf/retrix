@@ -27,18 +27,8 @@
     /* 背後の画面は、机の色を保ったまま暗くする。 */
     &::backdrop {
       background: rgb(38 38 36 / 32%);
-      transition:
-        background-color var(--rx-duration) ease-out,
-        display var(--rx-duration) allow-discrete,
-        overlay var(--rx-duration) allow-discrete;
     }
     &:not([open])::backdrop {
-      background: rgb(38 38 36 / 0%);
-      transition-duration: var(--rx-duration-out);
-    }
-  }
-  @starting-style {
-    .rx-dialog > .panel[open]::backdrop {
       background: rgb(38 38 36 / 0%);
     }
   }
@@ -94,9 +84,6 @@
       border-end-start-radius: 0;
       border-end-end-radius: 0;
       touch-action: none;
-      --rx-motion-slide: var(--rx-duration);
-      --rx-motion-scale-in: 1;
-      --rx-motion-scale-out: 1;
       /* 上端のハンドル。ドラッグして閉じられることを示す。 */
       &::before {
         content: "";
@@ -113,9 +100,6 @@
       &:not([open]) {
         translate: 0 100%;
       }
-      &[data-dragging="true"] {
-        transition: none;
-      }
       & > .heading {
         padding-block-start: var(--rx-space-6);
         & > .heading-row {
@@ -131,11 +115,6 @@
             position: static;
           }
         }
-      }
-    }
-    @starting-style {
-      .rx-dialog > .panel[open] {
-        translate: 0 100%;
       }
     }
   }

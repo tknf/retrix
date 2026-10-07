@@ -47,21 +47,7 @@
       }
       & > .copied {
         display: block;
-        animation: rx-copy-field-write 0.35s ease-out both;
       }
-    }
-  }
-  @keyframes rx-copy-field-write {
-    from {
-      clip-path: inset(0 100% 0 0);
-    }
-    to {
-      clip-path: inset(0);
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .rx-copy-field[data-copied="true"] > .rx-field > .row > .rx-button > .copied {
-      animation: none;
     }
   }
 }

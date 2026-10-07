@@ -37,7 +37,6 @@
         border-radius: inherit;
         background: var(--rx-teal);
         background-image: linear-gradient(180deg, var(--rx-teal) 0%, var(--rx-teal-dark) 100%);
-        transition: inline-size var(--rx-duration) ease-out;
       }
       &[data-state="complete"] > .fill {
         background: var(--rx-green);
@@ -56,22 +55,7 @@
             color-mix(in srgb, var(--rx-teal) 20%, var(--rx-surface))
           )
           0 0 / 200% 100% repeat-x;
-        animation: rx-progress-flow 2.4s linear infinite;
-        &:dir(rtl) {
-          animation-direction: reverse;
-        }
       }
-    }
-  }
-  @keyframes rx-progress-flow {
-    to {
-      background-position-x: -200%;
-    }
-  }
-  /* 動きを減らす時は、色を流さず、青緑の濃淡を溝いっぱいに敷いたまま止める。 */
-  @media (prefers-reduced-motion: reduce) {
-    .rx-progress > .track[data-state="indeterminate"] > .fill {
-      animation: none;
     }
   }
   @media (forced-colors: active) {

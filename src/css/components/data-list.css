@@ -24,7 +24,6 @@
       min-inline-size: 0;
       padding-block: var(--rx-space-3);
       padding-inline: var(--rx-space-2);
-      transition: background-color var(--rx-duration) ease;
       & + li {
         border-block-start: var(--rx-stroke-width) solid var(--rx-border);
       }

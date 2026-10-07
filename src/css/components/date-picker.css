@@ -85,7 +85,6 @@
   .rx-date-picker > .panel {
     position: fixed;
     /* 白いパネル。開閉のアニメーションはoverlay.cssの共通の定義で、欄の下の先頭側の角を支点にする。 */
-    transform-origin: top left;
     inset-block: 0 auto;
     inset-inline: 0 auto;
     margin: 0;
@@ -104,10 +103,6 @@
     line-height: calc(10 / 7);
     letter-spacing: 0;
     box-shadow: var(--rx-shadow-menu);
-
-    &:dir(rtl) {
-      transform-origin: top right;
-    }
     &:popover-open {
       display: grid;
       gap: var(--rx-space-2);

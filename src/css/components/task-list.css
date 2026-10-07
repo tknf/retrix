@@ -40,7 +40,6 @@
         display: grid;
         place-items: center;
         color: var(--rx-muted);
-        transition: rotate var(--rx-duration) ease;
         & > .rx-icon {
           font-size: 0.75rem;
         }
@@ -59,7 +58,6 @@
           var(--rx-success) calc(var(--rx-task-progress) * 1turn),
           color-mix(in srgb, var(--rx-success) 16%, var(--rx-surface)) 0
         );
-        transition: --rx-task-progress var(--rx-duration) ease;
       }
       & > .count {
         margin-inline-start: calc(var(--rx-space-1) * -1);
@@ -76,7 +74,6 @@
         block-size: 0.625rem;
         background: var(--rx-surface);
         mask: url("../assets/check-bold.svg") center / contain no-repeat;
-        animation: rx-check-arrive calc(var(--rx-duration) * 1.5) ease-out;
       }
       & > .count {
         color: var(--rx-success);
@@ -132,9 +129,6 @@
             inline-size: calc(var(--rx-body) * 9 / 7);
             block-size: calc(var(--rx-body) * 9 / 7);
             border-radius: 50%;
-            transition:
-              background-color var(--rx-duration) ease,
-              color var(--rx-duration) ease;
           }
           &:focus-within {
             background: var(--rx-cover);
@@ -178,9 +172,6 @@
             border-color: var(--rx-success);
             background: var(--rx-fill-success);
           }
-          & > input:checked::before {
-            animation: rx-check-arrive calc(var(--rx-duration) * 1.5) ease-out;
-          }
           & > span {
             min-inline-size: 0;
             overflow-wrap: anywhere;
@@ -204,9 +195,6 @@
             /* Basecamp 2のTo-doと同じく、項目の題名は通常の太さにし、行を軽く詰めて読ませる。 */
             color: var(--rx-ink);
             font-weight: 400;
-            transition:
-              background-size calc(var(--rx-duration) * 2.5) ease-out,
-              color var(--rx-duration) ease;
             &:dir(rtl) {
               background-position: 100% 55%;
             }
@@ -234,15 +222,6 @@
       min-block-size: 2.75rem;
     }
   }
-  @media (prefers-reduced-motion: reduce) {
-    .rx-task-list > .sheet > li > .rx-choice > input:checked::before,
-    .rx-task-list[data-complete="true"] > summary > .pie::before {
-      animation: none;
-    }
-    .rx-task-list > .sheet > li > .rx-choice > span > strong {
-      transition: none;
-    }
-  }
   /* 強制カラーでは背景の線が消えるため、終えた題名は取り消し線で示す。 */
   @media (forced-colors: active) {
     .rx-task-list > .sheet > li.add:focus-within {
@@ -254,17 +233,6 @@
     }
     .rx-task-list > summary > .pie {
       border: var(--rx-stroke-width) solid CanvasText;
-    }
-  }
-  @keyframes rx-check-arrive {
-    0% {
-      transform: scale(0.6);
-    }
-    65% {
-      transform: scale(1.15);
-    }
-    100% {
-      transform: scale(1);
     }
   }
 }

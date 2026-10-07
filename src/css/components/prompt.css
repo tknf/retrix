@@ -56,9 +56,6 @@
       overflow-wrap: anywhere;
       word-break: auto-phrase;
       cursor: pointer;
-      transition:
-        background-color var(--rx-duration) ease,
-        box-shadow var(--rx-duration) ease;
       /* 丸いマーク。題名の一行目の高さにそろえ、答える前は淡い青緑の輪にする。 */
       & > .mark {
         display: grid;
@@ -71,9 +68,6 @@
           border: var(--rx-frame-width) solid
             color-mix(in srgb, var(--rx-link) 35%, var(--rx-surface));
           border-radius: 50%;
-          transition:
-            border-color var(--rx-duration) ease,
-            background var(--rx-duration) ease;
         }
       }
       & > .text {
@@ -93,9 +87,6 @@
         block-size: 1lh;
         color: var(--rx-muted);
         opacity: 0;
-        transition:
-          opacity var(--rx-duration) ease,
-          color var(--rx-duration) ease;
         &:dir(rtl) > .rx-icon {
           rotate: 180deg;
         }

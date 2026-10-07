@@ -58,7 +58,6 @@
     list-style: none;
     box-shadow: var(--rx-shadow-menu);
     /* 開閉のアニメーションはoverlay.cssの共通の定義。支点は開いた操作の側の角にする。 */
-    transform-origin: top left;
     &::backdrop {
       background: transparent;
       pointer-events: none;
@@ -66,27 +65,6 @@
     &:focus-visible {
       outline: 0.125rem solid var(--rx-blue);
       outline-offset: -0.125rem;
-    }
-    &:dir(rtl) {
-      transform-origin: top right;
-    }
-    &[data-side="top"] {
-      transform-origin: bottom left;
-    }
-    &[data-side="top"]:dir(rtl) {
-      transform-origin: bottom right;
-    }
-  }
-  .rx-dropdown-menu[data-align="end"] > .rx-menu:dir(ltr) {
-    transform-origin: top right;
-    &[data-side="top"] {
-      transform-origin: bottom right;
-    }
-  }
-  .rx-dropdown-menu[data-align="end"] > .rx-menu:dir(rtl) {
-    transform-origin: top left;
-    &[data-side="top"] {
-      transform-origin: bottom left;
     }
   }
   .rx-menu[data-variant="group"] {
@@ -118,7 +96,6 @@
     text-decoration: none;
     box-shadow: none;
     cursor: pointer;
-    transition: background-color var(--rx-duration) ease;
     &:hover:not(:disabled, [data-disabled="true"]),
     &[data-state="active"]:not(:disabled, [data-disabled="true"]) {
       border-color: transparent;

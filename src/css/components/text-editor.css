@@ -16,9 +16,6 @@
     border-radius: var(--rx-radius-control);
     background: var(--rx-surface);
     box-shadow: var(--rx-shadow-input);
-    transition:
-      border-color var(--rx-duration) ease,
-      box-shadow var(--rx-duration) ease;
     &:focus-within {
       border-color: var(--rx-blue);
       box-shadow:

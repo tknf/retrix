@@ -44,7 +44,6 @@
         padding-inline: var(--rx-space-2);
         color: inherit;
         text-decoration: none;
-        transition: background-color var(--rx-duration) ease;
         &:is(a):hover {
           background: color-mix(in srgb, var(--rx-mark) 50%, var(--rx-surface));
         }
@@ -97,7 +96,6 @@
               text-underline-offset: 0.15em;
               text-overflow: ellipsis;
               white-space: nowrap;
-              transition: color var(--rx-duration) ease;
             }
             & > :is(.count, .attachment) {
               display: inline-flex;
@@ -319,7 +317,6 @@
         background:
           var(--rx-hatch) 0 0 / var(--rx-hatch-step) 100%,
           color-mix(in srgb, var(--rx-background) 70%, var(--rx-surface));
-        animation: rx-message-list-flow 0.8s linear infinite;
       }
       &::after {
         inline-size: 70%;
@@ -331,17 +328,6 @@
     }
     &[data-state="error"] > .state {
       color: var(--rx-danger);
-    }
-  }
-  @keyframes rx-message-list-flow {
-    to {
-      background-position-x: var(--rx-hatch-step);
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .rx-message-list[data-state="loading"] > .state::before,
-    .rx-message-list[data-state="loading"] > .state::after {
-      animation: none;
     }
   }
   @media (forced-colors: active) {

@@ -37,10 +37,6 @@
       inset-block: auto max(var(--rx-space-4), env(safe-area-inset-bottom));
       inset-inline: 0;
       /* 下から出して置き、閉じる時は同じ向きへ下げながら消す（出入りはoverlay.cssの共通の定義）。 */
-      transform-origin: bottom center;
-      --rx-motion-slide: var(--rx-duration-pop);
-      --rx-motion-scale-in: 1;
-      --rx-motion-scale-out: 1;
       /* 選択バーは中身の幅に合わせ、入らない時は操作の列を横にスクロールする。 */
       inline-size: max-content;
       max-inline-size: calc(100% - 2 * var(--rx-space-4));
@@ -226,7 +222,6 @@
           inline-size: 1rem;
           color: var(--rx-muted);
           opacity: 0;
-          transition: opacity var(--rx-duration) ease;
         }
         &:is(:hover, :focus-visible) > .indicator {
           opacity: 1;
@@ -303,7 +298,6 @@
           inline-size: calc(var(--rx-stroke-width) * 2);
           border-radius: var(--rx-radius-pill);
           background: transparent;
-          transition: background-color var(--rx-duration) ease;
         }
         &:hover::after,
         &:focus-visible::after {
@@ -323,11 +317,6 @@
     }
   }
   /* 選択バーは、開き始めを少し下に置いて出す。 */
-  @starting-style {
-    .rx-table > .selection-bar:popover-open {
-      translate: 0 1.5rem;
-    }
-  }
   @media (forced-colors: active) {
     .rx-table > .selection-bar {
       outline: var(--rx-stroke-width) solid CanvasText;

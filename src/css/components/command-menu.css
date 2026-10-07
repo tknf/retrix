@@ -46,7 +46,6 @@
       container: rx-command-panel / inline-size;
       position: fixed;
       /* 開閉のアニメーションはoverlay.cssの共通の定義。上部中央を支点にする。 */
-      transform-origin: top center;
       inset-block: var(--rx-space-4) auto;
       inset-inline: 0;
       inline-size: min(30rem, calc(100% - var(--rx-space-4)));

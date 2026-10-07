@@ -80,22 +80,6 @@
       &:dir(rtl) {
         --rx-empty-state-pen-start: inset(0 0 0 100%);
       }
-      & > .rx-icon {
-        animation: rx-empty-state-write 0.6s ease-out 0.2s both;
-      }
-    }
-  }
-  @keyframes rx-empty-state-write {
-    from {
-      clip-path: var(--rx-empty-state-pen-start);
-    }
-    to {
-      clip-path: inset(0);
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .rx-empty-state[data-kind="complete"] > .slip > .symbol > .rx-icon {
-      animation: none;
     }
   }
   @media (forced-colors: active) {

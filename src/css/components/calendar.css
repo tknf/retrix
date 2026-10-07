@@ -227,9 +227,6 @@
       font-size: var(--rx-small);
       line-height: 1rem;
       text-decoration: none;
-      transition:
-        background-color var(--rx-duration) ease,
-        color var(--rx-duration) ease;
       /* 詳細を持つ予定はbutton。リンクの予定と同じ見た目にそろえ、文字の指定はこのファイルが持つ。 */
       &:is(button) {
         appearance: none;
@@ -569,6 +566,8 @@
                 padding-block: 0.1875rem;
                 padding-inline: 0.5rem 0.375rem;
                 overflow: hidden;
+                /* 先頭側の縁に線を引くので、角は丸めない（線の端が丸く欠けないようにする）。 */
+                border-radius: 0;
                 color: var(--rx-text);
                 box-shadow: inset var(--rx-frame-width) 0 0 var(--rx-calendar-event-color);
                 font-size: var(--rx-calendar-meta-size);

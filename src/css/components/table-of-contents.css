@@ -55,9 +55,6 @@
       line-height: var(--rx-label-leading);
       text-decoration: none;
       overflow-wrap: anywhere;
-      transition:
-        background-color var(--rx-duration) ease,
-        color var(--rx-duration) ease;
       & > .number {
         color: var(--rx-meta);
         font-size: var(--rx-small);

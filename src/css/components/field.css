@@ -144,10 +144,11 @@
     & > li:hover:not([data-state="disabled"]) {
       background: var(--rx-background);
     }
+    /* キーボードで注目している候補は、メニューと同じ青の縦の塗りに白い文字。 */
     & > li[data-state="active"] {
-      background: var(--rx-cover);
-      color: var(--rx-text);
-      box-shadow: inset 0.125rem 0 var(--rx-link);
+      background: var(--rx-fill-selection);
+      color: var(--rx-surface);
+      text-shadow: var(--rx-deboss);
     }
     & > li[data-state="selected"] {
       background: var(--rx-info-soft);
@@ -259,9 +260,6 @@
       box-shadow: var(--rx-shadow-input);
       color: var(--rx-surface);
       cursor: inherit;
-      transition:
-        background-color var(--rx-duration) ease,
-        border-color var(--rx-duration) ease;
       &::before {
         content: "";
         inline-size: 0.875rem;
@@ -270,7 +268,6 @@
         mask: url("../assets/check.svg") center / contain no-repeat;
         /* チェックはペンで描くように、書き始めの側から線を出す。 */
         clip-path: inset(0 100% 0 0);
-        transition: clip-path calc(var(--rx-duration) * 2) ease-out;
       }
       &:dir(rtl)::before {
         clip-path: inset(0 0 0 100%);
@@ -305,9 +302,10 @@
         color: var(--rx-muted);
       }
       &:focus-visible {
-        outline: 0.125rem solid var(--rx-focus-ring);
+        outline: 0.125rem solid transparent;
         outline-offset: 0;
-        border-color: var(--rx-link);
+        border-color: var(--rx-focus-border);
+        box-shadow: var(--rx-focus-glow);
       }
     }
     & > span {
@@ -345,9 +343,6 @@
       border-radius: var(--rx-radius-field);
       background: var(--rx-surface);
       box-shadow: none;
-      transition:
-        background-color var(--rx-duration) ease,
-        box-shadow var(--rx-duration) ease;
     }
     &[data-kind="option"]:hover:not(:has(> input:disabled)) {
       border-color: var(--rx-control-border);
@@ -381,17 +376,12 @@
     font-size: var(--rx-label);
     font-weight: 400;
     line-height: calc(10 / 7);
-    transition:
-      border-color var(--rx-duration) ease,
-      box-shadow var(--rx-duration) ease;
-    /* 青い縁の外に淡い青の輪を広げる。 */
+    /* Mac OS XのAquaと同じく、青い縁の外にぼかした青い光を広げる。 */
     &:focus-visible {
       outline: 0.125rem solid transparent;
       outline-offset: 0;
-      border-color: var(--rx-blue);
-      box-shadow:
-        0 0 0 0.125rem var(--rx-focus-ring),
-        var(--rx-shadow-input);
+      border-color: var(--rx-focus-border);
+      box-shadow: var(--rx-focus-glow), var(--rx-shadow-input);
     }
     &[data-size="short"] {
       max-inline-size: 8rem;
@@ -460,30 +450,43 @@
   }
 }
 @layer components {
+  /*
+    一つを選ぶ欄は、Mac OS Xのポップアップボタンと同じく、ボタンと同じ縦の塗りと浮き彫りの文字にし、末尾に下向きの矢印を置く。
+  */
   select.rx-input:not([multiple]):not([size]) {
     appearance: none;
     overflow: clip;
     text-overflow: ellipsis;
     padding-inline-end: 2.5em;
-    background-image: url("../assets/caret.svg");
-    background-repeat: no-repeat;
-    background-size: calc(6em / 7);
-    background-position: right 0.75em center;
+    border-block-start-color: var(--rx-control-border);
+    border-block-end-color: color-mix(in srgb, var(--rx-control-border) 70%, var(--rx-ink));
+    background-color: var(--rx-surface);
+    background-image: url("../assets/caret.svg"), var(--rx-fill-control);
+    background-repeat: no-repeat, repeat;
+    background-size: calc(6em / 7), auto;
+    background-position:
+      right 0.75em center,
+      0 0;
+    box-shadow: var(--rx-shadow-control);
+    text-shadow: var(--rx-emboss);
+    cursor: pointer;
     &:dir(rtl) {
-      background-position: left 0.75em center;
-    }
-    &:disabled {
-      background-image: url("../assets/caret.svg"), var(--rx-hatch);
-      background-repeat: no-repeat, repeat;
-      background-size: calc(6em / 7), auto;
       background-position:
-        right 0.75em center,
+        left 0.75em center,
         0 0;
-      &:dir(rtl) {
-        background-position:
-          left 0.75em center,
-          0 0;
-      }
+    }
+    &:hover:not(:disabled) {
+      background-image: url("../assets/caret.svg"), var(--rx-fill-control-hover);
+    }
+    &:focus-visible {
+      box-shadow: var(--rx-focus-glow), var(--rx-shadow-control);
+    }
+    /* 使えない時はButtonと同じく、形と塗りを残したまま全体を薄くする。 */
+    &:disabled {
+      background-image: url("../assets/caret.svg"), var(--rx-fill-control);
+      opacity: var(--rx-disabled-opacity);
+      box-shadow: none;
+      cursor: default;
     }
   }
   .rx-input[type="file"] {

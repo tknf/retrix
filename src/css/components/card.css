@@ -18,7 +18,6 @@
     line-height: var(--rx-label-leading);
     overflow-wrap: anywhere;
     box-shadow: var(--rx-shadow-paper);
-    transition: box-shadow var(--rx-duration) ease;
     &:has(> .title > a:hover) {
       box-shadow: var(--rx-shadow-paper-lift);
     }
@@ -114,28 +113,12 @@
     &[data-state="complete"] {
       background: color-mix(in srgb, var(--rx-success-soft) 60%, var(--rx-surface));
     }
-    &[data-state="new"] {
-      animation: rx-card-arrive calc(var(--rx-duration) * 3) ease-out;
-    }
   }
   @media (forced-colors: active) {
     .rx-card {
       border: var(--rx-stroke-width) solid CanvasText;
       background: Canvas;
       box-shadow: none;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .rx-card[data-state="new"] {
-      animation: none;
-    }
-  }
-  @keyframes rx-card-arrive {
-    from {
-      outline: 0.1875rem solid var(--rx-mark);
-    }
-    to {
-      outline: 0 solid transparent;
     }
   }
 }

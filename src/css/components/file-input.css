@@ -19,9 +19,6 @@
     background: var(--rx-gray-20);
     font-size: var(--rx-label);
     line-height: calc(10 / 7);
-    transition:
-      background-color var(--rx-duration) ease,
-      border-color var(--rx-duration) ease;
 
     &[data-state="dragover"] {
       border-style: solid;
@@ -122,7 +119,6 @@
         line-height: calc(10 / 7);
         white-space: normal;
         cursor: pointer;
-        transition: background-color var(--rx-duration) ease;
       }
       /* 押す操作の手触りは共通Buttonと同じ。ホバーで塗りを少し濃くし、押すと内側へへこむ。 */
       &::file-selector-button:hover {

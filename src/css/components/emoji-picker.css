@@ -53,9 +53,6 @@
             font-weight: 400;
             line-height: 1;
             cursor: pointer;
-            transition:
-              background-color var(--rx-duration) ease,
-              box-shadow var(--rx-duration) ease;
             &[hidden] {
               display: none;
             }

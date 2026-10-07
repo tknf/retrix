@@ -24,22 +24,8 @@
       --rx-toast-index: 0;
       --rx-toast-offset: 0rem;
       inline-size: min(24rem, calc(100% - 2 * var(--rx-space-4)));
-      interpolate-size: allow-keywords;
-      transform-origin: top center;
       transform: translateY(calc(var(--rx-toast-index) * -0.625rem))
         scale(calc(1 - var(--rx-toast-index) * 0.05));
-      transition:
-        opacity var(--rx-duration-fade) ease-out,
-        scale var(--rx-duration) var(--rx-ease-slide),
-        translate var(--rx-motion-slide) var(--rx-ease-slide),
-        display var(--rx-duration) allow-discrete,
-        overlay var(--rx-duration) allow-discrete,
-        transform calc(var(--rx-duration) * 2) var(--rx-ease-slide)
-          calc(var(--rx-toast-index) * var(--rx-duration) / 8),
-        block-size calc(var(--rx-duration) * 2) var(--rx-ease-slide);
-      & > * {
-        transition: opacity var(--rx-duration) ease;
-      }
     }
     /*
       畳んだスタックの奥のToastは、手前と同じ高さに縮めて中身を隠し、上へずらした縁だけを見せる。

@@ -25,10 +25,6 @@
       grid-area: 1 / 1;
       display: grid;
       min-inline-size: 0;
-      transition:
-        opacity calc(var(--rx-duration) * 2) ease,
-        translate calc(var(--rx-duration) * 2) var(--rx-ease-slide),
-        visibility 0s linear;
       & > .rx-card {
         block-size: 100%;
       }
@@ -38,10 +34,6 @@
       opacity: 0;
       translate: var(--rx-space-4) 0;
       pointer-events: none;
-      transition:
-        opacity var(--rx-duration) ease,
-        translate 0s linear var(--rx-duration),
-        visibility 0s linear var(--rx-duration);
     }
     & > .viewport > .slide[hidden]:dir(rtl) {
       translate: calc(-1 * var(--rx-space-4)) 0;

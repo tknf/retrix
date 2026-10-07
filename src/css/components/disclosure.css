@@ -10,7 +10,6 @@
     color: var(--rx-text);
     font-size: var(--rx-label);
     line-height: calc(11 / 7);
-    interpolate-size: allow-keywords;
     & > summary {
       display: grid;
       grid-template-columns: 1.5rem minmax(0, 1fr);
@@ -25,7 +24,6 @@
       line-height: 1.5;
       list-style: none;
       cursor: pointer;
-      transition: color var(--rx-duration) ease;
       &:focus-visible {
         outline-offset: 0.125rem;
       }
@@ -40,12 +38,10 @@
         inline-size: 1.5rem;
         block-size: 1lh;
         color: var(--rx-muted);
-        transition: color var(--rx-duration) ease;
         & > .rx-icon {
           inline-size: 0.875rem;
           block-size: 0.875rem;
           rotate: -90deg;
-          transition: rotate var(--rx-duration-pop) var(--rx-ease-slide);
         }
       }
       &:dir(rtl) > .marker > .rx-icon {
@@ -89,10 +85,6 @@
       overflow: clip;
       overflow-clip-margin: var(--rx-space-3);
       opacity: 0;
-      transition:
-        block-size var(--rx-duration-pop) var(--rx-ease-slide),
-        opacity var(--rx-duration-pop) ease,
-        content-visibility var(--rx-duration-pop) allow-discrete;
     }
     &[open]::details-content {
       block-size: auto;

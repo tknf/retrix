@@ -77,8 +77,9 @@
       gap: 0;
       padding-block: var(--rx-space-2);
       padding-inline: var(--rx-space-4);
-      border-radius: var(--rx-radius-mark);
-      background: var(--rx-hatch), var(--rx-gray-20);
+      /* 先頭側の線は人の出来事だけのもの。帯は角を立て、線を引かない。 */
+      border-inline-start: 0;
+      background: var(--rx-gray-20);
       text-align: center;
       & > .marker {
         display: none;

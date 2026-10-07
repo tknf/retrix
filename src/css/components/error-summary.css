@@ -27,7 +27,6 @@
     }
     & > li > a {
       color: var(--rx-danger);
-      transition: color var(--rx-duration) ease;
       &:hover {
         color: var(--rx-red-dark);
       }

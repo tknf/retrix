@@ -37,12 +37,6 @@
       --rx-range-sign: -1;
     }
 
-    &[data-motion] {
-      transition:
-        --rx-range-fill-start var(--rx-duration) ease-out,
-        --rx-range-fill-end var(--rx-duration) ease-out;
-    }
-
     &:has(> .controls > .native > .input:disabled) {
       --rx-range-color: var(--rx-gray-200);
       color: var(--rx-muted);

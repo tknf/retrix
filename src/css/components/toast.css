@@ -35,9 +35,6 @@
     /* 日本語は文節の切れ目で折り返し、行末に一、二文字だけを残さない。 */
     word-break: auto-phrase;
     /* 出入りの動きはoverlay.cssの共通の定義。下から出して置き、閉じる時は同じ向きへ下げながら消す。 */
-    --rx-motion-slide: var(--rx-duration);
-    --rx-motion-scale-in: 1;
-    --rx-motion-scale-out: 1;
     &:not(:popover-open) {
       translate: 0 0.5rem;
     }
@@ -61,12 +58,6 @@
       flex-wrap: wrap;
       align-items: center;
       gap: var(--rx-space-2) var(--rx-space-4);
-    }
-  }
-  @starting-style {
-    .rx-toast:popover-open {
-      opacity: 0;
-      translate: 0 0.75rem;
     }
   }
   /* Overlayの見出し・操作の行の余白は、パネルの余白に置き換える。 */

@@ -19,9 +19,6 @@
     box-shadow: var(--rx-shadow-input);
     color: var(--rx-text);
     vertical-align: baseline;
-    transition:
-      border-color var(--rx-duration) ease,
-      box-shadow var(--rx-duration) ease;
     & > select {
       appearance: none;
       field-sizing: content;

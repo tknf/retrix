@@ -14,7 +14,6 @@
     background: var(--rx-surface);
     box-shadow: var(--rx-shadow-paper);
     color: var(--rx-text);
-    transition: box-shadow var(--rx-duration) ease;
     /* 動かせる項目にホバーすると、輪郭を少し濃くする。 */
     &:not([data-disabled="true"]):hover {
       box-shadow:

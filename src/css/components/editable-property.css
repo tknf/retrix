@@ -60,9 +60,6 @@
     max-inline-size: 100%;
     position: relative;
     box-shadow: var(--rx-editable-start) 0 0 0 var(--rx-editable-face);
-    transition:
-      background-color var(--rx-duration) ease,
-      box-shadow var(--rx-duration) ease;
     --rx-editable-pen-start: inset(0 100% 0 0);
     &:dir(rtl) {
       --rx-editable-pen-start: inset(0 0 0 100%);
@@ -112,19 +109,6 @@
   /* 値そのものを押しても編集を始める。 */
   .rx-editable-property > .preview:has(> .edit:enabled) > .value {
     cursor: text;
-  }
-
-  /* 確定した値は、先頭側からペンで書き、書き終えたところで鉛筆を完了のマークに置き換え、しばらくして鉛筆に戻す。 */
-  .rx-editable-property[data-saved="true"] > .preview {
-    & > .value {
-      animation: rx-editable-property-write 0.45s steps(12, end) both;
-    }
-    &::after {
-      animation: rx-editable-property-saved 1.6s ease-out 0.4s both;
-    }
-    & > .edit > .rx-icon {
-      animation: rx-editable-property-pencil 1.6s ease-out 0.4s both;
-    }
   }
 
   /* 鉛筆は自分の面とリングを持たず、箱の面とリングで示す。普段は灰色で控えめに置き、ホバーした時だけリンクの色にする。 */
@@ -228,16 +212,11 @@
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .rx-editable-property[data-saved="true"] > .preview > .value {
-      animation: none;
-    }
     .rx-editable-property[data-saved="true"] > .preview::after {
-      animation: none;
       clip-path: inset(0);
       opacity: 1;
     }
     .rx-editable-property[data-saved="true"] > .preview > .edit > .rx-icon {
-      animation: none;
       opacity: 0;
     }
   }
@@ -257,38 +236,6 @@
     .rx-editable-property > .preview:has(> .edit:focus-visible) {
       outline: 0.125rem solid Highlight;
       outline-offset: var(--rx-editable-inset);
-    }
-  }
-  @keyframes rx-editable-property-write {
-    0% {
-      clip-path: var(--rx-editable-pen-start);
-    }
-    100% {
-      clip-path: inset(0);
-    }
-  }
-  @keyframes rx-editable-property-pencil {
-    0%,
-    75% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-  @keyframes rx-editable-property-saved {
-    0% {
-      clip-path: var(--rx-editable-pen-start);
-      opacity: 1;
-    }
-    30%,
-    75% {
-      clip-path: inset(0);
-      opacity: 1;
-    }
-    100% {
-      clip-path: inset(0);
-      opacity: 0;
     }
   }
 }

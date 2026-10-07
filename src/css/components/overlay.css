@@ -123,55 +123,15 @@
       box-shadow: none;
     }
   }
-  /*
-    浮かぶ要素の出入り。Dialog・Popover・HoverCard・Tooltip・Toast・DropdownMenu・CommandMenu・DatePicker・Tableの選択バーの全てで、
-    ここだけに書く。支点からわずかに小さい形で現れて行き過ぎずに収まり、閉じる時は同じ支点へ少し縮みながら速く消える。
-    各コンポーネントは支点（transform-origin）だけを決める。画面の端から出てくる要素（Toast・下に付くDialog）は、
-    --rx-motion-slideで滑らせる時間を、--rx-motion-scale-in・-outで膨らみを1にし、閉じた形と開き始めのtranslateを決める。
-    位置を決めるスクリプトは変形前の寸法（layoutRect）で測るため、大きさを変えても配置は狂わない。
-  */
+  /* 閉じている浮かぶ要素は見せない。開閉は動かさず、その場で切り替える。 */
   :is(
-    .rx-overlay,
-    .rx-menu,
-    .rx-command-menu > .panel,
-    .rx-date-picker > .panel,
-    .rx-table > .selection-bar
-  ):is([popover], dialog) {
-    transition:
-      opacity var(--rx-duration-fade) ease-out,
-      scale var(--rx-duration) var(--rx-ease-slide),
-      translate var(--rx-motion-slide) var(--rx-ease-slide),
-      display var(--rx-duration) allow-discrete,
-      overlay var(--rx-duration) allow-discrete;
-    &:is([popover]:not(:popover-open), dialog:not([open])) {
-      opacity: 0;
-      scale: var(--rx-motion-scale-out);
-      transition-duration: var(--rx-duration-out);
-      transition-timing-function: ease-in;
-    }
-  }
-  @starting-style {
-    :is(
       .rx-overlay,
       .rx-menu,
       .rx-command-menu > .panel,
       .rx-date-picker > .panel,
       .rx-table > .selection-bar
-    ):is([popover]:popover-open, dialog[open]) {
-      opacity: 0;
-      scale: var(--rx-motion-scale-in);
-    }
-  }
-  /* アンカーに付くパネル（Popover・HoverCard）は、開いた操作の側の上の角を支点にする。 */
-  .rx-overlay[popover] {
-    transform-origin: top left;
-    &:dir(rtl),
-    &[data-align="end"]:dir(ltr) {
-      transform-origin: top right;
-    }
-    &[data-align="end"]:dir(rtl) {
-      transform-origin: top left;
-    }
+    ):is([popover], dialog):is([popover]:not(:popover-open), dialog:not([open])) {
+    opacity: 0;
   }
   .rx-overlay[data-placement="anchor"] {
     --rx-overlay-anchor: auto;

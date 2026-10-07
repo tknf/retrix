@@ -23,9 +23,6 @@
       border-radius: var(--rx-radius-control);
       color: var(--rx-text);
       text-decoration: none;
-      transition:
-        background-color var(--rx-duration) ease,
-        color var(--rx-duration) ease;
       /* アイコンは先頭の列に揃え、名前より淡い灰色で置く。 */
       & > .icon {
         display: flex;

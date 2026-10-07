@@ -53,9 +53,6 @@
     /* 分類へ移動するタグは、ホバーすると面と枠を一段濃くする。下線は引かない。 */
     &:is(a) {
       cursor: pointer;
-      transition:
-        background-color var(--rx-duration) ease,
-        border-color var(--rx-duration) ease;
       &:hover {
         border-color: color-mix(in srgb, var(--rx-tag-ink) 45%, var(--rx-tag-edge));
         background: color-mix(in srgb, var(--rx-tag-ink) 8%, var(--rx-tag-face));
