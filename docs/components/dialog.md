@@ -230,7 +230,7 @@ export default () => (
         size="wide"
       >
         {Array.from({ length: 12 }, (_, index) => (
-          <section class="rx-stack" data-space="small">
+          <section>
             <h3>確認事項 {index + 1}</h3>
             <p>
               本文が長い場合は、この領域をスクロールして確認します。見出しの閉じる操作から戻れます。
@@ -981,73 +981,73 @@ export default () => (
             </div>
           </header>
           <div class="body">
-            <section class="rx-stack" data-space="small">
+            <section>
               <h3>確認事項 1</h3>
               <p>
                 本文が長い場合は、この領域をスクロールして確認します。見出しの閉じる操作から戻れます。
               </p>
             </section>
-            <section class="rx-stack" data-space="small">
+            <section>
               <h3>確認事項 2</h3>
               <p>
                 本文が長い場合は、この領域をスクロールして確認します。見出しの閉じる操作から戻れます。
               </p>
             </section>
-            <section class="rx-stack" data-space="small">
+            <section>
               <h3>確認事項 3</h3>
               <p>
                 本文が長い場合は、この領域をスクロールして確認します。見出しの閉じる操作から戻れます。
               </p>
             </section>
-            <section class="rx-stack" data-space="small">
+            <section>
               <h3>確認事項 4</h3>
               <p>
                 本文が長い場合は、この領域をスクロールして確認します。見出しの閉じる操作から戻れます。
               </p>
             </section>
-            <section class="rx-stack" data-space="small">
+            <section>
               <h3>確認事項 5</h3>
               <p>
                 本文が長い場合は、この領域をスクロールして確認します。見出しの閉じる操作から戻れます。
               </p>
             </section>
-            <section class="rx-stack" data-space="small">
+            <section>
               <h3>確認事項 6</h3>
               <p>
                 本文が長い場合は、この領域をスクロールして確認します。見出しの閉じる操作から戻れます。
               </p>
             </section>
-            <section class="rx-stack" data-space="small">
+            <section>
               <h3>確認事項 7</h3>
               <p>
                 本文が長い場合は、この領域をスクロールして確認します。見出しの閉じる操作から戻れます。
               </p>
             </section>
-            <section class="rx-stack" data-space="small">
+            <section>
               <h3>確認事項 8</h3>
               <p>
                 本文が長い場合は、この領域をスクロールして確認します。見出しの閉じる操作から戻れます。
               </p>
             </section>
-            <section class="rx-stack" data-space="small">
+            <section>
               <h3>確認事項 9</h3>
               <p>
                 本文が長い場合は、この領域をスクロールして確認します。見出しの閉じる操作から戻れます。
               </p>
             </section>
-            <section class="rx-stack" data-space="small">
+            <section>
               <h3>確認事項 10</h3>
               <p>
                 本文が長い場合は、この領域をスクロールして確認します。見出しの閉じる操作から戻れます。
               </p>
             </section>
-            <section class="rx-stack" data-space="small">
+            <section>
               <h3>確認事項 11</h3>
               <p>
                 本文が長い場合は、この領域をスクロールして確認します。見出しの閉じる操作から戻れます。
               </p>
             </section>
-            <section class="rx-stack" data-space="small">
+            <section>
               <h3>確認事項 12</h3>
               <p>
                 本文が長い場合は、この領域をスクロールして確認します。見出しの閉じる操作から戻れます。

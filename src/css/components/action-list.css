@@ -16,6 +16,10 @@
     color: var(--rx-text);
     font-size: var(--rx-body);
     line-height: var(--rx-label-leading);
+    /* 縦に並べた行は、DataListと同じく器の先頭で行の上の余白の分だけはみ出させる。 */
+    &:not([data-layout="grid"]):first-child {
+      margin-block-start: -0.3125rem;
+    }
     & > li {
       min-inline-size: 0;
       & > a {

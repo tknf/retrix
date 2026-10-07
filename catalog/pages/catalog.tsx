@@ -315,7 +315,7 @@ export const ComponentPage = ({
       />
       <PageHeader title={entry.name} description={entry.description} />
       <section class="rx-stack" aria-label="見本">
-        <div class="rx-stack" data-example="hono">
+        <div class="rx-stack" data-space="small" data-example="hono">
           {entry.id === "page-header" ? (
             <iframe
               class="catalog-preview"

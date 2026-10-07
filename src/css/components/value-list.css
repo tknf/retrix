@@ -19,6 +19,17 @@
       padding-block: var(--rx-space-2);
       border-block-end: var(--rx-stroke-width) solid var(--rx-border);
       --rx-value-list-accent: var(--rx-muted);
+      /*
+        外側の余白は置く側（カード・パネル・列）が持つ。一覧の上端と下端には余白を足さず、
+        最後の行の罫線も置く側の縁と重なるので引かない。
+      */
+      &:first-child {
+        padding-block-start: 0;
+      }
+      &:last-child {
+        padding-block-end: 0;
+        border-block-end-color: transparent;
+      }
       &[data-accent="green"] {
         --rx-value-list-accent: var(--rx-success);
       }

@@ -183,7 +183,7 @@
     --rx-fill-control-hover: linear-gradient(#fafafa, #fafafa);
     --rx-fill-control-pressed: linear-gradient(#f2f2f2, #f2f2f2);
     --rx-fill-success: linear-gradient(var(--rx-green), var(--rx-green));
-    /* 操作のメニューの面。白いパネルに枠と影を付ける。選んでいる行は淡い青のピル（--rx-menu-active）にする。 */
+    /* 操作のメニューの面。白いパネルに枠と影を付ける。選んでいる行は角の無い淡い青（--rx-menu-active）にする。 */
     --rx-fill-menu: linear-gradient(var(--rx-surface), var(--rx-surface));
     --rx-menu-active: var(--rx-option-active);
     /* 机の紙の質感。BC2の実測どおり、明るさだけの細かいノイズを重ねる（structure.md「机」）。 */

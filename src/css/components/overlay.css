@@ -13,10 +13,17 @@
   */
   .rx-overlay {
     --rx-overlay-title-line: calc(var(--rx-label) * 10 / 7);
+    /*
+      余白の決め方。パネルの内側は上下左右とも同じ（inset）。中の塊の間は、見出しと本文の間（heading-gap）と、
+      本文と操作の行の間（actions-gap）だけで作り、一番下の塊の下には内側の余白を一度だけ取る。
+    */
     --rx-overlay-inset-inline: 1.25rem;
+    --rx-overlay-inset-block: var(--rx-overlay-inset-inline);
+    --rx-overlay-heading-gap: var(--rx-space-3);
+    --rx-overlay-actions-gap: var(--rx-space-4);
     --rx-overlay-close-inset: 0.375rem;
     /* 見出しの上の余白。×は題名の一行目の上下の中央にそろえる。 */
-    --rx-overlay-heading-start: var(--rx-space-4);
+    --rx-overlay-heading-start: var(--rx-overlay-inset-block);
     border: var(--rx-stroke-width) solid var(--rx-popover-edge);
     border-radius: var(--rx-popover-radius);
     background: var(--rx-surface);
@@ -30,7 +37,7 @@
       display: grid;
       gap: var(--rx-space-1);
       min-inline-size: 0;
-      padding-block-start: var(--rx-overlay-heading-start);
+      padding-block: var(--rx-overlay-heading-start) 0;
       padding-inline: var(--rx-overlay-inset-inline);
       & > .heading-row {
         display: grid;
@@ -63,18 +70,39 @@
     & > .body {
       display: grid;
       align-content: start;
-      gap: var(--rx-space-2);
+      /* 本文の段の間は12px。見出しと本文の間（heading-gap）と同じか狭くし、段の中の間はさらに狭くする。 */
+      gap: var(--rx-space-3);
       min-inline-size: 0;
-      padding-block: var(--rx-space-1) 0.875rem;
+      padding-block: var(--rx-overlay-heading-gap) var(--rx-overlay-inset-block);
       padding-inline: var(--rx-overlay-inset-inline);
       overflow-wrap: anywhere;
       &:empty {
         display: none;
       }
+      &:first-child {
+        padding-block-start: var(--rx-overlay-inset-block);
+      }
+      /* 続く操作の行が間を持つので、本文の下には余白を取らない。 */
+      &:has(~ .actions) {
+        padding-block-end: 0;
+      }
     }
-    &:has(> .body:empty) > .heading,
-    &:not(:has(> .body)) > .heading {
-      padding-block-end: var(--rx-space-2);
+    /*
+      題名を読み上げだけにした（見える見出しが無い）パネルは、見出しの余白を取らず、本文をパネルの上の余白から始める。
+      角の×と本文の一行目が重ならないよう、本文の行末を×の分だけ空ける。
+    */
+    & > .heading:not(:has(> p)):has(> .heading-row > .rx-visually-hidden:first-child) {
+      padding-block-start: 0;
+      & + .body {
+        padding-block-start: var(--rx-overlay-inset-block);
+        padding-inline-end: calc(
+          var(--rx-overlay-close-size) + var(--rx-overlay-close-inset) + var(--rx-space-2)
+        );
+      }
+    }
+    /* 見出しだけのパネルは、見出しの下に内側の余白を取る。 */
+    &:not(:has(> .body:not(:empty), > .actions)) > .heading {
+      padding-block-end: var(--rx-overlay-inset-block);
     }
     & > .actions {
       display: flex;
@@ -82,7 +110,7 @@
       justify-content: end;
       gap: var(--rx-space-2);
       min-inline-size: 0;
-      padding-block: var(--rx-space-1) 0.875rem;
+      padding-block: var(--rx-overlay-actions-gap) var(--rx-overlay-inset-block);
       padding-inline: var(--rx-overlay-inset-inline);
     }
   }

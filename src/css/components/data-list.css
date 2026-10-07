@@ -19,6 +19,14 @@
     font-size: var(--rx-body);
     line-height: calc(18 / 15);
     list-style: none;
+    /*
+      行は塗り（ホバー・選んだ行）のために上下の余白を持つ。置く側の余白に足されないよう、
+      一覧が器の先頭にある時は先頭の行の余白の分だけはみ出させる。下端は置く側が行の余白の分を引く
+      （余白は上から流す決まりなので、ここで下へはみ出させない）。
+    */
+    &:first-child {
+      margin-block-start: -0.5625rem;
+    }
     & > li {
       position: relative;
       display: grid;

@@ -49,22 +49,19 @@
       outline-offset: 0.125rem;
     }
   }
+  /* ダイアログは見出しと本文の間を一段広く取る（余白の決め方はoverlay.cssの共通の指定）。 */
+  .rx-dialog > .panel {
+    --rx-overlay-heading-gap: var(--rx-space-4);
+  }
   .rx-dialog > .panel > .body {
     min-block-size: 0;
-    padding-block: var(--rx-space-2);
     overflow: auto;
     overscroll-behavior: contain;
     font-size: var(--rx-body);
     line-height: var(--rx-leading);
   }
-  /* 本文が無い時は、問いのすぐ下に操作を置く。 */
-  .rx-dialog > .panel:has(> .body:empty) > .heading,
-  .rx-dialog > .panel:not(:has(> .body)) > .heading {
-    padding-block-end: var(--rx-space-2);
-  }
   .rx-dialog > .panel > .actions {
     grid-row: 3;
-    padding-block: var(--rx-space-3) var(--rx-space-4);
   }
   /*
     狭い画面のタッチ操作では、画面の下に付くシートにする。

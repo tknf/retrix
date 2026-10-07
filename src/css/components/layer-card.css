@@ -85,19 +85,12 @@
           border-block-end-color: transparent;
         }
       }
-      /* 行の一覧を載せたカードは、行の面が余白の代わりになるので、上下の余白を狭める（0にはしない）。 */
-      &:has(> :is(.rx-data-list, .rx-action-list:not([data-layout="grid"])):first-child) {
-        padding-block-start: var(--rx-space-1);
+      /* 一覧で終わる時は、最後の行の下の余白の分だけ本文の下の余白を引き、文字から縁までを上とそろえる。 */
+      &:has(> .rx-data-list:last-child) {
+        padding-block-end: calc(var(--rx-space-4) - 0.5625rem);
       }
-      &:has(> :is(.rx-data-list, .rx-action-list:not([data-layout="grid"])):last-child) {
-        padding-block-end: var(--rx-space-1);
-      }
-      /* 一覧だけを載せたカードは、行の内側の余白を引いて、行の題名を見出しと同じ書き始めにそろえる。 */
-      &:has(> .rx-data-list:only-child) {
-        padding-inline: calc(var(--rx-layer-card-inline) - var(--rx-space-4));
-      }
-      &:has(> .rx-action-list:not([data-layout="grid"]):only-child) {
-        padding-inline: calc(var(--rx-layer-card-inline) - var(--rx-space-2));
+      &:has(> .rx-action-list:not([data-layout="grid"]):last-child) {
+        padding-block-end: calc(var(--rx-space-4) - 0.3125rem);
       }
       @container rx-layer-card (inline-size < 24rem) {
         --rx-layer-card-inline: var(--rx-space-4);

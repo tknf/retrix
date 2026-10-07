@@ -28,9 +28,8 @@
   }
   /*
     操作のメニュー。実測: overlays.md「1c. 絞り込みのメニュー」。
-    枠と影はポップオーバーと同じ（overlay.css）。項目は黒い文字で、項目の間隔は28px。
-    ホバーした項目と矢印キーで選んでいる項目は、BC2の選んだ項目と同じ淡い青のピル（#dde4f5に#244960の文字、高さ約21px）にする。
-    パネルの内側の上下は12px、文字の書き始めはパネルの内側から約22px（1cの画素から）。
+    枠と影はポップオーバーと同じ（overlay.css）。項目は黒い文字で、一行の項目の高さは28px。
+    ホバーした項目と矢印キーで選んでいる項目は、行の幅いっぱいの角の無い淡い青（--rx-option-active）にする。
   */
   .rx-menu {
     position: fixed;
@@ -45,9 +44,13 @@
     overscroll-behavior: contain;
     overflow-wrap: anywhere;
     margin: 0;
-    /* 項目の上下の隙間（--rx-menu-row-gap）の半分を差し引き、ピルの上端からパネルの内側までを12pxにする。 */
-    padding-block: calc(0.75rem - var(--rx-menu-row-gap) / 2);
-    padding-inline: 0.75rem;
+    /*
+      項目はBC2のジャンプの候補（overlays.md「1f」）と同じく、隙間なく行の幅いっぱいに並べる。
+      パネルの上下の余白は、端の項目の文字からパネルの縁までが項目の文字どうしの間隔と同じになる量にする
+      （項目の上下の余白と行の余りの分）。左右の余白は項目が持つ。
+    */
+    padding-block: var(--rx-space-2);
+    padding-inline: 0;
     border: var(--rx-stroke-width) solid var(--rx-popover-edge);
     border-radius: var(--rx-popover-radius);
     background: var(--rx-surface);
@@ -59,8 +62,8 @@
     letter-spacing: 0;
     list-style: none;
     box-shadow: var(--rx-popover-shadow);
-    /* ピル（22px）と項目の間の隙間で、項目の間隔を28pxにする。 */
-    --rx-menu-row-gap: 0.375rem;
+    /* 項目の間の隙間。行を隙間なく並べるので0にする。 */
+    --rx-menu-row-gap: 0rem;
     &::backdrop {
       background: transparent;
       pointer-events: none;
@@ -88,12 +91,16 @@
     box-shadow: none;
   }
   .rx-menu > li > .item.rx-button {
-    --rx-menu-row-size: var(--rx-button-size);
+    /*
+      一行の項目の高さ28px（BC2のメニューの項目の間隔）。上下の余白は約4.5pxで、
+      題名と注釈の間（行の余りだけ）より広くし、間隔が余白を超えないようにする。
+    */
+    --rx-menu-row-size: calc(28em / 12);
     display: block;
     inline-size: 100%;
     /* 一行の高さから同量の上下余白を取る。複数行は上端を保って下へ伸ばす。 */
     padding-block: calc((var(--rx-menu-row-size) - 10em / 7 - 0.125rem) / 2);
-    padding-inline: 0.625rem;
+    padding-inline: var(--rx-space-3);
     border: var(--rx-stroke-width) solid transparent;
     /* 選んでいる行は、行の幅いっぱいの角の無い淡い青（--rx-menu-active。overlays.md「1f」）。 */
     border-radius: 0;
@@ -120,7 +127,7 @@
       outline: 0.125rem solid var(--rx-focus-ring);
       outline-offset: -0.125rem;
     }
-    /* 危険の操作は赤茶の文字にし、選ぶと淡い赤のピルにする（推測。ピルの形は1cに合わせる）。 */
+    /* 危険の操作は赤茶の文字にし、選ぶと淡い赤の面にする（推測）。 */
     &[data-tone="danger"] {
       color: var(--rx-danger);
       &:hover:not(:disabled, [data-disabled="true"]),
@@ -159,7 +166,8 @@
   }
   .rx-menu > li > .item > .content {
     display: grid;
-    gap: var(--rx-space-1);
+    /* 題名と注釈は同じ項目の中の段なので、間を空けず行の余りだけで分ける。 */
+    gap: 0;
     inline-size: 100%;
     min-inline-size: 0;
     &[data-leading="true"] > .description {
@@ -214,21 +222,20 @@
   .rx-menu > li > .label,
   .rx-menu > .empty {
     display: block;
-    padding-block: var(--rx-space-2) var(--rx-space-1);
-    padding-inline: var(--rx-space-2);
+    padding-block: var(--rx-space-1);
+    padding-inline: var(--rx-space-3);
     color: var(--rx-muted);
     font-size: var(--rx-small);
     font-weight: 600;
   }
   .rx-menu > .empty {
-    padding-block-end: var(--rx-space-2);
     font-weight: 400;
   }
   /* 区切りは1px #dddddd前後（1dの小メニューの項目の間の線）。 */
   .rx-menu > .separator {
-    margin-block-start: calc(var(--rx-menu-row-gap) / 2);
+    margin-block-start: var(--rx-space-1);
     padding-block: 0;
-    padding-block-start: calc(var(--rx-menu-row-gap) / 2);
+    padding-block-start: var(--rx-space-1);
     border-block-start: var(--rx-stroke-width) solid var(--rx-gray-200);
   }
   @media (pointer: coarse) {
