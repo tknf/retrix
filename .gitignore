@@ -3,6 +3,7 @@ node_modules/
 
 # 生成物
 dist/
+.wrangler/
 .vite/
 test-results/
 .rx-consumer-*/

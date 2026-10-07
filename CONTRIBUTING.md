@@ -101,6 +101,14 @@ vp run preview
 
 `dist/hono`・`dist/controllers`・`dist/css`・`dist/icons.svg`がライブラリ、`dist/catalog`が静的なカタログです。配布するCSSとカタログは同じファイルを使います。
 
+### カタログを確認用のURLに公開する
+
+```sh
+vp run catalog:deploy
+```
+
+`vp run build`でカタログを書き出し、カタログ専用のWorker（`catalog/wrangler.jsonc`）として、tknfのアカウントの`retrix-catalog-preview`に公開します（https://retrix-catalog-preview.tknf.workers.dev）。静的ファイルだけを配信し、サーバーの処理は持ちません。公開には`wrangler login`でtknfのアカウントに入っている必要があります。
+
 アイコンを追加する場合は`src/internal/icon-manifest.json`に加え、`vp run icons:build`でスプライト・CSS用のSVG・`IconName`型を生成し直します。
 
 ## 操作コンポーネントの文字位置
