@@ -15,8 +15,7 @@
       position: sticky;
       inset-block-start: 0;
       z-index: 1;
-      background: var(--rx-surface);
-      box-shadow: 0 0.0625rem var(--rx-border);
+      box-shadow: 0 var(--rx-stroke-width) var(--rx-control-border);
     }
     &:not([data-state="ready"]) > table > :is(tbody, tfoot),
     &:not([data-state="ready"]) > .selection-bar:not([popover]) {
@@ -140,15 +139,24 @@
         vertical-align: middle;
         font-weight: 400;
       }
+      /*
+        列の見出しは、白から淡い灰色への縦の塗りに小さな太字。下の罫線を濃くし、見出しと行を分ける。
+        見出しの間には淡い縦の線を引き、列の区切りを示す。
+      */
       & > thead > tr > th {
         padding-block: var(--rx-space-1);
-        background: var(--rx-surface);
-        color: var(--rx-muted);
+        background: var(--rx-gray-20);
+        background-image: linear-gradient(var(--rx-surface), var(--rx-gray-50));
+        color: var(--rx-text);
         font-size: var(--rx-small);
         font-weight: var(--rx-label-weight);
         line-height: var(--rx-small-leading);
-        border-block-end-color: var(--rx-border);
+        border-block-start: var(--rx-stroke-width) solid var(--rx-border);
+        border-block-end-color: var(--rx-control-border);
         white-space: nowrap;
+      }
+      & > thead > tr > th + th {
+        border-inline-start: var(--rx-stroke-width) solid var(--rx-border);
       }
       & > :is(thead, tbody, tfoot) > tr > [data-cell="numeric"] {
         text-align: end;
@@ -162,14 +170,19 @@
         min-inline-size: 14em;
         overflow-wrap: anywhere;
       }
+      /* ホバーした行は淡い黄色、操作中の行は淡い青緑。選んだ行は黄色（下のdata-selected）。 */
       & > tbody > tr:hover {
-        background: color-mix(in srgb, var(--rx-background) 65%, var(--rx-surface));
+        background: color-mix(in srgb, var(--rx-mark) 40%, var(--rx-surface));
       }
       & > tbody > tr:focus-within {
-        background: var(--rx-info-soft);
+        background: var(--rx-cover);
       }
       &[data-density="comfortable"] > tbody > tr > :is(th, td) {
         padding-block: var(--rx-space-3);
+      }
+      /* 縞は行が多く横に長い表で、行をたどりやすくする。 */
+      &[data-striped="true"] > tbody > tr:nth-child(even):not(:hover, [data-selected="true"]) {
+        background: var(--rx-gray-20);
       }
       & > thead > tr > th > .sort {
         position: relative;
@@ -193,12 +206,9 @@
         }
         &:hover:enabled {
           color: var(--rx-link);
+          text-decoration-line: underline;
         }
-        &:hover:enabled::before,
         &:focus-visible::before {
-          background: var(--rx-info-soft);
-        }
-        &:active:enabled::before {
           background: var(--rx-cover);
         }
         &:disabled {
@@ -235,16 +245,15 @@
         display: flex;
       }
       & > tbody > tr[data-selected="true"] {
-        background: var(--rx-info-soft);
+        background: var(--rx-mark);
       }
-      /* 行の題名のリンクは濃い色のMediumの文字にし、ホバー時だけ青くする。 */
+      /* 行の題名のリンクは本文のリンクと同じ青緑の文字と下線にし、Mediumの太さで題名と分かるようにする。 */
       & > tbody > tr > :is(th, td) > a {
-        color: var(--rx-text);
+        color: var(--rx-link);
         font-weight: 500;
-        text-decoration: none;
       }
       & > tbody > tr > :is(th, td) > a:hover {
-        color: var(--rx-link);
+        color: var(--rx-link-hover);
       }
       & > thead > tr > [data-cell="numeric"] > .sort {
         margin-inline-start: auto;

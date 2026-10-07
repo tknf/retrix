@@ -12,10 +12,14 @@
     min-block-size: var(--rx-button-size);
     max-inline-size: 100%;
     padding-block: 0;
-    /* ボタンはピル。主・控えめ・危険は形ではなく塗りの色で分ける。丸い端に文字が寄らないよう左右を広げる。 */
-    padding-inline: 1.25em;
-    border: var(--rx-stroke-width) solid var(--rx-border);
-    border-radius: var(--rx-radius-pill);
+    /*
+      ボタンは角の小さな長方形。白から淡い灰色への縦の塗りに、枠と上端の光を付ける。
+      下の枠を少し濃くし、机に置いた厚みを見せる。主・控えめ・危険は塗りの色で分ける。
+    */
+    padding-inline: 0.875em;
+    border: var(--rx-stroke-width) solid var(--rx-control-border);
+    border-block-end-color: color-mix(in srgb, var(--rx-control-border) 80%, var(--rx-ink));
+    border-radius: var(--rx-radius-control);
     background: var(--rx-surface);
     background-image: var(--rx-fill-control);
     color: var(--rx-text);
@@ -27,58 +31,66 @@
     text-decoration: none;
     overflow-wrap: anywhere;
     cursor: pointer;
-    /* ボタンは浮かせない。通常時は平らにし、ホバーすると面を少し濃くし、押すと内側へへこむ（ActionTileと同じ手触り）。 */
-    box-shadow: none;
+    /* ホバーすると塗りを少し濃くし、押すと内側へへこむ。 */
+    box-shadow: var(--rx-shadow-control);
     transition:
       background-color var(--rx-duration) ease,
       border-color var(--rx-duration) ease,
       box-shadow var(--rx-duration) ease;
     &:focus-visible {
-      outline: 0.125rem solid var(--rx-link);
-      outline-offset: 0.1875rem;
+      outline: 0.125rem solid var(--rx-blue);
+      outline-offset: 0.125rem;
     }
 
     &:hover:not(:disabled) {
-      background-color: color-mix(in srgb, var(--rx-ink) 4%, var(--rx-surface));
-      background-image: none;
+      border-color: color-mix(in srgb, var(--rx-control-border) 75%, var(--rx-ink));
+      background-image:
+        linear-gradient(rgb(38 38 36 / 4%), rgb(38 38 36 / 4%)), var(--rx-fill-control);
+      box-shadow: var(--rx-shadow-control-hover);
     }
     &:active:not(:disabled) {
-      background-color: color-mix(in srgb, var(--rx-ink) 6%, var(--rx-surface));
+      background-color: color-mix(in srgb, var(--rx-ink) 8%, var(--rx-surface));
       background-image: none;
       box-shadow: var(--rx-shadow-control-pressed);
     }
 
     &[data-size="compact"] {
-      padding-inline: 0.875em;
+      padding-inline: 0.625em;
     }
     &[data-size="large"] {
       min-block-size: var(--rx-button-large);
-      padding-inline: 1.375em;
+      padding-inline: 1.125em;
       font-size: calc(var(--rx-button-font) * 8 / 7);
       line-height: var(--rx-control-leading);
     }
     /*
-      主操作と危険は役割の色の135度で塗る。浮かせず、ホバーすると塗りの上に薄い黒を重ねて少し濃くし、
-      押すと内側へへこむ。
+      主操作は緑、危険は赤茶、選んでいる状態（current）は青緑の縦の塗り。
+      ホバーすると塗りの上に薄い黒を重ねて少し濃くし、押すと内側へへこむ。
     */
-    &[data-variant="primary"],
-    &[data-current="true"] {
-      --rx-button-color: var(--rx-link);
+    &[data-variant="primary"] {
+      --rx-button-color: var(--rx-green);
       --rx-button-fill: var(--rx-fill-primary);
-      background: var(--rx-link);
+      background: var(--rx-green);
       background-image: var(--rx-button-fill);
-      border-color: var(--rx-link);
+      border-color: var(--rx-green-dark);
+    }
+    &[data-current="true"] {
+      --rx-button-color: var(--rx-teal);
+      --rx-button-fill: linear-gradient(180deg, var(--rx-teal) 0%, var(--rx-teal-dark) 100%);
+      background: var(--rx-teal);
+      background-image: var(--rx-button-fill);
+      border-color: var(--rx-teal-dark);
     }
     &[data-variant="danger"] {
       --rx-button-color: var(--rx-danger);
       --rx-button-fill: var(--rx-fill-danger);
       background: var(--rx-danger);
       background-image: var(--rx-button-fill);
-      border-color: var(--rx-danger);
+      border-color: var(--rx-red-dark);
     }
     &:is([data-variant="primary"], [data-variant="danger"], [data-current="true"]) {
       color: var(--rx-surface);
-      box-shadow: none;
+      box-shadow: var(--rx-shadow-control-primary);
 
       /* 控えめな操作の淡い面の色へ戻さず、塗りの下の色も役割の色のままにする。 */
       &:hover:not(:disabled) {
@@ -95,25 +107,30 @@
     }
 
     /*
-      文字だけの操作は下線を引かず、青い文字にする。
-      ホバーすると淡い青のピルの面が現れ、押すと少し濃くなる。
+      文字だけの操作は、本文のリンクと同じく青緑の文字に下線を引く。
+      ホバーすると赤茶の文字になり、面は塗らない。
     */
     &[data-variant="link"] {
       background: transparent;
       border-color: transparent;
       color: var(--rx-link);
       box-shadow: none;
-      padding-inline: calc(4em / 7);
-      text-decoration: none;
-      transition: background-color var(--rx-duration) ease;
+      padding-inline: calc(2em / 7);
+      text-decoration-line: underline;
+      text-decoration-thickness: var(--rx-stroke-width);
+      text-underline-offset: 0.15em;
+      transition: color var(--rx-duration) ease;
       &:is(:hover, :active) {
+        border-color: transparent;
         box-shadow: none;
       }
       &:hover:not(:disabled) {
-        background: color-mix(in srgb, var(--rx-link) 8%, transparent);
+        background: transparent;
+        color: var(--rx-link-hover);
       }
       &:active:not(:disabled) {
-        background: color-mix(in srgb, var(--rx-link) 14%, transparent);
+        background: transparent;
+        color: var(--rx-red-dark);
       }
     }
 
@@ -164,13 +181,17 @@
       &:where(:dir(rtl)) {
         animation-direction: reverse;
       }
-      &:is([data-variant="primary"], [data-current="true"]) {
-        --rx-button-busy-from: var(--rx-link);
-        --rx-button-busy-to: color-mix(in srgb, var(--rx-link) 90%, white);
+      &[data-variant="primary"] {
+        --rx-button-busy-from: var(--rx-green-dark);
+        --rx-button-busy-to: var(--rx-green);
+      }
+      &[data-current="true"] {
+        --rx-button-busy-from: var(--rx-teal-dark);
+        --rx-button-busy-to: var(--rx-teal);
       }
       &[data-variant="danger"] {
-        --rx-button-busy-from: var(--rx-danger);
-        --rx-button-busy-to: color-mix(in srgb, var(--rx-danger) 82%, white);
+        --rx-button-busy-from: var(--rx-red-dark);
+        --rx-button-busy-to: var(--rx-danger);
       }
       &[data-variant="link"] {
         --rx-button-busy-from: transparent;

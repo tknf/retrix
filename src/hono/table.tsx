@@ -9,6 +9,8 @@ export type TableProps = PropsWithChildren<
     caption: string;
     /** 本文の行の密度。comfortableは本文の行の上下の余白を広げる。 */
     density?: "compact" | "comfortable";
+    /** 本文の偶数行に淡い面を敷く。行が多く横に長い表で、行をたどりやすくする。 */
+    striped?: boolean;
     /**
      * 並べ替えの方式。TableSortの見出しを押すと、昇順・降順・元の順を順に切り替える。
      * localは表示中の行をその場で並べ替え、manualは行を動かさずtable:sortイベントだけを発火する（サーバー側で並べ替える時に使う）。
@@ -33,6 +35,7 @@ export const Table = ({
   children,
   caption,
   density = "compact",
+  striped = false,
   sort,
   selectable = false,
   selectionActions,
@@ -61,6 +64,7 @@ export const Table = ({
         attributes["data-controller"],
       )}
       data-density={density}
+      data-striped={striped ? "true" : undefined}
       class={classes("table", className)}
       aria-busy={state === "loading" ? "true" : undefined}
     >

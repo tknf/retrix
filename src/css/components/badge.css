@@ -1,6 +1,6 @@
 @layer components {
   /*
-    状態はピル。役割の色を淡く混ぜた背景に、役割の色で文字を書く。枠線・影・アイコンは付けず、色だけで分ける。
+    状態は小さなピル。役割の色を淡く混ぜた背景に、役割の色で文字を書く。枠線・影・アイコンは付けない。
     役割の色が無いものと、まだ確定していない下書きは、中立の灰色の背景に--rx-mutedの文字にする。
   */
   .rx-badge {
@@ -11,14 +11,14 @@
     align-items: start;
     max-inline-size: 100%;
     /*
-      一行の高さは26px。折り返した行の間（行の余り2つ分）と、上下の縁から文字まで（余白＋行の余り）を
+      一行の高さは20px。折り返した行の間（行の余り2つ分）と、上下の縁から文字まで（余白＋行の余り）を
       同じにするため、行の高さを「一行の高さと文字の大きさの間」に詰め、残りを上下に半分ずつ取る。
     */
-    padding-block: calc((1.625rem - 1lh) / 2);
+    padding-block: calc((1.25rem - 1lh) / 2);
     /* 左右は角丸の大きさに近く取り、折り返した時も文字が角のカーブに寄らないようにする。 */
-    padding-inline: 0.75rem;
-    /* 一行では高さの半分で止まってピルになり、折り返すとカードと同じ角丸になる。 */
-    border-radius: var(--rx-radius-surface);
+    padding-inline: 0.5rem;
+    /* 一行では高さの半分の角丸でピルになる。 */
+    border-radius: 0.625rem;
     background: color-mix(in srgb, var(--rx-badge-ink) 11%, var(--rx-surface));
     /* 透明な輪郭は、強制カラーで背景が消えた時だけ見える縁になる。 */
     outline: var(--rx-stroke-width) solid transparent;
@@ -27,7 +27,7 @@
     font-family: var(--rx-control-font-family);
     font-size: var(--rx-small);
     font-weight: 400;
-    line-height: calc((1.625rem + 1em) / 2);
+    line-height: calc((1.25rem + 1em) / 2);
     overflow-wrap: anywhere;
     /* 日本語は文節の切れ目で折り返し、行末に一、二文字だけを残さない。 */
     word-break: auto-phrase;
@@ -39,7 +39,7 @@
     }
     &[data-tone="warning"] {
       --rx-badge-ink: var(--rx-warning);
-      background: var(--rx-butter);
+      background: var(--rx-mark);
     }
     &[data-tone="danger"] {
       --rx-badge-ink: var(--rx-danger);

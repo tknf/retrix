@@ -251,7 +251,8 @@
       inline-size: calc(10em / 7);
       block-size: calc(10em / 7);
       margin: 0;
-      border: var(--rx-stroke-width) solid var(--rx-border);
+      border: var(--rx-stroke-width) solid var(--rx-control-border);
+      border-block-start-color: color-mix(in srgb, var(--rx-control-border) 75%, var(--rx-ink));
       border-radius: var(--rx-radius-mark);
       /* インジケーターの枠は浮かせず、入力欄と同じく内側へ少し沈めた四角にする。 */
       background: var(--rx-surface);
@@ -276,8 +277,8 @@
       }
       &:checked,
       &:indeterminate {
-        background: var(--rx-fill-primary);
-        border-color: var(--rx-link);
+        background: linear-gradient(180deg, var(--rx-teal) 0%, var(--rx-teal-dark) 100%);
+        border-color: var(--rx-teal-dark);
         box-shadow: none;
       }
       &:checked::before,
@@ -334,26 +335,26 @@
       cursor: not-allowed;
     }
     /*
-      説明を伴う選択肢は、ActionTileと同じく浮かせない平らな淡い面。枠線は引かない。
-      ホバーすると面を少し濃くし、選んだ面は淡い青にして内側へへこませる。
+      説明を伴う選択肢は、枠で囲んだ白い面。ホバーすると枠を濃くし、
+      選んだ面は淡い青緑にして枠を青緑にする。
     */
     &[data-kind="option"] {
       padding-block: var(--rx-space-3);
       padding-inline: var(--rx-space-4);
-      border: var(--rx-stroke-width) solid transparent;
+      border: var(--rx-stroke-width) solid var(--rx-border);
       border-radius: var(--rx-radius-field);
-      background: color-mix(in srgb, var(--rx-ink) 3%, var(--rx-surface));
+      background: var(--rx-surface);
       box-shadow: none;
       transition:
         background-color var(--rx-duration) ease,
         box-shadow var(--rx-duration) ease;
     }
     &[data-kind="option"]:hover:not(:has(> input:disabled)) {
-      background: color-mix(in srgb, var(--rx-ink) 5%, var(--rx-surface));
+      border-color: var(--rx-control-border);
     }
     &[data-kind="option"]:has(> input:checked) {
-      background: var(--rx-info-soft);
-      box-shadow: var(--rx-shadow-control-pressed);
+      border-color: var(--rx-teal);
+      background: var(--rx-cover);
     }
     &[data-kind="option"]:has(> input:disabled) {
       background: var(--rx-hatch), var(--rx-surface);
@@ -362,14 +363,16 @@
   }
   .rx-input {
     /* Buttonと同じ高さ。上下の余白は高さから行高と枠を引いた残りを半分ずつにし、文字を中央に置く。 */
-    --rx-input-size: calc(18em / 7);
+    --rx-input-size: var(--rx-button-size);
     --rx-input-border-size: var(--rx-stroke-width);
     inline-size: 100%;
     min-inline-size: 0;
     min-block-size: var(--rx-input-size);
     padding-block: calc((var(--rx-input-size) - 10em / 7 - 2 * var(--rx-input-border-size)) / 2);
-    padding-inline: 0.75em;
-    border: var(--rx-input-border-size) solid var(--rx-border);
+    padding-inline: 0.5em;
+    /* 上の枠を濃くし、欄が面より一段沈んで見えるようにする。 */
+    border: var(--rx-input-border-size) solid var(--rx-control-border);
+    border-block-start-color: color-mix(in srgb, var(--rx-control-border) 75%, var(--rx-ink));
     border-radius: var(--rx-radius-control);
     background: var(--rx-surface);
     color: var(--rx-text);
@@ -385,7 +388,7 @@
     &:focus-visible {
       outline: 0.125rem solid transparent;
       outline-offset: 0;
-      border-color: var(--rx-link);
+      border-color: var(--rx-blue);
       box-shadow:
         0 0 0 0.125rem var(--rx-focus-ring),
         var(--rx-shadow-input);
@@ -404,7 +407,7 @@
 
     /* 読み取り専用は値を読めるので面の色だけ変える。使えない入力は斜線にする。 */
     &[readonly] {
-      background: var(--rx-background);
+      background: var(--rx-gray-20);
     }
 
     &:disabled {

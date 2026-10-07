@@ -10,8 +10,8 @@
   }
 
   body {
-    /* 背景は白。作業面は縁取りではなく影で浮かせる。 */
-    background: var(--rx-surface);
+    /* 地は机のクリーム色。作業面（シート）は白い紙として、その上に置く。 */
+    background: var(--rx-background);
     color: var(--rx-text);
     font-family: var(--rx-control-font-family);
     font-size: var(--rx-body);
@@ -21,38 +21,30 @@
   }
 
   /*
-    リンクは下線を引かず、青い文字にする。
-    文章（段落・引用・図の説明）の中に混ざるリンクだけは、色だけに頼らないよう細く淡い下線を残す。
-    コンポーネントが持つリンク（クラスを持つもの）は、それぞれのコンポーネントが見た目を決める。
+    リンクは青緑の文字に下線を引く。Basecamp 2と同じく、押せる文字であることを下線で示す。
+    ホバーすると赤茶に変わる。コンポーネントが持つリンク（クラスを持つもの）は、それぞれのコンポーネントが見た目を決める。
   */
   a {
     color: var(--rx-link);
-    text-decoration: none;
+    text-decoration-line: underline;
+    text-decoration-thickness: var(--rx-stroke-width);
+    text-underline-offset: 0.15em;
     transition: color var(--rx-duration) ease;
     &:hover {
-      color: var(--rx-blue-dark);
-    }
-  }
-  :where(p, blockquote, figcaption) a:not([class]) {
-    text-decoration-line: underline;
-    text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
-    text-decoration-thickness: var(--rx-stroke-width);
-    text-underline-offset: 0.2em;
-    &:hover {
-      text-decoration-color: currentColor;
+      color: var(--rx-link-hover);
     }
   }
 
   :focus-visible {
-    outline: 0.125rem solid var(--rx-ink);
-    outline-offset: 0.1875rem;
+    outline: 0.125rem solid var(--rx-blue);
+    outline-offset: 0.125rem;
   }
 
-  /* 検索の一致箇所・ハイライトは平らな淡い黄色の背景。行をまたいでも各行に同じ背景を敷く。 */
+  /* 検索の一致箇所・ハイライトは平らな黄色の背景。行をまたいでも各行に同じ背景を敷く。 */
   mark {
     padding-inline: 0.15em;
-    border-radius: 0.2em;
-    background: color-mix(in srgb, var(--rx-mark) 55%, transparent);
+    border-radius: var(--rx-radius-mark);
+    background: var(--rx-mark);
     color: inherit;
     box-decoration-break: clone;
   }

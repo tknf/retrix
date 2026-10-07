@@ -6,16 +6,22 @@
     align-items: center;
     gap: var(--rx-space-3);
     min-inline-size: 0;
+    /* 見出しの下に罫線を引き、ここからシートの中身が始まることを示す。 */
+    padding-block-end: var(--rx-space-4);
+    border-block-end: var(--rx-stroke-width) solid var(--rx-border);
+    /* アイコンはHighriseの写真の枠と同じく、白い枠に輪郭と浅い影を付けた四角に収める。 */
     & > .icon {
       display: grid;
       place-items: center;
       flex: 0 0 auto;
       inline-size: 3rem;
       block-size: 3rem;
-      border-radius: var(--rx-radius-field);
-      background: var(--rx-cover);
-      color: var(--rx-link);
-      font-size: 1.75rem;
+      border: 0.1875rem solid var(--rx-surface);
+      border-radius: var(--rx-radius-mark);
+      background: var(--rx-gray-20);
+      box-shadow: var(--rx-shadow-paper);
+      color: var(--rx-muted);
+      font-size: 1.5rem;
     }
     /* 補足文があると見出し部分が縦に長くなるため、アイコンと操作は見出しの1行目の上端に揃える。 */
     &:not([data-align="center"]):has(> .heading > p) > :is(.icon, .actions) {
@@ -54,9 +60,11 @@
       gap: var(--rx-space-2);
       min-inline-size: 0;
     }
-    /* 中央揃えは作業面の主題。見出しの左右から線を伸ばし、ここからまとまりが始まることを示す。 */
+    /* 中央揃えは作業面の主題。見出しの左右から線を伸ばし、下の罫線は引かない。 */
     &[data-align="center"] {
       flex-direction: column;
+      padding-block-end: 0;
+      border-block-end: 0;
       text-align: center;
       & > .heading {
         flex-basis: auto;
@@ -72,18 +80,7 @@
           flex: 1 1 1.5rem;
           min-inline-size: 1.5rem;
           block-size: var(--rx-stroke-width);
-          background: linear-gradient(
-            to right,
-            transparent,
-            color-mix(in srgb, var(--rx-link) 55%, var(--rx-surface))
-          );
-        }
-        &::after {
-          background: linear-gradient(
-            to left,
-            transparent,
-            color-mix(in srgb, var(--rx-link) 55%, var(--rx-surface))
-          );
+          background: var(--rx-border);
         }
       }
       & > .heading > p {
