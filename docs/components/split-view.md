@@ -61,7 +61,7 @@ inspectorは作業＋補足、readerは一覧＋本文。DOMの読み順は常�
 
 登録するcontroller：`splitter`（`SplitterController`）
 
-読み込むCSS：`layers.css`、`reset.css`、`tokens.css`、`base.css`、`layout.css`、`components/split-view.css`
+読み込むCSS：`layers.css`、`reset.css`、`tokens.css`、`base.css`、`layout.css`、`components/split-view.css`、`components/section.css`
 
 ## コード
 

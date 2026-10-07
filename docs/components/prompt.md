@@ -44,7 +44,7 @@
 
 ほかのpropsは`LayerCard`へそのまま渡します。
 
-読み込むCSS：`layers.css`、`reset.css`、`tokens.css`、`base.css`、`layout.css`、`components/icon.css`、`components/layer-card.css`、`components/prompt.css`
+読み込むCSS：`layers.css`、`reset.css`、`tokens.css`、`base.css`、`layout.css`、`components/section.css`、`components/icon.css`、`components/layer-card.css`、`components/prompt.css`
 
 #### `PromptChoice`
 

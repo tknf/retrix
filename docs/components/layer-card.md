@@ -39,7 +39,7 @@ controllerを持たないので、JavaScriptなしでも同じように表示・
 
 ほかに、`<section>`へ標準のHTML属性を渡せます。
 
-読み込むCSS：`layers.css`、`reset.css`、`tokens.css`、`base.css`、`layout.css`、`components/layer-card.css`
+読み込むCSS：`layers.css`、`reset.css`、`tokens.css`、`base.css`、`layout.css`、`components/section.css`、`components/layer-card.css`
 
 ## コード
 

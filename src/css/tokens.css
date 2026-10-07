@@ -202,7 +202,7 @@
       - ボタン・入力欄・ピル --rx-small：12px
       - 補足・日時・表 --rx-label：13px
       - 本文・一覧の題名 --rx-body：15px
-      - まとまりの見出し --rx-section-title：18px
+      - まとまりの見出し --rx-section-title：16px（手本は英字の18〜19px。和文は字面が大きく見えるので一段下げる）
       - シートの見出し --rx-title：20px（手本の24pxから、ユーザーの指定で下げた）
       操作の高さはemで文字に追従するため、文字の大きさを整数pxに保ち、縦位置の端数を作らない。
     */
@@ -210,7 +210,7 @@
     --rx-label: 0.8125rem;
     --rx-small: 0.75rem;
     --rx-title: 1.25rem;
-    --rx-section-title: 1.125rem;
+    --rx-section-title: 1rem;
     --rx-leading: 1.4;
     --rx-label-leading: calc(18 / 13);
     --rx-small-leading: calc(4 / 3);

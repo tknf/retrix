@@ -43,7 +43,7 @@
 
 ほかに、`<article>`へ標準のHTML属性を渡せます。
 
-読み込むCSS：`layers.css`、`reset.css`、`tokens.css`、`base.css`、`layout.css`、`components/card.css`
+読み込むCSS：`layers.css`、`reset.css`、`tokens.css`、`base.css`、`layout.css`、`components/section.css`、`components/card.css`
 
 ## コード
 

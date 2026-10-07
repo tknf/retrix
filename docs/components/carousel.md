@@ -59,7 +59,7 @@ JavaScriptがない時は `initialIndex` のスライドだけを表示し、前
 
 登録するcontroller：`carousel`（`CarouselController`）
 
-読み込むCSS：`layers.css`、`reset.css`、`tokens.css`、`base.css`、`layout.css`、`components/button.css`、`components/empty-state.css`、`components/carousel.css`、`components/icon.css`、`components/card.css`
+読み込むCSS：`layers.css`、`reset.css`、`tokens.css`、`base.css`、`layout.css`、`components/section.css`、`components/button.css`、`components/empty-state.css`、`components/carousel.css`、`components/icon.css`、`components/card.css`
 
 #### `CarouselSlide`
 

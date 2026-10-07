@@ -65,4 +65,16 @@
       font-weight: 700;
     }
   }
+  /*
+    カード・分割した面・右の列・入れ子のSectionの中の見出し。BC2で18pxの赤を使うのはシートの最上位のまとまりだけで、
+    中の見出しはリスト名（15pxの太字）やHighriseの右の列の見出しのように、小さな太字の黒にする（structure.md・lists.md）。
+  */
+  :where(.rx-split-view, .rx-card, .rx-layer-card, .rx-section, .rx-workspace > :nth-child(2))
+    .rx-section
+    > .heading
+    > h2 {
+    color: var(--rx-ink);
+    font-size: var(--rx-body);
+    font-weight: 700;
+  }
 }

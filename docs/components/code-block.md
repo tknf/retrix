@@ -63,7 +63,7 @@ JavaScriptがない時はコピーの操作を出さず、コードは読めま�
 
 登録するcontroller：`clipboard`（`ClipboardController`）、`code-block`（`CodeBlockController`）、`toast`（`ToastController`）
 
-読み込むCSS：`layers.css`、`reset.css`、`tokens.css`、`base.css`、`layout.css`、`components/button.css`、`components/overlay.css`、`components/icon.css`、`components/layer-card.css`、`components/toast.css`、`components/code-block.css`
+読み込むCSS：`layers.css`、`reset.css`、`tokens.css`、`base.css`、`layout.css`、`components/section.css`、`components/button.css`、`components/overlay.css`、`components/icon.css`、`components/layer-card.css`、`components/toast.css`、`components/code-block.css`
 
 #### `CodeToken`
 
