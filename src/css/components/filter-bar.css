@@ -27,7 +27,7 @@
     }
     &:not([data-appearance="segmented"]) > a {
       border-color: transparent;
-      border-radius: var(--rx-radius-pill);
+      border-radius: var(--rx-radius-mark);
       background: transparent;
       color: var(--rx-text);
       box-shadow: none;
@@ -52,15 +52,15 @@
         box-shadow: var(--rx-focus-glow);
       }
       &[data-current="true"] {
-        border-color: var(--rx-pill-selected);
-        background: var(--rx-pill-selected);
-        color: var(--rx-pill-selected-text);
+        border-color: var(--rx-option-active);
+        background: var(--rx-option-active);
+        color: var(--rx-option-active-text);
         & > small {
-          color: var(--rx-pill-selected-text);
+          color: var(--rx-option-active-text);
         }
         &:is(:hover, :active) {
-          border-color: var(--rx-pill-selected);
-          background: var(--rx-pill-selected);
+          border-color: var(--rx-option-active);
+          background: var(--rx-option-active);
           box-shadow: none;
           text-decoration-line: none;
         }

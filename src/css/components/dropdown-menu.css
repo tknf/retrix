@@ -93,10 +93,10 @@
     inline-size: 100%;
     /* 一行の高さから同量の上下余白を取る。複数行は上端を保って下へ伸ばす。 */
     padding-block: calc((var(--rx-menu-row-size) - 10em / 7 - 0.125rem) / 2);
-    /* ピルの両端は完全に丸いので、文字を丸みの内側へ少し入れる（1cで文字はピルの端から約6px）。 */
     padding-inline: 0.625rem;
     border: var(--rx-stroke-width) solid transparent;
-    border-radius: var(--rx-radius-pill);
+    /* 選んでいる行は、行の幅いっぱいの角の無い淡い青（--rx-menu-active。overlays.md「1f」）。 */
+    border-radius: 0;
     background: transparent;
     color: inherit;
     text-align: start;
@@ -107,13 +107,13 @@
     &[data-state="active"]:not(:disabled, [data-disabled="true"]) {
       border-color: transparent;
       background: var(--rx-menu-active);
-      color: var(--rx-pill-selected-text);
+      color: var(--rx-option-active-text);
       box-shadow: none;
     }
-    /* 押した時の色は手本に無い（推測）。ピルを文字の色へ少し寄せる。 */
+    /* 押した時の色は手本に無い（推測）。選んでいる行の色を文字の色へ少し寄せる。 */
     &:active:not(:disabled, [data-disabled="true"]) {
-      background: color-mix(in srgb, var(--rx-menu-active) 85%, var(--rx-pill-selected-text));
-      color: var(--rx-pill-selected-text);
+      background: color-mix(in srgb, var(--rx-menu-active) 85%, var(--rx-option-active-text));
+      color: var(--rx-option-active-text);
       box-shadow: none;
     }
     &:focus-visible {

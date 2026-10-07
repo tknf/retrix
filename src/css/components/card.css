@@ -73,8 +73,9 @@
     */
     & > .body {
       color: var(--rx-meta);
-      font-size: 1rem;
-      line-height: 1.25;
+      font-size: var(--rx-reading);
+      /* 14pxの文字で行高20px（整数px）。 */
+      line-height: calc(20 / 14);
     }
     & > .body:not(:empty) {
       margin-block-start: var(--rx-space-1);

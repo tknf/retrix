@@ -54,7 +54,7 @@
     min-block-size: calc(3lh + 2 * 0.625rem + 2 * var(--rx-stroke-width));
     padding-block: 0.625rem;
     padding-inline: 0.875rem;
-    font-size: 1rem;
+    font-size: var(--rx-reading);
     line-height: calc(21 / 16);
   }
 

@@ -97,7 +97,7 @@
         display: flex;
         flex: none;
         align-items: center;
-        min-block-size: 3.75rem;
+        min-block-size: 3.25rem;
         padding-inline: var(--rx-space-3) var(--rx-space-2);
         & > .count {
           font-weight: 700;

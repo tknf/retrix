@@ -101,14 +101,21 @@
     --rx-pill-count-text: var(--rx-teal);
     --rx-pill-meta: #eeeeee;
     --rx-pill-meta-text: #6b6b6b;
-    /* メニューやフィルターで選んだ項目の淡い青のピル（overlays.md）。 */
-    --rx-pill-selected: #dde4f5;
-    --rx-pill-selected-text: #244960;
+    /*
+      選んでいる項目・候補。BC2のジャンプの候補（overlays.md「1f」）と同じ、角の無い淡い青に黒い文字。
+      メニュー・候補の一覧・切り替え・Dialなど、選んでいる状態は全てこの一つの見た目にする（ピルで囲わない）。
+    */
+    --rx-option-active: #ddeefe;
+    --rx-option-active-text: var(--rx-ink);
     /* カレンダー・Progressの暖かい灰色の罫線（lists.md）。 */
     --rx-calendar-rule: #dcd9d2;
     /* ヘッダーの名前の濃い灰色と、名前と移動先の間の縦の線（BC2の実測）。 */
     --rx-logo: #3d3c37;
     --rx-header-rule: #ded7c7;
+    /* 浮かぶパネル（BC2のポップオーバー。overlays.md「1」）。1px #bbb の枠・角丸5px・外へ約8pxの柔らかい影。 */
+    --rx-popover-edge: #bbbbbb;
+    --rx-popover-radius: 0.3125rem;
+    --rx-popover-shadow: 0 var(--rx-stroke-width) 0.5rem rgb(0 0 0 / 18%);
     /* 背後に重ねた親のシートの枠。 */
     --rx-sheet-behind-edge: #e5e5e5;
     /* シートの背後に重ねる親のシート。 */
@@ -178,7 +185,7 @@
     --rx-fill-success: linear-gradient(var(--rx-green), var(--rx-green));
     /* 操作のメニューの面。白いパネルに枠と影を付ける。選んでいる行は淡い青のピル（--rx-menu-active）にする。 */
     --rx-fill-menu: linear-gradient(var(--rx-surface), var(--rx-surface));
-    --rx-menu-active: var(--rx-pill-selected);
+    --rx-menu-active: var(--rx-option-active);
     /* 机の紙の質感。BC2の実測どおり、明るさだけの細かいノイズを重ねる（structure.md「机」）。 */
     --rx-desk-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.38 0 0 0 0 0.25 0 0 0 0.07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     --rx-link: var(--rx-teal);
@@ -198,22 +205,26 @@
     --rx-control-font-family:
       "Retrix UI Latin", "Retrix UI Japanese", "Helvetica Neue", Arial, var(--rx-font);
     /*
-      文字の段（BC2の実測、structure.md「文字」）。画面幅で変えない。
-      - ボタン・入力欄・ピル --rx-small：12px
-      - 補足・日時・表 --rx-label：13px
-      - 本文・一覧の題名 --rx-body：15px
-      - まとまりの見出し --rx-section-title：16px（手本は英字の18〜19px。和文は字面が大きく見えるので一段下げる）
-      - シートの見出し --rx-title：20px（手本の24pxから、ユーザーの指定で下げた）
+      文字の段。ベースの本文を13pxにし、ほかの段をそこから決める（ユーザーの指定）。
+      手本（BC2）は英字で本文15px・ボタン12pxだが、和文は字面が大きく見えるので全体を一段下げ、段の比は手本に近づける。
+      - 補足・日時・ピル --rx-small：11px
+      - ボタン・入力欄・表・ラベル --rx-label：12px
+      - 本文・一覧の題名 --rx-body：13px（ベース）
+      - 続けて読む文章 --rx-reading：14px
+      - まとまりの見出し --rx-section-title：15px
+      - シートの見出し --rx-title：18px
       操作の高さはemで文字に追従するため、文字の大きさを整数pxに保ち、縦位置の端数を作らない。
     */
-    --rx-body: 0.9375rem;
-    --rx-label: 0.8125rem;
-    --rx-small: 0.75rem;
-    --rx-title: 1.25rem;
-    --rx-section-title: 1rem;
-    --rx-leading: 1.4;
-    --rx-label-leading: calc(18 / 13);
-    --rx-small-leading: calc(4 / 3);
+    --rx-body: 0.8125rem;
+    --rx-label: 0.75rem;
+    --rx-small: 0.6875rem;
+    --rx-title: 1.125rem;
+    --rx-section-title: 0.9375rem;
+    /* 続けて読む文章（コメントの本文・カードの説明・文書）。手本では一覧（15px）より一段大きい16px。 */
+    --rx-reading: 0.875rem;
+    --rx-leading: calc(18 / 13);
+    --rx-label-leading: calc(17 / 12);
+    --rx-small-leading: calc(15 / 11);
     /*
       角丸（BC2の実測）。控えめなボタンと複数行の入力欄は5px、主ボタンは4px、シート・カード・パネルは3px、
       一行の入力欄と小さな要素は2px。件数やメタ情報のピルだけを丸くする。
@@ -248,8 +259,8 @@
     --rx-control-size: 1.5rem;
     --rx-control-compact: 1.375rem;
     --rx-control-font: var(--rx-label);
-    --rx-control-leading: calc(18 / 13);
-    --rx-button-font: var(--rx-small);
+    --rx-control-leading: calc(17 / 12);
+    --rx-button-font: var(--rx-label);
     /*
       控えめなButtonはBC2の実測どおり12pxの文字で高さ22px、largeは14pxの文字で高さ32px（一行のInputは24px、field.css）。
       枠を除いた内側の高さと文字の大きさの差を偶数にし、文字の上下の余りを整数pxに保つ（22 − 2 − 12 = 8、32 − 2 − 14 = 16）。

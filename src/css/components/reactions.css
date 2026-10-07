@@ -38,8 +38,8 @@
         padding-block: calc((1.5rem - 2 * var(--rx-stroke-width) - 1lh) / 2);
         padding-inline: 0.4375rem 0.5rem;
         border: var(--rx-stroke-width) solid var(--rx-gray-200);
-        /* 一行の高さの半分の角丸。一行ではピルになり、折り返しても角が膨らみすぎない。 */
-        border-radius: 0.75rem;
+        /* ピルにせず、控えめなボタンと同じ5pxの角丸にする（ユーザーの指定）。 */
+        border-radius: var(--rx-radius-control);
         background: var(--rx-surface);
         color: var(--rx-text);
         font-family: inherit;
@@ -62,11 +62,11 @@
           font-variant-numeric: tabular-nums;
         }
         &[data-mine="true"] {
-          border-color: var(--rx-pill-selected);
-          background: var(--rx-pill-selected);
-          color: var(--rx-pill-selected-text);
+          border-color: var(--rx-option-active);
+          background: var(--rx-option-active);
+          color: var(--rx-option-active-text);
           & > .count {
-            color: var(--rx-pill-selected-text);
+            color: var(--rx-option-active-text);
           }
         }
       }
@@ -79,10 +79,10 @@
         &[data-mine="true"]:hover {
           border-color: color-mix(
             in srgb,
-            var(--rx-pill-selected-text) 25%,
-            var(--rx-pill-selected)
+            var(--rx-option-active-text) 25%,
+            var(--rx-option-active)
           );
-          background: var(--rx-pill-selected);
+          background: var(--rx-option-active);
         }
         &:active {
           box-shadow: var(--rx-shadow-control-pressed);

@@ -5,11 +5,16 @@
     普段は平らにし、ホバーするとBC2のメニューの選んだ項目と同じ淡い青（overlays.md「1c」の#dde4f5）の面を出して
     マークを青緑で塗り、押すと内側へへこむ。
     尾（下向きの三角）は、BC2のポップオーバーのしっぽ（overlays.md「1d」）と同じ45°で、深さ11px・付け根22px。
-    中はカードと同じ白、縁は1dのしっぽの縁と同じ#cccccc。すぐ下の対象を指す。
+    手本と同じく、カードの1pxの枠がそのまま尾の縁へつながる形にする。カードは影ではなく1px #bbb の枠で描き、
+    影は尾も含めた輪郭に沿って落とす（drop-shadow）。すぐ下の対象を指す。
     選択肢の行の文字の指定はこのファイルが持つ（共通Buttonとは別の専用の操作）。
   */
   .rx-prompt {
+    --rx-prompt-edge: #bbbbbb;
     position: relative;
+    border: var(--rx-stroke-width) solid var(--rx-prompt-edge);
+    box-shadow: none;
+    filter: drop-shadow(0 var(--rx-stroke-width) 0.1875rem rgb(0 0 0 / 14%));
     /* 尾は層の外へ出るので、下の要素との間は置く側の間隔（16px以上）で空ける。 */
     &[data-pointer="true"]::before,
     &[data-pointer="true"]::after {
@@ -20,10 +25,16 @@
       border-inline: 0.6875rem solid transparent;
       border-block-start: 0.6875rem solid var(--rx-surface);
     }
-    /* 縁の三角を一段外側に置き、白い三角の下から覗かせる。 */
+    /*
+      縁の三角はカードの下の枠のすぐ外から始め、白い三角はそれより1px上（下の枠の上）から重ねて枠を切る。
+      こうすると、カードの枠と尾の縁が一本の線でつながる。
+    */
     &[data-pointer="true"]::before {
       inset-block-start: calc(100% + var(--rx-stroke-width));
-      border-block-start-color: var(--rx-gray-300);
+      inset-inline-start: calc(var(--rx-space-6) + var(--rx-space-1) - var(--rx-stroke-width));
+      border-inline-width: calc(0.6875rem + var(--rx-stroke-width));
+      border-block-start-width: calc(0.6875rem + var(--rx-stroke-width));
+      border-block-start-color: var(--rx-prompt-edge);
     }
     /* カードは行の面を端近くまで広げ、行の要点を層の見出しと同じ書き始めにそろえる。 */
     & > .body {
@@ -94,7 +105,7 @@
         }
       }
       &:hover {
-        background: var(--rx-pill-selected);
+        background: var(--rx-option-active);
         & > .mark::before {
           border-color: var(--rx-teal-dark);
           background: var(--rx-teal);
@@ -105,7 +116,7 @@
         }
       }
       &:active {
-        background: color-mix(in srgb, var(--rx-pill-selected) 85%, var(--rx-pill-selected-text));
+        background: color-mix(in srgb, var(--rx-option-active) 85%, var(--rx-option-active-text));
         box-shadow: var(--rx-shadow-control-pressed);
       }
       &:focus-visible {

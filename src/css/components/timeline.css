@@ -177,7 +177,6 @@
           inset-inline: -0.375rem;
           z-index: -1;
           background: var(--rx-mark);
-          border-radius: var(--rx-radius-pill);
         }
       }
       /* これからの節目は、マークではなくそこから先の線を破線にする。小さな円の破線は途切れて見えるため。 */

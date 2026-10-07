@@ -37,7 +37,8 @@
       padding-block: 0;
       padding-inline: 0.625rem;
       border: var(--rx-stroke-width) solid transparent;
-      border-radius: var(--rx-radius-pill);
+      /* Highriseのページ送りは丸薬形だが、ピルを使わない方針（ユーザーの指定）で、控えめなボタンと同じ5pxの角丸にする。 */
+      border-radius: var(--rx-radius-control);
       color: var(--rx-text);
       font-variant-numeric: tabular-nums;
       text-decoration: none;

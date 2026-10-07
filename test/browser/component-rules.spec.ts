@@ -64,11 +64,11 @@ test("入れ子の局所クラスへ外側の見出しと状態の指定が漏�
 });
 
 test("文章・数値・操作の文字寸法を親からの継承で変えない", async ({ page }) => {
-  // 表と案内は補足の段（13px・行高18px）、カードの説明はBC2のプロジェクトのカードの16px・行高20px。
+  // 表と案内はラベルの段（12px・行高17px）、カードの説明は続けて読む文章の段（14px・行高20px）。
   for (const [id, selector, font, line] of [
-    ["table", '[data-example="hono"] tbody td', 13, 18],
-    ["card", '[data-example="hono"] .rx-card > .body > p', 16, 20],
-    ["notice", '[data-example="hono"] .rx-notice > .body > p', 13, 18],
+    ["table", '[data-example="hono"] tbody td', 12, 17],
+    ["card", '[data-example="hono"] .rx-card > .body > p', 14, 20],
+    ["notice", '[data-example="hono"] .rx-notice > .body > p', 12, 17],
   ] as const) {
     await page.goto(`/components/${id}`);
     const element = page.locator(selector).first();

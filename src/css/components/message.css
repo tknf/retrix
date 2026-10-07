@@ -16,7 +16,7 @@
     max-inline-size: 48rem;
     padding-block: var(--rx-space-2);
     color: var(--rx-text);
-    font-size: 1rem;
+    font-size: var(--rx-reading);
     line-height: calc(21 / 16);
     &:has(> .avatar) {
       grid-template-columns: var(--rx-message-avatar) minmax(0, 1fr);

@@ -65,7 +65,7 @@ JavaScriptが無い時は、標準の `datalist` で候補を出し、右の矢�
 
 登録するcontroller：`suggestion`（`SuggestionController`）
 
-読み込むCSS：`layers.css`、`reset.css`、`tokens.css`、`base.css`、`layout.css`、`components/overlay.css`、`components/field.css`、`components/icon.css`、`components/suggestion.css`
+読み込むCSS：`layers.css`、`reset.css`、`tokens.css`、`base.css`、`layout.css`、`components/field.css`、`components/icon.css`、`components/suggestion.css`
 
 ## コード
 

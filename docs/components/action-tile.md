@@ -63,9 +63,9 @@
 
 ```tsx
 import { ActionTile, Disclosure, DisclosureGroup } from "@tknf/retrix/hono";
-// セルは5〜7.5remで、入る数だけ並べる（文字を大きくした狭い画面では一列になる）。
+// セルは4〜5.5remで、入る数だけ並べる（文字を大きくした狭い画面では一列になる）。
 const grid =
-  "display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 5rem), 7.5rem)); gap: 0.75rem";
+  "display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 4rem), 5.5rem)); gap: 0.5rem";
 export default () => (
   <div class="rx-stack">
     <div style={grid}>
@@ -127,8 +127,8 @@ export default () => (
   <div
     style="
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(min(100%, 5rem), 7.5rem));
-      gap: 0.75rem;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 4rem), 5.5rem));
+      gap: 0.5rem;
     "
   >
     <a class="rx-action-tile" data-accent="green" href="/" aria-current="page"
@@ -199,8 +199,8 @@ export default () => (
         <div
           style="
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(min(100%, 5rem), 7.5rem));
-            gap: 0.75rem;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 4rem), 5.5rem));
+            gap: 0.5rem;
           "
         >
           <button type="button" class="rx-action-tile">
@@ -259,8 +259,8 @@ export default () => (
         <div
           style="
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(min(100%, 5rem), 7.5rem));
-            gap: 0.75rem;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 4rem), 5.5rem));
+            gap: 0.5rem;
           "
         >
           <button type="button" class="rx-action-tile">
@@ -343,8 +343,8 @@ export default () => (
         <div
           style="
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(min(100%, 5rem), 7.5rem));
-            gap: 0.75rem;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 4rem), 5.5rem));
+            gap: 0.5rem;
           "
         >
           <span
@@ -454,8 +454,8 @@ export default () => (
         <div
           style="
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(min(100%, 5rem), 7.5rem));
-            gap: 0.75rem;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 4rem), 5.5rem));
+            gap: 0.5rem;
           "
           dir="rtl"
           lang="ar"

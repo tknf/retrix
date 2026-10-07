@@ -8,22 +8,6 @@
     --rx-overlay-close-offset: 0.25rem;
   }
   /*
-    浮かぶパネルの共通の枠。実測: overlays.md「1. BC2 のポップオーバー」。
-    白い箱に1px #bbb（1a〜1dの#adadad〜#bcbcbcを一つにそろえた値）、角丸5px、四方へ約8pxの柔らかい影で、下側だけ少し濃い。
-    影は外へ#e3→#fbと薄れる測定からの換算（推測）。DropdownMenu・CommandMenu・DatePickerのパネルも同じ値を使う。
-  */
-  :is(
-    .rx-overlay,
-    .rx-menu,
-    .rx-command-menu > .panel,
-    .rx-date-picker > .panel,
-    .rx-suggestion > .options
-  ) {
-    --rx-popover-edge: #bbbbbb;
-    --rx-popover-radius: 0.3125rem;
-    --rx-popover-shadow: 0 var(--rx-stroke-width) 0.5rem rgb(0 0 0 / 18%);
-  }
-  /*
     閉じる操作は、末尾側の上の角の内側に置く小さな×。枠も塗りも持たず、灰色の×だけを見せる（BC2のポップオーバーには×が無い。推測）。
     見出しの行は、×が余白より内側へ入る分だけ行末を空ける。
   */

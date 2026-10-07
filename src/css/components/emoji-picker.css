@@ -58,13 +58,13 @@
               display: none;
             }
             &:hover {
-              background: var(--rx-pill-selected);
+              background: var(--rx-option-active);
             }
             &:active {
               background: color-mix(
                 in srgb,
-                var(--rx-pill-selected) 85%,
-                var(--rx-pill-selected-text)
+                var(--rx-option-active) 85%,
+                var(--rx-option-active-text)
               );
               box-shadow: var(--rx-shadow-control-pressed);
             }

@@ -89,7 +89,7 @@
         background: transparent;
         color: var(--rx-text);
         font-family: var(--rx-font);
-        font-size: 1rem;
+        font-size: var(--rx-reading);
         line-height: calc(21 / 16);
         outline: 0;
         resize: vertical;

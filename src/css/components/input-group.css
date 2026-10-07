@@ -33,7 +33,7 @@
     box-shadow: var(--rx-shadow-input);
     color: var(--rx-muted);
     font-family: var(--rx-control-font-family);
-    font-size: var(--rx-small);
+    font-size: var(--rx-label);
     font-weight: 400;
     line-height: calc(10 / 7);
 
@@ -79,7 +79,7 @@
     /* 大きな入力はInputのlargeと同じく、14pxの文字で高さ32px（largeのButtonと同じ）。 */
     &[data-size="large"] {
       --rx-input-group-size: calc(32em / 14);
-      font-size: calc(var(--rx-small) * 7 / 6);
+      font-size: calc(var(--rx-label) * 7 / 6);
       line-height: var(--rx-control-leading);
     }
   }

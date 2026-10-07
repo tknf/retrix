@@ -95,7 +95,7 @@
           min-block-size: 1.375rem;
           padding-block: 0.125rem;
           padding-inline: var(--rx-space-2);
-          border-radius: var(--rx-radius-pill);
+          border-radius: 0;
           cursor: pointer;
           &[hidden] {
             display: none;
@@ -103,7 +103,7 @@
           &:hover,
           &[data-active="true"] {
             background: var(--rx-menu-active);
-            color: var(--rx-pill-selected-text);
+            color: var(--rx-option-active-text);
           }
           /* 使えない候補は形をそのままにし、文字だけを灰色にする。 */
           &[data-disabled="true"] {
@@ -139,7 +139,7 @@
         }
         /* 選んだ候補は1cの選んだ項目と同じ#244960の太字。 */
         & > .option[data-selected="true"]:not([data-disabled="true"]) {
-          color: var(--rx-pill-selected-text);
+          color: var(--rx-option-active-text);
         }
         & > .option[data-selected="true"] {
           font-weight: 600;

@@ -29,7 +29,7 @@
     /* タイルの角やメニューの行の終わりに添える小さな表示。 */
     &[data-size="small"] {
       gap: 0.125rem;
-      font-size: 0.6875rem;
+      font-size: var(--rx-small);
       line-height: 1rem;
       & > kbd {
         min-inline-size: 1rem;

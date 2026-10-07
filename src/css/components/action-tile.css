@@ -19,7 +19,7 @@
     gap: 0.25rem;
     min-inline-size: 0;
     /* ActionDockの操作と同じ密度。アイコンの上を下より少し広く取り、アイコンと名前を一つのまとまりに見せる。 */
-    min-block-size: 3.75rem;
+    min-block-size: 3.25rem;
     margin: 0;
     padding-block: var(--rx-space-2) var(--rx-space-1);
     padding-inline: var(--rx-space-2);

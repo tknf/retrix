@@ -77,7 +77,6 @@
           calc(-50% - cos(var(--rx-dial-angle)) * var(--rx-dial-radius));
         padding-block: 0.125rem;
         padding-inline: 0.375rem;
-        border-radius: var(--rx-radius-pill);
         color: var(--rx-muted);
         font-variant-numeric: tabular-nums;
         white-space: nowrap;
@@ -93,9 +92,9 @@
         &:hover {
           color: var(--rx-text);
         }
+        /* 選んだ値は、ヘッダーの今いる項目と同じく黒い太字で示し、面で囲わない。 */
         &:has(> input:checked) {
-          background: var(--rx-pill-selected);
-          color: var(--rx-pill-selected-text);
+          color: var(--rx-ink);
           font-weight: 700;
         }
         &:has(> input:focus-visible) {
