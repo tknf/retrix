@@ -5,7 +5,9 @@ description: "@tknf/retrix（Retrix）を使って、管理画面・業務シス
 
 # Retrixで画面を作る（`@tknf/retrix`）
 
-Retrixは、管理画面・業務システム・一般利用者向けのサービスで使うデザインシステムです。CSSとセマンティックHTMLに、同じHTMLを出力するHono JSXのSSRコンポーネントと、開閉・選択・キーボード操作を行うStimulus controllerを加えて提供します。
+Retrixは、マスタ管理・顧客管理・案件管理・設定のような業務の画面を作るためのデザインシステムです。手本は2012年前後の37signalsの画面（Basecamp 2・Highrise）で、クリーム色の机の上に白いシートを置き、そこに表や一覧や文章を並べます。表を中心にした一覧・詳細・編集の画面が最も得意ですが、文書・予定・連絡・ボードの画面も同じ作法で組めます。
+
+CSSとセマンティックHTMLに、同じHTMLを出力するHono JSXのSSRコンポーネントと、開閉・選択・キーボード操作を行うStimulus controllerを加えて提供します。
 
 コードを書く前に、インストールした版の型定義（`node_modules/@tknf/retrix`）と[コンポーネントのリファレンス](https://github.com/tknf/retrix/blob/main/docs/components/README.md)で、props・登録名・イベントを確認します。APIを推測で書きません。
 
@@ -32,17 +34,27 @@ peer dependencyは、使う機能に必要なものだけをインストール�
 
 ## アプリの画面構成
 
-アプリの画面は`AppShell`で作ります。
+アプリの画面は`AppShell`で作ります。画面の幅いっぱいには広げず、ヘッダーとシートを画面の中央に揃えます。
 
-- 上部中央に`CommandMenu`を一つ置き、中央に作業面を置きます。
-- 常に表示するサイドバーは置きません。
-  - 作業面を補助する内容は、`Wing`（作業面の左右に開閉するパネル）に置きます。
-  - 同じ領域のページの切り替えには、作業面の中に置いた`Navigation`や`Tabs`を使います。
-- 作業面の幅は`AppShell`の`size`で、画面の中身に合わせて選びます。
+- `home`にアプリの名前、`navigation`に主な移動先、`commands`に検索（`CommandMenu`）を渡し、ヘッダーの一行に並べます。`CommandMenu`はヘッダーの末尾側に置き、アプリに一つだけにします。
+- `account`（利用者の名前・設定・ログアウトへのリンク）は、ヘッダーの上の行の末尾側に小さく置きます。
+- 画面の中身は`children`として中央の白いシート（作業面）に置きます。
+- 上の階層は`trail`で、シートの背後に重ねた淡い灰色のシートとして示します。背後のシートの見出しが上の階層へのリンクです。
+- 分類ごとの移動先や最近見た項目は`aside`の列に置きます。列はシートの外の先頭側に置き、画面の端に固定するサイドバーにはしません。
+- 作業面に付属する開閉式の補助パネルは`wings`（`Wing`）に置きます。同じ領域のページの切り替えには、作業面の中に置いた`Navigation`や`Tabs`を使います。
+- シートの幅は`AppShell`の`size`で、画面の中身に合わせて選びます。
   - 設定画面など入力が中心の画面は`compact`にします。
   - `Board`や年の予定など横に広い画面は`wide`にします。
   - それ以外は`default`のままにします。
 - `AppShell`を使わない画面では、作業面に`Surface`を使います。
+
+## コンポーネントの選び方
+
+- 同じ列で項目を見比べる一覧（マスタの一覧など）は`Table`にします。並べ替えは`sort`、行の選択と一括操作は`selectable`と`selectionActions`、列の幅の変更は`resizable`です。セルを矢印キーで移動するなら`Grid`、親子の階層があるなら`Treegrid`にします。
+- 一件ずつを題名と補足で読ませる一覧は`DataList`、一つの対象の属性は`ValueList`にします。
+- ページの見出しと主な操作は`PageHeader`、シートの中のまとまりの見出しは`Section`にします。主操作（緑の`primary`のボタン）は一つの画面に一つか二つにします。
+- アプリ全体の移動は`AppShell`のヘッダー、名前で探す移動と操作は`CommandMenu`、対象に対する操作は`DropdownMenu`、判断が必要な処理は`Dialog`、対象の近くの補足は`Popover`にします。
+- 継続して読む案内は`Notice`、修正先の一覧は`ErrorSummary`、何もない理由は`EmptyState`、測れる進み具合は`Progress`、待機は`Loading`、結果の通知は`Toast`にします。
 
 ## CSSの読み込みと上書き
 
@@ -74,16 +86,21 @@ ButtonとInputの文字・行の高さ・上下の余白は、それぞれのコ
 
 - controllerは自動では起動・登録されません。使うコンポーネントのcontrollerだけを、決められた登録名で登録します。
   - Honoのコンポーネントは、その登録名を`data-controller`に出力します。別の名前で登録すると動きません。
-  - 一つのコンポーネントが複数のcontrollerを使う場合があります（Tableは`table`・`table-sort`・`table-select`）。全て登録します。
+  - 一つのコンポーネントが複数のcontrollerを使う場合があります（Tableの並べ替えと行の選択は`table`・`table-sort`・`table-select`、列の幅の変更は`table-resize`）。全て登録します。
   - 登録名の一覧は、[references/components.md](references/components.md)の最後の表にあります。
 
 ```ts
 import { Application } from "@hotwired/stimulus";
-import { DialogController, DropdownMenuController } from "@tknf/retrix/controllers";
+import {
+  DialogController,
+  DropdownMenuController,
+  TableResizeController,
+} from "@tknf/retrix/controllers";
 
 const application = Application.start(); // 既存のApplicationがあればそれを使う
 application.register("dialog", DialogController);
 application.register("dropdown-menu", DropdownMenuController);
+application.register("table-resize", TableResizeController);
 ```
 
 - controllerは、選択・移動・変更のたびに`<登録名>:<動作>`という名前のカスタムイベントを発火します（`dropdown-menu:select`、`board:move`など）。

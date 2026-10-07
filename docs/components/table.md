@@ -6,7 +6,7 @@
 
 ## 使いどころ
 
-- 複数の項目を同じ列で見比べる時に使います。列の並べ替え、行の選択と一括操作、見出しの固定を足せます。
+- 複数の項目を同じ列で見比べる時に使います。マスタの一覧のような画面の中心になります。列の並べ替え、列の幅の変更と保存、行の選択と一括操作、見出しの固定を足せます。
 - 一件ずつを題名と補足で読ませる一覧は `DataList`、一つの対象の属性は `ValueList` を使います。
 - セルの間を矢印キーで移動させたい時は `Grid`、行に親子の階層がある時は `Treegrid` を使います。
 
@@ -14,7 +14,7 @@
 
 `children` に標準の `thead`・`tbody`・`tfoot` を書きます。`caption` は表の名前として自動で置きます。セルに `data-cell="numeric"` を付けると末尾側へそろえて等幅の数字にし、`data-cell="short"` は折り返さず、`data-cell="text"` は14em以上の幅で長文を折り返します。表が作業面より広い時は、囲みの中で横にスクロールします。
 
-`density` は既定の `compact` と、本文の行の上下を広げる `comfortable` から選びます。`stickyHeader` は囲みの高さを28remまでにし、縦にスクロールしても見出しの行を上に留めます。
+`density` は既定の `compact` と、本文の行の上下を広げる `comfortable` から選びます。`striped` は本文の偶数行に淡い面を敷き、行が多く横に長い表で行をたどりやすくします。`stickyHeader` は囲みの高さを28remまでにし、縦にスクロールしても見出しの行を上に留めます。
 
 並べ替えは `sort="local" | "manual"` です。並べ替えられる列の見出しは `TableSort` で書きます。`TableSort` 自身が `th` を出力するので、別の `th` で囲まず `thead` の行に直接置きます。見出しを押すたびに昇順・降順・元の順を切り替え、並べている列の見出しを青くして矢印を出します。
 
@@ -23,6 +23,10 @@
 選択は `selectable` で有効にします。`TableSelection` はチェックボックスを出力し、`rowId` を渡すと行の選択、省略すると表の全ての行の選択になります。全選択は一部だけ選ばれている時に中間の状態を示し、使えない（`disabled`）行は全選択と範囲選択から外します。フォームで送る行の `TableSelection` には `name`・`value`（必要なら `form`）を渡します。フォームのリセットでは選択の表示も戻します。
 
 行を選ぶと、`ActionDock` と同じ操作バーが画面の下の中央に浮かんで現れます。先頭に「N件選択」、続けて `selectionActions` の一括操作を横一列に並べ（`ActionTile` は面を持たない平らなタイル、`Button` もそのまま同じ列に置きます）、入らない時は操作の列だけを横にスクロールします。操作バーの角の×（「選択を解除」）は全ての選択を外し、フォーカスを全選択のチェックボックスへ戻します。操作バーは画面の上に浮かぶだけで、表は動きません。閉じる間も件数と並びは変わりません。
+
+列の幅は `resizable` で変えられるようにします。`TableResizeController` を `table-resize` として登録すると、列の見出しの末尾側の縁にハンドルを置き、ドラッグか矢印キーで幅を変えます（48〜1200px）。最後の列は残りの幅を使い、行を選ぶチェックの列にはハンドルを置きません。幅を変えた表は列の幅を固定し、長い文は折り返し、短い値は列の幅で切って末尾を省きます。ハンドルをダブルクリックすると全ての列を元の幅に戻します。見出しが複数の列にまたがる表では幅を変えません。
+
+`storageKey` を渡すと、変えた幅をcookie（名前は `tableWidthsCookieName(storageKey)`、値は「120,240,,96」の形式）へ一年間保存し、次に開いた時に戻します。サーバーでcookieを読んで `savedColumnWidths` に渡すと、初回の描画から保存した幅で表示し、読み込み後に幅が変わりません。利用者ごとにサーバーへ保存する時は、`table-resize:change` を受けて保存し、その値を `savedColumnWidths` に渡します。
 
 `state` は `ready`・`loading`・`empty`・`error` です。`ready` 以外では `thead` を保ったまま本文の行を隠し、状態の文（または `stateContent`）を出します。この間は並べ替えのボタンを押せず、選択も付けません。
 
@@ -35,6 +39,8 @@
 | Tab                              | 表の囲みへ移り、見出しのボタン・リンク・チェックボックスを順に移動します。行を選んでいる時は、表の後に選択バーの操作へ進みます。囲みにフォーカスがある時は矢印キーで表をスクロールできます。 |
 | Enter / Space（見出し）          | その列で並べ替えます。押すたびに昇順・降順・元の順を切り替えます。                                                                                                                           |
 | Space（チェックボックス）        | 行、または全ての行の選択を切り替えます。                                                                                                                                                     |
+| ← / →（列の幅のハンドル）        | 列の幅を16pxずつ変えます。Shiftを押していると64pxずつ変えます。右から左に読む言語では向きが逆になります。                                                                                    |
+| Home / End（列の幅のハンドル）   | 列の幅を最小（48px）・最大（1200px）にします。                                                                                                                                               |
 | Shift + Space / Shift + クリック | 前に操作した行から、この行までをまとめて同じ選択の状態にします。                                                                                                                             |
 
 ## アクセシビリティ
@@ -44,35 +50,41 @@
 - `TableSelection` の `label` はチェックボックスの `aria-label` になります。どの行か分かる名前（「〇〇を選択」）を付けてください。
 - 選択バーは `role="group"`（「選択した行の操作」）で、件数は `aria-live="polite"` で知らせます。選択バーはDOMでは表の後にあるので、行を選んだ後はTabで表の後の一括操作へ進めます。
 - 状態の文は `role="status"` で、`loading` では表に `aria-busy="true"` を付けます。
+- 列の幅のハンドルは `role="separator"`（縦向き）で、「「記事名」の列の幅」のような読み上げ名と、今の幅を `aria-valuenow`（px）で持ち、Tabで止まります。
 
 ## イベント
 
-| イベント                    | 内容                                                                                                                                                                                                                                                                      |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `table:beforesort`          | 並べ替える前に発火します。取り消せます（取り消すと見出しの状態も行も変えません）。detailは `{ column, direction, previousColumn, previousDirection, reason }` で、`direction` は `ascending`・`descending`・`none`、`reason` は `pointer`・`keyboard` です。              |
-| `table:sort`                | 並べ替えた後に発火します。detailは `table:beforesort` と同じです。`manual` ではこのイベントを受けて行を差し替えます。                                                                                                                                                     |
-| `table-select:beforechange` | 利用者の操作で選択が変わる前に、`table` 要素で発火します。取り消せます。detailは `{ selected, previousSelected, reason }` で、`selected` は選ばれる行の `rowId` の配列です。                                                                                              |
-| `table:selectionchange`     | 利用者の操作（チェックボックスと×）で選択が変わった後に発火します。detailは `{ ids, count, scope }` で、`ids` は選んでいる行の `rowId` を表の並びで、`count` はその数、`scope` は表示中の行だけを数えたことを示す `"rendered"` です。フォームのリセットでは発火しません。 |
+| イベント                    | 内容                                                                                                                                                                                                                                                                                                                   |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `table:beforesort`          | 並べ替える前に発火します。取り消せます（取り消すと見出しの状態も行も変えません）。detailは `{ column, direction, previousColumn, previousDirection, reason }` で、`direction` は `ascending`・`descending`・`none`、`reason` は `pointer`・`keyboard` です。                                                           |
+| `table:sort`                | 並べ替えた後に発火します。detailは `table:beforesort` と同じです。`manual` ではこのイベントを受けて行を差し替えます。                                                                                                                                                                                                  |
+| `table-select:beforechange` | 利用者の操作で選択が変わる前に、`table` 要素で発火します。取り消せます。detailは `{ selected, previousSelected, reason }` で、`selected` は選ばれる行の `rowId` の配列です。                                                                                                                                           |
+| `table:selectionchange`     | 利用者の操作（チェックボックスと×）で選択が変わった後に発火します。detailは `{ ids, count, scope }` で、`ids` は選んでいる行の `rowId` を表の並びで、`count` はその数、`scope` は表示中の行だけを数えたことを示す `"rendered"` です。フォームのリセットでは発火しません。                                              |
+| `table-resize:change`       | 利用者が列の幅を変えた後（ドラッグを離した時・矢印キーを押した時・ダブルクリックで戻した時）に、`table` 要素で発火します。detailは `{ widths, column }` で、`widths` は列ごとの幅（px、幅を決めていない列は `null`）、`column` は変えた列の番号です。元の幅に戻した時は `widths` が空の配列、`column` が `null` です。 |
 
 ## API
 
 ### Table
 
-| 名前               | 型                                           | 既定値      | 説明                                                                                                                                                                                                          |
-| ------------------ | -------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `caption`（必須）  | `string`                                     |             | 表の名前。captionに出し、スクロールする囲み（role="region"）のaria-labelにも使う。                                                                                                                            |
-| `density`          | `"compact" \| "comfortable"`                 | `"compact"` | 本文の行の密度。comfortableは本文の行の上下の余白を広げる。                                                                                                                                                   |
-| `sort`             | `"local" \| "manual"`                        |             | 並べ替えの方式。TableSortの見出しを押すと、昇順・降順・元の順を順に切り替える。 localは表示中の行をその場で並べ替え、manualは行を動かさずtable:sortイベントだけを発火する（サーバー側で並べ替える時に使う）。 |
-| `selectable`       | `boolean`                                    | `false`     | 行の選択を有効にする。TableSelectionのチェックで選び、選んでいる間は画面の下の中央に選択バーを出す。                                                                                                          |
-| `selectionActions` | `Child`                                      |             | 選択バーに件数に続けて並べる一括操作（ActionTileやButton）。selectableの時だけ出す。 JavaScriptがない時は表の下に置くので、行のチェックと同じformの送信ボタンにすると選んだ行を送れる。                       |
-| `stickyHeader`     | `boolean`                                    | `false`     | 見出しの行をスクロールしても上に留める。表の囲みの高さを28remまでにし、囲みの中で縦にスクロールする。                                                                                                         |
-| `state`            | `"ready" \| "loading" \| "empty" \| "error"` | `"ready"`   | 表の状態。ready以外ではtheadを残して本文の行を隠し、状態の文を出す。並べ替えと選択も止める。loadingではaria-busyを付ける。                                                                                    |
-| `stateContent`     | `Child`                                      |             | ready以外の時に、既定の状態の文の代わりに出す内容。                                                                                                                                                           |
-| `children`         | `Child`                                      |             | 表の中身。`thead`・`tbody`・`tfoot` を書く。`caption` は自動で置くので書かない。                                                                                                                              |
+| 名前                | 型                                           | 既定値      | 説明                                                                                                                                                                                                          |
+| ------------------- | -------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `caption`（必須）   | `string`                                     |             | 表の名前。captionに出し、スクロールする囲み（role="region"）のaria-labelにも使う。                                                                                                                            |
+| `density`           | `"compact" \| "comfortable"`                 | `"compact"` | 本文の行の密度。comfortableは本文の行の上下の余白を広げる。                                                                                                                                                   |
+| `striped`           | `boolean`                                    | `false`     | 本文の偶数行に淡い面を敷く。行が多く横に長い表で、行をたどりやすくする。                                                                                                                                      |
+| `sort`              | `"local" \| "manual"`                        |             | 並べ替えの方式。TableSortの見出しを押すと、昇順・降順・元の順を順に切り替える。 localは表示中の行をその場で並べ替え、manualは行を動かさずtable:sortイベントだけを発火する（サーバー側で並べ替える時に使う）。 |
+| `selectable`        | `boolean`                                    | `false`     | 行の選択を有効にする。TableSelectionのチェックで選び、選んでいる間は画面の下の中央に選択バーを出す。                                                                                                          |
+| `selectionActions`  | `Child`                                      |             | 選択バーに件数に続けて並べる一括操作（ActionTileやButton）。selectableの時だけ出す。 JavaScriptがない時は表の下に置くので、行のチェックと同じformの送信ボタンにすると選んだ行を送れる。                       |
+| `stickyHeader`      | `boolean`                                    | `false`     | 見出しの行をスクロールしても上に留める。表の囲みの高さを28remまでにし、囲みの中で縦にスクロールする。                                                                                                         |
+| `resizable`         | `boolean`                                    | `false`     | 列の幅を変えられるようにする。TableResizeControllerが列の見出しの末尾側の縁にハンドルを置き、ドラッグか矢印キーで幅を変える。最後の列は残りの幅を使う。                                                       |
+| `storageKey`        | `string`                                     |             | 列の幅を保存するcookieのキー。resizableの時に使い、cookie名はtableWidthsCookieName(storageKey)。省略すると保存しない。                                                                                        |
+| `savedColumnWidths` | `string`                                     |             | サーバーで読んだcookieの値（tableWidthsCookieName(storageKey)の値）。渡すと初回の描画から保存した幅で表示する。                                                                                               |
+| `state`             | `"ready" \| "loading" \| "empty" \| "error"` | `"ready"`   | 表の状態。ready以外ではtheadを残して本文の行を隠し、状態の文を出す。並べ替えと選択も止める。loadingではaria-busyを付ける。                                                                                    |
+| `stateContent`      | `Child`                                      |             | ready以外の時に、既定の状態の文の代わりに出す内容。                                                                                                                                                           |
+| `children`          | `Child`                                      |             | 表の中身。`thead`・`tbody`・`tfoot` を書く。`caption` は自動で置くので書かない。                                                                                                                              |
 
 ほかに、`<table>`へ標準のHTML属性を渡せます。
 
-登録するcontroller：`table`（`TableController`）、`table-sort`（`TableSortController`）、`table-select`（`TableSelectController`）
+登録するcontroller：`table`（`TableController`）、`table-sort`（`TableSortController`）、`table-select`（`TableSelectController`）、`table-resize`（`TableResizeController`）
 
 読み込むCSS：`layers.css`、`reset.css`、`tokens.css`、`base.css`、`layout.css`、`components/button.css`、`components/overlay.css`、`components/icon.css`、`components/table.css`
 
@@ -169,6 +181,8 @@ export default () => (
       <Table
         caption="記事の公開状況"
         sort="local"
+        resizable
+        storageKey="catalog-articles"
         selectable
         stickyHeader
         selectionActions={
@@ -396,7 +410,8 @@ export default () => (
       data-sticky="true"
     >
       <table
-        data-controller="table-sort table-select"
+        data-controller="table-sort table-select table-resize"
+        data-table-resize-storage-key-value="catalog-articles"
         data-density="compact"
         class="table"
       >

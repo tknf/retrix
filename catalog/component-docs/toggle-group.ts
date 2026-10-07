@@ -11,7 +11,7 @@ export default {
     "フォームで送信する値を選ぶ時は、ラジオボタンの `Choice` か `CheckboxGroup` を使います。`ToggleGroup` は値を送信しません。",
   ],
   usage: [
-    "`items` を押せるボタンとして並べ、`selected` の値をオンにします。オンのボタンは青い塗りにします。`value` が空白だけの項目と、重なった値の二つ目以降は出しません。",
+    "`items` を押せるボタンとして並べ、`selected` の値をオンにします。ボタンは隙間なくつなげ、間を1本の線にして外側の角だけを丸めます。オンのボタンは青緑の縦の塗りに白い文字で、内側へ沈めて示します。`value` が空白だけの項目と、重なった値の二つ目以降は出しません。",
     "既定では一つだけをオンにし、別のボタンを押すと切り替わります。オンのボタンを押してもオンのままで、`toggle-group:beforechange`・`toggle-group:change` は発火しません。`multiple` では押したボタンだけを切り替え、全てオフにもできます。",
     '`orientation="vertical"` は縦に並べ、ボタンの幅を一番長い名前にそろえます。',
     "`ToggleGroupController` を `toggle-group` として登録します。選んだ結果は `toggle-group:change` で受け取り、画面への反映や保存は利用側が行います。",

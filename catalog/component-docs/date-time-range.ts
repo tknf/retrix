@@ -10,7 +10,7 @@ export default {
     "時刻の要らない単日・期間は `DatePicker`、日付か時刻の一つだけなら `Field` で包んだ `DateField`・`TimeField` を使います。",
   ],
   usage: [
-    "`legend` と、送信する名前の接頭辞 `name` を渡します。`start`・`end` には初めの `date`（`YYYY-MM-DD`）と `time`（`HH:MM`）を渡します。開始と終了を淡い背景の一つの枠に並べて矢印でつなぎ、それぞれ小さな名前の下に日付と時刻の欄を縦に並べます。欄は標準の日付・時刻入力（`DateField`・`TimeField`）です。",
+    "`legend` と、送信する名前の接頭辞 `name` を渡します。`start`・`end` には初めの `date`（`YYYY-MM-DD`）と `time`（`HH:MM`）を渡します。開始と終了を淡い灰色の面の一つの枠に並べて灰色の矢印でつなぎ、それぞれ小さな名前の下に日付と時刻の欄を縦に並べます。欄は標準の日付・時刻入力（`DateField`・`TimeField`）です。",
     '送信する値：`name="event"` なら、各欄の値を `event[start_date]`・`event[start_time]`・`event[end_date]`・`event[end_time]` で送ります。終日のSwitchはオンの時だけ `event[all_day]` に `1` を送り、オフの時は送りません。',
     "`allDay` で終日のSwitchをオンにしておきます。終日の間は時刻の欄を隠しますが、欄に残っている値は送信されます。終日の時に時刻をどう扱うかはサーバー側で決めます。",
     "`timezone` を渡すと、枠の下に地球のアイコンとタイムゾーンを添えます。表示だけで、送信はしません。",

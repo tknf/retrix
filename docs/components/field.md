@@ -18,9 +18,9 @@
 
 `Field` の `children` は関数です。受け取った属性（`id`・`aria-describedby`・`aria-invalid`・`data-invalid`）を入力の要素へ展開します。`PasswordField`・`CountedTextarea`・`Combobox`・`NumberField`・`DateField`・`TimeField` へ展開すると、中の入力に付きます。`id` は画面内で一意にします。
 
-`help` は入力の下の淡い補足、`error` は直す所を書くエラー文です。`error` を渡すと入力を赤い縁にし、`aria-invalid` を付けます。現在値を淡い補足へ置かず、入力の値として見せます。`status` はラベルの行の終わりに保存の状態などを並べます。
+`help` は入力の下の淡い補足、`error` は直す所を書くエラー文です。`error` を渡すと入力の枠を赤茶にし、欄のすぐ下にアイコンと赤茶の文でエラーを出して、`aria-invalid` を付けます。現在値を淡い補足へ置かず、入力の値として見せます。`status` はラベルの行の終わりに保存の状態などを並べます。
 
-`Input`・`Textarea`・`Select` は標準の要素に `rx-input` を付けたもので、属性をそのまま渡します。`readonly` は面を淡くして値を読めるままにし、`disabled` は斜線の面にします。`Choice` は `label` で包んだチェックボックスかラジオボタンで、`kind="option"` は説明を伴う選択肢を淡い面に載せます。`Choice` のグループは `fieldset.rx-choice-group` の `div.list` に並べ、`legend` で名前を付けます。
+`Input`・`Textarea`・`Select` は標準の要素に `rx-input` を付けたもので、属性をそのまま渡します。欄は高さ31px（Buttonと同じ）・角丸3pxの白い面で、濃い灰色の枠の上側をさらに濃くし、内側に浅い影を落として沈んだ欄に見せます。フォーカスすると枠を青にし、外側に淡い青の輪を広げます。`readonly` は面を淡い灰色にして値を読めるままにし、`disabled` は斜線の面にします。`Choice` は `label` で包んだチェックボックスかラジオボタンです。チェックボックスは角丸2pxの沈んだ四角、ラジオボタンは円で、オンにすると青緑の縦の塗りに白いチェック（ラジオボタンは白い点）を出します。チェックはペンで描くように、先頭側から線を伸ばして出します。`kind="option"` は説明を伴う選択肢を枠で囲んだ白い面に載せ、選ぶと面を淡い青緑、枠を青緑にします。`Choice` のグループは `fieldset.rx-choice-group` の `div.list` に並べ、`legend` で名前を付けます。
 
 `PasswordField` は右端の目のアイコンで、入力を伏せ字と文字の表示で切り替えます。フォームを送信した時とリセットした時は伏せ字に戻します。`PasswordFieldController` を `password-field` として登録します。
 

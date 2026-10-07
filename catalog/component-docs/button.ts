@@ -14,16 +14,16 @@ export default {
   ],
   usage: [
     '`Button` は既定で `type="button"` の `button` を出力します。フォームを送る時は `type="submit"`、戻す時は `type="reset"` を渡します。`name`・`value`・`form`・`onclick`・`data-*` などの標準の属性は、そのまま `button` に渡ります。',
-    '文字は操作の段（`--rx-label`、画面幅に応じて13.5〜14px）です。`default` と `compact` の高さは文字の18/7倍（14pxの時36px）で、`compact` は左右の余白だけを1.25emから0.875emに狭めます。`large` は文字を8/7倍（16px）、高さを2.5em（40px）にし、フォーム末尾などの大きな操作に使います。タッチ操作の環境では、高さを2.75rem以上にします（`size="tag"` のアイコンだけの操作は除きます）。`tag` はTagの中の解除操作のための大きさです。',
-    "`variant` は塗りの色で役割を分け、形はどれもピルです。`primary` は青、`danger` は赤の塗り、`secondary` は白い面と枠、`link` は面も枠も持たない青い文字です。ホバーすると面が少し濃くなり、押すと内側へへこみます。`disabled` の操作は斜線の面と淡い文字にします。",
+    '文字は操作の段（`--rx-label`、13px）です。`default` と `compact` の高さは31pxで、`compact` は左右の余白だけを0.875emから0.625emに狭めます。`large` は文字を14px、高さを34pxにし、フォーム末尾などの大きな操作に使います。タッチ操作の環境では、高さを2.75rem以上にします（`size="tag"` のアイコンだけの操作は除きます）。`tag` はTagの中の解除操作のための大きさです。',
+    "形はどれも角の小さな長方形（角丸3px、`--rx-radius-control`）で、`variant` は塗りの色で役割を分けます。`secondary` は白から淡い灰色への縦の塗りに濃い灰色の枠を付け、下の枠を少し濃くします。`primary` は緑、`danger` は赤茶の縦の塗りに白い文字です。`link` は面も枠も持たず、本文のリンクと同じ青緑の文字に下線を引き、ホバーすると赤茶になります。ホバーすると塗りが少し濃くなり、押すと内側へへこみます。`disabled` の操作は斜線の面と灰色の文字にします。",
     '`Icon` は文字の前にも後にも置けます。アイコンだけの操作は `data-icon-only="true"` を付けて正方形にし、`aria-label` で操作名を付けます。`title` はマウス向けの補助で、`aria-label` の代わりにはなりません。',
-    '`busy` を渡すと、アイコンを含む内容を `busyLabel` に置き換え、`disabled`・`aria-busy="true"`・`data-busy="true"` を付けます。処理中は斜線にせず、カーソルを待機中の形にします。処理の開始と終了、つまり `busy` の切り替えは利用側が行います。',
+    '`busy` を渡すと、アイコンを含む内容を `busyLabel` に置き換え、`disabled`・`aria-busy="true"`・`data-busy="true"` を付けます。処理中は斜線にせず、役割の色の濃淡を一方向にゆっくり流し、カーソルを待機中の形にします。動きを減らす設定では流しません。処理の開始と終了、つまり `busy` の切り替えは利用側が行います。',
     "`ActionLink` は `href` を持つ `a` を `Button` と同じ見た目で出力します。`disabled` は持たないので、移動できない時はリンクを出さないか、`disabled` の `Button` に置き換えます。",
-    "`ButtonGroup` は隣り合う `Button` の向き合う角を落とし、枠を重ねて一つにつなげます。最後に `iconOnly` の `DropdownMenu` を置くと、主操作と▾の組み合わせになります。`primary` の▾の前には白い区切りを入れます。",
+    "`ButtonGroup` は隣り合う `Button` の向き合う角を落とし、枠を重ねて一つにつなげます。最後に `iconOnly` の `DropdownMenu` を置くと、主操作と▾の組み合わせになります。`primary` の▾の前には白く透かした区切りを入れます。",
     "`Button` の文字・太さ・行高・上下の余白・縦配置は `button.css` が持ちます。ほかのコンポーネントのCSSや利用側のCSSから、`font` の一括指定・太さ・行高・上下の余白・文字の移動で上書きしないでください。大きさは `size`、余白の違いは `compact` で選びます。",
   ],
   accessibility: [
-    "`Button` はネイティブの `button`、`ActionLink` は `a` なので、EnterとSpace（リンクはEnter）で押せ、フォーカスした時は青いフォーカスリングを出します。",
+    "`Button` はネイティブの `button`、`ActionLink` は `a` なので、EnterとSpace（リンクはEnter）で押せ、フォーカスした時は青い2pxのアウトラインを出します。",
     "アイコンだけの操作には必ず `aria-label` を付けます。",
     "`disabled` と `busy` の操作はフォーカスできなくなります。押せない理由を伝える時は、画面に理由の文を置き、`aria-describedby` で結び付けます。",
     '`ButtonGroup` は `role="group"` で、`label` をまとまりの名前として読み上げます。',
@@ -31,7 +31,7 @@ export default {
   ],
   propNotes: {
     Button: {
-      disabled: "押せなくする。斜線の面と淡い文字になり、フォーカスできなくなる。",
+      disabled: "押せなくする。斜線の面と灰色の文字になり、フォーカスできなくなる。",
       type: "`button` の種類。フォームを送る時は `submit`、戻す時は `reset` にする。",
       children: "操作の文言。`Icon` を文字の前後に置ける。`busy` の時は `busyLabel` に置き換わる。",
     },

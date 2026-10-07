@@ -6,15 +6,15 @@
 
 ## 作業面と移動
 
-- [AppShell](app-shell.md)：上部中央のコマンドメニューと中央の作業面を持つ、アプリの基本の画面構成です。
-- [CommandMenu](command-menu.md)：アプリ全体の移動先と操作を検索する、上部中央のパネルです。
+- [AppShell](app-shell.md)：机の上に白いシートを置く、アプリの基本の画面構成です。ヘッダーと作業面を画面の中央に揃えます。
+- [CommandMenu](command-menu.md)：ヘッダーの末尾側に置く検索欄から開き、アプリ全体の移動先と操作を名前で探します。
 - [SplitView](split-view.md)：一覧と本文、作業と補足を並べて表示します。
 - [Wing](wing.md)：中央の作業面の左右に、開閉できる補助パネルを置きます。
 - [Section](section.md)：関連する内容を、見出し・件数・操作と一緒にまとめます。
-- [Surface](surface.md)：中央の作業面です。作業の内容を1枚の白い面にまとめます。AppShellの作業面と同じ見た目で、AppShellを使わない画面で使います。
+- [Surface](surface.md)：机の上に置く白いシート（作業面）です。AppShellの作業面と同じ見た目で、AppShellを使わない画面で使います。
 - [ContextBar](context-bar.md)：現在の位置と、関連する移動・操作を作業面の上部にまとめます。
 - [PageHeader](page-header.md)：対象と作業を、大きな見出しで伝えます。
-- [ProfileHeader](profile-header.md)：人物の大きなアバターと名前に、その人に関する設定を並べます。
+- [ProfileHeader](profile-header.md)：人物の写真と名前に、その人に関する設定を並べます。
 - [Breadcrumb](breadcrumb.md)：階層をたどって、上の階層へ戻ります。
 - [BackLink](back-link.md)：一つ上の階層へ戻るためのリンクです。
 - [Navigation](navigation.md)：同じ領域のページを切り替えます。
@@ -70,7 +70,7 @@
 ## 内容と一覧
 
 - [Card](card.md)：関連する内容と操作を一つにまとめます。
-- [LayerCard](layer-card.md)：見出しを淡い青の層に置き、内容を白いカードに載せます。
+- [LayerCard](layer-card.md)：上端の見出しの帯と、その下の中身を一つのカードにまとめます。
 - [Message](message.md)：投稿者・時刻・本文を、決まった順序で表示します。
 - [MessageList](message-list.md)：差出人・件名・本文の冒頭・時刻を並べた受信の一覧です。
 - [SearchResults](search-results.md)：題名・抜粋・補足を並べ、一致した語を強調した検索結果です。
@@ -78,7 +78,7 @@
 - [Grid](grid.md)：行と列の見出しを見ながら、縦横に並んだセルを確認・選択する表です。
 - [Treegrid](treegrid.md)：階層のある行を、列をそろえて表示します。
 - [ValueList](value-list.md)：項目の現在の値を、項目名より目立たせて表示します。
-- [SettingList](setting-list.md)：設定の名前と、行の末尾の操作を点線でつないだ一覧です。
+- [SettingList](setting-list.md)：設定の名前と、行の末尾の操作を罫線で区切って並べた一覧です。
 - [EditableProperty](editable-property.md)：値をその場で編集し、確定と取り消しの操作をそろえます。
 - [DataList](data-list.md)：主な情報・補足・状態を行ごとに並べて比較します。
 - [ActionList](action-list.md)：作業へのリンクを、一覧や内容の見えるカードで示します。
@@ -106,7 +106,7 @@
 
 - [Badge](badge.md)：短い状態を、文言と役割の色で示します。
 - [Notice](notice.md)：事実・影響・次の操作を、画面に残る形で示します。
-- [Prompt](prompt.md)：質問を層の見出しに置き、回答の選択肢をカードに並べます。
+- [Prompt](prompt.md)：質問をカードの見出しの帯に置き、回答の選択肢を行に並べます。
 - [ErrorSummary](error-summary.md)：送信時のエラーと、修正する欄へのリンクをまとめます。
 - [EmptyState](empty-state.md)：表示する情報がない理由と、次の操作を示します。
 - [Progress](progress.md)：処理の進み具合を示します。終わりが分からない処理にも使えます。
@@ -154,6 +154,7 @@
 | `suggestion`        | `SuggestionController`       | [Suggestion](suggestion.md)                                               |
 | `table`             | `TableController`            | [Table](table.md)                                                         |
 | `table-of-contents` | `TableOfContentsController`  | [TableOfContents](table-of-contents.md)                                   |
+| `table-resize`      | `TableResizeController`      | [Table](table.md)                                                         |
 | `table-select`      | `TableSelectController`      | [Table](table.md)                                                         |
 | `table-sort`        | `TableSortController`        | [Table](table.md)                                                         |
 | `tabs`              | `TabsController`             | [Tabs](tabs.md)                                                           |

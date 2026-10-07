@@ -2,15 +2,15 @@
 
 ## ファイル
 
-| ファイル           | 内容                                                              |
-| ------------------ | ----------------------------------------------------------------- |
-| `layers.css`       | カスケードレイヤーの順序。必ず最初に読み込む                      |
-| `reset.css`        | ブラウザの既定のスタイルの整理                                    |
-| `tokens.css`       | `--rx-*`のトークン（[トークン](tokens.md)）                       |
-| `base.css`         | 地・本文・リンクなど、ページ全体の基礎                            |
-| `layout.css`       | 作業面の配置                                                      |
-| `components/*.css` | コンポーネントごとのCSS。ファイル名はコンポーネント名のkebab-case |
-| `assets/*.svg`     | CSSの背景・maskに使うアイコン                                     |
+| ファイル           | 内容                                                                |
+| ------------------ | ------------------------------------------------------------------- |
+| `layers.css`       | カスケードレイヤーの順序。必ず最初に読み込む                        |
+| `reset.css`        | ブラウザの既定のスタイルの整理                                      |
+| `tokens.css`       | `--rx-*`のトークン（[トークン](tokens.md)）                         |
+| `base.css`         | 地・本文・リンクなど、ページ全体の基礎                              |
+| `layout.css`       | シートの中の配置（`.rx-workspace`・`.rx-stack`・`.rx-cluster`など） |
+| `components/*.css` | コンポーネントごとのCSS。ファイル名はコンポーネント名のkebab-case   |
+| `assets/*.svg`     | CSSの背景・maskに使うアイコン                                       |
 
 レイヤーの優先順は`reset, base, tokens, layout, components, utilities, overrides`です。利用側の調整は`@layer overrides`に書くと、コンポーネントの詳細度に関係なく優先されます。
 
@@ -25,23 +25,24 @@
 
 ## 主な構造
 
-| コンポーネント   | 構造                                                                                                           |
-| ---------------- | -------------------------------------------------------------------------------------------------------------- |
-| Surface          | `.rx-surface > .body`                                                                                          |
-| PageHeader       | `.rx-page-header > .icon`、`.heading > h1 + p`、`.actions`                                                     |
-| Breadcrumb       | `nav.rx-breadcrumb > ol > li`。最後の項目だけが現在地                                                          |
-| ContextBar       | `div.rx-context-bar > nav.rx-breadcrumb` と `.actions`                                                         |
-| Field            | `.rx-field > .heading`、入力コンポーネント、`.messages > .help / .error`                                       |
-| FieldGroup       | `.rx-field-group > legend + .layout`。layoutの中にdescriptionとfields                                          |
-| InputGroup       | `.rx-input-group > .control > .affix / .rx-input`                                                              |
-| Tabs             | `.rx-tabs > .list` と `.panel`                                                                                 |
-| Dialog / Popover | `.rx-dialog > dialog.panel`、`.rx-popover > .panel`。heading・body・actionsはpanelの直下                       |
-| DropdownMenu     | `.rx-dropdown-menu > .rx-menu`。項目は`.rx-menu > li > .item`。入れ子のgroupも`.rx-menu[data-variant="group"]` |
-| DatePicker       | `.rx-date-picker > .control / .fallback / .panel`。panelの中にeditors・month・grid・actions                    |
-| Card             | `.rx-card > .preview / .eyebrow / .title / .body / .meta`                                                      |
-| DataList         | `.rx-data-list > li > .start / .body / .end`                                                                   |
-| Table / Calendar | `.rx-table > table`、`.rx-calendar > table`。スクロールする領域がコンポーネントのルート                        |
-| ImageFrame       | `.rx-image-frame > .image > img`                                                                               |
+| コンポーネント   | 構造                                                                                                                                                                           |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| AppShell         | `.rx-app-shell > header.bar`（`.account`・`.start`・`nav.navigation`・`.commands`）と `.body > .aside / .main`。mainの中に`nav.trail`・`.workspace`（シート）・`footer.footer` |
+| Surface          | `.rx-surface > .body`                                                                                                                                                          |
+| PageHeader       | `.rx-page-header > .icon`、`.heading > h1 + p`、`.actions`                                                                                                                     |
+| Breadcrumb       | `nav.rx-breadcrumb > ol > li`。最後の項目だけが現在地                                                                                                                          |
+| ContextBar       | `div.rx-context-bar > nav.rx-breadcrumb` と `.actions`                                                                                                                         |
+| Field            | `.rx-field > .heading`、入力コンポーネント、`.messages > .help / .error`                                                                                                       |
+| FieldGroup       | `.rx-field-group > legend + .layout`。layoutの中にdescriptionとfields                                                                                                          |
+| InputGroup       | `.rx-input-group > .control > .affix / .rx-input`                                                                                                                              |
+| Tabs             | `.rx-tabs > .list` と `.panel`                                                                                                                                                 |
+| Dialog / Popover | `.rx-dialog > dialog.panel`、`.rx-popover > .panel`。heading・body・actionsはpanelの直下                                                                                       |
+| DropdownMenu     | `.rx-dropdown-menu > .rx-menu`。項目は`.rx-menu > li > .item`。入れ子のgroupも`.rx-menu[data-variant="group"]`                                                                 |
+| DatePicker       | `.rx-date-picker > .control / .fallback / .panel`。panelの中にeditors・month・grid・actions                                                                                    |
+| Card             | `.rx-card > .preview / .eyebrow / .title / .body / .meta`                                                                                                                      |
+| DataList         | `.rx-data-list > li > .start / .body / .end`                                                                                                                                   |
+| Table / Calendar | `.rx-table > table`、`.rx-calendar > table`。スクロールする領域がコンポーネントのルート                                                                                        |
+| ImageFrame       | `.rx-image-frame > .image > img`                                                                                                                                               |
 
 その他のコンポーネントの構造は、[コンポーネントのリファレンス](components/README.md)の各ページの「コード」にある出力HTMLを参照してください。
 

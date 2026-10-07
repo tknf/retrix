@@ -6,15 +6,15 @@
 
 ## 作業面と移動
 
-- [AppShell](https://github.com/tknf/retrix/blob/main/docs/components/app-shell.md)：上部中央のコマンドメニューと中央の作業面を持つ、アプリの基本の画面構成です。
-- [CommandMenu](https://github.com/tknf/retrix/blob/main/docs/components/command-menu.md)：アプリ全体の移動先と操作を検索する、上部中央のパネルです。
+- [AppShell](https://github.com/tknf/retrix/blob/main/docs/components/app-shell.md)：机の上に白いシートを置く、アプリの基本の画面構成です。ヘッダーと作業面を画面の中央に揃えます。
+- [CommandMenu](https://github.com/tknf/retrix/blob/main/docs/components/command-menu.md)：ヘッダーの末尾側に置く検索欄から開き、アプリ全体の移動先と操作を名前で探します。
 - [SplitView](https://github.com/tknf/retrix/blob/main/docs/components/split-view.md)：一覧と本文、作業と補足を並べて表示します。
 - [Wing](https://github.com/tknf/retrix/blob/main/docs/components/wing.md)：中央の作業面の左右に、開閉できる補助パネルを置きます。
 - [Section](https://github.com/tknf/retrix/blob/main/docs/components/section.md)：関連する内容を、見出し・件数・操作と一緒にまとめます。
-- [Surface](https://github.com/tknf/retrix/blob/main/docs/components/surface.md)：中央の作業面です。作業の内容を1枚の白い面にまとめます。AppShellの作業面と同じ見た目で、AppShellを使わない画面で使います。
+- [Surface](https://github.com/tknf/retrix/blob/main/docs/components/surface.md)：机の上に置く白いシート（作業面）です。AppShellの作業面と同じ見た目で、AppShellを使わない画面で使います。
 - [ContextBar](https://github.com/tknf/retrix/blob/main/docs/components/context-bar.md)：現在の位置と、関連する移動・操作を作業面の上部にまとめます。
 - [PageHeader](https://github.com/tknf/retrix/blob/main/docs/components/page-header.md)：対象と作業を、大きな見出しで伝えます。
-- [ProfileHeader](https://github.com/tknf/retrix/blob/main/docs/components/profile-header.md)：人物の大きなアバターと名前に、その人に関する設定を並べます。
+- [ProfileHeader](https://github.com/tknf/retrix/blob/main/docs/components/profile-header.md)：人物の写真と名前に、その人に関する設定を並べます。
 - [Breadcrumb](https://github.com/tknf/retrix/blob/main/docs/components/breadcrumb.md)：階層をたどって、上の階層へ戻ります。
 - [BackLink](https://github.com/tknf/retrix/blob/main/docs/components/back-link.md)：一つ上の階層へ戻るためのリンクです。
 - [Navigation](https://github.com/tknf/retrix/blob/main/docs/components/navigation.md)：同じ領域のページを切り替えます。
@@ -70,7 +70,7 @@
 ## 内容と一覧
 
 - [Card](https://github.com/tknf/retrix/blob/main/docs/components/card.md)：関連する内容と操作を一つにまとめます。
-- [LayerCard](https://github.com/tknf/retrix/blob/main/docs/components/layer-card.md)：見出しを淡い青の層に置き、内容を白いカードに載せます。
+- [LayerCard](https://github.com/tknf/retrix/blob/main/docs/components/layer-card.md)：上端の見出しの帯と、その下の中身を一つのカードにまとめます。
 - [Message](https://github.com/tknf/retrix/blob/main/docs/components/message.md)：投稿者・時刻・本文を、決まった順序で表示します。
 - [MessageList](https://github.com/tknf/retrix/blob/main/docs/components/message-list.md)：差出人・件名・本文の冒頭・時刻を並べた受信の一覧です。
 - [SearchResults](https://github.com/tknf/retrix/blob/main/docs/components/search-results.md)：題名・抜粋・補足を並べ、一致した語を強調した検索結果です。
@@ -78,7 +78,7 @@
 - [Grid](https://github.com/tknf/retrix/blob/main/docs/components/grid.md)：行と列の見出しを見ながら、縦横に並んだセルを確認・選択する表です。
 - [Treegrid](https://github.com/tknf/retrix/blob/main/docs/components/treegrid.md)：階層のある行を、列をそろえて表示します。
 - [ValueList](https://github.com/tknf/retrix/blob/main/docs/components/value-list.md)：項目の現在の値を、項目名より目立たせて表示します。
-- [SettingList](https://github.com/tknf/retrix/blob/main/docs/components/setting-list.md)：設定の名前と、行の末尾の操作を点線でつないだ一覧です。
+- [SettingList](https://github.com/tknf/retrix/blob/main/docs/components/setting-list.md)：設定の名前と、行の末尾の操作を罫線で区切って並べた一覧です。
 - [EditableProperty](https://github.com/tknf/retrix/blob/main/docs/components/editable-property.md)：値をその場で編集し、確定と取り消しの操作をそろえます。
 - [DataList](https://github.com/tknf/retrix/blob/main/docs/components/data-list.md)：主な情報・補足・状態を行ごとに並べて比較します。
 - [ActionList](https://github.com/tknf/retrix/blob/main/docs/components/action-list.md)：作業へのリンクを、一覧や内容の見えるカードで示します。
@@ -106,7 +106,7 @@
 
 - [Badge](https://github.com/tknf/retrix/blob/main/docs/components/badge.md)：短い状態を、文言と役割の色で示します。
 - [Notice](https://github.com/tknf/retrix/blob/main/docs/components/notice.md)：事実・影響・次の操作を、画面に残る形で示します。
-- [Prompt](https://github.com/tknf/retrix/blob/main/docs/components/prompt.md)：質問を層の見出しに置き、回答の選択肢をカードに並べます。
+- [Prompt](https://github.com/tknf/retrix/blob/main/docs/components/prompt.md)：質問をカードの見出しの帯に置き、回答の選択肢を行に並べます。
 - [ErrorSummary](https://github.com/tknf/retrix/blob/main/docs/components/error-summary.md)：送信時のエラーと、修正する欄へのリンクをまとめます。
 - [EmptyState](https://github.com/tknf/retrix/blob/main/docs/components/empty-state.md)：表示する情報がない理由と、次の操作を示します。
 - [Progress](https://github.com/tknf/retrix/blob/main/docs/components/progress.md)：処理の進み具合を示します。終わりが分からない処理にも使えます。
@@ -154,6 +154,7 @@
 | `suggestion`        | `SuggestionController`       | [Suggestion](https://github.com/tknf/retrix/blob/main/docs/components/suggestion.md)                                                                                                                                                                 |
 | `table`             | `TableController`            | [Table](https://github.com/tknf/retrix/blob/main/docs/components/table.md)                                                                                                                                                                           |
 | `table-of-contents` | `TableOfContentsController`  | [TableOfContents](https://github.com/tknf/retrix/blob/main/docs/components/table-of-contents.md)                                                                                                                                                     |
+| `table-resize`      | `TableResizeController`      | [Table](https://github.com/tknf/retrix/blob/main/docs/components/table.md)                                                                                                                                                                           |
 | `table-select`      | `TableSelectController`      | [Table](https://github.com/tknf/retrix/blob/main/docs/components/table.md)                                                                                                                                                                           |
 | `table-sort`        | `TableSortController`        | [Table](https://github.com/tknf/retrix/blob/main/docs/components/table.md)                                                                                                                                                                           |
 | `tabs`              | `TabsController`             | [Tabs](https://github.com/tknf/retrix/blob/main/docs/components/tabs.md)                                                                                                                                                                             |

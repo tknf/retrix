@@ -11,7 +11,7 @@
 
 ## 使い方
 
-`legend` と、送信する名前の接頭辞 `name` を渡します。`start`・`end` には初めの `date`（`YYYY-MM-DD`）と `time`（`HH:MM`）を渡します。開始と終了を淡い背景の一つの枠に並べて矢印でつなぎ、それぞれ小さな名前の下に日付と時刻の欄を縦に並べます。欄は標準の日付・時刻入力（`DateField`・`TimeField`）です。
+`legend` と、送信する名前の接頭辞 `name` を渡します。`start`・`end` には初めの `date`（`YYYY-MM-DD`）と `time`（`HH:MM`）を渡します。開始と終了を淡い灰色の面の一つの枠に並べて灰色の矢印でつなぎ、それぞれ小さな名前の下に日付と時刻の欄を縦に並べます。欄は標準の日付・時刻入力（`DateField`・`TimeField`）です。
 
 送信する値：`name="event"` なら、各欄の値を `event[start_date]`・`event[start_time]`・`event[end_date]`・`event[end_time]` で送ります。終日のSwitchはオンの時だけ `event[all_day]` に `1` を送り、オフの時は送りません。
 

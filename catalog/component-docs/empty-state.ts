@@ -11,9 +11,9 @@ export default {
     "まだ読み込んでいる時は `Loading` を使います。",
   ],
   usage: [
-    "`title` に何が無いのか・何が終わったのかを書き、childrenに説明、`actions` に次の操作（`ActionLink` など）を渡します。題名と説明は破線の枠に書き、操作は枠の下に置きます。",
-    "`kind` で場面を選びます。`empty` は0件（灰）、`start` は初めて使う時（青）、`complete` は作業を終えた時（緑）で、枠をその色にします。",
-    "`icon` は渡した時だけ題名の上に置きます。`complete` は渡さなくても、ペンで描くチェックを置きます。",
+    "`title` に何が無いのか・何が終わったのかを書き、childrenに説明、`actions` に次の操作（`ActionLink` など）を渡します。枠や面は付けず、中央に太字の題名と灰色の説明を書き、操作はその下に置きます。",
+    "`kind` で場面を選びます。`empty` は0件（灰色）、`start` は初めて使う時（青緑）、`complete` は作業を終えた時（緑）で、アイコンを置く丸をその色で塗ります。",
+    "`icon` は渡した時だけ、題名の上の場面の色で塗った小さな丸に白で置きます。`complete` は渡さなくても、緑の丸にペンで描くチェックを置きます。",
     "架空の件数や見本のデータを置きません。JavaScriptは使いません。",
   ],
   accessibility: [
@@ -21,6 +21,6 @@ export default {
     "動きを減らす設定では、チェックを描く動きを止めます。",
   ],
   propNotes: {
-    EmptyState: { children: "枠の中の説明文。" },
+    EmptyState: { children: "題名の下に置く説明文。" },
   },
 } satisfies ComponentDoc;

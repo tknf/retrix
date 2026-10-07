@@ -17,15 +17,17 @@
 
 項目の代わりに任意の中身を置く列は、`items` の代わりに `content` と見出しに出す `count` を渡します。この列は移動先になりません。
 
-`tone` で列の色を選びます。色は見出しの文字と、項目のカードを先頭側の下の角から斜めに淡く染める色に出ます。`current` の列は `tone` に関わらず青で染め、`disabled` の列には斜線を引いて移動先から外します。項目に `code` を渡すと、番号などのバッジをカードの上の先頭側の角に列の色の淡い面で置きます。
+列は淡い灰色の面に罫線の輪郭を付けた枠で、項目はその中に白いカードとして重ねます。列の名前は `Section` の見出しと同じ赤茶の通常の太さの文字で、件数は名前の隣の淡い青のピルに青緑の数字で書きます。
 
-項目の無い列には `empty` の文を置きます。動かせるBoardでは、受け付ける列の空きを破線の枠で示します。
+`tone`（`info`・`warning`・`success`・`danger`）で列の色を選びます。色は列の上端の太い線と、項目の `code` の文字にだけ出し、カードは染めません。既定の `neutral` は上端の線を引かず、`current` の列は `tone` に関わらず青緑の線にします。`disabled` の列には斜線を引いて移動先から外します。項目に `code` を渡すと、番号などの文字をカードの上の先頭側に列の色の小さな太字で置きます。
 
-`movable` を渡すと各項目の上の末尾側の角にハンドルを置き、`BoardController` を `board` として登録すると、列の間の移動と並べ替えができます。ハンドルをドラッグすると、移動先に挿入位置の線を出し、離した所へ項目を移します。Boardの外や受け付けない列で離すと取り消します。ドラッグしている間は、Boardの左右の端でBoardを、画面の上下の端で画面をスクロールします。
+項目の無い列には、`empty` の文を破線の枠で囲んで置きます。
+
+`movable` を渡すと各項目の上の末尾側の角にハンドルを置き、`BoardController` を `board` として登録すると、列の間の移動と並べ替えができます。ハンドルをドラッグすると、元の項目を灰色に薄めて跡として残し、移動先の列を淡い青緑の面と青緑の破線で縁取って、挿入位置に青緑の線を出します。離した所へ項目を移します。キーボードで移動している項目は、青緑の破線で縁取って持ち上げた影を付けます。Boardの外や受け付けない列で離すと取り消します。ドラッグしている間は、Boardの左右の端でBoardを、画面の上下の端で画面をスクロールします。
 
 ドラッグを離して移動を確定すると、取り消し可能な `board:beforemove` イベントを発火します。取り消すと項目を元の位置へ戻し、取り消さなければ `board:move` イベントを発火します。どちらも項目を新しい位置へ移した後に発火し、位置が変わらなかった時は発火しません。移動の保存と、保存できなかった時の表示の戻しは利用側で行います。
 
-`collapsed` の列は、件数バッジと縦書きの名前を載せた縦長のピルになり、中の項目を隠して移動先から外します。`collapsible` を渡すと、ピルのどこを押しても開き、開いた列の見出しの末尾のボタンでたたみます。開閉には `BoardController` が要ります（`movable` でなくても登録します）。
+`collapsed` の列は、件数のピルと縦書きの名前を載せた列と同じ淡い灰色の細い縦長の枠になり、中の項目を隠して移動先から外します。狭い幅（36rem未満）では横長の枠にして一行に並べます。`collapsible` を渡すと、枠のどこを押しても開き、開いた列の見出しの末尾のボタンでたたみます。開閉には `BoardController` が要ります（`movable` でなくても登録します）。
 
 開閉の時、`BoardController` は表示だけを切り替え、取り消し可能な `board:toggle` イベントを発火します。開閉の状態は保存しないので、残す時は利用側で保存し、次に描画する時の `collapsed` に反映します。
 
@@ -48,7 +50,7 @@ JavaScriptが無い時は、ハンドルは無効のまま置かれ、項目は�
 - ハンドルは「（`label`）を移動」を読み上げ名にし、キー操作の説明を `aria-describedby` で結びます。
 - 持ち上げた・動かした先（列の名前と何番目か）・確定した・取り消したことを、`aria-live="polite"` の領域で読み上げます。
 - 移動している間はハンドルにフォーカスを保ち、確定や取り消しの後も移動した項目のハンドルに戻します。
-- 開閉のボタンは「（`title`）の列を開閉」を読み上げ名にし、`aria-expanded` で開閉の状態を伝えます。たたんだ列は、ピルを押すほかに、このボタンでも開けます。
+- 開閉のボタンは「（`title`）の列を開閉」を読み上げ名にし、`aria-expanded` で開閉の状態を伝えます。たたんだ列は、枠を押すほかに、このボタンでも開けます。
 - 列の色は見分けの補助です。状態の意味は列の名前で伝えます。
 
 ## イベント
@@ -138,8 +140,9 @@ import {
   ValueList,
 } from "@tknf/retrix/hono";
 
-const card = (id: string, title: string, body?: string) => ({
+const card = (id: string, title: string, body?: string, code?: string) => ({
   id,
+  code,
   label: title,
   content: (
     <>
@@ -261,7 +264,7 @@ export default () => (
           ]}
         />
       </Disclosure>
-      <Disclosure summary="完了の列：移動すると置いた列の色に変わる">
+      <Disclosure summary="完了の列：移動すると番号が置いた列の色に変わる">
         <Board
           label="原稿の承認"
           movable
@@ -269,19 +272,22 @@ export default () => (
             {
               id: "draft",
               title: "下書き",
-              items: [card("d1", "10月の利用案内"), card("d2", "年末年始の営業")],
+              items: [
+                card("d1", "10月の利用案内", undefined, "No. 31"),
+                card("d2", "年末年始の営業", undefined, "No. 32"),
+              ],
             },
             {
               id: "approved",
               title: "承認済み",
               tone: "success",
-              items: [card("d3", "9月の利用案内", "森 美咲が承認しました。")],
+              items: [card("d3", "9月の利用案内", "森 美咲が承認しました。", "No. 28")],
             },
             {
               id: "rejected",
               title: "見送り",
               tone: "danger",
-              items: [card("d4", "夏の特別料金")],
+              items: [card("d4", "夏の特別料金", undefined, "No. 24")],
             },
           ]}
         />
@@ -839,7 +845,9 @@ export default () => (
           >
             <use href="/assets/rx-icons.svg#rx-caret"></use></svg></span
         ><span class="label"
-          ><span class="title">完了の列：移動すると置いた列の色に変わる</span></span
+          ><span class="title"
+            >完了の列：移動すると番号が置いた列の色に変わる</span
+          ></span
         >
       </summary>
       <div class="body">
@@ -864,6 +872,7 @@ export default () => (
                 data-board-id="d1"
                 data-board-label="10月の利用案内"
               >
+                <span class="code">No. 31</span>
                 <div class="body"><h4>10月の利用案内</h4></div>
                 <button
                   data-icon-only="true"
@@ -893,6 +902,7 @@ export default () => (
                 data-board-id="d2"
                 data-board-label="年末年始の営業"
               >
+                <span class="code">No. 32</span>
                 <div class="body"><h4>年末年始の営業</h4></div>
                 <button
                   data-icon-only="true"
@@ -928,6 +938,7 @@ export default () => (
                 data-board-id="d3"
                 data-board-label="9月の利用案内"
               >
+                <span class="code">No. 28</span>
                 <div class="body">
                   <h4>9月の利用案内</h4>
                   <p>森 美咲が承認しました。</p>
@@ -966,6 +977,7 @@ export default () => (
                 data-board-id="d4"
                 data-board-label="夏の特別料金"
               >
+                <span class="code">No. 24</span>
                 <div class="body"><h4>夏の特別料金</h4></div>
                 <button
                   data-icon-only="true"

@@ -12,11 +12,11 @@
 
 ## 使い方
 
-`primary`・`secondary`を渡します。DOMの読み順は常に`primary`、`secondary`の順です。二つの領域は一枚の面に並べ、境目に罫線を一本引きます。
+`primary`・`secondary`を渡します。DOMの読み順は常に`primary`、`secondary`の順です。二つの領域は、1pxの輪郭と浅い影を持つ白いカードの中に並べ、境目に罫線を一本引きます。各領域の内側の余白はカードと同じ上下16px・左右20pxです（幅32rem未満では左右16px）。
 
 `SplitView`自身の幅が52rem以上で左右に並べます。`inspector`は`primary`を広く（おおよそ2:1）、`reader`は`primary`を狭く（おおよそ3:5）取ります。52rem未満では`primary`を上、`secondary`を下に積み、境目の罫線は横になります。
 
-`resizable`を指定し、`SplitterController`を`splitter`として登録すると、境目にハンドルを出します。ハンドルのドラッグと矢印キーで、`primary`の幅を全体の20〜80%の間で変えられます。初めの幅は`initialSize`で決めます。幅を変えられるのは左右に並べた時だけです。
+`resizable`を指定し、`SplitterController`を`splitter`として登録すると、境目の罫線の中ほどに、ボタンと同じ白い縦の塗りの細いハンドルを出します。ハンドルにホバーするかフォーカスすると、境目の罫線を青緑にします。ハンドルのドラッグと矢印キーで、`primary`の幅を全体の20〜80%の間で変えられます。初めの幅は`initialSize`で決めます。幅を変えられるのは左右に並べた時だけです。
 
 利用者が幅を変えると`splitter:beforechange`、続けて`splitter:change`を発火します。ドラッグは離した時に一度だけ発火します。幅を覚えておく時は、`splitter:change`の`detail.value`を利用側で保存し、次の描画で`initialSize`に渡します。
 

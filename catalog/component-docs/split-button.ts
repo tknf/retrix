@@ -15,7 +15,7 @@ export default {
     "`DropdownMenuController` を `dropdown-menu` として登録します。主操作は通常の `button` なので、controllerは要りません。",
     "`type`・`name`・`value`・`form`・`onclick`・`busy`・`busyLabel` など、`Button` へ渡す指定は主操作へそのまま渡ります。`class` だけはルートに付きます。`id` は主操作のボタンに付け、▾のメニューは `<id>-menu`、▾の操作は `<id>-menu-trigger` になります。",
     "`variant`・`size`・`disabled` は両方にかかります。`busy` の間は主操作を `busyLabel` に置き換え、▾も押せなくします。`variant` の既定は `primary` です。",
-    "二つの操作は見た目だけを一体にします。向き合う側の角を落とし、間に細い区切りを入れます（塗りの操作では白、`secondary` では枠の色）。ホバーした側、フォーカスのある側を手前に出します。",
+    "二つの操作は見た目だけを一体にします。向き合う側の角を落とし、間に細い区切りを入れます（塗りの操作では白く透かした線、`secondary` では枠と同じ濃い灰色の線）。ホバーした側、フォーカスのある側を手前に出します。",
     "主操作を押した時の処理は `onclick` やフォームの送信で、▾で選んだやり方は `dropdown-menu:select` の `detail.value` で受け取ります。どちらの処理も利用側が行います。",
   ],
   keyboard: [

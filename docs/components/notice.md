@@ -13,11 +13,11 @@
 
 ## 使い方
 
-`label` を題名として、アイコンと一緒に役割の色で塗ったピルに書き、childrenの本文と操作（`ActionLink` など）をその下に置きます。childrenを省くと題名だけの知らせになります。
+Noticeは細い枠を付けた角の小さなカードです。一行目にアイコンと `label` の題名を太字で書き、childrenの本文と操作（`ActionLink` など）をその下に置きます。childrenを省くと題名だけの知らせになります。
 
-`tone` で役割を選びます（`info`・`success`・`warning`・`danger`）。白いカードの上側をその色でうっすら染め、ピルのアイコンは `success` でチェック、`danger` でバツ、他はiにします。
+`tone` で役割を選びます（`info`・`success`・`warning`・`danger`、既定は `info`）。`info` と `warning` は黄色の面に黄色みの枠で、題名は黒です。`info` のアイコンは青、`warning` のアイコンは黄土色です。`success` は淡い緑の面と枠に緑の題名とアイコン、`danger` は淡い赤の面と枠に赤茶の題名とアイコンです。アイコンは `success` でチェック、`danger` でバツ、他はiにします。
 
-ピルはカードの上端にまたがるので、Noticeは自分の上にピルの半分の高さの余白を取ります。Noticeの中にNoticeを入れ子にもできます。
+Noticeの中にNoticeを入れ子にもできます。
 
 `heading` を渡すと題名を `h2` で書き、ページの節の見出しとして読ませます。
 

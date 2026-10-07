@@ -6,7 +6,7 @@ Retrixは[Phosphor Icons](https://github.com/phosphor-icons/core)（MIT）のreg
 
 - 標準は1em、小型（`data-size="small"`）は6em/7です。14pxの文字なら14px・12pxのSVG枠になります。
 - アイコン名によるサイズ・ウェイトの分岐はありません。大きなショートカットや空状態の図は、その役割を持つ親要素が大きさを決めます。
-- Checkbox・TaskListのチェックマーク、Selectの矢印は、同じ素材の単独SVGをCSSのmask・背景として使います。
+- Checkbox・TaskListのチェックマーク、Selectの矢印は、同じ素材の単独SVGをCSSのmask・背景として使います。小さな枠の中で線が細くなりすぎる所（TaskListのチェック、Tagの解除の×、Comparisonの矢印など）は、同じ絵柄の太い版（bold）を使います。
 
 ## 使い方
 
