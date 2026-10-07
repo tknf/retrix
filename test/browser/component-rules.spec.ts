@@ -75,9 +75,9 @@ test("文章・数値・操作の文字寸法を親からの継承で変えな�
       font: Number.parseFloat(getComputedStyle(node).fontSize),
       line: Number.parseFloat(getComputedStyle(node).lineHeight),
     }));
-    // FirefoxとWebKitは画面幅に合わせた文字の大きさ（clamp）を13.98pxのように丸めるので、0.05pxまでの差を許す。
-    expect(Math.abs(style.font - 14), selector).toBeLessThan(0.05);
-    expect(Math.abs(style.line - 20), selector).toBeLessThan(0.05);
+    // 表・カード・案内の文は操作・ラベルの段（--rx-label、13px）で、行高は10/7。丸めの差は0.05pxまで許す。
+    expect(Math.abs(style.font - 13), selector).toBeLessThan(0.05);
+    expect(Math.abs(style.line - 130 / 7), selector).toBeLessThan(0.05);
   }
   await page.goto("/components/icon");
   const button = page.locator('[data-example="hono"] .rx-button').first();
@@ -93,9 +93,9 @@ test("文章・数値・操作の文字寸法を親からの継承で変えな�
     };
   });
   expect(dimensions).toEqual({
-    font: 14,
-    line: 20,
-    block: 36,
+    font: 13,
+    line: 18.6,
+    block: 31,
     paddingStart: "0px",
     paddingEnd: "0px",
   });

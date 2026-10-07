@@ -63,18 +63,20 @@ test("Boardはポインターで空の列へドロップできる", async ({ pag
   await expect(board.locator(".drag-preview")).toHaveCount(0);
 });
 
-test("Boardは移動した項目を置いた列の色に染め、たたんだ列はピルの幅になる", async ({ page }) => {
+test("Boardは移動した項目の番号を置いた列の色にし、たたんだ列は細い帯の幅になる", async ({
+  page,
+}) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto("/components/board");
   await page
     .locator('[data-example="hono"] details')
     .evaluateAll((elements) => elements.forEach((element) => element.setAttribute("open", "")));
   const approval = page.getByRole("region", { name: "原稿の承認", exact: true });
-  // 列の色はカードの地ではなく、斜めの色付け（背景の画像）に出る。
+  // カードは白い紙のまま染めず、列の色は項目の番号の文字に出る。
   const fill = (id: string) =>
     approval
-      .locator(`[data-board-id="${id}"]`)
-      .evaluate((element) => getComputedStyle(element).backgroundImage);
+      .locator(`[data-board-id="${id}"] .code`)
+      .evaluate((element) => getComputedStyle(element).color);
   const approved = await fill("d3");
   expect(await fill("d1")).not.toBe(approved);
   await approval.locator('[data-board-id="d1"]').getByRole("button").focus();

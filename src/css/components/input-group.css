@@ -78,10 +78,10 @@
       box-shadow: none;
     }
 
-    /* 隣に並ぶlargeのButtonと同じ文字の大きさ（操作の文字の8/7倍）にし、どの画面幅でも高さをそろえる。 */
+    /* 隣に並ぶlargeのButtonと同じ文字の大きさ（14px）と高さ（34px）にそろえる。 */
     &[data-size="large"] {
-      --rx-input-group-size: 2.5em;
-      font-size: calc(var(--rx-button-font) * 8 / 7);
+      --rx-input-group-size: var(--rx-button-large);
+      font-size: calc(var(--rx-button-font) * 14 / 13);
       line-height: var(--rx-control-leading);
     }
   }

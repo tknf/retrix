@@ -72,6 +72,7 @@
   :root {
     /*
       基本色。Basecamp 2の画面の色を手本にする。
+      補足の灰色（--rx-gray-650）と日付の茶色（--rx-tan）は、説明文に求める7:1を白地で満たすよう、手本より少し濃くする。
       - 机の地はクリーム色、その上に白いシート（作業面）を置く。
       - 罫線と枠は黄みを帯びた灰色にし、青みの灰色を使わない。
     */
@@ -82,7 +83,7 @@
     --rx-gray-200: #cfcbc2;
     --rx-gray-300: #b4b0a6;
     --rx-gray-500: #8a877e;
-    --rx-gray-650: #656661;
+    --rx-gray-650: #52524d;
     --rx-gray-900: #262624;
     --rx-black: #111111;
     --rx-desk-cream: #f3efe6;
@@ -98,7 +99,7 @@
     --rx-red-dark: #7a0f00;
     --rx-coral: #b0472f;
     --rx-coral-dark: #923a26;
-    --rx-tan: #7d6c52;
+    --rx-tan: #5f5340;
     --rx-plum: #6d4c8a;
     --rx-gold: #8a631a;
     --rx-cream: #faf7ef;
@@ -307,15 +308,18 @@
     --rx-measure: 40rem;
     /* 作業面（シート）の幅。Basecamp 2のシートと同じくらいの幅にする。 */
     --rx-page: 61.25rem;
-    --rx-control-size: 1.875rem;
+    --rx-control-size: 1.9375rem;
     --rx-control-compact: 1.625rem;
     --rx-control-font: var(--rx-label);
     --rx-control-leading: calc(10 / 7);
     --rx-control-weight: 400;
     --rx-button-font: var(--rx-label);
-    /* Buttonと一行のInputは13pxの文字で高さ30px、largeは16pxの文字で36px。 */
-    --rx-button-size: calc(30em / 13);
-    --rx-button-large: 2.25em;
+    /*
+      Buttonと一行のInputは13pxの文字で高さ31px、largeは14pxの文字で高さ34px。
+      枠を除いた内側の高さと文字の大きさの差を偶数にし、文字の上下の余りを整数pxに保つ（31 − 2 − 13 = 16、34 − 2 − 14 = 18）。
+    */
+    --rx-button-size: calc(31em / 13);
+    --rx-button-large: calc(34em / 14);
     --rx-z-menu: 20;
   }
 

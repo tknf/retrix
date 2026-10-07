@@ -34,8 +34,9 @@
     &[data-tone="info"] {
       --rx-badge-ink: var(--rx-info);
     }
+    /* 緑は淡い面の上で4.5:1に届かないので、文字だけ濃い緑にする。 */
     &[data-tone="success"] {
-      --rx-badge-ink: var(--rx-success);
+      --rx-badge-ink: var(--rx-green-dark);
     }
     &[data-tone="warning"] {
       --rx-badge-ink: var(--rx-warning);

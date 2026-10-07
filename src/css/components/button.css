@@ -60,7 +60,7 @@
     &[data-size="large"] {
       min-block-size: var(--rx-button-large);
       padding-inline: 1.125em;
-      font-size: calc(var(--rx-button-font) * 8 / 7);
+      font-size: calc(var(--rx-button-font) * 14 / 13);
       line-height: var(--rx-control-leading);
     }
     /*

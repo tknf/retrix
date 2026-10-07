@@ -75,41 +75,40 @@ test("単日と期間の両端はホバー・押下中も選択色を保つ", as
   }
 });
 
-test("今日のマーカーは通常の文字色の点で示し選択時は白になる", async ({ page }) => {
+test("今日は黄色の面で示し、選んだ日は青緑の塗りに白い文字にする", async ({ page }) => {
   await page.clock.setFixedTime(new Date(2026, 8, 12, 12));
   await page.goto("/components/date-picker");
   const single = await open(page, "single");
   const today = single.panel.getByRole("button", { name: "2026年9月12日", exact: true });
-  const mark = () =>
+  const look = () =>
     today.evaluate((element) => ({
       text: getComputedStyle(element).color,
-      dot: getComputedStyle(element, "::after").backgroundColor,
-      size: getComputedStyle(element, "::after").width,
+      background: getComputedStyle(element).backgroundColor,
     }));
-  const selected = await mark();
-  expect(selected.dot).toBe(selected.text);
-  expect(selected.size).toBe("3px");
+  const selected = await look();
+  expect(selected.text).toBe("rgb(255, 255, 255)");
   await single.panel.getByRole("button", { name: "2026年9月15日", exact: true }).click();
-  const neutral = await mark();
+  const neutral = await look();
   const regular = await single.panel
     .getByRole("button", { name: "2026年9月11日", exact: true })
     .evaluate((element) => getComputedStyle(element).color);
   expect(neutral.text).toBe(regular);
-  expect(neutral.dot).toBe(regular);
-  expect(neutral.dot).not.toBe(selected.dot);
+  expect(neutral.background).toBe("rgb(255, 255, 203)");
+  expect(neutral.background).not.toBe(selected.background);
 });
 
-test("クリアは終了日と左右・行高を揃えて文字を中央に置く", async ({ page }) => {
+test("クリアは下線付きの文字にし、終了日と左右・行高を揃えて文字を中央に置く", async ({ page }) => {
   await page.goto("/components/date-picker");
   const flexible = await open(page, "flexible");
   // 拡大しながら現れる動きの途中で測らないよう、動きの終わりを待つ。
   await flexible.panel.evaluate((element) =>
     Promise.all(element.getAnimations().map((animation) => animation.finished)),
   );
-  for (const name of ["クリア", "今日"]) {
-    const button = flexible.panel.getByRole("button", { name, exact: true });
-    await expect(button).toHaveCSS("text-decoration-line", "none");
-  }
+  // クリアはBasecamp 2の「No due date」と同じく、下線付きのリンクの文字にする。
+  await expect(flexible.panel.getByRole("button", { name: "クリア", exact: true })).toHaveCSS(
+    "text-decoration-line",
+    "underline",
+  );
   const rows = await flexible.panel.locator(".actions > *").evaluateAll((elements) => {
     return elements.map((element) => {
       const label = element.querySelector(":scope > span");
@@ -508,6 +507,8 @@ test("タッチ操作でもShiftを使わず期間を選択できる", async ({ 
 });
 
 test("参照先の変更とクリアでカレンダーの下限が連動する", async ({ page }) => {
+  // 開いた月が実行日に左右されないよう、他の検査と同じ日に固定する。
+  await page.clock.setFixedTime(new Date(2026, 8, 12, 12));
   await page.goto("/components/date-picker");
   const start = picker(page, "independent-start");
   const end = picker(page, "independent-end");

@@ -162,7 +162,8 @@ export const controlTextErrors = (root, path) => {
         const large = selector.includes('[data-size="large"]');
         if (
           large &&
-          ((prop === "font-size" && value === "calc(var(--rx-button-font) * 8 / 7)") ||
+          // largeは13pxの文字を14pxにする。高さ34pxの内側（32px）との差を偶数にし、文字の上下の余りを整数pxに保つ。
+          ((prop === "font-size" && value === "calc(var(--rx-button-font) * 14 / 13)") ||
             (prop === "line-height" && value === "var(--rx-control-leading)") ||
             (prop === "min-block-size" && value === "var(--rx-button-large)"))
         )

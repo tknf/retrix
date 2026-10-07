@@ -1,6 +1,6 @@
 @layer components {
   .rx-date-picker {
-    --rx-date-picker-control-size: calc(18em / 7);
+    --rx-date-picker-control-size: var(--rx-button-size);
     display: grid;
     min-inline-size: 0;
     border: 0;

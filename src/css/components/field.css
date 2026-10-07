@@ -416,8 +416,8 @@
       box-shadow: none;
     }
     &:where([data-size="large"]) {
-      --rx-input-size: 2.5em;
-      padding-block: calc((var(--rx-input-size) - 1.5em - 2 * var(--rx-input-border-size)) / 2);
+      --rx-input-size: var(--rx-button-large);
+      padding-block: calc((var(--rx-input-size) - 10em / 7 - 2 * var(--rx-input-border-size)) / 2);
       padding-inline: 0.5em;
       font-size: var(--rx-body);
       line-height: var(--rx-control-leading);

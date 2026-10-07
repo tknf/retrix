@@ -8,7 +8,7 @@
   */
   .rx-editable-property {
     /* 値の行の高さは欄とButtonの高さ。行の文字は上下の余りを半分ずつ空けて置く。 */
-    --rx-editable-row: calc(18em / 7);
+    --rx-editable-row: var(--rx-button-size);
     --rx-editable-pad: calc((var(--rx-editable-row) - 10em / 7) / 2);
     /* 面を文字の外へ張り出す幅は、鉛筆の領域の中でアイコンが端から空く幅と同じにし、面の端・値・鉛筆の間をそろえる。 */
     --rx-editable-inset: calc((var(--rx-editable-row) - 1em) / 2);
