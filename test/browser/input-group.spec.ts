@@ -29,7 +29,7 @@ test("枠全体にフォーカスとエラーを反映して入力と操作を�
   await expect(error).toHaveCSS("outline-style", "none");
   await expect(frame).toHaveCSS("outline-style", "solid");
   // 危険の色（--rx-danger）の枠。
-  await expect(frame).toHaveCSS("border-top-color", "rgb(155, 19, 0)");
+  await expect(frame).toHaveCSS("border-top-color", "rgb(153, 0, 0)");
   await expect(error).toHaveAccessibleDescription("料金を入力してください。 ¥");
   const readonly = page.getByRole("textbox", { name: "公開済みのURL", exact: true });
   await expect(readonly).not.toBeEditable();
@@ -48,10 +48,10 @@ for (const width of [375, 1280]) {
     await page.goto("/components/input-group");
     await page.getByText("エラー・閲覧専用・利用不可・大きい入力", { exact: true }).click();
     const example = page.locator('[data-example="hono"]');
-    // 高さは入力の枠の文字の大きさから求める（通常は13pxの31/13倍で31px、largeは14pxの34/14倍で34px）。
+    // 高さは入力の枠の文字の大きさから求める（通常は12pxの2倍で24px、largeは14pxの32/14倍で32px）。
     for (const [name, ratio] of [
-      ["記事を検索", 31 / 13],
-      ["記事を検索（大きい入力）", 34 / 14],
+      ["記事を検索", 2],
+      ["記事を検索（大きい入力）", 32 / 14],
     ] as const) {
       const input = page.getByRole("searchbox", { name, exact: true });
       const group = example.locator(".rx-input-group").filter({ has: input });
@@ -63,8 +63,8 @@ for (const width of [375, 1280]) {
         .locator(".control")
         .evaluate((element) => Number.parseFloat(getComputedStyle(element).fontSize));
       expect(control.height).toBeCloseTo(fontSize * ratio, 1);
-      expect(button.height).toBeCloseTo(control.height, 1);
-      expect(control.y).toBeCloseTo(button.y, 1);
+      // BC2の欄（24px）とボタン（22px）は高さが違うので、上下の中央をそろえる。
+      expect(button.y + button.height / 2).toBeCloseTo(control.y + control.height / 2, 0);
     }
     await example.screenshot({ path: testInfo.outputPath(`input-group-${width}.png`) });
     await page.evaluate(() => {

@@ -38,10 +38,10 @@ test("選択済みCheckboxは状態だけでなく白いcheckを実際に描画�
   expect(white).toBeGreaterThanOrEqual(4);
 });
 
-test("基本色を変えてもhover・押下が既定の色へ戻らず、塗りと文字の位置を保つ", async ({ page }) => {
+test("主操作の色を変えてもhover・押下が既定の色へ戻らず、文字の位置を保つ", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/components/button");
-  await page.evaluate(() => document.documentElement.style.setProperty("--rx-brand", "#146f53"));
+  await page.evaluate(() => document.documentElement.style.setProperty("--rx-green", "#146f53"));
   const button = page.locator('[data-example="hono"] button[data-variant="primary"]').first();
   const color = () =>
     button.evaluate((element) => {
@@ -67,12 +67,12 @@ test("基本色を変えてもhover・押下が既定の色へ戻らず、塗り
     expect(green).toBeGreaterThan(red);
     expect(green).toBeGreaterThan(blue);
   }
-  // 塗りの色はホバーしても押しても変えず、影だけで応える。
-  expect(hover).toEqual(normal);
-  expect(active).toEqual(normal);
+  // ホバーと押下は、変えた緑を少し濃くするだけで、既定の色へは戻らない。
+  expect(normal).toEqual([0x14, 0x6f, 0x53]);
+  expect(hover).not.toEqual(normal);
 });
 
-test("選択中のButtonを無効にした場合も、通常の無効状態と同じく全体を薄くして見分けられる", async ({
+test("選択中のButtonを無効にした場合も、通常の無効状態と同じ見た目で見分けられる", async ({
   page,
 }) => {
   await page.goto("/components/button");
@@ -81,19 +81,20 @@ test("選択中のButtonを無効にした場合も、通常の無効状態と�
     element.setAttribute("data-current", "true");
     element.setAttribute("disabled", "");
   });
+  const look = (element: Element) => {
+    const style = getComputedStyle(element);
+    return { color: style.color, background: style.backgroundColor, opacity: style.opacity };
+  };
   const expected = await page
     .locator('[data-example="hono"]')
     .getByRole("button", { name: "変更なし", exact: true })
-    .evaluate((element) => getComputedStyle(element).opacity);
-  // 使えない操作は斜線ではなく、昔のUIと同じく形と塗りを残したまま全体を薄くする。
-  expect(Number(expected)).toBeLessThan(1);
-  await expect
-    .poll(() =>
-      button.evaluate((element) => ({
-        opacity: getComputedStyle(element).opacity,
-        shadow: getComputedStyle(element).boxShadow,
-      })),
-    )
-    .toEqual({ opacity: expected, shadow: "none" });
+    .evaluate(look);
+  // 使えない操作は、Highriseの「First」と同じく形と塗りをそのままにし、文字だけを灰色にする。
+  expect(expected).toEqual({
+    color: "rgb(154, 154, 154)",
+    background: "rgb(255, 255, 255)",
+    opacity: "1",
+  });
+  await expect.poll(() => button.evaluate(look)).toEqual(expected);
   await expect(button).toBeDisabled();
 });

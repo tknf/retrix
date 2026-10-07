@@ -1,9 +1,10 @@
 import { expect, test } from "@playwright/test";
 
-test("独自のチェックとラジオをラベル・キーボードで操作できる", async ({ page }) => {
+test("OSの標準のチェックとラジオをラベル・キーボードで操作できる", async ({ page }) => {
   await page.goto("/components/field");
   const check = page.getByLabel("条件を確認しました", { exact: true });
-  await expect(check).toHaveCSS("appearance", "none");
+  // BC2・Highriseと同じく、チェックボックスとラジオはOSの標準の部品のまま使う。
+  await expect(check).toHaveCSS("appearance", "auto");
   await page.getByText("条件を確認しました", { exact: true }).click();
   await expect(check).toBeChecked();
   await page.keyboard.press("Tab");

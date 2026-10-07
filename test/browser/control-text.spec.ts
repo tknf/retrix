@@ -8,10 +8,11 @@ const measureControls = async (page: Page) => {
     const root = document.createElement("section");
     root.id = "control-text-fixture";
     root.style.cssText =
-      "display:grid;grid-template-columns:repeat(4,240px);gap:12px;padding:24px;background:white;width:1044px;font-weight:700";
+      // ButtonとInputは高さが違う（22pxと24px）ので、行の高さに引き伸ばさず、それぞれの高さで測る。
+      "display:grid;grid-template-columns:repeat(4,240px);align-items:start;gap:12px;padding:24px;background:white;width:1044px;font-weight:700";
     document.body.replaceChildren(root);
     const positions = [];
-    // 通常は14px、largeは16px。どちらも製品のCSSの大きさのまま測る。
+    // 通常のButtonは12px、Inputは12px、largeは14px。どれも製品のCSSの大きさのまま測る。
     for (const size of ["通常", "large"] as const) {
       for (const wrapped of [false, true]) {
         for (const tag of ["button", "input"]) {
@@ -64,7 +65,8 @@ const measureControls = async (page: Page) => {
         for (let y = (pos.y + 4) * 2; y < (pos.y + pos.height - 4) * 2; y++) {
           for (let x = (pos.x + 8) * 2; x < (pos.x + pos.width - 8) * 2; x++) {
             const offset = (Math.floor(y) * canvas.width + Math.floor(x)) * 4;
-            if (data[offset] < 128 && data[offset + 1] < 128 && data[offset + 2] < 128) {
+            // プレースホルダーはBC2の実測どおり淡い灰色（#aaa）なので、白地より十分に暗い画素を字形として数える。
+            if (data[offset] < 200 && data[offset + 1] < 200 && data[offset + 2] < 200) {
               top = Math.min(top, y);
               bottom = Math.max(bottom, y);
             }

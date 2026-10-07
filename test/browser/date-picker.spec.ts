@@ -93,7 +93,8 @@ test("今日は黄色の面で示し、選んだ日は青緑の塗りに白い�
     .getByRole("button", { name: "2026年9月11日", exact: true })
     .evaluate((element) => getComputedStyle(element).color);
   expect(neutral.text).toBe(regular);
-  expect(neutral.background).toBe("rgb(255, 255, 203)");
+  // 今日はBC2の日付のパネルの実測どおり #ffe582。
+  expect(neutral.background).toBe("rgb(255, 229, 130)");
   expect(neutral.background).not.toBe(selected.background);
 });
 

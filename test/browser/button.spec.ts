@@ -57,10 +57,10 @@ test("Buttonは画面幅で文字サイズを変えず、文字拡大に寸法�
   const [small, medium, large] = sizes;
   if (small === undefined || medium === undefined || large === undefined)
     throw new Error("各幅の測定値がありません");
-  // 管理画面で情報を多く並べるため、ボタンの文字は画面幅によらず13pxにする。
-  expect(small).toBeCloseTo(13, 2);
-  expect(medium).toBeCloseTo(13, 2);
-  expect(large).toBeCloseTo(13, 2);
+  // BC2の実測どおり、ボタンの文字は画面幅によらず12pxにする。
+  expect(small).toBeCloseTo(12, 2);
+  expect(medium).toBeCloseTo(12, 2);
+  expect(large).toBeCloseTo(12, 2);
 });
 
 test("ボタンは置いた厚みの影を持ち、ホバーすると面が濃くなり、押すと内側へへこみ、focusで輪郭が見える", async ({

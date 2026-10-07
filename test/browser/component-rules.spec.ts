@@ -64,10 +64,11 @@ test("入れ子の局所クラスへ外側の見出しと状態の指定が漏�
 });
 
 test("文章・数値・操作の文字寸法を親からの継承で変えない", async ({ page }) => {
-  for (const [id, selector] of [
-    ["table", '[data-example="hono"] tbody td'],
-    ["card", '[data-example="hono"] .rx-card > .body > p'],
-    ["notice", '[data-example="hono"] .rx-notice > .body > p'],
+  // 表と案内は補足の段（13px・行高18px）、カードの説明はBC2のプロジェクトのカードの16px・行高20px。
+  for (const [id, selector, font, line] of [
+    ["table", '[data-example="hono"] tbody td', 13, 18],
+    ["card", '[data-example="hono"] .rx-card > .body > p', 16, 20],
+    ["notice", '[data-example="hono"] .rx-notice > .body > p', 13, 18],
   ] as const) {
     await page.goto(`/components/${id}`);
     const element = page.locator(selector).first();
@@ -75,9 +76,8 @@ test("文章・数値・操作の文字寸法を親からの継承で変えな�
       font: Number.parseFloat(getComputedStyle(node).fontSize),
       line: Number.parseFloat(getComputedStyle(node).lineHeight),
     }));
-    // 表・カード・案内の文は操作・ラベルの段（--rx-label、13px）で、行高は10/7。丸めの差は0.05pxまで許す。
-    expect(Math.abs(style.font - 13), selector).toBeLessThan(0.05);
-    expect(Math.abs(style.line - 130 / 7), selector).toBeLessThan(0.05);
+    expect(Math.abs(style.font - font), selector).toBeLessThan(0.05);
+    expect(Math.abs(style.line - line), selector).toBeLessThan(0.05);
   }
   await page.goto("/components/icon");
   const button = page.locator('[data-example="hono"] .rx-button').first();
@@ -92,10 +92,11 @@ test("文章・数値・操作の文字寸法を親からの継承で変えな�
       paddingEnd: style.paddingBlockEnd,
     };
   });
+  // 控えめなButtonはBC2の実測どおり12pxの文字で高さ22px。
   expect(dimensions).toEqual({
-    font: 13,
-    line: 18.6,
-    block: 31,
+    font: 12,
+    line: 17,
+    block: 22,
     paddingStart: "0px",
     paddingEnd: "0px",
   });

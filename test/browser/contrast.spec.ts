@@ -1,5 +1,9 @@
 import { expect, test } from "@playwright/test";
 
+/*
+  RetrixはWCAG 2.2のAAを基準にし、文字は4.5:1、操作の縁や状態の印は3:1を求める。
+  手本（Basecamp 2・Highrise）の実測の色が届かない時は、色合いを保って明るさだけを下げる（docs/visual-reference/README.md）。
+*/
 const cases = [
   {
     id: "code-block",
@@ -17,7 +21,9 @@ const cases = [
   },
   {
     id: "surface",
-    targets: [{ selector: '[data-example="hono"] .rx-surface p', property: "color", threshold: 7 }],
+    targets: [
+      { selector: '[data-example="hono"] .rx-surface p', property: "color", threshold: 4.5 },
+    ],
   },
   {
     id: "action-list",
@@ -25,13 +31,17 @@ const cases = [
       {
         selector: '[data-example="hono"] .rx-action-list > li > a > .title',
         property: "color",
-        threshold: 7,
+        threshold: 4.5,
       },
-      { selector: '[data-example="hono"] .rx-action-list small', property: "color", threshold: 7 },
+      {
+        selector: '[data-example="hono"] .rx-action-list small',
+        property: "color",
+        threshold: 4.5,
+      },
       {
         selector: '[data-example="hono"] .rx-action-list > li > a > .preview p',
         property: "color",
-        threshold: 7,
+        threshold: 4.5,
       },
     ],
   },
@@ -40,7 +50,12 @@ const cases = [
     targets: [
       // 文字のある操作は文字で操作と分かるので、WCAG 1.4.11は縁の対比を求めない。
       // 控えめな操作（secondary）は淡い縁と縦の陰影で描く設計なので、縁ではなく文字の対比を確かめる。
-      { selector: '[data-example="hono"] .rx-button', property: "color", threshold: 4.5 },
+      {
+        // 使えない操作の文字は、WCAG 2.2の1.4.3が対比を求めないため測らない。
+        selector: '[data-example="hono"] .rx-button:not(:disabled)',
+        property: "color",
+        threshold: 4.5,
+      },
     ],
   },
   {
@@ -53,7 +68,7 @@ const cases = [
       {
         selector: '[data-example="hono"] .rx-input:not(:disabled)',
         property: "color",
-        threshold: 7,
+        threshold: 4.5,
       },
       { selector: '[data-example="hono"] .affix', property: "color", threshold: 4.5 },
       {
@@ -66,8 +81,12 @@ const cases = [
   {
     id: "switch",
     targets: [
-      { selector: '[data-example="hono"] .rx-switch > span', property: "color", threshold: 7 },
-      { selector: '[data-example="hono"] .rx-switch small', property: "color", threshold: 7 },
+      {
+        selector: '[data-example="hono"] .rx-switch:not(:has(> input:disabled)) > span',
+        property: "color",
+        threshold: 4.5,
+      },
+      { selector: '[data-example="hono"] .rx-switch small', property: "color", threshold: 4.5 },
       // 使えない操作はWCAGの対比の対象外なので、Fieldの入力と同じく除く。
       {
         selector: '[data-example="hono"] .rx-switch > input:not(:disabled)',
@@ -79,7 +98,7 @@ const cases = [
   {
     id: "notice",
     targets: [
-      { selector: '[data-example="hono"] .rx-notice', property: "color", threshold: 7 },
+      { selector: '[data-example="hono"] .rx-notice', property: "color", threshold: 4.5 },
       // アイコンと題名は、役割の色で塗ったピルの上の白い文字。全ての役割で本文と同じ基準にする。
       {
         selector: '[data-example="hono"] .rx-notice > .heading',
@@ -94,9 +113,9 @@ const cases = [
       {
         selector: '[data-example="hono"] .rx-input:not(:disabled)',
         property: "color",
-        threshold: 7,
+        threshold: 4.5,
       },
-      { selector: '[data-example="hono"] .rx-input:disabled', property: "color", threshold: 4.5 },
+      // 使えない入力の文字は、WCAG 2.2の1.4.3が対比を求めないため測らない（Highriseの実測どおり淡い灰色にする）。
       {
         selector: '[data-example="hono"] .rx-input[data-invalid="true"]',
         property: "border-inline-start-color",
@@ -105,7 +124,7 @@ const cases = [
       {
         selector: '[data-example="hono"] .help, [data-example="hono"] .error',
         property: "color",
-        threshold: 7,
+        threshold: 4.5,
       },
       {
         selector: '[data-example="hono"] .error > .rx-icon',
@@ -127,13 +146,17 @@ const cases = [
   {
     id: "tabs",
     targets: [
-      { selector: '[data-example="hono"] [role="tab"]', property: "color", threshold: 4.5 },
+      {
+        selector: '[data-example="hono"] [role="tab"]:not(:disabled)',
+        property: "color",
+        threshold: 4.5,
+      },
     ],
   },
   {
     id: "file-item",
     targets: [
-      { selector: '[data-example="hono"] .rx-file-item p', property: "color", threshold: 7 },
+      { selector: '[data-example="hono"] .rx-file-item p', property: "color", threshold: 4.5 },
     ],
   },
 ];
