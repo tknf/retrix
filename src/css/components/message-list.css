@@ -1,0 +1,330 @@
+@layer components {
+  /*
+    受け取った連絡の一覧。作業面の上に行を平らに並べ、罫線は引かずに行間で区切る。
+    ホバーした行だけ、角丸の淡い面で示す。
+    行は「件名」と「差出人 – 書き出し」の二段にし、差出人のアバターを左に、時刻と未読の点を右に置く。
+    まだ開けていない連絡は、件名と差出人を太字にして青い点を添える。
+  */
+  .rx-message-list {
+    container: rx-message-list / inline-size;
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--rx-text);
+    font-size: var(--rx-body);
+    line-height: var(--rx-label-leading);
+    /* ここから新しい：青い細い線とラベル。前後の行の線と重ねない。 */
+    & > .divider {
+      padding-block: var(--rx-space-2) 0;
+      padding-inline: var(--rx-space-3);
+      & > .rx-divider {
+        --rx-divider-color: var(--rx-link);
+        & > span {
+          color: var(--rx-link);
+        }
+      }
+    }
+    & > li {
+      position: relative;
+      min-inline-size: 0;
+      & > .row {
+        /* 行は二段だけ。件名と「差出人 – 書き出し」を左に、時刻と未読の点を右の上下中央に置く。 */
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas: "body meta";
+        align-items: center;
+        gap: var(--rx-space-4);
+        min-inline-size: 0;
+        /* 件名と書き出しの二段の間より、行の上下をはっきり広くし、行ごとのまとまりを見せる。 */
+        padding-block: var(--rx-space-4);
+        padding-inline: var(--rx-space-3);
+        border-radius: var(--rx-radius-field);
+        color: inherit;
+        text-decoration: none;
+        transition: background-color var(--rx-duration) ease;
+        &:is(a):hover {
+          background: color-mix(in srgb, var(--rx-ink) 4%, var(--rx-surface));
+        }
+        &:focus-visible {
+          outline: 0.125rem solid var(--rx-link);
+          outline-offset: -0.125rem;
+        }
+        /* 差出人は共通のAvatar。画像のない行は、同じ大きさの淡い円に手紙のアイコンを置く。 */
+        & > .avatar {
+          grid-area: avatar;
+          display: grid;
+          place-items: center;
+          inline-size: 2.5rem;
+          block-size: 2.5rem;
+          border-radius: 50%;
+          background: var(--rx-background);
+          color: var(--rx-muted);
+          /* 渡されたAvatarの大きさの指定にかかわらず、行のアバターの大きさとAvatarの既定の文字にそろえる。 */
+          & > .rx-avatar {
+            inline-size: 100%;
+            block-size: 100%;
+            font-size: var(--rx-small);
+          }
+        }
+        & > .body {
+          grid-area: body;
+          display: grid;
+          gap: 0.125rem;
+          min-inline-size: 0;
+          & > .title {
+            display: flex;
+            align-items: baseline;
+            min-inline-size: 0;
+            font-weight: 400;
+            /*
+              状態バッジ。件名の前に置き、形・大きさ・色は共通のBadgeに任せる（失敗は赤、他は灰）。
+              バッジは縮めず、件名の一行目の文字の並びにそろえる。
+            */
+            & > .state {
+              flex: none;
+              margin-inline-end: var(--rx-space-2);
+            }
+            & > .subject {
+              min-inline-size: 0;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+            & > :is(.count, .attachment) {
+              display: inline-flex;
+              flex: none;
+              align-items: center;
+              gap: 0.125rem;
+              margin-inline-start: var(--rx-space-2);
+              color: var(--rx-muted);
+              font-size: var(--rx-small);
+              font-weight: 400;
+              font-variant-numeric: tabular-nums;
+            }
+          }
+          /* 差出人と書き出しは一行にまとめ、はみ出す分は書き出しの側で省略する。 */
+          & > .summary {
+            display: flex;
+            align-items: baseline;
+            min-inline-size: 0;
+            color: var(--rx-muted);
+            font-size: var(--rx-small);
+            line-height: var(--rx-small-leading);
+            white-space: nowrap;
+            & > .sender {
+              flex: 0 1 auto;
+              min-inline-size: 0;
+              max-inline-size: 60%;
+              overflow: hidden;
+              color: var(--rx-text);
+              text-overflow: ellipsis;
+            }
+            & > .preview {
+              flex: 1 1 0;
+              min-inline-size: 0;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              &::before {
+                content: "–";
+                margin-inline: 0.375em;
+              }
+            }
+          }
+        }
+        & > .meta {
+          grid-area: meta;
+          display: flex;
+          align-items: center;
+          gap: var(--rx-space-2);
+          color: var(--rx-muted);
+          font-size: var(--rx-small);
+          font-variant-numeric: tabular-nums;
+          white-space: nowrap;
+          /* 未読は時刻の後ろに置く小さな青い点。 */
+          & > .unread {
+            display: block;
+            order: 1;
+            inline-size: 0.5rem;
+            block-size: 0.5rem;
+            border-radius: 50%;
+            background: var(--rx-link);
+          }
+        }
+      }
+      &[data-unread="true"] > .row > .body > .title,
+      &[data-unread="true"] > .row > .body > .summary > .sender {
+        font-weight: 600;
+      }
+      /* 今、隣で開いている連絡は、DataListと同じ角丸の淡い青の面で示す。 */
+      &[data-current="true"] > .row {
+        background: color-mix(in srgb, var(--rx-link) 8%, var(--rx-surface));
+      }
+      /* 送信中は届くまでの間なので、行全体を少しだけ控えめにする。 */
+      &[data-state="sending"] > .row {
+        opacity: 0.72;
+      }
+      /* 閲覧できない連絡は、件名と差出人も淡い文字にして、開けないことを行全体で示す。 */
+      &[data-unavailable="true"] > .row > .body > :is(.title, .summary > .sender) {
+        color: var(--rx-muted);
+      }
+    }
+    /*
+      0件の表示はEmptyStateが余白を持つので、一覧の空の行の余白は持たない。
+      行を後から出し入れする画面でも、連絡の行が一つもない時だけ見せる。
+    */
+    & > .state[data-empty="true"] {
+      padding-block: 0;
+      padding-inline: 0;
+      &:not(:only-child) {
+        display: none;
+      }
+    }
+    /* 差出人のアバターは左に置き、二段の本文をその右へ並べる。 */
+    &[data-avatars="true"] > li > .row {
+      grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+      grid-template-areas: "avatar body meta";
+    }
+    /* 書き出しを二行にする指定では、差出人の下で折り返す。 */
+    &[data-preview-lines="2"] > li > .row > .body > .summary {
+      flex-wrap: wrap;
+      white-space: normal;
+      & > .preview {
+        flex-basis: 100%;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        &::before {
+          content: none;
+        }
+      }
+    }
+    /* 狭い幅では、時刻を件名の行だけに置き、「差出人 – 書き出し」は下の段で幅いっぱいに使う。 */
+    @container rx-message-list (inline-size < 30rem) {
+      & > li > .row {
+        grid-template-areas:
+          "title meta"
+          "summary summary";
+        /* 日時は行の幅の4割までにし、文字を大きくしても本文の列を押し出さず折り返す。 */
+        grid-template-columns: minmax(0, 1fr) fit-content(40%);
+        column-gap: var(--rx-space-3);
+        row-gap: 0.125rem;
+        & > .body {
+          display: contents;
+          /* 件名は一行では数文字しか入らないため、二行まで折り返してから省略する。 */
+          & > .title {
+            grid-area: title;
+            align-self: first baseline;
+            /* 状態バッジ・件名・件数を一行に並べ、件名だけが縮んで二行まで折り返す。 */
+            flex-wrap: nowrap;
+            & > .subject {
+              flex: 0 1 auto;
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 2;
+              white-space: normal;
+              overflow-wrap: anywhere;
+            }
+          }
+          & > .summary {
+            grid-area: summary;
+          }
+        }
+        /* 時刻は件名の一行目にそろえる。 */
+        & > .meta {
+          align-self: first baseline;
+          flex-wrap: wrap;
+          justify-content: end;
+          text-align: end;
+          white-space: normal;
+        }
+      }
+      &[data-avatars="true"] > li > .row {
+        grid-template-columns: 2.5rem minmax(0, 1fr) fit-content(40%);
+        grid-template-areas:
+          "avatar title meta"
+          "avatar summary summary";
+      }
+    }
+    /* さらに狭い時（文字を大きくした時を含む）は、アバターと日時を件名の上下へ回し、件名に幅を残す。 */
+    @container rx-message-list (inline-size < 16rem) {
+      & > li > .row {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas:
+          "title"
+          "summary"
+          "meta";
+        /* バッジ・件名・件数が一行に入らない幅では、件数を次の行へ送り、行の外へはみ出さない。 */
+        & > .body > .title {
+          flex-wrap: wrap;
+        }
+        & > .meta {
+          justify-content: start;
+          text-align: start;
+        }
+      }
+      &[data-avatars="true"] > li > .row {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas:
+          "avatar"
+          "title"
+          "summary"
+          "meta";
+        & > .avatar {
+          justify-self: start;
+        }
+      }
+    }
+    /* 0件・読み込み中・失敗は、一覧の場所に文で示す。読み込み中だけ、行の形の斜線を流す。 */
+    & > .state {
+      display: grid;
+      justify-items: center;
+      gap: var(--rx-space-3);
+      padding-block: var(--rx-space-8);
+      padding-inline: var(--rx-space-3);
+      color: var(--rx-muted);
+      text-align: center;
+    }
+    &[data-state="loading"] > .state {
+      justify-items: stretch;
+      padding-block: var(--rx-space-4);
+      text-align: start;
+      &::before,
+      &::after {
+        content: "";
+        block-size: 2.75rem;
+        border-radius: var(--rx-radius-field);
+        background:
+          var(--rx-hatch) 0 0 / var(--rx-hatch-step) 100%,
+          color-mix(in srgb, var(--rx-background) 70%, var(--rx-surface));
+        animation: rx-message-list-flow 0.8s linear infinite;
+      }
+      &::after {
+        inline-size: 70%;
+      }
+      &::before,
+      &::after {
+        order: -1;
+      }
+    }
+    &[data-state="error"] > .state {
+      color: var(--rx-danger);
+    }
+  }
+  @keyframes rx-message-list-flow {
+    to {
+      background-position-x: var(--rx-hatch-step);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rx-message-list[data-state="loading"] > .state::before,
+    .rx-message-list[data-state="loading"] > .state::after {
+      animation: none;
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-message-list > li > .row > .meta > .unread {
+      background: CanvasText;
+    }
+  }
+}

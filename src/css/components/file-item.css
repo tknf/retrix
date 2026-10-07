@@ -1,0 +1,107 @@
+@layer components {
+  .rx-file-item {
+    container: rx-file-item / inline-size;
+    display: grid;
+    /* アイコンの背景とサムネイルは同じ40pxの正方形の列に置き、混ぜても名前の書き始めをそろえる。 */
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    align-items: center;
+    gap: var(--rx-space-3);
+    min-inline-size: 0;
+    padding-block: var(--rx-space-2);
+    color: var(--rx-text);
+    font-size: var(--rx-label);
+    line-height: var(--rx-label-leading);
+    /* ファイルのアイコンは枠で囲まず、淡く塗った背景に置く。 */
+    & > .icon {
+      display: grid;
+      place-items: center;
+      grid-column: 1;
+      block-size: 2.5rem;
+      border-radius: var(--rx-radius-control);
+      background: var(--rx-info-soft);
+      color: var(--rx-link);
+    }
+    /*
+      サムネイルは角丸を付けず淡い縁だけで囲み、アイコンと同じ高さの正方形に切り抜く。
+      送信待ちはサムネイルを薄くする。
+    */
+    & > .preview {
+      grid-column: 1;
+      inline-size: 2.5rem;
+      block-size: 2.5rem;
+      overflow: hidden;
+      border: var(--rx-stroke-width) solid color-mix(in srgb, var(--rx-ink) 15%, transparent);
+      background: var(--rx-background);
+      & > :is(img, svg:not(.rx-icon)) {
+        display: block;
+        inline-size: 100%;
+        block-size: 100%;
+        object-fit: cover;
+      }
+    }
+    &[data-state="pending"] > .preview {
+      opacity: 0.6;
+    }
+    /* 送信待ちはアイコンを控えめな色にし、状態は説明の文言で伝える。 */
+    &[data-state="pending"] > .icon {
+      background: var(--rx-background);
+      color: var(--rx-muted);
+    }
+    &[data-state="error"] > .icon {
+      background: var(--rx-danger-soft);
+      color: var(--rx-danger);
+    }
+    & > .body {
+      grid-column: 2;
+      min-inline-size: 0;
+      overflow-wrap: anywhere;
+      & > .title {
+        font-size: var(--rx-label);
+        font-weight: 600;
+        line-height: var(--rx-label-leading);
+        & > strong {
+          font-weight: inherit;
+        }
+        & > a {
+          color: var(--rx-text);
+          text-decoration: none;
+          &:hover {
+            color: var(--rx-link);
+            text-decoration: none;
+          }
+        }
+      }
+      & > .description {
+        margin-block-start: var(--rx-space-1);
+        color: var(--rx-muted);
+        font-size: var(--rx-small);
+        line-height: var(--rx-small-leading);
+      }
+    }
+    & > .actions {
+      grid-column: 2;
+      grid-row: 2;
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--rx-space-2);
+      min-inline-size: 0;
+    }
+    @container rx-file-item (inline-size >= 26rem) {
+      grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+      & > .actions {
+        grid-column: 3;
+        grid-row: 1;
+      }
+    }
+    &[data-state="error"] > .body > .description > .state {
+      color: var(--rx-danger);
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-file-item > .icon {
+      border: var(--rx-stroke-width) solid CanvasText;
+      background: Canvas;
+      box-shadow: none;
+    }
+  }
+}

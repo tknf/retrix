@@ -1,0 +1,94 @@
+@layer components {
+  .rx-progress {
+    display: block;
+    min-inline-size: 0;
+    color: var(--rx-text);
+    font-size: var(--rx-label);
+    line-height: var(--rx-label-leading);
+    & > .heading {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: baseline;
+      gap: var(--rx-space-1) var(--rx-space-3);
+      overflow-wrap: anywhere;
+      & > .value {
+        color: var(--rx-text);
+        font-size: var(--rx-small);
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+      }
+    }
+    /*
+      面に沈んだ溝に、進んだ分だけバーを引く。バーはDropdownMenuと同じく青から紫へ塗り、終わると成功の色になる。
+    */
+    & > .track {
+      display: block;
+      position: relative;
+      block-size: 0.625rem;
+      margin-block-start: var(--rx-space-2);
+      overflow: hidden;
+      border-radius: var(--rx-radius-pill);
+      background: var(--rx-background);
+      box-shadow: var(--rx-shadow-sunken);
+      & > .fill {
+        display: block;
+        block-size: 100%;
+        border-radius: inherit;
+        background: linear-gradient(
+          to right,
+          color-mix(in srgb, var(--rx-link) 85%, var(--rx-surface)),
+          color-mix(in srgb, var(--rx-link) 60%, var(--rx-plum))
+        );
+        transition: inline-size var(--rx-duration) ease-out;
+        &:dir(rtl) {
+          background: linear-gradient(
+            to left,
+            color-mix(in srgb, var(--rx-link) 85%, var(--rx-surface)),
+            color-mix(in srgb, var(--rx-link) 60%, var(--rx-plum))
+          );
+        }
+      }
+      &[data-state="complete"] > .fill {
+        background: var(--rx-fill-success);
+      }
+      /*
+        終わりが分からない処理は、溝いっぱいのバーの中で、淡い青と紫のグラデーションが途切れずにゆっくり一方向へ流れ続ける。
+        バーそのものは動かさず、色だけを流す（模様はバーの幅の二倍で繰り返し、一巡りでちょうど元の色に戻る）。
+      */
+      &[data-state="indeterminate"] > .fill {
+        inline-size: 100%;
+        background: linear-gradient(
+            to right,
+            color-mix(in srgb, var(--rx-link) 30%, var(--rx-surface)),
+            color-mix(in srgb, var(--rx-link) 55%, var(--rx-plum)),
+            color-mix(in srgb, var(--rx-link) 30%, var(--rx-surface))
+          )
+          0 0 / 200% 100% repeat-x;
+        animation: rx-progress-flow 2.4s linear infinite;
+        &:dir(rtl) {
+          animation-direction: reverse;
+        }
+      }
+    }
+  }
+  @keyframes rx-progress-flow {
+    to {
+      background-position-x: -200%;
+    }
+  }
+  /* 動きを減らす時は、色を流さず、青と紫のグラデーションを溝いっぱいに敷いたまま止める。 */
+  @media (prefers-reduced-motion: reduce) {
+    .rx-progress > .track[data-state="indeterminate"] > .fill {
+      animation: none;
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-progress > .track {
+      outline: var(--rx-stroke-width) solid CanvasText;
+      background: Canvas;
+      & > .fill {
+        background: Highlight;
+      }
+    }
+  }
+}

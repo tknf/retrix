@@ -1,0 +1,43 @@
+import type { ComponentDoc } from "../reference";
+
+export default {
+  id: "reactions",
+  name: "Reactions",
+  description: "同じ絵文字ごとに、付けた人数を添えてリアクションを表示します。",
+  api: ["Reactions"],
+  guidance: [
+    "投稿やコメントに付いたリアクションを、絵文字や短い言葉ごとにまとめて示し、自分も付け外しさせる時に使います。",
+    "絵文字パネルだけが必要な時は `EmojiPicker` を使います。",
+  ],
+  usage: [
+    "`items` にリアクションごとの `content`（絵文字や短い言葉）と `by`（付けた人の名前の並び）を渡します。リアクションは `by` の人数を数として添え、ホバーすると付けた人の名前を出します。自分も付けているリアクションは `mine` にすると、淡い青の面・青い縁・青い数にします。",
+    "`add` を渡すとリアクションが押せるボタンになります。自分のリアクションを押すと外し、他の人のリアクションを押すと自分も付けます。数が0になったリアクションは消えます。付け外しで `by` に追加・削除する自分の名前は `add.me` で、`mine` のリアクションの `by` にも同じ名前を入れておきます。",
+    "`add` がある時は、リアクションの並びの末尾に「リアクションを追加」の操作を置きます。開くパネルには16文字までの言葉の欄と `EmojiPicker` があり、開くと言葉の欄へ移ります。選んだ絵文字や書いた言葉は、同じリアクションがあればそこへ自分を加え、なければ末尾に新しいリアクションを作ります。",
+    "`ReactionsController` を `reactions`、`EmojiPickerController` を `emoji-picker` として登録し、追加のパネルに使う `PopoverController`・`TooltipController` も登録します。付け外しすると `reactions:toggle` を発火するので、保存は利用側で行います。リアクションはcontrollerがその場で書き換えます。保存に失敗した時は、`reactions` のcontrollerの `setReaction(content, selected, name)` に `reactions:toggle` のdetailを `selected` だけ逆にして渡すと、イベントを発火せずにリアクションを元に戻します（消えたリアクションは作り直し、追加したリアクションは消します）。保存が済むまで書き換えたくない時は `reactions:beforetoggle` を取り消し、保存できてから `setReaction` で付け外しします。",
+    "`add` がない時は表示するだけのリアクションです。JavaScriptがない時はリアクションを押しても変わりません。",
+  ],
+  keyboard: [
+    ["Enter / Space", "フォーカスのあるリアクションで、自分のリアクションを付け外しします。"],
+    [
+      "Enter",
+      "言葉の欄で、書いた言葉をリアクションとして追加します。日本語入力の変換を確定するEnterでは追加しません。",
+    ],
+    ["Esc", "追加のパネルを閉じます。"],
+  ],
+  accessibility: [
+    "リアクションの並びは `ul` で、`label` を名前にします。`label` は画面には出しません。",
+    "リアクションは「いいね：田中 遥、佐藤 健」のように、`name`（無ければ `content`）と付けた人を読み上げ、絵文字と数は読み上げから外します。押せるリアクションは `aria-pressed` で自分が付けているかを伝えます。絵文字のリアクションには `name` を渡します。",
+    "追加の操作はアイコンだけのボタンで、`add.label` を名前にし、Tooltipで名前を見せます。パネルの見出しは読み上げだけに残します。",
+    "リアクションを外して消えた時は次のリアクションか追加の操作へ、リアクションを追加した時はそのリアクションへフォーカスを移します。絵文字パネルの中の操作は `EmojiPicker` と同じです。",
+  ],
+  events: [
+    [
+      "reactions:beforetoggle",
+      "利用者の操作で自分のリアクションを付ける・外す前に発火します。取り消せます（取り消すとリアクションを変えません）。detailは `reactions:toggle` と同じです。",
+    ],
+    [
+      "reactions:toggle",
+      "自分のリアクションを付けた・外した後に発火します。detailは `content`（リアクションの内容）・`name`（読み上げの名前）・`selected`（付けた時は `true`）です。`setReaction` では発火しません。",
+    ],
+  ],
+} satisfies ComponentDoc;

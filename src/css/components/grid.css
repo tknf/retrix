@@ -1,0 +1,144 @@
+@layer components {
+  /*
+    日と時間の格子。外枠を持たず、列の間は淡い縦線、行の間は細い線だけで区切る。
+    日付の見出しは濃い色の太字、時刻は淡い小さな数字にする。今日の列は見出しに蛍光ペンの黄のピルを敷く。
+    選んだ枠は濃い色の2pxの角丸の枠で示し、埋まっている枠は斜線にする。
+  */
+  .rx-grid {
+    min-inline-size: 0;
+    overflow: auto;
+    overscroll-behavior-inline: contain;
+    color: var(--rx-text);
+    font-size: var(--rx-label);
+    line-height: var(--rx-label-leading);
+
+    & > .table {
+      inline-size: max-content;
+      min-inline-size: 100%;
+      border: 0;
+      border-spacing: 0;
+      border-radius: 0;
+      background: var(--rx-surface);
+
+      & > caption {
+        padding-block-end: var(--rx-space-3);
+        text-align: start;
+        font-size: var(--rx-body);
+        font-weight: 600;
+        line-height: 1.5;
+      }
+
+      & > :is(thead, tbody) > tr > :is(th, td) {
+        min-inline-size: 7.5rem;
+        padding-block: var(--rx-space-3);
+        padding-inline: var(--rx-space-3);
+        border-block-end: var(--rx-stroke-width) solid
+          color-mix(in srgb, var(--rx-ink) 12%, transparent);
+        text-align: start;
+        vertical-align: middle;
+        overflow-wrap: anywhere;
+      }
+
+      & > :is(thead, tbody) > tr > :is(th, td) + :is(th, td) {
+        border-inline-start: var(--rx-stroke-width) solid
+          color-mix(in srgb, var(--rx-ink) 8%, transparent);
+      }
+
+      & > thead > tr > th {
+        padding-block: var(--rx-space-2);
+        background: var(--rx-surface);
+        color: var(--rx-text);
+        font-size: var(--rx-label);
+        font-weight: 700;
+        line-height: var(--rx-label-leading);
+        white-space: nowrap;
+        & > .label {
+          display: inline-block;
+          padding-inline: var(--rx-space-2);
+          border-radius: var(--rx-radius-pill);
+        }
+        /* 楕円の内側の余白の分だけ見出しの余白を詰め、日付の文字を下の枠の文字と同じ書き始めにそろえる。 */
+        &:not(:first-child) {
+          padding-inline: calc(var(--rx-space-3) - var(--rx-space-2));
+        }
+        /* 今日の列の見出しは、Calendarの今日と同じ蛍光ペンの黄のピルを敷く。 */
+        &[data-current="true"] > .label {
+          position: relative;
+          isolation: isolate;
+          color: var(--rx-ink);
+          &::before {
+            content: "";
+            position: absolute;
+            inset-block: -0.1875rem;
+            inset-inline: -0.125rem;
+            z-index: -1;
+            background: var(--rx-mark);
+            border-radius: var(--rx-radius-pill);
+          }
+        }
+      }
+
+      /* 格子の角の見出しと時刻は、日付より控えめな淡い小さな文字にする。 */
+      & > thead > tr > th:first-child,
+      & > tbody > tr > th {
+        color: var(--rx-muted);
+        font-size: var(--rx-small);
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
+      }
+
+      & > tbody > tr > th {
+        position: sticky;
+        inset-inline-start: 0;
+        z-index: 1;
+        min-inline-size: 5rem;
+        background: var(--rx-surface);
+        white-space: nowrap;
+      }
+
+      & > tbody > tr:last-child > :is(th, td) {
+        border-block-end: 0;
+      }
+
+      & > tbody > tr > td:not([data-disabled="true"]):hover {
+        background: color-mix(in srgb, var(--rx-link) 5%, var(--rx-surface));
+      }
+
+      /* 使えない・埋まっている枠は斜線で示す。 */
+      & > tbody > tr > td[data-disabled="true"] {
+        background: var(--rx-surface);
+        background-image: var(--rx-hatch);
+        color: var(--rx-muted);
+      }
+
+      & > :is(thead, tbody) > tr > :is(th, td):focus-visible {
+        position: relative;
+        z-index: 2;
+        outline: var(--rx-frame-width) solid var(--rx-ink);
+        outline-offset: calc(-1 * var(--rx-frame-width));
+        border-radius: var(--rx-radius-control);
+      }
+    }
+
+    & > .empty {
+      margin-block-start: var(--rx-space-2);
+      padding-block: var(--rx-space-3);
+      padding-inline: var(--rx-space-4);
+      border: 0;
+      border-block: var(--rx-stroke-width) solid color-mix(in srgb, var(--rx-ink) 12%, transparent);
+      border-radius: 0;
+      background: var(--rx-surface);
+      color: var(--rx-muted);
+    }
+  }
+
+  @media (forced-colors: active) {
+    .rx-grid > :is(.table, .empty) {
+      background: Canvas;
+      box-shadow: none;
+    }
+    .rx-grid > .table > thead > tr > th[data-current="true"] > .label {
+      outline: var(--rx-stroke-width) solid CanvasText;
+    }
+  }
+}

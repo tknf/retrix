@@ -1,0 +1,175 @@
+@layer components {
+  .rx-app-shell {
+    container: rx-app-shell / inline-size;
+    display: grid;
+    justify-items: center;
+    align-content: start;
+    /* バーの下のグラデーション（.bar::after）と同じ高さにし、スクロールしていない時にグラデーションが作業面にかからないようにする。 */
+    gap: var(--rx-space-6);
+    min-inline-size: 0;
+    min-block-size: 100dvh;
+    /*
+      Wingが開く時に行き過ぎたパネルや影が画面の外へ出て、一瞬だけ横スクロールが出ないよう、左右を画面の幅で切る。
+      clipはスクロールコンテナを作らないので、上端に留まるバー（sticky）はそのまま動く。
+    */
+    overflow-x: clip;
+    padding-block-end: var(--rx-space-8);
+    background: var(--rx-surface);
+    color: var(--rx-text);
+    /* 作業面の幅の上限。compactは本文の幅を読みやすい行の長さ（--rx-measure）にそろえる。 */
+    &[data-size="compact"] {
+      --rx-page: calc(var(--rx-measure) + 2 * var(--rx-space-12));
+    }
+    &[data-size="wide"] {
+      --rx-page: 112rem;
+    }
+    & > .bar {
+      position: sticky;
+      inset-block-start: 0;
+      /*
+        作業面の中の要素（ButtonGroup、カレンダー、Wingの作業面など）より上、メニューより下に重ねる。
+        作業面はスタッキングコンテキストを作らないため、1のままだとスクロール時に作業面の中の要素がバーの上に表示される。
+      */
+      z-index: calc(var(--rx-z-menu) - 1);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      align-items: center;
+      gap: var(--rx-space-2);
+      inline-size: 100%;
+      min-inline-size: 0;
+      padding-block: var(--rx-space-3);
+      padding-inline: var(--rx-space-4);
+      background: var(--rx-surface);
+      /*
+        バーの背景で作業面の影（--rx-shadow-sheet）が直線的に途切れないよう、バーの下に背景色から透明へのグラデーションを置く。
+        スクロールしていない時はバーと作業面の間に収まり、スクロール時はバーの下に入った内容を徐々に隠す。
+      */
+      &::after {
+        content: "";
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: 100%;
+        block-size: var(--rx-space-6);
+        background: linear-gradient(var(--rx-surface), transparent);
+        pointer-events: none;
+      }
+      /* 左右の内容幅に影響されず、共通コマンドを画面の中央へ置く。 */
+      & > :is(.start, .end) {
+        display: flex;
+        align-items: center;
+        gap: var(--rx-space-2);
+        min-inline-size: 0;
+        &:empty {
+          display: none;
+        }
+      }
+      & > .end {
+        justify-content: end;
+      }
+      & > .commands {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-inline-size: 0;
+        max-inline-size: 60cqi;
+      }
+    }
+    & > .workspace,
+    & > .rx-wing > .layout > .main > .workspace {
+      container: rx-workspace / inline-size;
+      display: grid;
+      /* 列は作業面の幅に収め、広い表などの最小幅で作業面を押し広げない（中身の側で横にスクロールする）。 */
+      grid-template-columns: minmax(0, 1fr);
+      align-content: start;
+      gap: var(--rx-space-6);
+      inline-size: min(calc(100% - var(--rx-space-8)), var(--rx-page));
+      min-inline-size: 0;
+      /* 左右の余白は変数にし、横スクロールするコンテンツを作業面の端まで広げる時にも使う。 */
+      --rx-workspace-gutter: var(--rx-space-12);
+      padding-block: calc(var(--rx-space-12) + var(--rx-space-2));
+      padding-inline: var(--rx-workspace-gutter);
+      /* 白い面・角丸・影は、Surfaceと共通の作業面の定義（layout.css）が持つ。 */
+      /*
+        先頭のContextBarはSurfaceと同じく、見出しと同じ左右の位置に置き、下の区切り線を消す。
+        上の余白を詰めてパンくずを作業面の上端に寄せ、見出しはパンくずのすぐ下から始める。
+        バーの高さは操作の高さに揃え、操作の有無で見出しの位置を変えない。
+      */
+      &:has(> .rx-context-bar:first-child) {
+        padding-block-start: var(--rx-space-8);
+      }
+      & > .rx-context-bar:first-child {
+        min-block-size: var(--rx-control-size);
+        padding-block: 0;
+        padding-inline: 0;
+        border-block-end: 0;
+      }
+      /*
+        枠や背景のない横スクロールのコンテンツは、作業面の左右の余白の分だけ外側へ広げ、作業面の端までスクロールできるようにする。
+        同じ幅を内側の余白に取るため、スクロールしていない時の表示位置は変わらない。枠や背景があるもの（CodeBlock・ChartFrame）は対象にしない。
+      */
+      & :is(.rx-board, .rx-table, .rx-grid, .rx-calendar > .viewport) {
+        margin-inline: calc(-1 * var(--rx-workspace-gutter));
+        padding-inline: var(--rx-workspace-gutter);
+        scroll-padding-inline: var(--rx-workspace-gutter);
+      }
+      /* 段組みの中や、余白・枠のあるコンポーネントの中では、隣の列や枠の外にはみ出すため広げない。 */
+      &
+        :is(
+          .rx-split,
+          .rx-workspace,
+          .rx-split-view,
+          .rx-card,
+          .rx-layer-card,
+          .rx-notice,
+          .rx-chart-frame,
+          .rx-surface,
+          dialog,
+          [popover]
+        ) {
+        --rx-workspace-gutter: 0rem;
+      }
+    }
+    /* Wingの左右列を含めた幅を使う。作業面の最大幅はWingの中央列が所有する。 */
+    & > .rx-wing {
+      inline-size: 100%;
+      padding-inline: var(--rx-space-4);
+      & > .layout > .main > .workspace {
+        inline-size: 100%;
+      }
+    }
+    @container rx-app-shell (inline-size < 45rem) {
+      & > .workspace {
+        inline-size: calc(100% - var(--rx-space-4));
+      }
+      & > .workspace,
+      & > .rx-wing > .layout > .main > .workspace {
+        --rx-workspace-gutter: var(--rx-space-4);
+        padding-block: var(--rx-space-8);
+        &:has(> .rx-context-bar:first-child) {
+          padding-block-start: var(--rx-space-6);
+        }
+      }
+      & > .rx-wing {
+        padding-inline: var(--rx-space-2);
+      }
+      & > .bar {
+        padding-inline: var(--rx-space-2);
+      }
+    }
+    @container rx-app-shell (inline-size < 28rem) {
+      & > .bar > .commands {
+        grid-column: 1 / -1;
+        grid-row: 1;
+        max-inline-size: 100%;
+      }
+      & > .bar > .start {
+        grid-column: 1;
+        grid-row: 2;
+      }
+      & > .bar > .end {
+        grid-column: 3;
+        grid-row: 2;
+      }
+    }
+  }
+}

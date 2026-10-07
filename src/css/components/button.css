@@ -1,0 +1,218 @@
+@layer components {
+  /* FilterBarへ直接渡された標準リンクにも、同じボタンの規則を適用する。 */
+  .rx-button,
+  :where(.rx-filter-bar > a) {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    justify-self: start;
+    gap: calc(2em / 7);
+    /* アイコンと文言を内容幅で並べるためFlex。 */
+    min-block-size: var(--rx-button-size);
+    max-inline-size: 100%;
+    padding-block: 0;
+    /* ボタンはピル。主・控えめ・危険は形ではなく塗りの色で分ける。丸い端に文字が寄らないよう左右を広げる。 */
+    padding-inline: 1.25em;
+    border: var(--rx-stroke-width) solid var(--rx-border);
+    border-radius: var(--rx-radius-pill);
+    background: var(--rx-surface);
+    background-image: var(--rx-fill-control);
+    color: var(--rx-text);
+    font-family: var(--rx-control-font-family);
+    font-size: var(--rx-button-font);
+    font-weight: 400;
+    line-height: calc(10 / 7);
+    text-align: center;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+    cursor: pointer;
+    /* ボタンは浮かせない。通常時は平らにし、ホバーすると面を少し濃くし、押すと内側へへこむ（ActionTileと同じ手触り）。 */
+    box-shadow: none;
+    transition:
+      background-color var(--rx-duration) ease,
+      border-color var(--rx-duration) ease,
+      box-shadow var(--rx-duration) ease;
+    &:focus-visible {
+      outline: 0.125rem solid var(--rx-link);
+      outline-offset: 0.1875rem;
+    }
+
+    &:hover:not(:disabled) {
+      background-color: color-mix(in srgb, var(--rx-ink) 4%, var(--rx-surface));
+      background-image: none;
+    }
+    &:active:not(:disabled) {
+      background-color: color-mix(in srgb, var(--rx-ink) 6%, var(--rx-surface));
+      background-image: none;
+      box-shadow: var(--rx-shadow-control-pressed);
+    }
+
+    &[data-size="compact"] {
+      padding-inline: 0.875em;
+    }
+    &[data-size="large"] {
+      min-block-size: var(--rx-button-large);
+      padding-inline: 1.375em;
+      font-size: calc(var(--rx-button-font) * 8 / 7);
+      line-height: var(--rx-control-leading);
+    }
+    /*
+      主操作と危険は役割の色の135度で塗る。浮かせず、ホバーすると塗りの上に薄い黒を重ねて少し濃くし、
+      押すと内側へへこむ。
+    */
+    &[data-variant="primary"],
+    &[data-current="true"] {
+      --rx-button-color: var(--rx-link);
+      --rx-button-fill: var(--rx-fill-primary);
+      background: var(--rx-link);
+      background-image: var(--rx-button-fill);
+      border-color: var(--rx-link);
+    }
+    &[data-variant="danger"] {
+      --rx-button-color: var(--rx-danger);
+      --rx-button-fill: var(--rx-fill-danger);
+      background: var(--rx-danger);
+      background-image: var(--rx-button-fill);
+      border-color: var(--rx-danger);
+    }
+    &:is([data-variant="primary"], [data-variant="danger"], [data-current="true"]) {
+      color: var(--rx-surface);
+      box-shadow: none;
+
+      /* 控えめな操作の淡い面の色へ戻さず、塗りの下の色も役割の色のままにする。 */
+      &:hover:not(:disabled) {
+        background-color: var(--rx-button-color);
+        background-image: linear-gradient(rgb(0 0 0 / 8%), rgb(0 0 0 / 8%)), var(--rx-button-fill);
+      }
+
+      &:active:not(:disabled) {
+        background-color: var(--rx-button-color);
+        background-image:
+          linear-gradient(rgb(0 0 0 / 12%), rgb(0 0 0 / 12%)), var(--rx-button-fill);
+        box-shadow: var(--rx-shadow-control-primary-pressed);
+      }
+    }
+
+    /*
+      文字だけの操作は下線を引かず、青い文字にする。
+      ホバーすると淡い青のピルの面が現れ、押すと少し濃くなる。
+    */
+    &[data-variant="link"] {
+      background: transparent;
+      border-color: transparent;
+      color: var(--rx-link);
+      box-shadow: none;
+      padding-inline: calc(4em / 7);
+      text-decoration: none;
+      transition: background-color var(--rx-duration) ease;
+      &:is(:hover, :active) {
+        box-shadow: none;
+      }
+      &:hover:not(:disabled) {
+        background: color-mix(in srgb, var(--rx-link) 8%, transparent);
+      }
+      &:active:not(:disabled) {
+        background: color-mix(in srgb, var(--rx-link) 14%, transparent);
+      }
+    }
+
+    /* 使えない操作は斜線。薄くするだけでは押せる操作と区別しにくい。 */
+    &:disabled:not([data-busy="true"]) {
+      border-color: var(--rx-border);
+      background: var(--rx-hatch), var(--rx-surface);
+      color: var(--rx-muted);
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    &[data-variant="link"]:disabled:not([data-busy="true"]) {
+      border-color: transparent;
+      background: transparent;
+      text-decoration: none;
+    }
+
+    &[data-icon-only="true"] {
+      min-inline-size: var(--rx-button-size);
+      padding-block: 0;
+      padding-inline: 0;
+      text-decoration: none;
+
+      &[data-size="large"] {
+        min-inline-size: var(--rx-button-large);
+      }
+    }
+
+    /*
+      処理中は、Progressの終わりが分からない時と同じく、操作そのものは動かさず、役割の色だけを一方向にゆっくり流す。
+      模様は操作の幅の二倍で繰り返し、一巡りでちょうど元の色に戻る。流す色の組はバリエーションごとに下で決める。
+      塗った操作の明るい側は、白い文字との対比が4.5:1を下回らない割合にとどめる（primary 90%、danger 82%）。
+    */
+    &[data-busy="true"] {
+      --rx-button-busy-from: var(--rx-surface);
+      --rx-button-busy-to: color-mix(in srgb, var(--rx-surface) 90%, var(--rx-ink));
+      background-image: linear-gradient(
+        to right,
+        var(--rx-button-busy-from),
+        var(--rx-button-busy-to),
+        var(--rx-button-busy-from)
+      );
+      background-size: 200% 100%;
+      background-repeat: repeat-x;
+      cursor: progress;
+      animation: rx-button-busy 2.4s linear infinite;
+      &:where(:dir(rtl)) {
+        animation-direction: reverse;
+      }
+      &:is([data-variant="primary"], [data-current="true"]) {
+        --rx-button-busy-from: var(--rx-link);
+        --rx-button-busy-to: color-mix(in srgb, var(--rx-link) 90%, white);
+      }
+      &[data-variant="danger"] {
+        --rx-button-busy-from: var(--rx-danger);
+        --rx-button-busy-to: color-mix(in srgb, var(--rx-danger) 82%, white);
+      }
+      &[data-variant="link"] {
+        --rx-button-busy-from: transparent;
+        --rx-button-busy-to: color-mix(in srgb, var(--rx-link) 12%, transparent);
+      }
+    }
+  }
+
+  @keyframes rx-button-busy {
+    to {
+      background-position-x: -200%;
+    }
+  }
+
+  /* 動きを減らす設定の時は流さず、流す色の組を敷いたまま止める。 */
+  @media (prefers-reduced-motion: reduce) {
+    .rx-button[data-busy="true"] {
+      animation: none;
+    }
+  }
+}
+
+@layer components {
+  @media (forced-colors: active) {
+    .rx-button {
+      background-image: none;
+      box-shadow: none;
+    }
+    :is(.rx-button, :where(.rx-filter-bar > a))[data-current="true"]:not(:disabled) {
+      forced-color-adjust: none;
+      background: Highlight;
+      border-color: Highlight;
+      color: HighlightText;
+    }
+  }
+  @media (pointer: coarse) {
+    .rx-button[data-icon-only="true"]:not([data-size="tag"]) {
+      min-inline-size: 2.75rem;
+    }
+    /* タグ内のアイコン専用操作は小さなチップの高さを維持する。 */
+    .rx-button:not([data-size="tag"][data-icon-only="true"]) {
+      min-block-size: 2.75rem;
+    }
+  }
+}

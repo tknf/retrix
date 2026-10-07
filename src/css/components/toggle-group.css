@@ -1,0 +1,26 @@
+@layer components {
+  .rx-toggle-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: start;
+    gap: var(--rx-space-1);
+    min-inline-size: 0;
+    /* 縦に並べる時は、ピルの幅をいちばん長い名前にそろえ、名前を先頭側に寄せる。 */
+    &[data-orientation="vertical"] {
+      flex-direction: column;
+      align-items: stretch;
+      inline-size: fit-content;
+      & > .rx-button {
+        justify-content: start;
+      }
+    }
+    /* オンはFilterBarと同じ青い塗り。形は共通Buttonのピル。 */
+    & > .rx-button[data-state="on"] {
+      border-color: var(--rx-link);
+      background: var(--rx-link);
+      background-image: var(--rx-fill-primary);
+      color: var(--rx-surface);
+      box-shadow: none;
+    }
+  }
+}

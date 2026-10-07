@@ -1,0 +1,181 @@
+@layer components {
+  /*
+    ツールへのリンクの一覧。罫線や進む矢印を使わず、淡い背景の上にアイコンと太字の名前を並べる。
+    アイコンはValueListと同じく、ツールの色を淡く敷いた丸に塗りつぶしのアイコンを置き、名前と説明のまとまりの縦の中央にそろえる。
+    一覧（list）は背景の上に行を積み、ホバーした行を角丸の面にする。並べる時（grid）も同じ行の形のまま、
+    淡い面の角丸のタイルにしてグリッドに並べる。行もタイルも普段は平らで、押すと内側へへこむ（ActionTileと同じ手触り）。
+  */
+  .rx-action-list {
+    display: grid;
+    gap: 0;
+    min-inline-size: 0;
+    margin: 0;
+    padding-block: var(--rx-space-1);
+    padding-inline: var(--rx-space-1);
+    border-radius: var(--rx-radius-field);
+    /* 背景はページの灰色より淡くし、中の行の面と押した時のへこみを見分けやすくする。 */
+    background: color-mix(in srgb, var(--rx-ink) 2.5%, var(--rx-surface));
+    list-style: none;
+    color: var(--rx-text);
+    font-size: var(--rx-body);
+    line-height: var(--rx-label-leading);
+    & > li {
+      min-inline-size: 0;
+      & > a {
+        --rx-action-list-accent: var(--rx-link);
+        display: grid;
+        grid-template-columns: 2rem minmax(0, 1fr);
+        /* 並べたタイルの背が違っても、名前の書き始めの高さをそろえる。 */
+        align-content: start;
+        align-items: start;
+        gap: 0 var(--rx-space-3);
+        block-size: 100%;
+        min-inline-size: 0;
+        padding-block: var(--rx-space-2);
+        padding-inline: var(--rx-space-2) var(--rx-space-3);
+        border-radius: var(--rx-radius-control);
+        color: inherit;
+        text-decoration: none;
+        overflow-wrap: anywhere;
+        transition:
+          background-color var(--rx-duration) ease,
+          box-shadow var(--rx-duration) ease;
+        &:hover {
+          background: color-mix(in srgb, var(--rx-ink) 4%, transparent);
+        }
+        &:active {
+          background: color-mix(in srgb, var(--rx-ink) 6%, transparent);
+          box-shadow: var(--rx-shadow-control-pressed);
+        }
+        &:focus-visible {
+          outline: 0.125rem solid var(--rx-link);
+          outline-offset: -0.125rem;
+        }
+        & > .title {
+          grid-column: 2;
+          font-weight: 700;
+        }
+        & > .description {
+          grid-column: 2;
+          color: var(--rx-muted);
+          font-size: var(--rx-label);
+          line-height: var(--rx-label-leading);
+        }
+        /* ツールのアイコン。ツールの色を淡く敷いた丸に置き、名前と説明のまとまりの縦の中央にそろえる。 */
+        & > .icon {
+          grid-column: 1;
+          grid-row: 1 / span 2;
+          align-self: center;
+          display: grid;
+          place-items: center;
+          inline-size: 2rem;
+          block-size: 2rem;
+          border-radius: 50%;
+          background: color-mix(in srgb, var(--rx-action-list-accent) 12%, var(--rx-surface));
+          color: var(--rx-action-list-accent);
+          & > .rx-icon {
+            font-size: 1rem;
+          }
+        }
+        /* 中身の見本がある行は背が高くなるので、アイコンを題名の一行目にそろえる。 */
+        &:has(> .preview) > .icon {
+          align-self: start;
+        }
+        /* 名前だけの行は、アイコンと名前を一行の中央でそろえる。 */
+        &:not(:has(> .description, > .preview)) {
+          align-items: center;
+          & > .icon {
+            grid-row: 1;
+          }
+        }
+        & > .preview {
+          grid-column: 2;
+          min-inline-size: 0;
+          margin-block-start: var(--rx-space-1);
+          color: var(--rx-muted);
+          font-size: var(--rx-label);
+          line-height: var(--rx-label-leading);
+          & > * + * {
+            margin-block-start: var(--rx-space-1);
+          }
+        }
+        /* アイコンのないリンクは、題名を行の先頭から書く。 */
+        &:not(:has(> .icon)) {
+          grid-template-columns: minmax(0, 1fr);
+          & > :is(.title, .description, .preview) {
+            grid-column: 1;
+          }
+        }
+        &[data-accent="amber"] {
+          --rx-action-list-accent: var(--rx-amber);
+        }
+        &[data-accent="green"] {
+          --rx-action-list-accent: var(--rx-success);
+        }
+        &[data-accent="coral"] {
+          --rx-action-list-accent: var(--rx-coral-dark);
+        }
+        /* 対応が必要な行は、アイコン・名前・説明を危険の色で書く。 */
+        &[data-attention="true"] {
+          --rx-action-list-accent: var(--rx-danger);
+          /* 淡い背景の上でも本文と同じ7:1を保つよう、危険の色に濃い色（黒）を少し混ぜる。 */
+          & > :is(.title, .description) {
+            color: color-mix(in srgb, var(--rx-danger) 88%, var(--rx-ink));
+          }
+        }
+      }
+    }
+    /* 行の間はNavigationと同じく、名前の書き始めから細い線で区切る。 */
+    &:not([data-layout="grid"]) > li + li > a {
+      position: relative;
+      &::before {
+        content: "";
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline: calc(var(--rx-space-2) + 2rem + var(--rx-space-3)) var(--rx-space-3);
+        block-size: var(--rx-stroke-width);
+        background: color-mix(in srgb, var(--rx-ink) 8%, transparent);
+      }
+      &:not(:has(> .icon))::before {
+        inset-inline-start: var(--rx-space-3);
+      }
+      /* ホバーした行と、その次の行の区切りは面に溶かす。 */
+      &:hover::before {
+        opacity: 0;
+      }
+    }
+    &:not([data-layout="grid"]) > li:has(> a:hover) + li > a::before {
+      opacity: 0;
+    }
+    /*
+      並べる時は、行と同じ形のまま淡い面の角丸のタイルにしてグリッドに並べる。背景は持たない。
+    */
+    &[data-layout="grid"] {
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
+      gap: var(--rx-space-2);
+      padding-block: 0;
+      padding-inline: 0;
+      border-radius: 0;
+      background: transparent;
+      & > li > a {
+        padding-block: var(--rx-space-3);
+        padding-inline: var(--rx-space-3);
+        border-radius: var(--rx-radius-field);
+        background: color-mix(in srgb, var(--rx-ink) 2.5%, var(--rx-surface));
+        &:hover {
+          background: color-mix(in srgb, var(--rx-ink) 5%, var(--rx-surface));
+        }
+        &:active {
+          background: color-mix(in srgb, var(--rx-ink) 7%, var(--rx-surface));
+          box-shadow: var(--rx-shadow-control-pressed);
+        }
+      }
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-action-list,
+    .rx-action-list[data-layout="grid"] > li > a {
+      border: var(--rx-stroke-width) solid CanvasText;
+    }
+  }
+}

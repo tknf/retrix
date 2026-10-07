@@ -1,0 +1,67 @@
+@layer components {
+  /*
+    設定の行。名前（太字）と淡い補足を先頭側に、操作を末尾側に置き、その間を淡い点線でつなぐ。
+    線の役目は「この名前にこの操作が付く」ことを目でたどらせることなので、行の間に罫線は引かない。
+  */
+  .rx-setting-list {
+    display: grid;
+    gap: var(--rx-space-1);
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--rx-text);
+    font-size: var(--rx-label);
+    line-height: var(--rx-label-leading);
+    /* 狭い場所では、操作を次の行の末尾側へ回す。 */
+    & > li {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--rx-space-2);
+      min-inline-size: 0;
+      min-block-size: 2.5rem;
+      padding-block: var(--rx-space-1);
+      & > .leading {
+        display: grid;
+        flex: none;
+        place-items: center;
+      }
+      & > .text {
+        display: grid;
+        flex: 0 1 auto;
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+        & > .name {
+          font-weight: 700;
+        }
+        & > .description {
+          color: var(--rx-muted);
+          font-size: var(--rx-small);
+          line-height: var(--rx-small-leading);
+        }
+      }
+      /* 点線は名前と操作の間の余った幅いっぱいに引く。狭くても1.5remは残して、つながりを見せる。 */
+      & > .leader {
+        flex: 1 1 1.5rem;
+        min-inline-size: 1.5rem;
+        border-block-end: var(--rx-stroke-width) dotted var(--rx-perforation);
+      }
+      & > .control {
+        display: flex;
+        flex: 0 1 auto;
+        flex-wrap: wrap;
+        justify-content: end;
+        min-inline-size: 0;
+        margin-inline-start: auto;
+        align-items: center;
+        gap: var(--rx-space-1);
+      }
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-setting-list > li > .leader {
+      border-block-end-color: CanvasText;
+    }
+  }
+}

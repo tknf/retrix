@@ -1,0 +1,70 @@
+@layer components {
+  .rx-section {
+    --rx-section-accent: var(--rx-muted);
+    display: grid;
+    gap: var(--rx-space-3);
+    min-inline-size: 0;
+    &[data-tone="info"] {
+      --rx-section-accent: var(--rx-info);
+    }
+    &[data-tone="warning"] {
+      --rx-section-accent: var(--rx-warning);
+    }
+    &[data-tone="success"] {
+      --rx-section-accent: var(--rx-success);
+    }
+    &[data-tone="danger"] {
+      --rx-section-accent: var(--rx-danger);
+    }
+    /*
+      見出しはアイコン・太字の名前・件数だけにし、線は伸ばさない。続く一覧や表が罫線を持つので、線を重ねない。
+      操作がある時は末尾側に寄せる。
+    */
+    & > .heading {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--rx-space-2);
+      & > .actions {
+        order: 2;
+      }
+      & > h2 {
+        display: flex;
+        align-items: center;
+        gap: var(--rx-space-2);
+        font-size: var(--rx-label);
+        font-weight: 600;
+        line-height: var(--rx-label-leading);
+        &::before {
+          content: "";
+          inline-size: 0.5rem;
+          block-size: 0.5rem;
+          border-radius: 50%;
+          background: var(--rx-section-accent);
+        }
+      }
+      /* 件数は淡い面の色の小さなピルで包み、名前の横で見つけやすくする。数字はピルの上下の中央に置く。 */
+      & > .count {
+        display: inline-grid;
+        place-items: center;
+        min-inline-size: 1.25rem;
+        block-size: 1.25rem;
+        padding-inline: 0.375rem;
+        border-radius: var(--rx-radius-pill);
+        background: var(--rx-background);
+        color: var(--rx-text);
+        font-size: var(--rx-small);
+        font-weight: 600;
+        line-height: 1;
+        font-variant-numeric: tabular-nums;
+      }
+      & > .actions {
+        margin-inline-start: auto;
+      }
+    }
+    & > h2 {
+      font-size: var(--rx-section-title);
+      font-weight: 700;
+    }
+  }
+}

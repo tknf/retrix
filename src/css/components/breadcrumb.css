@@ -1,0 +1,50 @@
+@layer components {
+  .rx-breadcrumb {
+    min-inline-size: 0;
+    font-size: var(--rx-small);
+    line-height: var(--rx-small-leading);
+    & > ol {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: var(--rx-space-1) var(--rx-space-2);
+      padding: 0;
+      list-style: none;
+    }
+    & > ol > li {
+      display: flex;
+      align-items: baseline;
+      gap: var(--rx-space-2);
+      min-inline-size: 0;
+    }
+    & > ol > li + li::before {
+      content: "/";
+      flex-shrink: 0;
+      color: var(--rx-muted);
+    }
+    & > ol > li > :is(a, span) {
+      min-inline-size: 0;
+      overflow-wrap: anywhere;
+    }
+    & > ol > li > a {
+      position: relative;
+      color: var(--rx-muted);
+      text-decoration: none;
+      &::before {
+        content: "";
+        position: absolute;
+        inset-block: -0.5rem;
+        inset-inline: -0.25rem;
+      }
+      &:hover {
+        color: var(--rx-link);
+        text-decoration: none;
+      }
+    }
+    /* 今いる場所はインクの太字。並びの末尾なので区切りのアイコンは付けない。 */
+    & > ol > li:last-child {
+      color: var(--rx-text);
+      font-weight: 600;
+    }
+  }
+}

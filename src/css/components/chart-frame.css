@@ -1,0 +1,96 @@
+@layer components {
+  /*
+    図の枠。図は淡い面の上に置き、青の系列はDropdownMenuと同じ青から紫の塗りにする。
+    題名は太字、説明と出典は淡い文字。数値の表は罫線で区切ったDisclosureに収める。
+  */
+  .rx-chart-frame {
+    display: grid;
+    gap: var(--rx-space-2);
+    min-inline-size: 0;
+    max-inline-size: 36rem;
+    margin: 0;
+    &[data-size="wide"] {
+      max-inline-size: none;
+    }
+  }
+
+  .rx-chart-frame > figcaption {
+    display: grid;
+    gap: var(--rx-space-1);
+    overflow-wrap: anywhere;
+    & > strong {
+      font-size: var(--rx-body);
+      line-height: var(--rx-label-leading);
+      font-weight: 700;
+    }
+    & > span {
+      color: var(--rx-muted);
+      font-size: var(--rx-small);
+      line-height: var(--rx-small-leading);
+    }
+  }
+
+  .rx-chart-frame > .graphic {
+    min-inline-size: 0;
+    padding-block: var(--rx-space-5);
+    padding-inline: var(--rx-space-5);
+    overflow: auto;
+    border: 0;
+    border-radius: var(--rx-radius-field);
+    background: var(--rx-background);
+    & > svg {
+      display: block;
+      max-inline-size: 100%;
+      block-size: auto;
+      margin-inline: auto;
+    }
+  }
+
+  .rx-chart-frame > .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--rx-space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--rx-muted);
+    font-size: var(--rx-small);
+    line-height: var(--rx-small-leading);
+    & > li {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--rx-space-1);
+    }
+    /* 凡例のマークは棒と同じ塗りの小さな円にする。 */
+    & > li > .mark {
+      inline-size: 0.625rem;
+      block-size: 0.625rem;
+      border-radius: 50%;
+      background: var(--rx-link);
+      background-image: var(--rx-fill-menu);
+    }
+    & > li[data-tone="green"] > .mark {
+      background: var(--rx-success);
+      background-image: var(--rx-fill-success);
+    }
+    & > li[data-tone="amber"] > .mark {
+      background: var(--rx-warning);
+      background-image: var(--rx-fill-warning);
+    }
+    & > li[data-tone="coral"] > .mark {
+      background: var(--rx-coral);
+    }
+  }
+
+  /* 開閉の見た目はDisclosureが持つ。図は淡い面に載っているので、罫線を引かず余白だけで区切る。 */
+  .rx-chart-frame > .data {
+    min-inline-size: 0;
+  }
+
+  .rx-chart-frame > .source {
+    margin: 0;
+    color: var(--rx-muted);
+    font-size: var(--rx-small);
+    line-height: var(--rx-small-leading);
+  }
+}

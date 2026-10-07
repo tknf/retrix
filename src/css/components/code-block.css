@@ -1,0 +1,90 @@
+@layer components {
+  /*
+    コードは名前とコピーをLayerCardの層の見出しに置き、層の上のカードに書く（層とカードの見た目はLayerCardが持つ）。
+    ここではコードの書き方だけを決める。ハイライト行は平らな淡い黄色の背景にし、行番号は余白に小さく書いてコピーには含めない。
+  */
+  .rx-code-block {
+    min-inline-size: 0;
+    margin: 0;
+    color: var(--rx-text);
+    /* カードにはコードだけを書き、コードの面が余白とスクロールを持つので、カードの余白を持たない。 */
+    & > .rx-layer-card > .body {
+      padding-block: 0;
+      padding-inline: 0;
+    }
+    & > .rx-layer-card > .body > pre {
+      /* 長い行は中でスクロールする。行の長さで外側の幅を押し広げないよう、横の大きさを内容から切り離す。 */
+      contain: inline-size;
+      max-inline-size: 100%;
+      max-block-size: 28rem;
+      overflow: auto;
+      margin: 0;
+      padding-block: var(--rx-space-4);
+      padding-inline: var(--rx-space-5);
+      /* カードの角丸の中でスクロールさせ、ハイライト行の背景を角からはみ出させない。 */
+      border-radius: inherit;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: var(--rx-small);
+      line-height: var(--rx-leading);
+      tab-size: 2;
+      /* コードは右から左に読むページでも、左から右に書く。 */
+      direction: ltr;
+      text-align: start;
+      overscroll-behavior-inline: contain;
+      &:focus-visible {
+        outline-offset: -0.125rem;
+      }
+      & > code {
+        display: block;
+        inline-size: max-content;
+        min-inline-size: 100%;
+        font: inherit;
+        counter-reset: rx-code-line;
+        & > .line {
+          display: block;
+          &[data-highlighted="true"] {
+            background: color-mix(in srgb, var(--rx-mark) 45%, var(--rx-surface));
+          }
+        }
+      }
+    }
+    /* 行番号は、左の余白に小さく書く。横にスクロールしても余白に残り、下のコードを隠す。 */
+    &[data-line-numbers="true"] > .rx-layer-card > .body > pre > code > .line::before {
+      content: counter(rx-code-line);
+      counter-increment: rx-code-line;
+      position: sticky;
+      inset-inline-start: 0;
+      display: inline-block;
+      min-inline-size: 3ch;
+      margin-inline-end: var(--rx-space-4);
+      padding-inline-end: var(--rx-space-2);
+      background: var(--rx-surface);
+      color: var(--rx-muted);
+      text-align: end;
+      user-select: none;
+    }
+    &[data-line-numbers="true"]
+      > .rx-layer-card
+      > .body
+      > pre
+      > code
+      > .line[data-highlighted="true"]::before {
+      background: color-mix(in srgb, var(--rx-mark) 45%, var(--rx-surface));
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-code-block {
+      & > .rx-layer-card > .body > pre {
+        background: Canvas;
+      }
+      &[data-line-numbers="true"] > .rx-layer-card > .body > pre > code > .line::before {
+        background: Canvas;
+      }
+      & > .rx-layer-card > .body > pre > code > .line[data-highlighted="true"],
+      & > .rx-layer-card > .body > pre > code > .line[data-highlighted="true"]::before {
+        background: Mark;
+        color: MarkText;
+      }
+    }
+  }
+}

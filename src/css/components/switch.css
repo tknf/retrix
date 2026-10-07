@@ -1,0 +1,101 @@
+@layer components {
+  /*
+    スイッチは枠線を持たず、切っている溝は淡い黒、入れた溝は青にする。
+    溝は内側の影で沈め、つまみはボタンの影で浮かせる。高さは一行（20px）、つまみは高さの8割。
+  */
+  .rx-switch {
+    display: grid;
+    grid-template-columns: calc(18em / 7) minmax(0, 1fr);
+    align-items: start;
+    column-gap: var(--rx-space-2);
+    min-inline-size: 0;
+    font-size: var(--rx-label);
+    line-height: calc(10 / 7);
+    cursor: pointer;
+
+    & > input {
+      appearance: none;
+      display: grid;
+      grid-template-columns: 0fr calc(8em / 7) 1fr;
+      align-items: center;
+      inline-size: calc(18em / 7);
+      block-size: calc(10em / 7);
+      border: 0;
+      border-radius: var(--rx-radius-pill);
+      background: color-mix(in srgb, var(--rx-ink) 14%, var(--rx-surface));
+      color: var(--rx-muted);
+      box-shadow: var(--rx-shadow-input);
+      padding-block: calc(1em / 7);
+      padding-inline: calc(1em / 7);
+      margin: 0;
+      cursor: inherit;
+      transition: grid-template-columns var(--rx-duration) ease-in-out;
+    }
+
+    & > input::before {
+      content: "";
+      grid-column: 2;
+      inline-size: calc(8em / 7);
+      block-size: calc(8em / 7);
+      border-radius: 50%;
+      background: var(--rx-surface);
+      box-shadow: var(--rx-shadow-hardware);
+    }
+
+    & > input:checked {
+      grid-template-columns: 1fr calc(8em / 7) 0fr;
+      background: var(--rx-fill-primary);
+      color: var(--rx-surface);
+    }
+
+    &:hover > input:not(:disabled, :checked) {
+      background: color-mix(in srgb, var(--rx-ink) 20%, var(--rx-surface));
+    }
+
+    /* 欄と同じく、青い縁の外に淡い青の輪を広げる。溝には枠線がないため、縁は影で描く。 */
+    & > input:focus-visible {
+      outline: 0.125rem solid var(--rx-focus-ring);
+      outline-offset: var(--rx-stroke-width);
+      box-shadow:
+        0 0 0 var(--rx-stroke-width) var(--rx-link),
+        var(--rx-shadow-input);
+    }
+
+    & > input:disabled {
+      background: var(--rx-hatch), var(--rx-background);
+      box-shadow: none;
+      color: var(--rx-border);
+    }
+
+    &:has(> input:disabled) {
+      color: var(--rx-muted);
+      cursor: not-allowed;
+    }
+
+    & > span {
+      min-inline-size: 0;
+    }
+
+    & > span > small {
+      display: block;
+      margin-block-start: var(--rx-space-1);
+      color: var(--rx-muted);
+      font-size: var(--rx-small);
+    }
+  }
+
+  @media (pointer: coarse) {
+    .rx-switch {
+      min-block-size: 2.75rem;
+      padding-block: var(--rx-space-3);
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-switch > input {
+      appearance: auto;
+    }
+    .rx-switch > input::before {
+      display: none;
+    }
+  }
+}

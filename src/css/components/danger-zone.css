@@ -1,0 +1,70 @@
+@layer components {
+  /*
+    取り返しのつかない操作は、題名と説明、危険の色で塗ったButtonでまとめる。
+    赤はButtonの一か所だけにし、題名はインクの太字にする。面を塗らず、先頭側の罫線でほかの設定と分ける。
+  */
+  .rx-danger-zone {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    /* 説明と操作の段の間は、上下の余白よりはっきり狭くする。 */
+    gap: var(--rx-space-3);
+    min-inline-size: 0;
+    padding-block: var(--rx-space-6);
+    border-block-start: var(--rx-stroke-width) solid var(--rx-border);
+    color: var(--rx-text);
+    font-size: var(--rx-label);
+    line-height: var(--rx-label-leading);
+    overflow-wrap: anywhere;
+  }
+
+  .rx-danger-zone > .heading {
+    display: grid;
+    gap: var(--rx-space-1);
+    min-inline-size: 0;
+    & > h2 {
+      margin: 0;
+      color: var(--rx-text);
+      font-size: var(--rx-body);
+      font-weight: 600;
+      line-height: var(--rx-control-leading);
+    }
+    & > p {
+      margin: 0;
+      color: var(--rx-muted);
+    }
+  }
+
+  .rx-danger-zone > .body {
+    display: grid;
+    gap: var(--rx-space-2);
+    min-inline-size: 0;
+    & > * {
+      margin: 0;
+    }
+    &:empty {
+      display: none;
+    }
+  }
+
+  .rx-danger-zone > .actions {
+    /* 操作を内容幅で並べ、コンポーネントの幅に合わせて折り返すためFlex。 */
+    display: flex;
+    flex-wrap: wrap;
+    align-items: start;
+    gap: var(--rx-space-2);
+    min-inline-size: 0;
+    & > * {
+      min-inline-size: 0;
+      max-inline-size: 100%;
+    }
+    &:empty {
+      display: none;
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-danger-zone {
+      border: var(--rx-stroke-width) solid CanvasText;
+      background: Canvas;
+    }
+  }
+}

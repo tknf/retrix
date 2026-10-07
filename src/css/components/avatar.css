@@ -1,0 +1,76 @@
+@layer components {
+  /*
+    アバターは、中間の濃さで塗った丸に濃いインクの太いイニシャルを置く。
+    淡い背景に色の文字では、一覧の中でアバターが目立たない。
+  */
+  .rx-avatar {
+    --rx-avatar-fill: color-mix(in srgb, var(--rx-blue) 42%, var(--rx-surface));
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    inline-size: 2.25rem;
+    block-size: 2.25rem;
+    flex: none;
+    overflow: hidden;
+    /* 縁取りを持たず、塗りの円だけにする。 */
+    border-radius: 50%;
+    background: var(--rx-avatar-fill);
+    color: var(--rx-ink);
+    font-family: var(--rx-control-font-family);
+    font-size: var(--rx-small);
+    font-weight: 700;
+    line-height: 1;
+    &[data-tone="green"] {
+      --rx-avatar-fill: color-mix(in srgb, var(--rx-green) 42%, var(--rx-surface));
+    }
+    &[data-tone="amber"] {
+      --rx-avatar-fill: color-mix(in srgb, var(--rx-gold) 48%, var(--rx-surface));
+    }
+    &[data-tone="coral"] {
+      --rx-avatar-fill: color-mix(in srgb, var(--rx-coral) 42%, var(--rx-surface));
+    }
+    & > .initials {
+      max-inline-size: 100%;
+      padding-inline: var(--rx-space-1);
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    & > img {
+      position: absolute;
+      inset-block: 0;
+      inset-inline: 0;
+      inline-size: 100%;
+      block-size: 100%;
+      object-fit: cover;
+      opacity: 0;
+    }
+    &[data-state="loaded"] > img {
+      opacity: 1;
+    }
+    &[data-size="inline"] {
+      inline-size: 1.25rem;
+      block-size: 1.25rem;
+      font-size: 0.625rem;
+      & > .initials {
+        padding-inline: 0;
+      }
+    }
+    &[data-size="large"] {
+      inline-size: 3rem;
+      block-size: 3rem;
+      font-size: 1rem;
+    }
+    &[data-size="small"] {
+      inline-size: 1.75rem;
+      block-size: 1.75rem;
+      font-size: 0.75rem;
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-avatar {
+      border: var(--rx-stroke-width) solid CanvasText;
+      background: Canvas;
+      box-shadow: none;
+    }
+  }
+}

@@ -1,0 +1,79 @@
+@layer components {
+  .rx-image-frame {
+    inline-size: min(100%, 8rem);
+    min-inline-size: 0;
+    margin: 0;
+    /*
+      画像は灰色の枠で余白を埋めない。比率の枠は並べた時の位置をそろえるためだけに使い、色を持たせない。
+      全体を表示する時は画像を枠の中央に置き、淡い縁は画像そのものに沿わせる。角丸は付けない。
+    */
+    & > .image {
+      position: relative;
+      display: grid;
+      place-items: center;
+      aspect-ratio: 5 / 7;
+      min-block-size: 0;
+      & > img {
+        display: block;
+        max-inline-size: 100%;
+        max-block-size: 100%;
+        inline-size: auto;
+        block-size: auto;
+        min-block-size: 0;
+        border: var(--rx-stroke-width) solid color-mix(in srgb, var(--rx-ink) 15%, transparent);
+      }
+      /* 画像がない時だけ、淡い面に文言を置いて場所を示す。 */
+      & > span {
+        display: grid;
+        place-items: center;
+        inline-size: 100%;
+        block-size: 100%;
+        padding-inline: var(--rx-space-2);
+        background: var(--rx-background);
+        color: var(--rx-muted);
+        font-size: var(--rx-small);
+        line-height: var(--rx-small-leading);
+        text-align: center;
+        overflow-wrap: anywhere;
+      }
+    }
+    /* 説明は中央にそろえ、名前を濃い色のMedium、大きさや日付を淡い文字で添える。 */
+    & > figcaption {
+      display: grid;
+      justify-items: center;
+      margin-block-start: var(--rx-space-2);
+      text-align: center;
+      overflow-wrap: anywhere;
+      & > .name {
+        color: var(--rx-text);
+        font-size: var(--rx-label);
+        font-weight: 500;
+        line-height: var(--rx-label-leading);
+      }
+      & > .meta {
+        color: var(--rx-muted);
+        font-size: var(--rx-small);
+        line-height: var(--rx-small-leading);
+      }
+    }
+    &[data-shape="square"] > .image {
+      aspect-ratio: 1;
+    }
+    &[data-shape="landscape"] {
+      inline-size: min(100%, 16rem);
+    }
+    &[data-shape="landscape"] > .image {
+      aspect-ratio: 16 / 9;
+    }
+    /* 切り抜いて表示する時は画像を枠いっぱいに置き、縁も枠に沿わせる。 */
+    &[data-fit="cover"] > .image > img {
+      position: absolute;
+      inset-block: 0;
+      inset-inline: 0;
+      inline-size: 100%;
+      block-size: 100%;
+      max-block-size: none;
+      object-fit: cover;
+    }
+  }
+}

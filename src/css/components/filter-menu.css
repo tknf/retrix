@@ -1,0 +1,155 @@
+@layer components {
+  /*
+    絞り込めるメニュー。DropdownMenuと同じ青い面のパネルに、
+    上に白い絞り込みの欄と「新しく作る」、その下に淡い大文字の見出しと候補を並べる。
+    候補は選んだものに白いチェックを置き、上下の矢印キーで選んでいる候補とホバーした候補は白を薄く重ねる。
+    位置と出入りの動きは、Popoverと同じoverlay.cssの共通の定義に任せる。
+  */
+  .rx-filter-menu {
+    display: grid;
+    justify-items: start;
+    min-inline-size: 0;
+    &[data-align="end"] {
+      justify-items: end;
+    }
+    & > .panel.rx-overlay {
+      --rx-overlay-width: 17rem;
+      padding-block: var(--rx-space-2);
+      padding-inline: var(--rx-space-2);
+      background: var(--rx-link);
+      background-image: var(--rx-fill-menu);
+      color: var(--rx-surface);
+      &:popover-open {
+        display: grid;
+        grid-template-rows: auto auto minmax(0, 1fr) auto;
+        gap: var(--rx-space-1);
+      }
+      /* 絞り込みの欄。枠のない白い面のピルにする。 */
+      & > .search {
+        display: flex;
+        align-items: center;
+        gap: var(--rx-space-2);
+        min-inline-size: 0;
+        & > .field {
+          display: flex;
+          flex: 1 1 auto;
+          align-items: center;
+          gap: var(--rx-space-2);
+          min-inline-size: 0;
+          padding-inline: var(--rx-space-3);
+          border-radius: var(--rx-radius-pill);
+          background: var(--rx-surface);
+          color: var(--rx-muted);
+          & > input {
+            flex: 1 1 auto;
+            min-inline-size: 0;
+            block-size: var(--rx-button-size);
+            padding: 0;
+            border: 0;
+            background: transparent;
+            color: var(--rx-text);
+            font: inherit;
+            line-height: var(--rx-label-leading);
+            outline: 0;
+            &::placeholder {
+              color: var(--rx-muted);
+            }
+          }
+          &:has(> input:focus-visible) {
+            box-shadow: 0 0 0 0.125rem color-mix(in srgb, var(--rx-surface) 60%, transparent);
+          }
+        }
+        & > .create {
+          flex: none;
+        }
+      }
+      & > .title {
+        margin: 0;
+        padding-block: var(--rx-space-2) 0;
+        padding-inline: var(--rx-space-2);
+        color: color-mix(in srgb, var(--rx-surface) 75%, transparent);
+        font-size: var(--rx-small);
+        font-weight: 700;
+        line-height: var(--rx-small-leading);
+      }
+      & > .options {
+        min-block-size: 0;
+        margin: 0;
+        padding: 0;
+        overflow: auto;
+        overscroll-behavior: contain;
+        list-style: none;
+        & > .option {
+          display: flex;
+          align-items: center;
+          gap: var(--rx-space-2);
+          min-inline-size: 0;
+          padding-block: var(--rx-space-2);
+          padding-inline: var(--rx-space-2);
+          border-radius: var(--rx-radius-control);
+          cursor: pointer;
+          transition: background-color var(--rx-duration) ease;
+          &[hidden] {
+            display: none;
+          }
+          &:hover,
+          &[data-active="true"] {
+            background: color-mix(in srgb, var(--rx-surface) 16%, transparent);
+          }
+          &[data-disabled="true"] {
+            opacity: 0.5;
+            cursor: not-allowed;
+          }
+          /* アイコンの枠。アイコンのない候補は、選んだ時だけチェックを見せる。 */
+          & > .mark {
+            display: grid;
+            flex: none;
+            place-items: center;
+            inline-size: 1.25rem;
+            block-size: 1.25rem;
+            font-size: 1rem;
+          }
+          & > .label {
+            flex: 1 1 auto;
+            min-inline-size: 0;
+          }
+          /* ショートカットキーの表示の見た目はKeycapが持つ。ここでは行の終わりに置くだけ。 */
+          & > .shortcut {
+            flex: none;
+          }
+          & > .check {
+            display: none;
+            flex: none;
+            font-size: 1rem;
+          }
+        }
+        & > .option:not(:has(> .check)) > .mark > .rx-icon {
+          visibility: hidden;
+        }
+        & > .option[data-selected="true"] {
+          font-weight: 700;
+          & > .check {
+            display: grid;
+          }
+          &:not(:has(> .check)) > .mark > .rx-icon {
+            visibility: visible;
+          }
+        }
+      }
+      & > .empty {
+        margin: 0;
+        padding-block: var(--rx-space-2);
+        padding-inline: var(--rx-space-2);
+        color: color-mix(in srgb, var(--rx-surface) 75%, transparent);
+      }
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-filter-menu > .panel.rx-overlay {
+      outline: var(--rx-stroke-width) solid CanvasText;
+      & > .options > .option[data-selected="true"] {
+        outline: var(--rx-stroke-width) solid Highlight;
+      }
+    }
+  }
+}

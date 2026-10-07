@@ -1,0 +1,132 @@
+@layer components {
+  /*
+    比べる行の一覧。MessageListと同じ作りにする。罫線を引かず行間で区切り、
+    ホバーした行と今開いている行だけを角丸の淡い面で示す。題名は太字、説明とメタ情報は一段小さい淡い文字。
+  */
+  .rx-data-list {
+    container: rx-data-list / inline-size;
+    display: grid;
+    gap: 0;
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    color: var(--rx-text);
+    font-size: var(--rx-body);
+    line-height: var(--rx-label-leading);
+    list-style: none;
+    & > li {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.125rem var(--rx-space-4);
+      align-items: center;
+      min-inline-size: 0;
+      padding-block: var(--rx-space-4);
+      padding-inline: var(--rx-space-3);
+      border-radius: var(--rx-radius-field);
+      transition:
+        background-color var(--rx-duration) ease,
+        box-shadow var(--rx-duration) ease;
+      &:has(> .body > a.title):hover {
+        background: color-mix(in srgb, var(--rx-ink) 4%, var(--rx-surface));
+      }
+      /* 押した時はActionListの行と同じく、面を少し濃くして内側へへこませる。 */
+      &:has(> .body > a.title:active) {
+        background: color-mix(in srgb, var(--rx-ink) 6%, var(--rx-surface));
+        box-shadow: var(--rx-shadow-control-pressed);
+      }
+      &[data-current="true"] {
+        background: color-mix(in srgb, var(--rx-link) 8%, var(--rx-surface));
+      }
+      & > .start {
+        grid-column: 1;
+        grid-row: 1 / span 2;
+        display: flex;
+        align-items: center;
+        gap: var(--rx-space-2);
+      }
+      & > .body {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+        /* 項目の題名は太字にする。行全体の面で反応を示すので、題名の色は変えない。 */
+        & > .title {
+          color: var(--rx-text);
+          font-size: var(--rx-body);
+          font-weight: 600;
+          line-height: var(--rx-label-leading);
+        }
+        /*
+          題名のリンクの押せる範囲を行全体に広げる。ホバー時の面と押せる範囲をそろえ、
+          行の末尾の操作は、その上に重ねて押せるようにする。
+        */
+        & > a.title {
+          text-decoration: none;
+          &::before {
+            content: "";
+            position: absolute;
+            inset-block: 0;
+            inset-inline: 0;
+          }
+          &:focus-visible {
+            outline: 0.125rem solid var(--rx-link);
+            outline-offset: 0.125rem;
+          }
+        }
+        /* 説明は本文より一段小さい淡い文字にし、題名に寄せて一人分・一件分のまとまりに見せる。 */
+        & > .description {
+          margin-block-start: 0.125rem;
+          color: var(--rx-muted);
+          font-size: var(--rx-small);
+          line-height: var(--rx-small-leading);
+        }
+        & > .meta {
+          margin-block-start: var(--rx-space-1);
+          color: var(--rx-muted);
+          font-size: var(--rx-small);
+          line-height: var(--rx-small-leading);
+        }
+      }
+      & > .end {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--rx-space-2);
+        min-inline-size: 0;
+        color: var(--rx-muted);
+        font-size: var(--rx-small);
+        line-height: var(--rx-small-leading);
+        overflow-wrap: anywhere;
+      }
+      &:has(> .start) {
+        grid-template-columns: auto minmax(0, 1fr);
+        & > :is(.body, .end) {
+          grid-column: 2;
+        }
+      }
+    }
+    @container rx-data-list (inline-size >= 28rem) {
+      & > li {
+        grid-template-columns: minmax(0, 1fr) fit-content(32%);
+        column-gap: var(--rx-space-6);
+        & > .end {
+          grid-column: 2;
+          grid-row: 1;
+        }
+        &:has(> .start) {
+          grid-template-columns: auto minmax(0, 1fr) fit-content(32%);
+          & > .end {
+            grid-column: 3;
+          }
+        }
+      }
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-data-list > li[data-current="true"] {
+      outline: var(--rx-frame-width) solid Highlight;
+      outline-offset: calc(-1 * var(--rx-frame-width));
+    }
+  }
+}

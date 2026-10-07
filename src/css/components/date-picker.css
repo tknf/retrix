@@ -1,0 +1,355 @@
+@layer components {
+  .rx-date-picker {
+    --rx-date-picker-control-size: calc(18em / 7);
+    display: grid;
+    min-inline-size: 0;
+    border: 0;
+    padding: 0;
+
+    & > legend {
+      font-size: var(--rx-label);
+      font-weight: var(--rx-label-weight);
+      line-height: var(--rx-label-leading);
+      padding: 0;
+    }
+    & > .control,
+    & > .fallback,
+    & > .messages:has(> :not([hidden])) {
+      margin-block-start: 0.375rem;
+    }
+    & > .messages:not(:has(> :not([hidden]))) {
+      display: none;
+    }
+  }
+  .rx-date-picker > .control {
+    position: relative;
+    min-inline-size: 0;
+    inline-size: min(100%, 26rem);
+    font-size: var(--rx-label);
+
+    & > .rx-input {
+      padding-inline-end: 3em;
+      font-variant-numeric: tabular-nums;
+    }
+    & > .toggle:disabled {
+      cursor: not-allowed;
+    }
+  }
+  .rx-date-picker > .fallback {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+    gap: var(--rx-space-3);
+  }
+  /* JavaScriptが無効なら標準入力だけを表示する。 */
+  @media (scripting: none) {
+    .rx-date-picker > .control {
+      display: none;
+    }
+  }
+  /* controller接続前も接続後と同じ一欄の表示にし、構造の入れ替わりによるちらつきを防ぐ。 */
+  @media (scripting: enabled) {
+    .rx-date-picker[data-enhancement="pending"] {
+      & > .fallback {
+        display: none;
+      }
+      & > .control > .rx-input:disabled {
+        background: var(--rx-surface);
+        color: var(--rx-text);
+      }
+    }
+  }
+  .rx-date-picker > .panel > .editors {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--rx-space-2);
+    & > .rx-input {
+      padding-inline: var(--rx-space-3);
+      border-radius: var(--rx-radius-field);
+      background: color-mix(in srgb, var(--rx-text) 3%, var(--rx-surface));
+      font-variant-numeric: tabular-nums;
+    }
+    &[data-kind="range"] {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    & > .rx-input[data-active="true"]:not([data-invalid="true"]) {
+      border-color: var(--rx-link);
+      background: var(--rx-surface);
+    }
+    & > .rx-input:focus-visible {
+      outline: 0.125rem solid var(--rx-link);
+      outline-offset: -0.125rem;
+    }
+  }
+  .rx-date-picker > .panel > .editor-error {
+    color: var(--rx-danger);
+    font-size: var(--rx-small);
+  }
+  .rx-date-picker > .panel {
+    position: fixed;
+    /* 開閉のアニメーションはoverlay.cssの共通の定義。欄の下の先頭側の角から膨らむ。 */
+    transform-origin: top left;
+    inset-block: 0 auto;
+    inset-inline: 0 auto;
+    margin: 0;
+    inline-size: min(22rem, calc(100vw - 1rem));
+    container: rx-date-picker-calendar / inline-size;
+    max-block-size: calc(100dvh - 1rem);
+    overflow: auto;
+    padding-block: var(--rx-space-3) var(--rx-space-2);
+    padding-inline: var(--rx-space-5);
+    border: 0;
+    border-radius: var(--rx-radius-surface);
+    background: var(--rx-surface);
+    color: var(--rx-text);
+    font-family: var(--rx-control-font-family);
+    font-size: var(--rx-label);
+    line-height: calc(10 / 7);
+    letter-spacing: 0;
+    box-shadow: var(--rx-shadow-menu);
+
+    &:dir(rtl) {
+      transform-origin: top right;
+    }
+    &:popover-open {
+      display: grid;
+      gap: var(--rx-space-2);
+    }
+    &:not([data-positioned="true"]) {
+      visibility: hidden;
+    }
+  }
+
+  .rx-date-picker > .panel > .month > .rx-button {
+    padding-inline: var(--rx-space-2);
+    border-color: transparent;
+    background: transparent;
+    color: var(--rx-muted);
+    box-shadow: none;
+    text-decoration: none;
+    &:hover:enabled {
+      background: var(--rx-background);
+      color: var(--rx-text);
+    }
+  }
+  .rx-date-picker > .panel > .month {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto auto;
+    align-items: center;
+    gap: var(--rx-space-1);
+    text-align: start;
+
+    & > strong {
+      padding-inline: var(--rx-space-1);
+      font-weight: 600;
+    }
+    & > .previous > .rx-icon {
+      transform: rotate(90deg);
+    }
+
+    & > .next > .rx-icon {
+      transform: rotate(-90deg);
+    }
+
+    &:dir(rtl) > .previous > .rx-icon {
+      transform: rotate(-90deg);
+    }
+
+    &:dir(rtl) > .next > .rx-icon {
+      transform: rotate(90deg);
+    }
+  }
+
+  @container rx-date-picker-calendar (inline-size < 18rem) {
+    .rx-date-picker > .panel > .month {
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      & > strong {
+        grid-column: 1 / -1;
+        grid-row: 1;
+      }
+    }
+  }
+
+  .rx-date-picker > .panel > .selection {
+    position: absolute;
+    inline-size: 0.0625rem;
+    block-size: 0.0625rem;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .rx-date-picker > .panel > .grid {
+    inline-size: 100%;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0 0.125rem;
+
+    & th {
+      padding-block: var(--rx-space-1);
+      padding-inline: 0;
+      color: var(--rx-muted);
+      font-size: var(--rx-small);
+      font-weight: 400;
+      text-align: center;
+    }
+
+    & td {
+      padding: 0;
+    }
+  }
+
+  .rx-date-picker > .panel > .grid > tbody > tr > td > .day {
+    appearance: none;
+    position: relative;
+    display: block;
+    inline-size: 100%;
+    min-block-size: 2.25rem;
+    padding: 0;
+    border: var(--rx-stroke-width) solid transparent;
+    border-radius: var(--rx-radius-control);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+    cursor: pointer;
+
+    &[data-outside="true"] {
+      color: var(--rx-muted);
+    }
+
+    &[data-state="in-range"] {
+      border-radius: 0;
+      background: var(--rx-info-soft);
+      color: var(--rx-link);
+    }
+
+    &[data-today="true"]::after {
+      content: "";
+      position: absolute;
+      inset-block-end: 0.1875rem;
+      inset-inline: 0;
+      inline-size: 0.1875rem;
+      block-size: 0.1875rem;
+      margin-inline: auto;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    /* 通常のホバーは未選択日にだけ適用し、選択済みの塗りを保つ。 */
+    &:where(:hover):not(:disabled, [data-state]) {
+      background: color-mix(in srgb, var(--rx-text) 6%, var(--rx-surface));
+      color: var(--rx-text);
+    }
+
+    &:where(:active):not(:disabled, [data-state]) {
+      background: color-mix(in srgb, var(--rx-text) 10%, var(--rx-surface));
+    }
+
+    &[data-state="in-range"]:where(:hover):not(:disabled) {
+      box-shadow: inset 0 0 0 0.0625rem var(--rx-link);
+    }
+
+    &[data-state="selected"],
+    &[data-state="range-start"],
+    &[data-state="range-end"] {
+      background: var(--rx-link);
+      color: var(--rx-surface);
+      font-weight: 600;
+    }
+
+    &[data-state="range-start"] {
+      border-start-end-radius: 0;
+      border-end-end-radius: 0;
+    }
+
+    &[data-state="range-end"] {
+      border-start-start-radius: 0;
+      border-end-start-radius: 0;
+    }
+
+    &:focus-visible {
+      outline: 0.125rem solid currentColor;
+      outline-offset: -0.25rem;
+    }
+
+    /* 選べない日は斜線。 */
+    &:disabled {
+      background-image: var(--rx-hatch);
+      color: var(--rx-muted);
+      cursor: not-allowed;
+    }
+  }
+
+  .rx-date-picker
+    > .panel[data-selection="end"]
+    > .grid
+    > tbody
+    > tr
+    > td
+    > .day[data-state="range-start"],
+  .rx-date-picker
+    > .panel[data-same-day="true"]
+    > .grid
+    > tbody
+    > tr
+    > td
+    > .day[data-state="range-start"] {
+    border-radius: var(--rx-radius-control);
+  }
+
+  /* 下の操作（クリアなど）は線で区切らず、カレンダーとの間の余白だけで分ける。 */
+  .rx-date-picker > .panel > .actions {
+    display: grid;
+    padding-block-start: var(--rx-space-1);
+
+    gap: var(--rx-space-2);
+    & > .rx-switch {
+      min-block-size: var(--rx-date-picker-control-size);
+      align-items: center;
+      grid-template-columns: minmax(0, 1fr) auto;
+      & > input {
+        grid-column: 2;
+        grid-row: 1;
+      }
+      & > span {
+        grid-column: 1;
+        grid-row: 1;
+      }
+    }
+    & > .rx-button {
+      inline-size: 100%;
+      border-color: transparent;
+      background: var(--rx-background);
+      color: var(--rx-text);
+      box-shadow: none;
+    }
+  }
+
+  @media (pointer: coarse) {
+    .rx-date-picker > .panel {
+      inline-size: min(24rem, calc(100vw - 1rem));
+    }
+    .rx-date-picker > .panel > .grid > tbody > tr > td > .day {
+      min-block-size: 2.75rem;
+    }
+    .rx-date-picker > .panel > .month > .rx-button,
+    .rx-date-picker > .panel > .actions > .rx-button {
+      min-block-size: 2.75rem;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .rx-date-picker > .panel > .grid > tbody > tr > td > .day[data-state="selected"],
+    .rx-date-picker > .panel > .grid > tbody > tr > td > .day[data-state="range-start"],
+    .rx-date-picker > .panel > .grid > tbody > tr > td > .day[data-state="range-end"] {
+      forced-color-adjust: none;
+      background: Highlight;
+      color: HighlightText;
+    }
+
+    .rx-date-picker > .panel > .grid > tbody > tr > td > .day[data-state="in-range"] {
+      border-block-color: Highlight;
+    }
+  }
+}

@@ -1,0 +1,59 @@
+@layer components {
+  /* 名前・欄・選んだ値・補足の間は、Fieldのラベルと欄の間と同じにする。 */
+  .rx-picker {
+    display: grid;
+    gap: 0.375rem;
+    min-inline-size: 0;
+  }
+
+  .rx-picker > .label {
+    font-size: var(--rx-label);
+    font-weight: var(--rx-label-weight);
+    line-height: var(--rx-label-leading);
+  }
+
+  .rx-picker > .rx-input {
+    inline-size: 100%;
+    padding-inline-end: 1em;
+  }
+
+  .rx-picker > .rx-input[hidden],
+  .rx-picker > .values[hidden],
+  .rx-picker > .note[hidden] {
+    display: none;
+  }
+
+  .rx-picker > .values {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--rx-space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .rx-picker > .note,
+  .rx-picker > .messages > .help {
+    color: var(--rx-muted);
+    font-size: var(--rx-small);
+    line-height: var(--rx-small-leading);
+  }
+
+  .rx-picker:has(> .search[data-invalid="true"]) > .note {
+    color: var(--rx-danger);
+  }
+
+  .rx-picker > .messages > .error {
+    display: flex;
+    align-items: start;
+    gap: var(--rx-space-1);
+    color: var(--rx-danger);
+    font-size: var(--rx-label);
+    line-height: var(--rx-label-leading);
+  }
+
+  .rx-picker > .messages > .error > .rx-icon {
+    flex: none;
+    margin-block-start: calc(3em / 14);
+  }
+}

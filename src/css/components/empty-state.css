@@ -1,0 +1,116 @@
+@layer components {
+  /*
+    まだ何もない場所。中央に破線の枠を置き、太字の題名と説明を書く。
+    破線は「ここに入る・置ける」ことを表すので、これから内容が入る場所を示す。枠と文字は場面の色にする
+    （検索で0件は灰、初回は青、完了時は緑）。操作は枠の下に置く。
+  */
+  .rx-empty-state {
+    --rx-empty-color: var(--rx-muted);
+    display: grid;
+    justify-items: center;
+    gap: var(--rx-space-5);
+    min-inline-size: 0;
+    inline-size: 100%;
+    padding-block: var(--rx-space-8);
+    padding-inline: var(--rx-space-4);
+    color: var(--rx-text);
+    font-size: var(--rx-label);
+    line-height: var(--rx-label-leading);
+    text-align: center;
+    overflow-wrap: anywhere;
+    /* 日本語は文節の切れ目で折り返し、中央に揃えた行の端に一、二文字だけを残さない。 */
+    word-break: auto-phrase;
+    &[data-kind="start"] {
+      --rx-empty-color: var(--rx-link);
+    }
+    &[data-kind="complete"] {
+      --rx-empty-color: var(--rx-success);
+    }
+    /* 枠。場面の色の2pxの破線と、ごく淡い同じ色の面。 */
+    & > .slip {
+      display: grid;
+      justify-items: center;
+      min-inline-size: 0;
+      max-inline-size: min(100%, 28rem);
+      padding-block: var(--rx-space-5);
+      padding-inline: var(--rx-space-6);
+      border: var(--rx-frame-width) dashed
+        color-mix(in srgb, var(--rx-empty-color) 35%, var(--rx-surface));
+      border-radius: var(--rx-radius-field);
+      background: color-mix(in srgb, var(--rx-empty-color) 5%, var(--rx-surface));
+      & > .symbol {
+        display: grid;
+        place-items: center;
+        inline-size: 2rem;
+        block-size: 2rem;
+        border-radius: 50%;
+        color: var(--rx-surface);
+        font-size: 1rem;
+      }
+      & > .symbol + .title {
+        margin-block-start: var(--rx-space-3);
+      }
+      & > .title {
+        margin: 0;
+        color: color-mix(in srgb, var(--rx-empty-color) 70%, var(--rx-text));
+        font-size: var(--rx-body);
+        font-weight: 700;
+        line-height: 1.5;
+        text-wrap: balance;
+      }
+      & > .body {
+        min-inline-size: 0;
+        margin-block-start: var(--rx-space-1);
+        color: var(--rx-muted);
+        text-wrap: balance;
+        & > * + * {
+          margin-block-start: var(--rx-space-1);
+        }
+        &:empty {
+          display: none;
+        }
+      }
+    }
+    & > .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: var(--rx-space-3);
+    }
+    /* 渡されたアイコンは、場面の色で塗った丸の上に白で置く。完了時は完了の色で、ペンでチェックを描く。 */
+    &:not([data-kind="complete"]) > .slip > .symbol {
+      background: var(--rx-empty-color);
+    }
+    &[data-kind="complete"] > .slip > .symbol {
+      --rx-empty-state-pen-start: inset(0 100% 0 0);
+      background: var(--rx-fill-success);
+      &:dir(rtl) {
+        --rx-empty-state-pen-start: inset(0 0 0 100%);
+      }
+      & > .rx-icon {
+        animation: rx-empty-state-write 0.6s ease-out 0.2s both;
+      }
+    }
+  }
+  @keyframes rx-empty-state-write {
+    from {
+      clip-path: var(--rx-empty-state-pen-start);
+    }
+    to {
+      clip-path: inset(0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rx-empty-state[data-kind="complete"] > .slip > .symbol > .rx-icon {
+      animation: none;
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-empty-state > .slip {
+      border-color: CanvasText;
+    }
+    .rx-empty-state > .slip > .symbol {
+      outline: var(--rx-stroke-width) solid CanvasText;
+    }
+  }
+}

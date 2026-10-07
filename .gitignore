@@ -1,0 +1,24 @@
+# 依存
+node_modules/
+
+# 生成物
+dist/
+.vite/
+test-results/
+.rx-consumer-*/
+
+# 秘密情報
+.env
+.env.*
+!.env.example
+secrets/
+
+# Codexのローカルのログ（`.codex/agents/`の定義はコミットする）
+.codex-log/
+
+# OS・エディター
+.DS_Store
+*.log
+
+# 参考スクリーンショット（容量が大きいためコミットしない）
+screenshots/

@@ -1,0 +1,66 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    name: npmへ公開
+    runs-on: ubuntu-latest
+    permissions:
+      # npmのtrusted publishing（OIDC）で公開する。トークンは使わない。
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+
+      # 公開するビルドには、キャッシュを使わない。
+      - uses: voidzero-dev/setup-vp@v1.21.1
+        with:
+          node-version: "22"
+          cache: false
+
+      - name: 依存を入れる
+        run: vp install --frozen-lockfile
+
+      # 公開の前の検査はCIと同じかそれ以上にする。
+      - name: 検査
+        run: vp check
+
+      - name: CSSの規約の検査
+        run: vp run check:css
+
+      - name: 単体テスト
+        run: vp run test
+
+      - name: ビルド
+        run: vp run build
+
+      - name: 配布物の検査
+        run: vp run check:package
+
+      # タグとpackage.jsonの版が一致しない時は公開しない。
+      - name: 版の確認
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          test "v${version}" = "${GITHUB_REF_NAME}"
+
+      # 最初の版のように、手元から公開済みの版なら公開の手順を飛ばす。
+      - name: 公開済みかの確認
+        id: published
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          status="$(curl -s -o /dev/null -w "%{http_code}" "https://registry.npmjs.org/@tknf%2Fply/${version}")"
+          if [ "${status}" = "200" ]; then echo "exists=true" >> "${GITHUB_OUTPUT}"; else echo "exists=false" >> "${GITHUB_OUTPUT}"; fi
+
+      # pnpmはOIDCで認証し、公開リポジトリからの公開にはprovenanceを自動で付ける。
+      # npmjs.comの@tknf/retrixに、このワークフロー（release.yml）をtrusted publisherとして登録しておく。
+      # 検査した配布物をそのまま公開するため、prepublishOnlyなどのscriptsは流さない。
+      - name: 公開
+        if: steps.published.outputs.exists == 'false'
+        run: vp pm publish --no-git-checks -- --ignore-scripts

@@ -1,0 +1,81 @@
+@layer base {
+  :root {
+    color-scheme: light;
+    /* スクロールバーはつまみを細く淡くし、トラックは透明にする。色は子へ引き継がれる。 */
+    scrollbar-color: color-mix(in srgb, var(--rx-muted) 40%, transparent) transparent;
+  }
+
+  * {
+    scrollbar-width: thin;
+  }
+
+  body {
+    /* 背景は白。作業面は縁取りではなく影で浮かせる。 */
+    background: var(--rx-surface);
+    color: var(--rx-text);
+    font-family: var(--rx-control-font-family);
+    font-size: var(--rx-body);
+    line-height: var(--rx-leading);
+    letter-spacing: normal;
+    overflow-wrap: anywhere;
+  }
+
+  /*
+    リンクは下線を引かず、青い文字にする。
+    文章（段落・引用・図の説明）の中に混ざるリンクだけは、色だけに頼らないよう細く淡い下線を残す。
+    コンポーネントが持つリンク（クラスを持つもの）は、それぞれのコンポーネントが見た目を決める。
+  */
+  a {
+    color: var(--rx-link);
+    text-decoration: none;
+    transition: color var(--rx-duration) ease;
+    &:hover {
+      color: var(--rx-blue-dark);
+    }
+  }
+  :where(p, blockquote, figcaption) a:not([class]) {
+    text-decoration-line: underline;
+    text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+    text-decoration-thickness: var(--rx-stroke-width);
+    text-underline-offset: 0.2em;
+    &:hover {
+      text-decoration-color: currentColor;
+    }
+  }
+
+  :focus-visible {
+    outline: 0.125rem solid var(--rx-ink);
+    outline-offset: 0.1875rem;
+  }
+
+  /* 検索の一致箇所・ハイライトは平らな淡い黄色の背景。行をまたいでも各行に同じ背景を敷く。 */
+  mark {
+    padding-inline: 0.15em;
+    border-radius: 0.2em;
+    background: color-mix(in srgb, var(--rx-mark) 55%, transparent);
+    color: inherit;
+    box-decoration-break: clone;
+  }
+}
+
+@layer utilities {
+  /* Carouselのスライドは隠しても場所を残し、切り替えで高さが変わらないようにする（carousel.cssが見えなくする）。 */
+  [hidden]:not(.rx-carousel > .viewport > .slide) {
+    display: none;
+  }
+
+  /* 単独操作リンクの当たり判定だけを広げ、行高と文字位置を保つ。 */
+  :where(
+    .rx-card > .title > a,
+    .rx-table > table > tbody > tr > :is(th, td) > a:only-child,
+    .rx-file-item > .body > .title > a
+  ) {
+    position: relative;
+    &::before {
+      content: "";
+      position: absolute;
+      inset-block: -0.375rem;
+      inset-inline: -0.25rem;
+    }
+  }
+}

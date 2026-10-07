@@ -1,0 +1,43 @@
+@layer components {
+  /* ショートカットキーの表示。キーボードの操作を表す所は、どのコンポーネントでもこの表示を使う。 */
+  .rx-keycap {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25em;
+    max-inline-size: 100%;
+    vertical-align: baseline;
+    font-family: var(--rx-control-font-family);
+    font-size: var(--rx-small);
+    line-height: var(--rx-small-leading);
+    & > kbd {
+      min-inline-size: 1.5em;
+      padding-inline: 0.35em;
+      border: var(--rx-stroke-width) solid var(--rx-border);
+      border-block-end-width: 0.125rem;
+      border-radius: var(--rx-radius-mark);
+      background: var(--rx-surface);
+      color: var(--rx-muted);
+      font: inherit;
+      text-align: center;
+      overflow-wrap: anywhere;
+    }
+    /* タイルの角やメニューの行の終わりに添える小さな表示。 */
+    &[data-size="small"] {
+      gap: 0.125rem;
+      font-size: 0.6875rem;
+      line-height: 1rem;
+      & > kbd {
+        min-inline-size: 1rem;
+        padding-inline: 0.1875rem;
+        border-block-end-width: var(--rx-stroke-width);
+      }
+    }
+    /* 青のメニューや塗った面の上では地を塗らず、文字と同じ色の淡い縁にする。 */
+    &[data-inverse="true"] > kbd {
+      border-color: color-mix(in srgb, currentColor 45%, transparent);
+      background: transparent;
+      color: inherit;
+    }
+  }
+}

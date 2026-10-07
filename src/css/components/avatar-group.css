@@ -1,0 +1,59 @@
+@layer components {
+  /*
+    アバターを少しずつ重ねて並べる。重なりは6pxにして小さいアバターでもイニシャルを隠さず、
+    アバターどうしの境は作業面の色の輪郭で切り分ける。後に並ぶアバターを手前に重ね、前のアバターは端だけを隠してイニシャルを見せる。
+  */
+  .rx-avatar-group {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    row-gap: var(--rx-space-1);
+    isolation: isolate;
+    /* 残りの人数のバッジの大きさ。並べるAvatarの大きさ（size）にそろえる。 */
+    --rx-avatar-group-size: 2.25rem;
+    --rx-avatar-group-font: var(--rx-small);
+    & > .rx-avatar {
+      box-shadow: 0 0 0 var(--rx-frame-width) var(--rx-surface);
+    }
+    /* 重なりは前のアバターの末尾側に付け、狭い所で折り返しても行の先頭がはみ出さないようにする。 */
+    & > :is(.rx-avatar, .more):not(:last-child) {
+      margin-inline-end: -0.375rem;
+    }
+    /*
+      残りの人数はアバターと同じ大きさの淡い丸に、濃い色の太い数字で置く。桁が増えたら横に伸びるピルにする。
+      数字は右から左に読む画面でも「+n」の順に書く。
+    */
+    &[data-size="small"] {
+      --rx-avatar-group-size: 1.75rem;
+      --rx-avatar-group-font: 0.75rem;
+    }
+    &[data-size="large"] {
+      --rx-avatar-group-size: 3rem;
+      --rx-avatar-group-font: 1rem;
+    }
+    & > .more {
+      position: relative;
+      display: inline-grid;
+      place-items: center;
+      min-inline-size: var(--rx-avatar-group-size);
+      block-size: var(--rx-avatar-group-size);
+      padding-inline: var(--rx-space-1);
+      border-radius: var(--rx-radius-pill);
+      background: var(--rx-background);
+      box-shadow: 0 0 0 var(--rx-frame-width) var(--rx-surface);
+      color: var(--rx-ink);
+      font-family: var(--rx-control-font-family);
+      font-size: var(--rx-avatar-group-font);
+      font-weight: 700;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+      direction: ltr;
+      unicode-bidi: isolate;
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-avatar-group > .rx-avatar {
+      box-shadow: 0 0 0 var(--rx-frame-width) Canvas;
+    }
+  }
+}

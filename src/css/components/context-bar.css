@@ -1,0 +1,25 @@
+@layer components {
+  .rx-context-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--rx-space-2) var(--rx-space-4);
+    min-inline-size: 0;
+    /* 操作の高さと上下の余白で決め、ボタンの有無でバーの高さを変えない。 */
+    min-block-size: calc(var(--rx-control-size) + 2 * var(--rx-space-2));
+    padding-block: var(--rx-space-2);
+    padding-inline: var(--rx-space-4);
+    border-block-end: var(--rx-stroke-width) solid var(--rx-border);
+    & > .rx-breadcrumb {
+      flex: 1 1 12rem;
+    }
+    & > .actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--rx-space-2);
+      min-inline-size: 0;
+      margin-inline-start: auto;
+    }
+  }
+}

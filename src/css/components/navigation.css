@@ -1,0 +1,106 @@
+@layer components {
+  /*
+    縦並びのナビゲーション。淡い面の一枚のパネルに行を並べ、
+    行の間は名前の書き始めから細い線で区切る。今いる行は面を塗らず、太字と末尾側の青いチェックで示す。
+    名前はMedium、アイコンは塗りつぶしの版（Iconのfill）を文字と同じ濃さで置く。
+  */
+  .rx-navigation {
+    display: grid;
+    align-content: start;
+    /* 並べた先の高さに引き伸ばさず、中身の高さのパネルにする。 */
+    align-self: start;
+    padding-block: var(--rx-space-1);
+    padding-inline: var(--rx-space-1);
+    border-radius: var(--rx-radius-field);
+    background: var(--rx-background);
+    font-size: var(--rx-label);
+    line-height: var(--rx-label-leading);
+    & > a {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: var(--rx-space-2);
+      min-inline-size: 0;
+      min-block-size: 2.75rem;
+      padding-block: var(--rx-space-2);
+      padding-inline: var(--rx-space-3);
+      border-radius: var(--rx-radius-control);
+      color: var(--rx-text);
+      font-weight: 500;
+      text-decoration: none;
+      transition: background-color var(--rx-duration) ease;
+      /* アイコンは先頭の列に揃え、文字と同じ濃さで少し大きく置く。 */
+      & > .icon {
+        display: flex;
+        flex: none;
+        justify-content: center;
+        inline-size: 1.25rem;
+        color: var(--rx-text);
+        & > .rx-icon {
+          inline-size: 1.125em;
+          block-size: 1.125em;
+        }
+      }
+      & > span:not(.icon) {
+        flex: 1;
+        min-inline-size: 0;
+      }
+      /* 件数はSectionと同じ、淡い面の色の小さなピル。パネルの色と分けるため白地にする。 */
+      & > small {
+        display: inline-grid;
+        flex: none;
+        place-items: center;
+        min-inline-size: 1.25rem;
+        block-size: 1.25rem;
+        padding-inline: 0.375rem;
+        border-radius: var(--rx-radius-pill);
+        background: var(--rx-surface);
+        color: var(--rx-text);
+        font-size: var(--rx-small);
+        font-weight: 600;
+        line-height: 1;
+        font-variant-numeric: tabular-nums;
+      }
+      &:hover {
+        background: color-mix(in srgb, var(--rx-ink) 6%, var(--rx-background));
+      }
+      /* 今いる行は太字と、末尾側の青いチェック。 */
+      &[data-current="true"] {
+        font-weight: 600;
+        &::after {
+          content: "";
+          flex: none;
+          inline-size: 1rem;
+          block-size: 1rem;
+          background: var(--rx-link);
+          mask: url("../assets/check.svg") center / contain no-repeat;
+        }
+      }
+    }
+    /* 行の間の線は、名前の書き始めから終わりまで。ホバーした行の上下では消す。 */
+    & > a + a::before {
+      content: "";
+      position: absolute;
+      inset-block-start: 0;
+      inset-inline: var(--rx-space-3);
+      block-size: var(--rx-stroke-width);
+      background: color-mix(in srgb, var(--rx-ink) 8%, var(--rx-background));
+      transition: opacity var(--rx-duration) ease;
+    }
+    & > a + a:has(> .icon)::before {
+      inset-inline-start: calc(var(--rx-space-3) + 1.25rem + var(--rx-space-2));
+    }
+    & > a:hover::before,
+    & > a:hover + a::before {
+      opacity: 0;
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-navigation {
+      border: var(--rx-stroke-width) solid CanvasText;
+      & > a[data-current="true"]::after {
+        background: LinkText;
+      }
+    }
+  }
+}

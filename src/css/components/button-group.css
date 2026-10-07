@@ -1,0 +1,33 @@
+@layer components {
+  .rx-button-group {
+    display: inline-flex;
+    align-items: stretch;
+    inline-size: fit-content;
+    max-inline-size: 100%;
+    gap: 0;
+    & > .rx-button {
+      min-inline-size: 0;
+      flex: 1 1 auto;
+    }
+    & > .rx-dropdown-menu {
+      flex: 0 0 auto;
+    }
+    & > .rx-button:not(:last-child) {
+      border-start-end-radius: 0;
+      border-end-end-radius: 0;
+    }
+    & > .rx-button:not(:first-child),
+    & > .rx-dropdown-menu:not(:first-child) > .rx-button {
+      border-start-start-radius: 0;
+      border-end-start-radius: 0;
+      margin-inline-start: -0.0625rem;
+    }
+    & > .rx-button:focus-visible,
+    & > .rx-dropdown-menu > .rx-button:focus-visible {
+      z-index: 1;
+    }
+    & > .rx-dropdown-menu:not(:first-child) > .rx-button[data-variant="primary"] {
+      border-inline-start-color: rgb(255 255 255 / 35%);
+    }
+  }
+}

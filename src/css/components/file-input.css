@@ -1,0 +1,244 @@
+@layer components {
+  /*
+    ファイルを受け入れる場所。「ここに置ける」目印の破線の枠に、青から紫で塗った丸いアイコン・ドロップの案内・選ぶ操作を
+    一行に並べる。選んだファイルはFileItemの形で枠の中に並べ、解除の操作を添える。
+    ドロップを待つ間は枠を実線の青にして淡い青の面を敷く。標準の入力は隠し、フォーカスの輪は選ぶ操作に出す。
+  */
+  .rx-file-input {
+    container: rx-file-input / inline-size;
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--rx-space-2) var(--rx-space-3);
+    min-inline-size: 0;
+    padding-block: var(--rx-space-3);
+    padding-inline: var(--rx-space-3);
+    border: var(--rx-frame-width) dashed color-mix(in srgb, var(--rx-link) 30%, var(--rx-surface));
+    border-radius: var(--rx-radius-field);
+    background: color-mix(in srgb, var(--rx-link) 3%, var(--rx-surface));
+    font-size: var(--rx-label);
+    line-height: calc(10 / 7);
+    transition:
+      background-color var(--rx-duration) ease,
+      border-color var(--rx-duration) ease;
+
+    &[data-state="dragover"] {
+      border-style: solid;
+      border-color: var(--rx-link);
+      background: var(--rx-cover);
+    }
+    &:has(> .rx-input[data-invalid="true"]) {
+      border-color: color-mix(in srgb, var(--rx-danger) 60%, var(--rx-surface));
+      background: color-mix(in srgb, var(--rx-danger) 3%, var(--rx-surface));
+    }
+    &:has(> .rx-input:disabled) {
+      border-color: var(--rx-border);
+      background: var(--rx-hatch), var(--rx-surface);
+      color: var(--rx-muted);
+      outline: none;
+    }
+    &:has(> .rx-input:disabled) > .hint {
+      visibility: hidden;
+    }
+    /* アイコン。EmptyStateのアイコンと同じ丸を、DropdownMenuと同じ青から紫で塗る。 */
+    & > .symbol {
+      display: grid;
+      grid-column: 1;
+      place-items: center;
+      inline-size: 2.25rem;
+      block-size: 2.25rem;
+      border-radius: 50%;
+      background: var(--rx-fill-menu);
+      color: var(--rx-surface);
+      font-size: 1.125rem;
+    }
+    &:has(> .rx-input[data-invalid="true"]) > .symbol {
+      background: var(--rx-fill-danger);
+    }
+    &:has(> .rx-input:disabled) > .symbol {
+      background: var(--rx-border);
+      color: var(--rx-muted);
+    }
+    & > .hint {
+      grid-column: 2;
+      min-inline-size: 0;
+      margin: 0;
+      color: var(--rx-text);
+      font-weight: 600;
+      overflow-wrap: anywhere;
+      /* 日本語は文節の切れ目で折り返し、行末に一、二文字だけを残さない。 */
+      word-break: auto-phrase;
+    }
+    /* 選んだ名前は折り返せる一覧へ出し、標準入力との二重表示を避ける。 */
+    &[data-enhanced="true"] > .rx-input {
+      color: transparent;
+    }
+    /*
+      JavaScriptが有効なら標準入力を画面上は隠し、ラベルを共通Buttonとして見せる。
+      入力はフォーカスとキーボード操作のため残し、フォーカスの輪はラベルに出す。
+    */
+    & > .choose {
+      grid-column: 3;
+      justify-self: end;
+      cursor: pointer;
+    }
+    /* 案内が隠れている時（JavaScriptの読み込み前・タッチの画面）は、選ぶ操作をアイコンの隣へ寄せる。 */
+    /* アイコンの隣に置く時は、文字の操作の左右の余白を打ち消し、文字の書き始めを案内と同じ位置にする。 */
+    & > .hint[hidden] + .choose {
+      grid-column: 2 / -1;
+      justify-self: start;
+      margin-inline-start: calc(-4em / 7);
+    }
+    &:has(> .rx-input:focus-visible) > .choose {
+      outline: 0.125rem solid var(--rx-link);
+      outline-offset: 0.125rem;
+    }
+    /* 選ぶ操作は枠のない青い文字（Buttonのlink）。使えない時は淡い文字にし、斜線は枠の面に任せる。 */
+    &:has(> .rx-input:disabled) > .choose {
+      background: transparent;
+      color: var(--rx-muted);
+      cursor: not-allowed;
+    }
+    & > .rx-input[type="file"] {
+      block-size: auto;
+      min-block-size: var(--rx-button-size);
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      font-size: inherit;
+      line-height: var(--rx-button-size);
+
+      &::file-selector-button {
+        box-sizing: border-box;
+        max-inline-size: 100%;
+        min-block-size: var(--rx-button-size);
+        padding-block: calc((var(--rx-button-size) - 10em / 7 - 0.125rem) / 2);
+        padding-inline: 0.75em;
+        margin-inline-end: var(--rx-space-2);
+        border: var(--rx-stroke-width) solid var(--rx-border);
+        border-radius: var(--rx-radius-pill);
+        background: var(--rx-surface) var(--rx-fill-control);
+        box-shadow: none;
+        color: var(--rx-text);
+        font: inherit;
+        line-height: calc(10 / 7);
+        white-space: normal;
+        cursor: pointer;
+        transition: background-color var(--rx-duration) ease;
+      }
+      &::file-selector-button:hover {
+        background: var(--rx-info-soft);
+      }
+      &::file-selector-button:active {
+        background: color-mix(in srgb, var(--rx-link) 14%, var(--rx-surface));
+      }
+      &:disabled::file-selector-button {
+        border-color: var(--rx-border);
+        background: var(--rx-hatch), var(--rx-surface);
+        color: var(--rx-muted);
+        cursor: not-allowed;
+      }
+    }
+  }
+  .rx-file-input > .files {
+    grid-column: 1 / -1;
+    min-inline-size: 0;
+    margin: 0;
+    padding-block: var(--rx-space-1) 0;
+    padding-inline: 0;
+    border-block-start: var(--rx-stroke-width) solid
+      color-mix(in srgb, var(--rx-link) 15%, var(--rx-surface));
+    list-style: none;
+    & > li {
+      min-inline-size: 0;
+    }
+    & > li + li {
+      border-block-start: var(--rx-stroke-width) solid var(--rx-border);
+    }
+  }
+  .rx-file-input > .clear {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+  .rx-file-input > .status {
+    grid-column: 1 / -1;
+    margin: 0;
+    color: var(--rx-danger);
+
+    &:not([data-invalid="true"]) {
+      position: absolute;
+      inline-size: 0.0625rem;
+      block-size: 0.0625rem;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+  }
+  /* 狭い枠では、案内をアイコンの隣に広く置き、選ぶ操作をその下の行へ回す（案内を出さないタッチの画面を除く）。 */
+  @media not (pointer: coarse) {
+    @container rx-file-input (inline-size < 24rem) {
+      .rx-file-input > .hint {
+        grid-column: 2 / -1;
+      }
+      .rx-file-input > .hint:not([hidden]) + .choose {
+        grid-column: 2 / -1;
+        grid-row: 2;
+        justify-self: start;
+        margin-inline-start: calc(-4em / 7);
+      }
+    }
+  }
+  /* タッチの画面ではドロップの案内を出さず、選ぶ操作をアイコンの隣の一行目に置く。 */
+  @media (pointer: coarse) {
+    .rx-file-input > .rx-input[type="file"]::file-selector-button,
+    .rx-file-input > .rx-button {
+      min-block-size: 2.75rem;
+    }
+    .rx-file-input > .hint {
+      display: none;
+    }
+    .rx-file-input > .hint + .choose {
+      grid-column: 2 / -1;
+      grid-row: 1;
+      justify-self: start;
+      margin-inline-start: calc(-4em / 7);
+    }
+  }
+  /* さらに狭い枠（大きな文字の狭い画面）では、アイコン・案内・選ぶ操作を縦に積む。 */
+  @container rx-file-input (inline-size < 16rem) {
+    .rx-file-input > :is(.symbol, .hint, .choose),
+    .rx-file-input > .hint + .choose,
+    .rx-file-input > .hint[hidden] + .choose {
+      grid-column: 1 / -1;
+      grid-row: auto;
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-file-input[data-enhanced="true"] > .rx-input {
+      color: CanvasText;
+    }
+  }
+  @media (scripting: enabled) {
+    .rx-file-input > .rx-input[type="file"] {
+      position: absolute;
+      inline-size: var(--rx-stroke-width);
+      block-size: var(--rx-stroke-width);
+      min-block-size: 0;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+  }
+  @media (scripting: none) {
+    .rx-file-input > .choose {
+      display: none;
+    }
+    .rx-file-input > .rx-input[type="file"] {
+      grid-column: 2 / -1;
+      grid-row: 1;
+    }
+  }
+}

@@ -1,0 +1,275 @@
+@layer components {
+  .rx-table {
+    /* 表の中の絶対配置（読み上げだけの文字など）を、スクロールする囲みの中に収める。 */
+    position: relative;
+    min-inline-size: 0;
+    overflow: auto;
+    overscroll-behavior-inline: contain;
+    color: var(--rx-text);
+    font-size: var(--rx-label);
+    line-height: var(--rx-label-leading);
+    &[data-sticky="true"] {
+      max-block-size: 28rem;
+    }
+    &[data-sticky="true"] > table > thead > tr > th {
+      position: sticky;
+      inset-block-start: 0;
+      z-index: 1;
+      background: var(--rx-surface);
+      box-shadow: 0 0.0625rem var(--rx-border);
+    }
+    &:not([data-state="ready"]) > table > :is(tbody, tfoot),
+    &:not([data-state="ready"]) > .selection-bar:not([popover]) {
+      display: none;
+    }
+    & > .state {
+      padding-block: var(--rx-space-6);
+      padding-inline: var(--rx-space-4);
+      color: var(--rx-muted);
+      text-align: center;
+    }
+    /*
+      選択した行の操作は表の中の行に置かず、画面の下の中央に浮かべる。表は一行も動かない。
+      選択バーはActionDockと同じ操作バー（白いパネル・パネルの角丸・メニューの影・内側4px）にし、先頭に件数、続けて一括操作を横一列に並べる。
+      解除の×（「選択を解除」）はDialogと同じくパネルの末尾側の上の角から少しはみ出させて置く。
+    */
+    & > .selection-bar {
+      position: fixed;
+      inset-block: auto max(var(--rx-space-4), env(safe-area-inset-bottom));
+      inset-inline: 0;
+      /* 下から出して置き、閉じる時は同じ向きへ下げながら消す（出入りはoverlay.cssの共通の定義）。 */
+      transform-origin: bottom center;
+      --rx-motion-slide: var(--rx-duration-pop);
+      --rx-motion-scale-in: 1;
+      --rx-motion-scale-out: 1;
+      /* 選択バーは中身の幅に合わせ、入らない時は操作の列を横にスクロールする。 */
+      inline-size: max-content;
+      max-inline-size: calc(100% - 2 * var(--rx-space-4));
+      /* 角の×をはみ出させるため、パネルは切り取らない。 */
+      overflow: visible;
+      margin: 0;
+      margin-inline: auto;
+      padding-block: var(--rx-space-1);
+      /* 末尾側は、角の×が重なる分を空けて、最後の操作を×の下に入れない。 */
+      padding-inline: var(--rx-space-1)
+        calc(var(--rx-overlay-close-size) - var(--rx-overlay-close-offset));
+      border: 0;
+      border-radius: var(--rx-radius-surface);
+      background: var(--rx-surface);
+      color: var(--rx-text);
+      font-family: var(--rx-control-font-family);
+      font-size: var(--rx-label);
+      line-height: 1.5;
+      box-shadow: var(--rx-shadow-menu);
+      &:popover-open {
+        display: flex;
+        align-items: stretch;
+        gap: var(--rx-space-1);
+      }
+      &[popover]:not(:popover-open) {
+        translate: 0 1rem;
+      }
+      /*
+        JavaScriptがない時（popoverにする前）は浮かべず、表の下に置いて一括操作へ届くようにする。
+        件数と解除の×は動かないので出さない。スクリプトが動く環境では、popoverになるまで隠す。
+      */
+      &:not([popover]) {
+        position: static;
+        display: flex;
+        margin-block-start: var(--rx-space-3);
+        margin-inline: 0;
+        padding-inline: var(--rx-space-1);
+        border: var(--rx-stroke-width) solid var(--rx-border);
+        box-shadow: none;
+        & > .heading {
+          display: none;
+        }
+        @media (scripting: enabled) {
+          display: none;
+        }
+      }
+      /* 件数。操作の列の始まりに、タイルと同じ高さで置く。 */
+      & > .heading {
+        display: flex;
+        flex: none;
+        align-items: center;
+        min-block-size: 3.75rem;
+        padding-inline: var(--rx-space-3) var(--rx-space-2);
+        & > .count {
+          font-weight: 700;
+          white-space: nowrap;
+        }
+      }
+      /*
+        一括操作。ActionDockと同じく、面を持たないActionTileを横一列に並べる（Buttonを渡した時も同じ列に置く）。
+        入らない時は列だけを横にスクロールする。
+      */
+      & > .actions {
+        display: flex;
+        align-items: center;
+        gap: var(--rx-space-1);
+        min-inline-size: 0;
+        overflow-x: auto;
+        overscroll-behavior-inline: contain;
+        & > .rx-action-tile {
+          --rx-action-tile-rest: transparent;
+          flex: none;
+          min-inline-size: 5.25rem;
+        }
+        & > :not(.rx-action-tile) {
+          flex: none;
+          margin-inline-end: var(--rx-space-2);
+        }
+      }
+    }
+    & > table {
+      inline-size: 100%;
+      border-collapse: collapse;
+      & > caption {
+        padding-block-end: var(--rx-space-3);
+        text-align: start;
+        font-size: var(--rx-body);
+        font-weight: 600;
+        line-height: 1.5;
+      }
+      & > :is(thead, tbody, tfoot) > tr > :is(th, td) {
+        padding-block: var(--rx-space-2);
+        padding-inline: var(--rx-space-3);
+        border-block-end: var(--rx-stroke-width) solid var(--rx-border);
+        text-align: start;
+        vertical-align: middle;
+        font-weight: 400;
+      }
+      & > thead > tr > th {
+        padding-block: var(--rx-space-1);
+        background: var(--rx-surface);
+        color: var(--rx-muted);
+        font-size: var(--rx-small);
+        font-weight: var(--rx-label-weight);
+        line-height: var(--rx-small-leading);
+        border-block-end-color: var(--rx-border);
+        white-space: nowrap;
+      }
+      & > :is(thead, tbody, tfoot) > tr > [data-cell="numeric"] {
+        text-align: end;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+      & > :is(thead, tbody, tfoot) > tr > [data-cell="short"] {
+        white-space: nowrap;
+      }
+      & > :is(thead, tbody, tfoot) > tr > [data-cell="text"] {
+        min-inline-size: 14em;
+        overflow-wrap: anywhere;
+      }
+      & > tbody > tr:hover {
+        background: color-mix(in srgb, var(--rx-background) 65%, var(--rx-surface));
+      }
+      & > tbody > tr:focus-within {
+        background: var(--rx-info-soft);
+      }
+      &[data-density="comfortable"] > tbody > tr > :is(th, td) {
+        padding-block: var(--rx-space-3);
+      }
+      & > thead > tr > th > .sort {
+        position: relative;
+        isolation: isolate;
+        gap: var(--rx-space-1);
+        padding-inline: 0;
+        border: 0;
+        background: transparent;
+        color: inherit;
+        box-shadow: none;
+        font-weight: inherit;
+        &::before {
+          content: "";
+          position: absolute;
+          z-index: -1;
+          inset-block: 0;
+          inset-inline: -0.375rem;
+          border-radius: var(--rx-radius-control);
+          background: transparent;
+          pointer-events: none;
+        }
+        &:hover:enabled {
+          color: var(--rx-link);
+        }
+        &:hover:enabled::before,
+        &:focus-visible::before {
+          background: var(--rx-info-soft);
+        }
+        &:active:enabled::before {
+          background: var(--rx-cover);
+        }
+        &:disabled {
+          background: transparent;
+          color: var(--rx-muted);
+          opacity: 0.6;
+          box-shadow: none;
+        }
+        /* 並べ替え中の列以外は、見出しにホバーした時だけアイコンを出して見出しを静かに保つ。 */
+        & > .indicator {
+          inline-size: 1rem;
+          color: var(--rx-muted);
+          opacity: 0;
+          transition: opacity var(--rx-duration) ease;
+        }
+        &:is(:hover, :focus-visible) > .indicator {
+          opacity: 1;
+        }
+      }
+      & > thead > tr > th[data-state="ascending"] > .sort,
+      & > thead > tr > th[data-state="descending"] > .sort {
+        color: var(--rx-link);
+        & > .indicator {
+          color: inherit;
+          opacity: 1;
+        }
+      }
+      & > :is(thead, tbody) > tr > :is(th, td):has(> .rx-choice) {
+        inline-size: 2.75rem;
+        padding-inline: var(--rx-space-2);
+        vertical-align: middle;
+      }
+      & > :is(thead, tbody) > tr > :is(th, td) > .rx-choice {
+        display: flex;
+      }
+      & > tbody > tr[data-selected="true"] {
+        background: var(--rx-info-soft);
+      }
+      /* 行の題名のリンクは濃い色のMediumの文字にし、ホバー時だけ青くする。 */
+      & > tbody > tr > :is(th, td) > a {
+        color: var(--rx-text);
+        font-weight: 500;
+        text-decoration: none;
+      }
+      & > tbody > tr > :is(th, td) > a:hover {
+        color: var(--rx-link);
+      }
+      & > thead > tr > [data-cell="numeric"] > .sort {
+        margin-inline-start: auto;
+      }
+      & > tfoot > tr > :is(th, td) {
+        font-weight: 600;
+        border-block-end: 0;
+      }
+    }
+  }
+  /* 選択バーは、開き始めを少し下に置いて出す。 */
+  @starting-style {
+    .rx-table > .selection-bar:popover-open {
+      translate: 0 1.5rem;
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-table > .selection-bar {
+      outline: var(--rx-stroke-width) solid CanvasText;
+    }
+  }
+  /* ホバーできない端末では、並べ替えられる列だと分かるようアイコンを常に出す。 */
+  @media (hover: none) {
+    .rx-table > table > thead > tr > th > .sort > .indicator {
+      opacity: 1;
+    }
+  }
+}

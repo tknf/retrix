@@ -1,0 +1,25 @@
+@layer components {
+  .rx-toolbar {
+    display: flex;
+    align-items: start;
+    flex-wrap: wrap;
+    gap: var(--rx-space-1);
+    min-inline-size: 0;
+
+    & > .start {
+      flex: 1 1 14rem;
+      max-inline-size: 24rem;
+    }
+    & > .end {
+      margin-inline-start: auto;
+    }
+    & > * {
+      min-inline-size: 0;
+      max-inline-size: 100%;
+    }
+    & > .rx-button,
+    & > :is(.start, .end) > .rx-button {
+      border-radius: var(--rx-radius-pill);
+    }
+  }
+}

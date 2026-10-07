@@ -1,0 +1,130 @@
+@layer components {
+  .rx-board-item {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: var(--rx-space-2) var(--rx-space-1);
+    min-inline-size: 0;
+    /* 題名・補足・バッジの段の間（4〜8px）より、カードの上下の余白をはっきり広くする。 */
+    padding-block: var(--rx-space-4);
+    padding-inline: var(--rx-space-4) var(--rx-space-2);
+    border-radius: var(--rx-radius-surface);
+    /* 列の色で斜めに淡く染まったカード。Boardの外と中立の列では白いカードになる。 */
+    background: var(--rx-board-tint, none), var(--rx-fill-paper);
+    background-color: var(--rx-surface);
+    box-shadow: var(--rx-shadow-paper);
+    color: var(--rx-text);
+    transition:
+      box-shadow var(--rx-duration) ease,
+      translate var(--rx-duration) ease;
+    /* 動かせる項目にホバーすると、少し持ち上がる。 */
+    &:not([data-disabled="true"]):hover {
+      box-shadow: var(--rx-shadow-paper-lift);
+      translate: 0 calc(var(--rx-stroke-width) * -1);
+    }
+    /*
+      中身は項目のグリッドに直接並べる。右上のハンドルの隣は一行目（題名）だけにし、
+      二つ目からはハンドルの下まで項目の幅いっぱいに使う。
+    */
+    & > .body {
+      display: contents;
+      & > * {
+        grid-column: 1 / -1;
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+      }
+      /* 題名は太くして項目の中でいちばん強くする。補足と日付は一段小さく弱くする。 */
+      & > h4 {
+        margin: 0;
+        font-size: var(--rx-body);
+        font-weight: 700;
+        line-height: var(--rx-label-leading);
+      }
+      & > p {
+        color: var(--rx-muted);
+        font-size: var(--rx-small);
+        line-height: var(--rx-small-leading);
+      }
+    }
+    /*
+      番号などのバッジ。カードの上の先頭側の角に、列の色の淡い面と列の色の文字で置く。
+      バッジの角はカードと同じ角丸にし、反対の下の角も面の内側の角丸で大きく丸めて、葉の形にする。中立の列では灰色にする。
+    */
+    & > .code {
+      position: absolute;
+      inset-block-start: 0;
+      inset-inline-start: 0;
+      padding-block: 0.125rem;
+      padding-inline: var(--rx-space-3) var(--rx-space-2);
+      border-start-start-radius: var(--rx-radius-surface);
+      border-end-end-radius: var(--rx-radius-field);
+      background: color-mix(in srgb, var(--rx-lane-accent, var(--rx-muted)) 14%, var(--rx-surface));
+      color: color-mix(in srgb, var(--rx-lane-accent, var(--rx-muted)) 85%, var(--rx-text));
+      font-size: var(--rx-small);
+      font-weight: 700;
+      line-height: var(--rx-small-leading);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    /* バッジの高さ（行高＋上下の余白）の下に、題名との間を段の間と同じだけ空ける。 */
+    &:has(> .code) {
+      padding-block-start: calc(
+        var(--rx-small) * var(--rx-small-leading) + 0.25rem + var(--rx-space-2)
+      );
+    }
+    /* ハンドルがある時は、一行目の文字をハンドルの中央の高さにそろえる。 */
+    &:has(> .handle) > .body > :first-child {
+      grid-column: 1;
+      padding-block-start: 0.375rem;
+    }
+    & > .rx-button.handle {
+      grid-column: 2;
+      grid-row: 1;
+      color: var(--rx-muted);
+      touch-action: none;
+      &:not(:disabled) {
+        cursor: grab;
+      }
+      &:not(:disabled):active {
+        cursor: grabbing;
+      }
+      &:disabled {
+        cursor: not-allowed;
+      }
+    }
+    /*
+      移動中の項目は青い破線で縁取る。キーボードで移動する時は、この項目そのものが列と位置を移るので、
+      薄めずに持ち上げた影のまま見せる。
+    */
+    &[data-moving="true"] {
+      outline: var(--rx-frame-width) dashed var(--rx-link);
+      outline-offset: calc(var(--rx-frame-width) * -1);
+      box-shadow: var(--rx-shadow-paper-lift);
+      translate: none;
+    }
+    &[data-moving="true"] > .rx-button.handle:not(:disabled) {
+      cursor: grabbing;
+    }
+  }
+  /*
+    ドラッグ中はコピーを動かすので、元の項目は移動元の跡として残す。影を消して灰色に薄め、
+    置く場所へ一緒に移って、離すとそこに収まることを示す。
+  */
+  .rx-board-item[data-moving="true"]:is(:root[data-rx-board-dragging="true"] *) {
+    box-shadow: none;
+    filter: grayscale(1) brightness(0.97);
+    opacity: 0.6;
+  }
+  :root[data-rx-board-dragging="true"],
+  :root[data-rx-board-dragging="true"] :is(.rx-button, *, *::before, *::after) {
+    cursor: grabbing;
+  }
+  @media (forced-colors: active) {
+    .rx-board-item {
+      border: var(--rx-stroke-width) solid CanvasText;
+      background: Canvas;
+      box-shadow: none;
+    }
+  }
+}

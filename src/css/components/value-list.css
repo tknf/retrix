@@ -1,0 +1,79 @@
+@layer components {
+  /*
+    一つの対象の属性。各行の下に濃い色の細い線を行の幅いっぱいに引いて区切る。
+    項目名は淡いMedium、値は濃い色の文字にする。項目名の前には、ActionListと同じく塗りつぶしのアイコンを淡い色の丸に入れて添えられる。
+  */
+  .rx-value-list {
+    container: rx-value-list / inline-size;
+    min-inline-size: 0;
+    color: var(--rx-text);
+    font-size: var(--rx-label);
+    line-height: var(--rx-label-leading);
+    & > div {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--rx-space-1);
+      padding-block: var(--rx-space-3);
+      border-block-end: var(--rx-stroke-width) solid
+        color-mix(in srgb, var(--rx-ink) 12%, transparent);
+      --rx-value-list-accent: var(--rx-link);
+      --rx-value-list-soft: var(--rx-info-soft);
+      &[data-accent="green"] {
+        --rx-value-list-accent: var(--rx-success);
+        --rx-value-list-soft: var(--rx-success-soft);
+      }
+      &[data-accent="amber"] {
+        --rx-value-list-accent: var(--rx-amber);
+        --rx-value-list-soft: var(--rx-warning-soft);
+      }
+      &[data-accent="coral"] {
+        --rx-value-list-accent: var(--rx-coral-dark);
+        --rx-value-list-soft: var(--rx-danger-soft);
+      }
+      & > dt {
+        display: flex;
+        align-items: center;
+        gap: var(--rx-space-2);
+        color: var(--rx-muted);
+        font-weight: 500;
+        & > .icon {
+          display: grid;
+          flex: none;
+          place-items: center;
+          inline-size: 1.75rem;
+          block-size: 1.75rem;
+          border-radius: 50%;
+          background: var(--rx-value-list-soft);
+          color: var(--rx-value-list-accent);
+          & > .rx-icon {
+            font-size: 1rem;
+          }
+        }
+      }
+      & > dd {
+        min-inline-size: 0;
+        color: var(--rx-text);
+        overflow-wrap: anywhere;
+        &[data-empty="true"] {
+          color: var(--rx-muted);
+        }
+        & > * + * {
+          margin-block-start: var(--rx-space-2);
+        }
+        & > .description {
+          margin-block-start: var(--rx-space-1);
+          color: var(--rx-muted);
+          font-size: var(--rx-small);
+          line-height: var(--rx-small-leading);
+        }
+      }
+    }
+    @container rx-value-list (inline-size >= 22rem) {
+      & > div {
+        grid-template-columns: minmax(6rem, 0.4fr) minmax(0, 1fr);
+        column-gap: var(--rx-space-4);
+        align-items: baseline;
+      }
+    }
+  }
+}

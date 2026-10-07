@@ -1,0 +1,327 @@
+@layer components {
+  .rx-board {
+    container: rx-board / inline-size;
+    /*
+      開いた列は同じ幅を分け合い、16remより狭くなる分は横にスクロールする。
+      たたんだ列だけはピルの幅にする。列ごとの決め方は、Boardが要素のstyleで並び順どおりに渡す。
+    */
+    --rx-board-tracks: none;
+    display: grid;
+    grid-template-columns: var(--rx-board-tracks);
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(auto, 1fr);
+    /* 全ての列をたたんだ時も、余った幅をピルの列へ配らず、先頭側に詰めて並べる。 */
+    justify-content: start;
+    align-items: stretch;
+    gap: var(--rx-space-4);
+    min-inline-size: 0;
+    overflow: auto;
+    /* スクロール領域の下端でカードの影（--rx-shadow-paper）が切れないよう、影がほぼ見えなくなるまで余白を取る。 */
+    padding-block: var(--rx-space-2) var(--rx-space-8);
+    overscroll-behavior-inline: contain;
+    color: var(--rx-text);
+    font-size: var(--rx-label);
+    line-height: var(--rx-label-leading);
+    /*
+      列は背景も影も持たず、見出しと項目だけを並べる。列の色は見出しの文字と、項目のカードの色付け・角のバッジに出す。
+      カードは、先頭側の下の角から列の色で斜めに淡く染め、末尾側の上へ向かって白に戻す。
+      移動中の破線が項目に重ならないよう、列の内側に少しだけ余白を取る。
+    */
+    & > section {
+      --rx-lane-accent: var(--rx-muted);
+      --rx-board-tint: linear-gradient(
+        60deg,
+        color-mix(in srgb, var(--rx-lane-accent) 16%, var(--rx-surface)) 0%,
+        color-mix(in srgb, var(--rx-lane-accent) 5%, var(--rx-surface)) 45%,
+        var(--rx-surface) 75%
+      );
+      min-inline-size: 16rem;
+      padding-block: 0 var(--rx-space-2);
+      padding-inline: var(--rx-space-2);
+      border-radius: var(--rx-radius-surface);
+      &[data-tone="neutral"]:not([data-current="true"]) {
+        --rx-board-tint: none;
+      }
+      &[data-tone="info"] {
+        --rx-lane-accent: var(--rx-info);
+      }
+      &[data-tone="warning"] {
+        --rx-lane-accent: var(--rx-warning);
+      }
+      &[data-tone="success"] {
+        --rx-lane-accent: var(--rx-success);
+      }
+      &[data-tone="danger"] {
+        --rx-lane-accent: var(--rx-danger);
+      }
+      &[data-current="true"] {
+        --rx-lane-accent: var(--rx-link);
+      }
+      /* 列の名前は控えめにし、項目の題名より弱くする。件数は名前の隣に置く。 */
+      & > .title {
+        display: flex;
+        align-items: center;
+        gap: var(--rx-space-2);
+        min-inline-size: 0;
+        margin: 0;
+        padding-block: var(--rx-space-2);
+        padding-inline: var(--rx-space-1);
+        color: color-mix(in srgb, var(--rx-lane-accent) 85%, var(--rx-text));
+        font-size: var(--rx-label);
+        font-weight: 600;
+        line-height: var(--rx-label-leading);
+        overflow-wrap: anywhere;
+        /* 件数はSectionと同じ、淡い面の色の小さなピル。 */
+        & > small {
+          display: inline-grid;
+          place-items: center;
+          min-inline-size: 1.25rem;
+          block-size: 1.25rem;
+          padding-inline: 0.375rem;
+          border-radius: var(--rx-radius-pill);
+          background: var(--rx-background);
+          color: var(--rx-text);
+          font-size: var(--rx-small);
+          font-weight: 600;
+          line-height: 1;
+          font-variant-numeric: tabular-nums;
+        }
+        /* 開閉の操作は、見出しの末尾側に置く。開いている時は「たたむ」、たたんだ時は「開く」のアイコンを表示する。 */
+        & > .rx-button.toggle {
+          margin-inline-start: auto;
+          color: var(--rx-muted);
+          & > .expand {
+            display: none;
+          }
+        }
+      }
+      /*
+        開閉のボタン（36px）がある見出しは上下の余白を0にし、ほかの列の見出し（文字の20pxと上下8pxずつの余白）と高さを揃える。
+        タッチ操作ではボタンが44pxになるので、どの列の見出しも44pxにする。
+      */
+      &:not([data-collapsed="true"]) > .title:has(> .toggle:not([hidden])) {
+        padding-block: 0;
+      }
+      @media (pointer: coarse) {
+        & > .title {
+          min-block-size: 2.75rem;
+        }
+      }
+      & > .empty {
+        display: none;
+        position: relative;
+        margin-block-start: var(--rx-space-2);
+        padding-block: var(--rx-space-4);
+        padding-inline: var(--rx-space-4);
+        /* 項目を置ける場所は、FileInputのドロップ先と同じ細い破線で、項目と同じ角の形をなぞる。 */
+        border: var(--rx-stroke-width) dashed
+          color-mix(in srgb, var(--rx-lane-accent) 40%, var(--rx-surface));
+        border-radius: var(--rx-radius-surface);
+        color: var(--rx-muted);
+        text-align: center;
+      }
+      & > .items:empty + .empty {
+        display: block;
+      }
+      & > .items {
+        min-inline-size: 0;
+        margin-block-start: var(--rx-space-2);
+        & > * + * {
+          margin-block-start: var(--rx-space-4);
+        }
+      }
+    }
+    /* 破線は受け入れ先を示すので、動かせないBoardの空の列には引かず、文言だけを置く。 */
+    &:not([data-movable="true"]) > section > .empty::after {
+      display: none;
+    }
+    /* 受け付けない列は、無効なFieldと同じ斜線を列に引く。 */
+    & > section[data-disabled="true"] {
+      background: var(--rx-hatch);
+      & > .title {
+        color: var(--rx-muted);
+      }
+      /* 破線は受け入れ先を示すので、受け付けない列には引かない。 */
+      & > .empty::after {
+        display: none;
+      }
+    }
+    /*
+      たたんだ列は、縦長のピルのカード。列の色で塗った件数バッジと縦書きの名前を載せ、開ける列はピルの下に「開く」のアイコンを置く。
+      開ける列はピルのどこを押しても開き、ホバーすると項目と同じく少し持ち上がる。
+    */
+    & > section[data-collapsed="true"] {
+      /* 列が収まらない時もピルの幅を確保する。0にすると、autoのトラックが0まで縮み、ピルがはみ出す。 */
+      min-inline-size: min-content;
+      padding-block: 0 var(--rx-space-2);
+      padding-inline: 0;
+      & > .title {
+        flex-direction: column;
+        align-items: center;
+        gap: var(--rx-space-3);
+        inline-size: 2.75rem;
+        min-block-size: 12rem;
+        padding-block: var(--rx-space-2);
+        padding-inline: 0;
+        border-radius: var(--rx-radius-pill);
+        background: linear-gradient(
+          to bottom,
+          color-mix(in srgb, var(--rx-lane-accent) 12%, var(--rx-surface)),
+          var(--rx-surface) 70%
+        );
+        box-shadow: var(--rx-shadow-paper);
+        transition: box-shadow var(--rx-duration) ease;
+        /* 名前を伸ばして、開く操作をピルの下端へ送る（Buttonの余白は動かさない）。 */
+        & > .label {
+          flex: 1 1 auto;
+          writing-mode: vertical-rl;
+        }
+        /* 件数はピルの上に、列の色で塗った件数バッジに白い数字で置く。 */
+        & > small {
+          order: -1;
+          min-inline-size: 1.75rem;
+          block-size: 1.75rem;
+          background: var(--rx-lane-accent);
+          color: var(--rx-surface);
+        }
+        & > .rx-button.toggle {
+          margin-inline-start: 0;
+          & > .expand {
+            display: block;
+          }
+          & > .collapse {
+            display: none;
+          }
+        }
+      }
+      &:has(> .title > .toggle:not([hidden])) > .title {
+        cursor: pointer;
+        &:hover {
+          box-shadow: var(--rx-shadow-paper-lift);
+        }
+      }
+      & > :is(.items, .empty) {
+        display: none;
+      }
+    }
+    /* 開いた時だけ、中の項目をピルのあった側から1件ずつ順に表示する。 */
+    & > section[data-unfolding="true"] > .items > * {
+      animation: rx-board-unfold calc(var(--rx-duration) * 1.6) ease-out both;
+      &:nth-child(2) {
+        animation-delay: 40ms;
+      }
+      &:nth-child(3) {
+        animation-delay: 80ms;
+      }
+      &:nth-child(n + 4) {
+        animation-delay: 120ms;
+      }
+    }
+    /*
+      項目の移動先の列は、列の色の淡い背景を敷き、列の色の破線で内側を縁取る。
+      背景色は項目が移動してきた時から少し時間をかけて付ける。
+    */
+    & > section {
+      transition: background-color calc(var(--rx-duration) * 1.3) ease;
+    }
+    & > section[data-over="true"] {
+      background-color: color-mix(in srgb, var(--rx-lane-accent) 8%, var(--rx-surface));
+      outline: var(--rx-frame-width) dashed
+        color-mix(in srgb, var(--rx-lane-accent) 55%, var(--rx-surface));
+      outline-offset: calc(var(--rx-frame-width) * -1);
+    }
+    /*
+      ドラッグ中の挿入位置。項目は元の場所に跡として残し、移動先には列の色の挿入位置の線だけを出す。
+      線は両端を淡く中央を濃くした列の色のグラデーションにし、縁取りは付けずに、ぼかした影を重ねてうっすら光らせる。
+    */
+    & > section > .items > .drop-marker {
+      --rx-board-marker: var(--rx-lane-accent);
+      block-size: 0.1875rem;
+      border-radius: var(--rx-radius-pill);
+      background: linear-gradient(
+        to right,
+        color-mix(in srgb, var(--rx-board-marker) 35%, transparent),
+        var(--rx-board-marker) 30% 70%,
+        color-mix(in srgb, var(--rx-board-marker) 35%, transparent)
+      );
+      box-shadow:
+        0 0 0.375rem color-mix(in srgb, var(--rx-board-marker) 45%, transparent),
+        0 0 1rem 0.125rem color-mix(in srgb, var(--rx-board-marker) 18%, transparent);
+    }
+    & > section[data-tone="neutral"]:not([data-current="true"]) > .items > .drop-marker {
+      --rx-board-marker: var(--rx-link);
+    }
+    /*
+      ドラッグ中の項目。項目そのもののコピーを傾けずに深い影で持ち上げ、
+      下に出る挿入位置の線が見えるよう半透明にする。
+      位置はポインターの位置から決めるので、書字方向にかかわらず左上を基準にする（コピーの中身は元の書字方向のまま）。
+    */
+    & > .drag-preview {
+      position: fixed;
+      inset-block-start: 0;
+      inset-inline-start: 0;
+      direction: ltr;
+      z-index: 100;
+      pointer-events: none;
+      opacity: 0.8;
+      & > * {
+        box-shadow: var(--rx-shadow-paper-lift);
+      }
+    }
+    @container rx-board (inline-size < 36rem) {
+      & > section {
+        grid-column: 1 / -1;
+        min-inline-size: 0;
+      }
+      /* 狭い場所では、横長のピルにし、件数・名前・「開く」を一行に並べる。 */
+      & > section[data-collapsed="true"] > .title {
+        flex-direction: row;
+        inline-size: fit-content;
+        min-block-size: 0;
+        padding-block: var(--rx-space-1);
+        padding-inline: var(--rx-space-1) var(--rx-space-4);
+        background: linear-gradient(
+          to right,
+          color-mix(in srgb, var(--rx-lane-accent) 12%, var(--rx-surface)),
+          var(--rx-surface) 70%
+        );
+        &:has(> .toggle:not([hidden])) {
+          padding-inline-end: var(--rx-space-1);
+        }
+        & > .label {
+          flex: 0 1 auto;
+          writing-mode: horizontal-tb;
+        }
+      }
+    }
+  }
+  @keyframes rx-board-unfold {
+    from {
+      opacity: 0;
+      translate: calc(var(--rx-space-4) * -1) 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rx-board > section[data-unfolding="true"] > .items > * {
+      animation: none;
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-board > section > .empty {
+      border: var(--rx-stroke-width) dashed CanvasText;
+    }
+    .rx-board > section[data-collapsed="true"] > .title {
+      border: var(--rx-stroke-width) solid CanvasText;
+    }
+    .rx-board > section > .items > .drop-marker {
+      forced-color-adjust: none;
+      background: Highlight;
+      box-shadow: none;
+    }
+    .rx-board > .drag-preview > * {
+      border: var(--rx-stroke-width) solid CanvasText;
+      background: Canvas;
+      box-shadow: none;
+    }
+  }
+}

@@ -1,0 +1,120 @@
+@layer components {
+  /*
+    通知は本文のそばに置く「ここを見て」のカード。白いカードを影で浮かべ、アイコンと題名を役割の色で塗った一つのピルにまとめて、
+    カードの上の縁にまたがせる（Carouselの丸と同じく、縁をまたぐコンポーネント）。カードの上側には役割の色を
+    うっすら乗せ、本文と操作をピルの下に並べる。ピルの半分がカードの外に出るので、その分だけ上を空ける。
+  */
+  .rx-notice {
+    --rx-notice-accent: var(--rx-info);
+    --rx-notice-fill: var(--rx-fill-menu);
+    /* ピルの一行の高さ。カードの上の縁はピルの高さの半分の所を通る。 */
+    --rx-notice-pill: 2rem;
+    display: grid;
+    /* 列はカードの幅に収め、長い題名やURLでも中身の最小幅でカードを押し広げない。 */
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: start;
+    min-inline-size: 0;
+    margin-block-start: calc(var(--rx-notice-pill) / 2);
+    padding-block: 0 var(--rx-space-5);
+    padding-inline: var(--rx-space-5) var(--rx-space-6);
+    /* 見出しのピルは本文より書き始めの側へ寄せ、カードの角の近くからまたがせる。 */
+    --rx-notice-pill-start: var(--rx-space-3);
+    border-radius: var(--rx-radius-surface);
+    background:
+      linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--rx-notice-accent) 7%, var(--rx-surface)),
+        var(--rx-surface) 4.5rem
+      ),
+      var(--rx-surface);
+    box-shadow: var(--rx-shadow-paper);
+    color: var(--rx-text);
+    font-size: var(--rx-label);
+    line-height: var(--rx-label-leading);
+    overflow-wrap: anywhere;
+    /* 日本語は文節の切れ目で折り返し、行末に一、二文字だけを残さない。 */
+    word-break: auto-phrase;
+    /*
+      アイコンと題名のピル。役割の色で塗り、白いアイコンと白い太字の題名を横に並べる。地の色の輪でカードの縁と切り離す。
+      アイコンの枠は題名の一行の高さにそろえて上揃えにし、題名が折り返してもアイコンは一行目の横に置く。
+      上下の余白は、一行の時のピルの高さから行の高さを引いた残りを半分ずつにする。折り返す時は、
+      一行の時の丸みのまま角丸の面として下へ伸びる。
+    */
+    & > .heading {
+      display: inline-flex;
+      align-items: start;
+      /* アイコンと題名は一つの塊として読ませるので、Toastのアイコンと文と同じく詰める。 */
+      gap: 0.375rem;
+      max-inline-size: 100%;
+      margin-block-start: calc(var(--rx-notice-pill) / -2);
+      margin-inline-start: calc(var(--rx-notice-pill-start) - var(--rx-space-5));
+      padding-block: calc((var(--rx-notice-pill) - 1lh) / 2);
+      padding-inline: var(--rx-space-2) var(--rx-space-4);
+      border-radius: calc(var(--rx-notice-pill) / 2);
+      background: var(--rx-notice-fill);
+      box-shadow:
+        0 0 0 0.1875rem var(--rx-surface),
+        var(--rx-shadow-chip);
+      color: var(--rx-surface);
+      /* 題名は操作の文字と同じ大きさにし、ピルを本文より強くしすぎない。 */
+      font-size: var(--rx-label);
+      line-height: var(--rx-label-leading);
+      & > .symbol {
+        display: grid;
+        flex: none;
+        place-items: center;
+        block-size: 1lh;
+        & > .rx-icon {
+          font-size: 1rem;
+        }
+      }
+      & > .title {
+        min-inline-size: 0;
+        margin: 0;
+        color: inherit;
+        font-size: inherit;
+        font-weight: 700;
+        line-height: inherit;
+      }
+    }
+    & > .body {
+      justify-self: stretch;
+      min-inline-size: 0;
+      margin-block-start: var(--rx-space-3);
+      & > * + * {
+        margin-block-start: var(--rx-space-3);
+      }
+      /* 本文の中の通知は、段の間に加えてピルのはみ出す分も空け、上の行にピルを重ねない。 */
+      & > * + .rx-notice {
+        margin-block-start: calc(var(--rx-notice-pill) / 2 + var(--rx-space-3));
+      }
+      &:empty {
+        display: none;
+      }
+    }
+    &[data-tone="success"] {
+      --rx-notice-accent: var(--rx-success);
+      --rx-notice-fill: var(--rx-fill-success);
+    }
+    &[data-tone="warning"] {
+      --rx-notice-accent: var(--rx-warning);
+      --rx-notice-fill: var(--rx-fill-warning);
+    }
+    &[data-tone="danger"] {
+      --rx-notice-accent: var(--rx-danger);
+      --rx-notice-fill: var(--rx-fill-danger);
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-notice {
+      outline: var(--rx-frame-width) solid CanvasText;
+      outline-offset: calc(var(--rx-frame-width) * -1);
+      background: Canvas;
+    }
+    .rx-notice > .heading {
+      forced-color-adjust: none;
+      background: CanvasText;
+      color: Canvas;
+    }
+  }
+}

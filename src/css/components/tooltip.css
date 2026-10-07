@@ -1,0 +1,59 @@
+@layer components {
+  .rx-tooltip {
+    display: inline-flex;
+    max-inline-size: 100%;
+  }
+  .rx-tooltip > .content {
+    position: fixed;
+    inset-block: auto 1rem;
+    inset-inline: auto;
+    inset-inline-start: 50%;
+    translate: -50% 0;
+    inline-size: max-content;
+    max-inline-size: min(20rem, calc(100vw - 1rem));
+    margin: 0;
+    padding-block: var(--rx-space-2);
+    padding-inline: var(--rx-space-3);
+    font-size: var(--rx-small);
+    line-height: var(--rx-small-leading);
+    /* 操作の中央の下に出るため、上の中央を支点に膨らむ。 */
+    transform-origin: top center;
+    /* 下のつなぎの領域を切り取らない。 */
+    overflow: visible;
+    /*
+      操作と補足の間の隙間に、上下へ透明なつなぎの領域を置く。操作から補足へポインターを移す間も補足の上にいるので、
+      補足は閉じない（WCAG 1.4.13）。上下どちらへ回り込んでも操作の側につなぎの領域がある。
+    */
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      inset-inline: 0;
+      block-size: var(--rx-space-1);
+    }
+    &::before {
+      inset-block-end: 100%;
+    }
+    &::after {
+      inset-block-start: 100%;
+    }
+  }
+  @supports (inset-block-start: anchor(end)) and (position-try-fallbacks: flip-block) {
+    .rx-tooltip > .content {
+      inset-block: auto;
+      inset-inline: auto;
+      inset-block-start: calc(anchor(end) + var(--rx-space-1));
+      inset-inline-start: anchor(center);
+      translate: -50% 0;
+      position-try-fallbacks:
+        flip-block,
+        flip-inline,
+        flip-block flip-inline;
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-tooltip > .content {
+      border-color: CanvasText;
+    }
+  }
+}

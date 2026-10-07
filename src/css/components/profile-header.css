@@ -1,0 +1,83 @@
+@layer components {
+  /*
+    人物の見出し。大きなアバター・太字の大きな名前・淡い補足を中央に積み、
+    上の二つの角に所属のバッジと操作を置く。この人への設定は、名前の下の灰色のバーにまとめて並べる。
+  */
+  .rx-profile-header {
+    container: rx-profile-header / inline-size;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "badge actions"
+      "avatar avatar"
+      "name name"
+      "detail detail"
+      "preferences preferences";
+    justify-items: center;
+    row-gap: var(--rx-space-2);
+    min-inline-size: 0;
+    color: var(--rx-text);
+    text-align: center;
+    overflow-wrap: anywhere;
+    & > .badge {
+      grid-area: badge;
+      justify-self: start;
+    }
+    & > .actions {
+      grid-area: actions;
+      display: flex;
+      gap: var(--rx-space-2);
+      justify-self: end;
+    }
+    & > .avatar {
+      grid-area: avatar;
+      & > .rx-avatar {
+        inline-size: 4rem;
+        block-size: 4rem;
+        font-size: 1.5rem;
+      }
+    }
+    & > .name {
+      grid-area: name;
+      margin: 0;
+      font-size: var(--rx-title);
+      font-weight: 800;
+      line-height: 1.15;
+    }
+    & > .detail {
+      grid-area: detail;
+      margin: 0;
+      margin-block-start: calc(var(--rx-space-2) * -1);
+      color: var(--rx-muted);
+      font-size: var(--rx-label);
+    }
+    /* 設定のバー。灰色の面のピルに、アイコンと名前の操作を面を持たない形で並べる。 */
+    & > .preferences {
+      grid-area: preferences;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: var(--rx-space-1);
+      max-inline-size: 100%;
+      margin-block-start: var(--rx-space-3);
+      padding-block: var(--rx-space-1);
+      padding-inline: var(--rx-space-2);
+      border-radius: var(--rx-radius-field);
+      background: var(--rx-background);
+      & > .rx-button,
+      & > .rx-dropdown-menu > .rx-button {
+        border-color: transparent;
+        background: transparent;
+        box-shadow: none;
+        &:hover:not(:disabled) {
+          background: var(--rx-surface);
+        }
+      }
+    }
+  }
+  @container rx-profile-header (inline-size < 20rem) {
+    .rx-profile-header > .preferences {
+      padding-inline: 0;
+    }
+  }
+}

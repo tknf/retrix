@@ -1,0 +1,263 @@
+@layer components {
+  .rx-color-picker {
+    --color-picker-hue: 215;
+    --color-picker-saturation: 0.68;
+    --color-picker-brightness: 0.84;
+    --color-picker-alpha: 1;
+    --color-picker-color: var(--rx-link);
+    --color-picker-hue-color: var(--rx-link);
+    --color-picker-fallback: var(--rx-link);
+    container: rx-color-picker / inline-size;
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+
+    & > legend {
+      max-inline-size: 100%;
+      padding: 0;
+      font-size: var(--rx-label);
+      font-weight: var(--rx-label-weight);
+      line-height: var(--rx-label-leading);
+    }
+
+    & > .editor {
+      display: grid;
+      align-items: start;
+      gap: var(--rx-space-4);
+      min-inline-size: 0;
+      /* 面の余白は、色の面とスライダーのグループの間やスライダーどうしの間より広くする。 */
+      padding-block: var(--rx-space-6);
+      padding-inline: var(--rx-space-6);
+      /* Navigationのパネルと同じく、枠線を引かず淡い面の上に色の面と調整を載せる。 */
+      border: var(--rx-stroke-width) solid transparent;
+      border-radius: var(--rx-radius-field);
+      background: var(--rx-background);
+    }
+
+    & > .editor > .visual,
+    & > .editor > .channels {
+      min-inline-size: 0;
+    }
+
+    & > .editor > .visual > .area {
+      position: relative;
+      display: block;
+      inline-size: 100%;
+      max-inline-size: none;
+      min-block-size: 0;
+      aspect-ratio: 8 / 5;
+      overflow: hidden;
+      padding: 0;
+      border-radius: var(--rx-radius-control);
+      background:
+        linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, transparent),
+        var(--color-picker-hue-color, var(--rx-link));
+      box-shadow: var(--rx-shadow-input);
+      cursor: crosshair;
+      touch-action: none;
+    }
+
+    &:not([data-state]) > .editor > .visual > .area {
+      display: none;
+    }
+
+    & > .editor > .visual > .area > .cursor {
+      position: absolute;
+      inset-inline-start: calc(var(--color-picker-saturation, 0.68) * 100%);
+      inset-block-start: calc((1 - var(--color-picker-brightness, 0.84)) * 100%);
+      inline-size: 0.875rem;
+      block-size: 0.875rem;
+      border: 0.125rem solid white;
+      border-radius: 50%;
+      background: transparent;
+      box-shadow:
+        0 0 0 0.0625rem rgb(36 57 70 / 45%),
+        0 0.0625rem 0.1875rem rgb(36 57 70 / 18%);
+      translate: -50% -50%;
+      pointer-events: none;
+    }
+
+    & > .editor > .visual > .preview {
+      display: grid;
+      grid-template-columns: 1.625rem minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 0.5625rem;
+      min-inline-size: 0;
+      margin-block-start: 0.625rem;
+      color: var(--rx-muted);
+      font-size: var(--rx-small);
+      line-height: var(--rx-small-leading);
+    }
+
+    & > .editor > .visual > .preview > .swatch {
+      position: relative;
+      inline-size: 1.625rem;
+      block-size: 1.625rem;
+      overflow: hidden;
+      border: var(--rx-stroke-width) solid var(--rx-border);
+      border-radius: var(--rx-radius-mark);
+      background: repeating-conic-gradient(var(--rx-border) 0 25%, white 0 50%) 0 0 / 0.5rem 0.5rem;
+      box-shadow: none;
+    }
+
+    & > .editor > .visual > .preview > .swatch::after {
+      position: absolute;
+      inset: 0;
+      background: var(--color-picker-fallback, var(--rx-link));
+      background: var(--color-picker-color, var(--rx-link));
+      content: "";
+    }
+
+    & > .editor > .visual > .preview > .preview-label {
+      min-inline-size: 0;
+      overflow-wrap: anywhere;
+    }
+
+    & > .editor > .channels {
+      display: grid;
+      gap: 0.625rem;
+    }
+
+    & > .editor > .channels > .rx-field {
+      gap: 0.125rem;
+    }
+
+    & > .editor > .channels > .rx-field > .rx-range > .controls {
+      margin-block-start: 0;
+    }
+
+    & > .editor > .channels > .rx-field > .rx-range[data-channel="hue"] {
+      --rx-range-color: var(--color-picker-hue-color, var(--rx-link));
+      --slider-value: calc(var(--color-picker-hue, 215) / 360);
+    }
+
+    & > .editor > .channels > .rx-field > .rx-range[data-channel="saturation"] {
+      --rx-range-color: var(--color-picker-hue-color, var(--rx-link));
+      --slider-value: var(--color-picker-saturation, 0.68);
+    }
+
+    & > .editor > .channels > .rx-field > .rx-range[data-channel="brightness"] {
+      --rx-range-color: var(--color-picker-hue-color, var(--rx-link));
+      --slider-value: var(--color-picker-brightness, 0.84);
+    }
+
+    & > .editor > .channels > .rx-field > .rx-range[data-channel="alpha"] {
+      --rx-range-color: var(--color-picker-hue-color, var(--rx-link));
+      --slider-value: var(--color-picker-alpha, 1);
+    }
+
+    & > .editor > .channels > .rx-field > .rx-range > .controls > .native > .input {
+      background: linear-gradient(var(--rx-range-color), var(--rx-range-color)) center /
+        calc(100% - 9em / 7) calc(2em / 7) no-repeat;
+    }
+
+    &
+      > .editor
+      > .channels
+      > .rx-field
+      > .rx-range[data-channel="hue"]
+      > .controls
+      > .native
+      > .input {
+      background: linear-gradient(to right, #f33, #fc3, #59c966, #35bdc8, #487edc, #c05bc4, #f33)
+        center / calc(100% - 9em / 7) calc(2em / 7) no-repeat;
+    }
+
+    &
+      > .editor
+      > .channels
+      > .rx-field
+      > .rx-range[data-channel="saturation"]
+      > .controls
+      > .native
+      > .input {
+      background: linear-gradient(to right, white, var(--color-picker-hue-color, var(--rx-link)))
+        center / calc(100% - 9em / 7) calc(2em / 7) no-repeat;
+    }
+
+    &
+      > .editor
+      > .channels
+      > .rx-field
+      > .rx-range[data-channel="brightness"]
+      > .controls
+      > .native
+      > .input {
+      background: linear-gradient(to right, black, var(--color-picker-hue-color, var(--rx-link)))
+        center / calc(100% - 9em / 7) calc(2em / 7) no-repeat;
+    }
+
+    &
+      > .editor
+      > .channels
+      > .rx-field
+      > .rx-range[data-channel="alpha"]
+      > .controls
+      > .native
+      > .input {
+      background:
+        linear-gradient(to right, transparent, var(--color-picker-hue-color, var(--rx-link))) center
+          / calc(100% - 9em / 7) calc(2em / 7) no-repeat,
+        repeating-conic-gradient(var(--rx-border) 0 25%, white 0 50%) center / calc(100% - 9em / 7)
+          calc(2em / 7) no-repeat;
+    }
+
+    &:disabled > .editor {
+      background: var(--rx-hatch), var(--rx-background);
+    }
+
+    &:disabled > .editor > .visual {
+      opacity: 0.55;
+    }
+
+    &:disabled > .editor > .visual > .area {
+      cursor: not-allowed;
+    }
+  }
+
+  @container rx-color-picker (inline-size >= 28rem) {
+    .rx-color-picker > .editor > .channels {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 1.125rem;
+    }
+  }
+
+  @container rx-color-picker (inline-size < 20rem) {
+    .rx-color-picker > .editor > .visual > .preview {
+      grid-template-columns: 1.625rem minmax(0, 1fr);
+    }
+
+    .rx-color-picker > .editor > .visual > .preview > .rx-tag {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @container rx-color-picker (inline-size >= 38rem) {
+    .rx-color-picker > .editor {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: 1.375rem;
+    }
+
+    .rx-color-picker > .editor > .channels {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (forced-colors: active) {
+    .rx-color-picker > .editor > .visual > .area {
+      background: Canvas;
+      box-shadow: none;
+    }
+
+    .rx-color-picker > .editor > .visual > .area > .cursor {
+      border-color: Highlight;
+      box-shadow: none;
+    }
+
+    .rx-color-picker > .editor > .channels > .rx-field > .rx-range > .controls > .native > .input {
+      background: linear-gradient(Highlight, Highlight) center / calc(100% - 9em / 7) calc(2em / 7)
+        no-repeat;
+    }
+  }
+}

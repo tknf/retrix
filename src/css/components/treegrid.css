@@ -1,0 +1,77 @@
+@layer components {
+  .rx-treegrid {
+    --rx-treegrid-depth: 0;
+    /* 開閉ボタンは題名の一行の高さにし、開閉ボタンのある行とない行を同じ高さにそろえる。 */
+    --rx-treegrid-toggle-size: 1.25rem;
+  }
+
+  .rx-treegrid > table > tbody > tr > th > .node {
+    display: flex;
+    align-items: center;
+    gap: var(--rx-space-1);
+    min-inline-size: 0;
+    padding-inline-start: calc(var(--rx-treegrid-depth) * var(--rx-space-3));
+    & > .toggle {
+      --rx-button-size: var(--rx-treegrid-toggle-size);
+      flex: none;
+      padding-inline: 0;
+      & > .rx-icon {
+        transition: rotate var(--rx-duration) ease;
+      }
+    }
+    & > .spacer {
+      flex: none;
+      inline-size: var(--rx-treegrid-toggle-size);
+    }
+    /* 題名はリンクかどうかに関わらず、濃い色のMediumの文字にそろえる。 */
+    & > :is(.label, a) {
+      min-inline-size: 0;
+      font-weight: 500;
+      overflow-wrap: anywhere;
+    }
+    /* 行の題名のリンクはTableと同じく濃い色のMediumの文字にし、ホバー時だけ青くする。 */
+    & > a {
+      color: var(--rx-text);
+      text-decoration: none;
+    }
+    & > a:hover {
+      color: var(--rx-link);
+    }
+  }
+
+  /* 開閉はcontrollerが行にdata-stateを付けてから働くので、それまでは開閉ボタンを隠し、幅だけ残す。 */
+  .rx-treegrid > table > tbody > tr:not([data-state]) > th .toggle {
+    visibility: hidden;
+  }
+
+  .rx-treegrid > table > tbody > tr[data-state="collapsed"] > th .toggle > .rx-icon {
+    rotate: -90deg;
+  }
+
+  .rx-treegrid:dir(rtl) > table > tbody > tr[data-state="collapsed"] > th .toggle > .rx-icon {
+    rotate: 90deg;
+  }
+
+  .rx-treegrid > table > tbody > tr[data-selected="true"] {
+    background: var(--rx-info-soft);
+  }
+
+  .rx-treegrid > table > tbody > tr[data-disabled="true"] > th .label {
+    color: var(--rx-muted);
+  }
+
+  .rx-treegrid > table > tbody > tr > :is(th, td):focus-visible {
+    position: relative;
+    outline: 0.125rem solid var(--rx-link);
+    outline-offset: -0.125rem;
+  }
+  /* タッチ操作では開閉ボタンが44pxになるので、開閉ボタンのない行も同じ高さにそろえる。 */
+  @media (pointer: coarse) {
+    .rx-treegrid {
+      --rx-treegrid-toggle-size: 2.75rem;
+    }
+    .rx-treegrid > table > tbody > tr > th > .node {
+      min-block-size: var(--rx-treegrid-toggle-size);
+    }
+  }
+}

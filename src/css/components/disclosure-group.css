@@ -1,0 +1,7 @@
+@layer components {
+  .rx-disclosure-group {
+    display: grid;
+    gap: var(--rx-space-1);
+    min-inline-size: 0;
+  }
+}

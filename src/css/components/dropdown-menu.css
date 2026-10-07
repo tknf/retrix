@@ -1,0 +1,251 @@
+@layer components {
+  /* 親メニューより先にトップレイヤーへ載せ、背後の画面を覆う実要素。 */
+  .rx-dropdown-menu > .shield {
+    position: fixed;
+    inset-block: 0;
+    inset-inline: 0;
+    inline-size: auto;
+    block-size: auto;
+    max-inline-size: none;
+    max-block-size: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    outline: none;
+    &::backdrop {
+      background: transparent;
+      pointer-events: none;
+    }
+  }
+  .rx-dropdown-menu {
+    display: grid;
+    justify-items: start;
+    min-inline-size: 0;
+    &[data-align="end"] {
+      justify-items: end;
+    }
+  }
+  /*
+    操作のメニューは白いパネルではなく青の面に白い文字で出す。
+    項目にホバーすると白を薄く重ね、区切りや補足も白の濃さで分ける。読み物を載せるPopoverやDialogは白いパネルのまま。
+  */
+  .rx-menu {
+    position: fixed;
+    inset-block: 0 auto;
+    inset-inline: 0 auto;
+    z-index: var(--rx-z-menu);
+    inline-size: max-content;
+    min-inline-size: min(12rem, calc(100vw - 1rem));
+    max-inline-size: min(20rem, calc(100vw - 1rem));
+    max-block-size: min(24rem, calc(100dvh - 1rem));
+    overflow: auto;
+    overscroll-behavior: contain;
+    overflow-wrap: anywhere;
+    margin: 0;
+    padding-block: var(--rx-space-1);
+    padding-inline: var(--rx-space-1);
+    border: 0;
+    border-radius: var(--rx-radius-surface);
+    background: var(--rx-link);
+    background-image: var(--rx-fill-menu);
+    color: var(--rx-surface);
+    font-family: var(--rx-control-font-family);
+    font-size: var(--rx-label);
+    line-height: calc(10 / 7);
+    letter-spacing: 0;
+    list-style: none;
+    box-shadow: var(--rx-shadow-menu);
+    scrollbar-color: color-mix(in srgb, var(--rx-surface) 40%, transparent) transparent;
+    /* 開閉のアニメーションはoverlay.cssの共通の定義。支点は開いた操作の側の角にする。 */
+    transform-origin: top left;
+    &::backdrop {
+      background: transparent;
+      pointer-events: none;
+    }
+    &:focus-visible {
+      outline: 0.125rem solid var(--rx-surface);
+      outline-offset: -0.125rem;
+    }
+    &:dir(rtl) {
+      transform-origin: top right;
+    }
+    &[data-side="top"] {
+      transform-origin: bottom left;
+    }
+    &[data-side="top"]:dir(rtl) {
+      transform-origin: bottom right;
+    }
+  }
+  .rx-dropdown-menu[data-align="end"] > .rx-menu:dir(ltr) {
+    transform-origin: top right;
+    &[data-side="top"] {
+      transform-origin: bottom right;
+    }
+  }
+  .rx-dropdown-menu[data-align="end"] > .rx-menu:dir(rtl) {
+    transform-origin: top left;
+    &[data-side="top"] {
+      transform-origin: bottom left;
+    }
+  }
+  .rx-menu[data-variant="group"] {
+    position: static;
+    inline-size: auto;
+    min-inline-size: 0;
+    max-inline-size: none;
+    max-block-size: none;
+    overflow: visible;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    color: inherit;
+    box-shadow: none;
+  }
+  .rx-menu > li > .item.rx-button {
+    --rx-menu-row-size: var(--rx-button-size);
+    display: block;
+    inline-size: 100%;
+    /* 一行の高さから同量の上下余白を取る。複数行は上端を保って下へ伸ばす。 */
+    padding-block: calc((var(--rx-menu-row-size) - 10em / 7 - 0.125rem) / 2);
+    padding-inline: var(--rx-space-2);
+    border: var(--rx-stroke-width) solid transparent;
+    border-radius: var(--rx-radius-control);
+    background: transparent;
+    color: inherit;
+    text-align: start;
+    text-decoration: none;
+    box-shadow: none;
+    cursor: pointer;
+    transition: background-color var(--rx-duration) ease;
+    &:hover:not(:disabled, [data-disabled="true"]),
+    &[data-state="active"]:not(:disabled, [data-disabled="true"]) {
+      background: color-mix(in srgb, var(--rx-surface) 16%, transparent);
+      box-shadow: none;
+    }
+    &:active:not(:disabled, [data-disabled="true"]) {
+      background: color-mix(in srgb, var(--rx-surface) 24%, transparent);
+      box-shadow: none;
+    }
+    &:focus-visible {
+      outline: 0.125rem solid var(--rx-surface);
+      outline-offset: -0.125rem;
+    }
+    /* 青の面の上では赤の文字が沈むため、危険の操作は淡い赤の文字とアイコンで分ける。 */
+    &[data-tone="danger"] {
+      color: var(--rx-danger-soft);
+    }
+    &:disabled,
+    &[data-disabled="true"] {
+      background: transparent;
+      border-color: transparent;
+      color: inherit;
+      box-shadow: none;
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+    &[data-checked="false"] > .content > .heading > .mark {
+      visibility: hidden;
+    }
+    &[data-checked="mixed"] > .content > .heading > .mark > .rx-icon {
+      display: none;
+    }
+    &[data-checked="mixed"] > .content > .heading > .mark > .mixed {
+      display: block;
+    }
+  }
+  .rx-menu > li > .item > .content > .heading > .text {
+    display: block;
+    flex: 1;
+    min-inline-size: 0;
+  }
+  .rx-menu > li > .item > .content {
+    display: grid;
+    gap: var(--rx-space-1);
+    inline-size: 100%;
+    min-inline-size: 0;
+    &[data-leading="true"] > .description {
+      padding-inline-start: calc(var(--rx-button-font) + var(--rx-space-2));
+    }
+  }
+  .rx-menu > li > .item > .content > .heading {
+    display: flex;
+    align-items: start;
+    gap: var(--rx-space-2);
+    min-inline-size: 0;
+    & > .rx-icon {
+      margin-block-start: calc((1lh - 1em) / 2);
+    }
+  }
+  .rx-menu > li > .item > .content > .description {
+    display: block;
+    color: color-mix(in srgb, currentColor 76%, transparent);
+    font-size: var(--rx-small);
+    line-height: var(--rx-control-leading);
+  }
+  .rx-menu > li > .item > .content > .heading > .shortcut {
+    color: color-mix(in srgb, currentColor 72%, transparent);
+    white-space: nowrap;
+  }
+  .rx-menu > li > .item > .content > .heading > .caret,
+  .rx-menu > li > .item > .content > .heading > .mark {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    inline-size: 1em;
+    block-size: 1lh;
+  }
+  .rx-menu > li > .item > .content > .heading > .caret {
+    & > .rx-icon {
+      transform: rotate(-90deg);
+    }
+    &:dir(rtl) > .rx-icon {
+      transform: rotate(90deg);
+    }
+  }
+  .rx-menu > li > .item > .content > .heading > .mark > .dot {
+    inline-size: 0.45em;
+    block-size: 0.45em;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .rx-menu > li > .item > .content > .heading > .mark > .mixed {
+    display: none;
+  }
+  .rx-menu > li > .label,
+  .rx-menu > .empty {
+    display: block;
+    padding-block: var(--rx-space-2);
+    padding-inline: var(--rx-space-2);
+    color: color-mix(in srgb, currentColor 76%, transparent);
+    font-size: var(--rx-small);
+    font-weight: 600;
+  }
+  .rx-menu > .separator {
+    margin-block-start: var(--rx-space-1);
+    padding-block-start: var(--rx-space-1);
+    border-block-start: var(--rx-stroke-width) solid
+      color-mix(in srgb, currentColor 24%, transparent);
+  }
+  @media (pointer: coarse) {
+    .rx-menu > li > .item.rx-button {
+      --rx-menu-row-size: 2.75rem;
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-menu {
+      background: Canvas;
+      color: CanvasText;
+      box-shadow: none;
+    }
+    .rx-menu > li > .item.rx-button[data-state="active"] {
+      border-color: Highlight;
+    }
+    .rx-menu > li > .item.rx-button:disabled,
+    .rx-menu > li > .item.rx-button[data-disabled="true"] {
+      color: GrayText;
+      opacity: 1;
+    }
+  }
+}

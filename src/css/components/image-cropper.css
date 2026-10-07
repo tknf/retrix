@@ -1,0 +1,224 @@
+@layer components {
+  .rx-image-cropper {
+    --rx-cropper-aspect: 1;
+    --image-cropper-x: 25;
+    --image-cropper-y: 25;
+    --image-cropper-width: 50;
+    --image-cropper-height: 50;
+    --image-cropper-zoom: 1;
+    --image-cropper-offset-x: 0;
+    --image-cropper-offset-y: 0;
+    container: rx-image-cropper / inline-size;
+    display: grid;
+    gap: var(--rx-space-3);
+    min-inline-size: 0;
+    color: var(--rx-text);
+
+    & > .title {
+      font-size: var(--rx-section-title);
+      font-weight: 600;
+      line-height: var(--rx-label-leading);
+    }
+
+    & > .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(12rem, 15rem);
+      align-items: start;
+      gap: var(--rx-space-5);
+      min-inline-size: 0;
+    }
+
+    & > .layout > .stage {
+      display: grid;
+      place-items: center;
+      min-inline-size: 0;
+      padding-block: var(--rx-space-4);
+      padding-inline: var(--rx-space-5);
+      border: 0;
+      border-radius: var(--rx-radius-field);
+      background: color-mix(in srgb, var(--rx-background) 65%, var(--rx-surface));
+    }
+
+    & > .layout > .stage > .viewport {
+      position: relative;
+      inline-size: min(100%, 21rem);
+      aspect-ratio: var(--rx-cropper-aspect);
+      overflow: hidden;
+      border: var(--rx-stroke-width) solid var(--rx-border);
+      border-radius: var(--rx-radius-control);
+      background: var(--rx-surface);
+      box-shadow: none;
+      isolation: isolate;
+    }
+
+    & > .layout > .stage > .viewport > img {
+      position: absolute;
+      inset-block-start: calc(var(--image-cropper-offset-y) * 1%);
+      inset-inline-start: calc(var(--image-cropper-offset-x) * 1%);
+      inline-size: calc(var(--image-cropper-zoom) * 100%);
+      block-size: calc(var(--image-cropper-zoom) * 100%);
+      max-inline-size: none;
+      object-fit: fill;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    & > .layout > .stage > .viewport > .selection {
+      position: absolute;
+      inset-block-start: calc(var(--image-cropper-y) * 1%);
+      inset-inline-start: calc(var(--image-cropper-x) * 1%);
+      inline-size: calc(var(--image-cropper-width) * 1%);
+      block-size: calc(var(--image-cropper-height) * 1%);
+      min-block-size: 0;
+      padding: 0;
+      border: 0.125rem solid var(--rx-surface);
+      border-radius: calc(var(--rx-radius-control) / 2);
+      background: transparent;
+      box-shadow:
+        0 0 0 100vmax rgb(20 39 53 / 42%),
+        inset 0 0 0 var(--rx-stroke-width) rgb(20 39 53 / 38%),
+        0 0 0 var(--rx-stroke-width) rgb(20 39 53 / 36%);
+      cursor: move;
+      touch-action: none;
+    }
+
+    & > .layout > .stage > .viewport > .resize {
+      position: absolute;
+      inset-block-start: clamp(
+        0rem,
+        calc((var(--image-cropper-y) + var(--image-cropper-height)) * 1% - 1.125rem),
+        calc(100% - 2.25rem)
+      );
+      inset-inline-start: clamp(
+        0rem,
+        calc((var(--image-cropper-x) + var(--image-cropper-width)) * 1% - 1.125rem),
+        calc(100% - 2.25rem)
+      );
+      inline-size: 2.25rem;
+      block-size: 2.25rem;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      cursor: nwse-resize;
+      touch-action: none;
+    }
+
+    & > .layout > .stage > .viewport > .resize::after {
+      content: "";
+      display: block;
+      inline-size: 0.875rem;
+      block-size: 0.875rem;
+      border: 0.125rem solid var(--rx-link);
+      border-radius: var(--rx-radius-mark);
+      background: var(--rx-surface);
+      box-shadow: var(--rx-shadow-hardware);
+    }
+
+    & > .layout > .stage > .viewport > :is(.selection, .resize):focus-visible {
+      outline: 0.125rem solid var(--rx-link);
+      outline-offset: 0.125rem;
+    }
+
+    &[data-state="moving"] > .layout > .stage > .viewport > .selection,
+    &[data-state="resizing"] > .layout > .stage > .viewport > .resize {
+      cursor: grabbing;
+    }
+
+    &[data-disabled="true"] > .layout > .stage > .viewport > :is(.selection, .resize) {
+      cursor: not-allowed;
+    }
+
+    & > .layout > .settings {
+      display: grid;
+      align-content: start;
+      gap: var(--rx-space-4);
+      min-inline-size: 0;
+    }
+
+    /* 開閉の見た目はDisclosureが持つ。 */
+    /* 罫線の内側に余白を持たせ、見出しから調整の欄までの間より広くする。 */
+    & > .layout > .settings > .position {
+      padding-block: var(--rx-space-3);
+      border-block: var(--rx-stroke-width) solid var(--rx-border);
+    }
+
+    & > .layout > .settings > .position > .body > .ranges {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--rx-space-3) var(--rx-space-4);
+    }
+
+    /* JavaScriptが無いと動かないので、controllerが接続するまでハンドルと調整の欄を出さず、切り抜きの見本だけにする。 */
+    &:not([data-connected="true"]) > .layout > .settings,
+    &:not([data-connected="true"]) > .layout > .stage > .viewport > :is(.selection, .resize) {
+      display: none;
+    }
+
+    & > .layout > .settings > .instructions {
+      color: var(--rx-muted);
+      font-size: var(--rx-small);
+      line-height: var(--rx-small-leading);
+    }
+
+    & > .empty {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--rx-space-4);
+      min-inline-size: 0;
+      padding-block: var(--rx-space-4) var(--rx-space-3);
+      padding-inline: var(--rx-space-5);
+      border: 0;
+      border-radius: var(--rx-radius-field);
+      background: color-mix(in srgb, var(--rx-background) 60%, var(--rx-surface));
+      color: var(--rx-muted);
+      font-size: var(--rx-label);
+    }
+
+    & > .empty > .rx-image-frame {
+      flex: 0 1 4rem;
+      max-inline-size: 100%;
+    }
+
+    & > .empty > p {
+      flex: 1 1 6rem;
+      min-inline-size: 0;
+      overflow-wrap: anywhere;
+    }
+  }
+
+  @container rx-image-cropper (inline-size < 40rem) {
+    .rx-image-cropper > .layout {
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--rx-space-4);
+    }
+
+    .rx-image-cropper > .layout > .settings {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .rx-image-cropper > .layout > .settings > .instructions {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @container rx-image-cropper (inline-size < 25rem) {
+    .rx-image-cropper > .layout > .settings,
+    .rx-image-cropper > .layout > .settings > .position > .body > .ranges {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (forced-colors: active) {
+    .rx-image-cropper > .layout > .stage > .viewport > .selection {
+      border-color: Highlight;
+      box-shadow: 0 0 0 100vmax Canvas;
+    }
+    .rx-image-cropper > .layout > .stage > .viewport > .resize::after {
+      border-color: Highlight;
+      background: Canvas;
+      box-shadow: none;
+    }
+  }
+}

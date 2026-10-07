@@ -1,0 +1,120 @@
+@layer components {
+  /*
+    折りたたみは控えめな矢印と名前だけにする。
+    枠付きの開閉ボタンや中身の縦線は引かず、中身は名前の書き始めに揃え、入れ子は字下げだけで示す（Treeと同じ）。
+    開く時は高さが伸びながら中身が現れ、閉じる時は縮みながら薄れる。矢印も同じ時間で回る。
+  */
+  .rx-disclosure {
+    min-inline-size: 0;
+    color: var(--rx-text);
+    font-size: var(--rx-label);
+    line-height: calc(11 / 7);
+    interpolate-size: allow-keywords;
+    & > summary {
+      display: grid;
+      grid-template-columns: 1.5rem minmax(0, 1fr);
+      align-items: start;
+      gap: var(--rx-space-2);
+      padding-block: var(--rx-space-2);
+      padding-inline: 0;
+      border-radius: var(--rx-radius-control);
+      font-family: var(--rx-control-font-family);
+      font-size: var(--rx-body);
+      font-weight: 500;
+      line-height: 1.5;
+      list-style: none;
+      cursor: pointer;
+      transition: color var(--rx-duration) ease;
+      &:focus-visible {
+        outline-offset: 0.125rem;
+      }
+      &::-webkit-details-marker {
+        display: none;
+      }
+      & > .marker {
+        grid-column: 1;
+        grid-row: 1;
+        display: grid;
+        place-items: center;
+        inline-size: 1.5rem;
+        block-size: 1lh;
+        color: var(--rx-muted);
+        transition: color var(--rx-duration) ease;
+        & > .rx-icon {
+          inline-size: 0.875rem;
+          block-size: 0.875rem;
+          rotate: -90deg;
+          transition: rotate var(--rx-duration-pop) var(--rx-ease-slide);
+        }
+      }
+      &:dir(rtl) > .marker > .rx-icon {
+        rotate: 90deg;
+      }
+      &:hover {
+        color: var(--rx-link);
+        & > .marker {
+          color: var(--rx-link);
+        }
+      }
+      & > .label {
+        grid-column: 2;
+        grid-row: 1;
+        display: grid;
+        gap: 0.125rem;
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+        & > .description {
+          color: var(--rx-muted);
+          font-size: var(--rx-small);
+          font-weight: 400;
+          line-height: var(--rx-small-leading);
+        }
+      }
+    }
+    &[open] > summary > .marker {
+      color: var(--rx-text);
+      & > .rx-icon {
+        rotate: 0deg;
+      }
+    }
+    /* 閉じる間も中身を残して薄れさせ、高さを0へ縮める。中の操作の影は切らない。 */
+    &::details-content {
+      block-size: 0;
+      overflow: clip;
+      overflow-clip-margin: var(--rx-space-3);
+      opacity: 0;
+      transition:
+        block-size var(--rx-duration-pop) var(--rx-ease-slide),
+        opacity var(--rx-duration-pop) ease,
+        content-visibility var(--rx-duration-pop) allow-discrete;
+    }
+    &[open]::details-content {
+      block-size: auto;
+      opacity: 1;
+    }
+    /* 列は本文の幅に収め、長い語や横に広いコンポーネントでも本文を押し広げない。 */
+    & > div {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--rx-space-2);
+      min-inline-size: 0;
+      /* 中身の下は見出しの上と同じ余白にし、罫線で囲まれても上下の空きをそろえる。 */
+      padding-block: 0 var(--rx-space-2);
+      padding-inline: calc(1.5rem + var(--rx-space-2)) 0;
+      overflow-wrap: anywhere;
+      & > p {
+        max-inline-size: 44em;
+      }
+    }
+  }
+  @media (pointer: coarse) {
+    .rx-disclosure > summary {
+      padding-block: 0.625rem;
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-disclosure > summary > .marker {
+      color: CanvasText;
+    }
+  }
+}

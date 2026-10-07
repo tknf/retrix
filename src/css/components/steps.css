@@ -1,0 +1,65 @@
+@layer components {
+  .rx-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+    gap: var(--rx-space-4);
+    padding: 0;
+    list-style: none;
+    & > li {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: start;
+      gap: var(--rx-space-2);
+      font-size: var(--rx-label);
+      line-height: var(--rx-label-leading);
+    }
+    /* 番号の円（24px）の中心を、題名の一行目（行の高さ）の中心に合わせる。 */
+    & > li > .number {
+      display: grid;
+      place-items: center;
+      inline-size: 1.5rem;
+      block-size: 1.5rem;
+      margin-block-start: calc((1lh - 1.5rem) / 2);
+      border: var(--rx-stroke-width) solid var(--rx-border);
+      border-radius: 50%;
+      color: var(--rx-muted);
+      font-size: var(--rx-small);
+    }
+    /* 戻れる段階の題名は下線を引かず本文の色にし、ホバー時だけ青くする。 */
+    & > li > span > a {
+      color: inherit;
+      text-decoration: none;
+      transition: color var(--rx-duration) ease;
+      &:hover {
+        color: var(--rx-link);
+      }
+    }
+    & > li > span > small {
+      display: block;
+      margin-block-start: var(--rx-space-1);
+      color: var(--rx-muted);
+      font-size: var(--rx-small);
+      font-weight: 400;
+    }
+    & > li[data-state="complete"] > .number {
+      background: var(--rx-success-soft);
+      color: var(--rx-success);
+      border-color: var(--rx-success);
+    }
+    & > li[data-state="current"] > .number {
+      background: var(--rx-link);
+      color: var(--rx-surface);
+      border-color: var(--rx-link);
+      box-shadow: 0 0 0 0.1875rem var(--rx-info-soft);
+    }
+    & > li[data-state="current"] > span:last-child {
+      font-weight: 600;
+    }
+    /* これからの段階はまだ確定していないので、番号の円を破線にする。 */
+    & > li:not([data-state]) > .number,
+    & > li[data-state="upcoming"] > .number {
+      border-style: dashed;
+      border-color: var(--rx-perforation);
+    }
+  }
+}

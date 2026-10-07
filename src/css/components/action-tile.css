@@ -1,0 +1,107 @@
+@layer components {
+  /*
+    グリッドに並べるリンクや操作のタイル。塗りつぶしのアイコンを上・名前を下に置く。
+    ActionDockの操作と同じく、普段は影を持たない平らな淡い面にし、ホバーするとアイコンの色を淡く敷き、
+    押すと面が内側へへこむ（浮かせてから沈めるのではなく、平らな所から沈める）。
+    文字の指定（書体・大きさ・太さ・行高）はこのファイルが持つ（共通Buttonとは別の専用の操作）。
+  */
+  .rx-action-tile {
+    --rx-action-tile-accent: var(--rx-link);
+    /* 通常時の面。ActionDockの操作バーのようにパネルの上に置く時は、置く側が透明にする。 */
+    --rx-action-tile-rest: color-mix(in srgb, var(--rx-ink) 3%, var(--rx-surface));
+    appearance: none;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    min-inline-size: 0;
+    /* ActionDockの操作と同じ密度。アイコンの上を下より少し広く取り、アイコンと名前を一つのまとまりに見せる。 */
+    min-block-size: 3.75rem;
+    margin: 0;
+    padding-block: var(--rx-space-2) var(--rx-space-1);
+    padding-inline: var(--rx-space-2);
+    border: 0;
+    border-radius: var(--rx-radius-control);
+    background: var(--rx-action-tile-rest);
+    color: var(--rx-text);
+    font-family: inherit;
+    font-size: var(--rx-label);
+    font-weight: 500;
+    line-height: calc(10 / 7);
+    text-align: center;
+    text-decoration: none;
+    /* 名前を「プロジェク／ト」のように語の途中で折り返さない。 */
+    word-break: auto-phrase;
+    cursor: pointer;
+    transition:
+      background-color var(--rx-duration) ease,
+      box-shadow var(--rx-duration) ease;
+    &[data-accent="green"] {
+      --rx-action-tile-accent: var(--rx-green);
+    }
+    &[data-accent="amber"] {
+      --rx-action-tile-accent: var(--rx-amber);
+    }
+    &[data-accent="coral"] {
+      --rx-action-tile-accent: var(--rx-coral);
+    }
+    &:is(a, button:enabled):hover {
+      background: color-mix(in srgb, var(--rx-action-tile-accent) 8%, var(--rx-surface));
+    }
+    &:is(a, button:enabled):active {
+      background: color-mix(in srgb, var(--rx-action-tile-accent) 11%, var(--rx-surface));
+      box-shadow: var(--rx-shadow-control-pressed);
+    }
+    &:focus-visible {
+      outline: 0.125rem solid var(--rx-link);
+      outline-offset: -0.125rem;
+    }
+    &:is(:disabled, [data-disabled="true"]) {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+    & > .icon {
+      position: relative;
+      display: flex;
+      color: var(--rx-action-tile-accent);
+      & > .rx-icon {
+        inline-size: 1.375rem;
+        block-size: 1.375rem;
+      }
+      /*
+        状態バッジ（Badgeの小さい形）はアイコンの上に重ね、背景色の輪郭でアイコンから切り離す。
+        バッジはアイコンより幅が広いので、左右にアイコンの外まで広げた枠の中で自分の幅を保ち、
+        自動の外側余白で中央へ置く（読む向きに関わらずアイコンの真ん中に重なる）。
+      */
+      & > .rx-badge {
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline: -3rem;
+        inline-size: max-content;
+        /* Badgeの幅の上限（置き場所の幅）はアイコンの幅になってしまうので外す。 */
+        max-inline-size: none;
+        margin-inline: auto;
+        translate: 0 -50%;
+        box-shadow: 0 0 0 0.125rem var(--rx-surface);
+        white-space: nowrap;
+      }
+    }
+    /* ショートカットキーの表示（Keycapの小さい形）は、アイコンの末尾側の上に添える。見た目はKeycapが持つ。 */
+    & > .shortcut {
+      position: absolute;
+      inset-block-start: var(--rx-space-1);
+      inset-inline-start: calc(50% + 1rem);
+    }
+    /* バッジはアイコンより幅が広く略記の位置へ届くので、バッジのある時は略記をタイルの末尾側の角へ寄せる。 */
+    &:has(> .icon > .rx-badge) > .shortcut {
+      inset-inline: auto var(--rx-space-1);
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-action-tile {
+      border: var(--rx-stroke-width) solid CanvasText;
+    }
+  }
+}

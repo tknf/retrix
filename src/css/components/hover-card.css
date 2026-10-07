@@ -1,0 +1,12 @@
+@layer components {
+  .rx-hover-card {
+    display: inline-flex;
+    align-items: start;
+    flex-wrap: wrap;
+    gap: var(--rx-space-1);
+    max-inline-size: 100%;
+  }
+  .rx-hover-card:not([data-state]) > .preview {
+    display: none;
+  }
+}

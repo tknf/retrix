@@ -1,0 +1,57 @@
+import type { ComponentDoc } from "../reference";
+
+export default {
+  id: "command-menu",
+  name: "CommandMenu",
+  description: "アプリ全体の移動先と操作を検索する、上部中央のパネルです。",
+  api: ["CommandMenu"],
+  guidance: [
+    "アプリ全体の移動先と操作を一か所から探す導線として、`AppShell`の`commands`に一つ置きます。",
+    "よく使う場所は`shortcuts`のタイル、最近の場所・人・ページ・操作は`groups`の一覧に分けて渡します。",
+    "画面の中の一つの対象に対する操作の一覧は`DropdownMenu`、同じ領域のページの切り替えは`Navigation`、作業面の中の階層は`Tree`を使います。",
+    "開閉のキー（`shortcut`）は、アプリ全体で一つの`CommandMenu`だけに指定します。",
+  ],
+  usage: [
+    "`id`・`label`・`shortcuts`・`groups`を渡し、`CommandMenuController`を`command-menu`として登録します。`label`は開くボタンとパネルの見出しに出す名前です。",
+    '開くボタンを押すと、背景を暗転しない`popover="auto"`のパネルを開きます。開くたびに検索欄を空にして全候補を出し、検索欄へフォーカスを移します。先頭の候補を選んだ状態で始まります。移動や操作の項目を選ぶ、閉じるボタンかEscを押す、パネルの外を押す、フォーカスがパネルの外へ移る、のいずれかで閉じます。Turboのキャッシュの直前（`turbo:before-cache`）にも閉じます。',
+    "検索欄の文字は、各項目の`label`・`description`・`keywords`をつないだ文字列と照合します。空白で区切った語をすべて含む項目だけを残し、全角と半角、大文字と小文字は区別しません。項目の残らないグループは隠し、一件も残らなければ「見つかりませんでした。」を出します。`shortcuts`は絞り込みの対象外です。",
+    "`groups`の項目は、`href`を渡すと移動のリンク、`value`を渡すと操作のボタンになります。移動は通常のリンクとして画面を移ります。操作を選ぶとパネルを閉じて開くボタンへフォーカスを戻し、`command-menu:select`を発火して`detail.value`を渡します。操作の実行は利用側のcontrollerが担い、`action`に`command-menu:select->（controller名）#（メソッド名）`の形で受け取り先を書きます。",
+    "`shortcut`を指定すると、ページのどこからでもそのキーで開閉し、パネルの下にキーの案内を出します。`shift+j`は入力欄・テキストエリア・選択欄・編集できる要素の中では働かず、`mod+k`は入力中も働きます。どちらも、Altを押している時、キーを押し続けた繰り返し、日本語の変換中、開くボタンが無効か表示されていない時は働きません。開いている時に押すと閉じて、開くボタンへフォーカスを戻します。",
+    "JavaScriptなしでも、開くボタンと閉じるボタンは`popovertarget`でパネルを開閉し、ショートカットと移動の項目は通常のリンクとして動作します。絞り込み、矢印キーの選択、操作の項目の実行、開閉のキーはcontrollerが担います。",
+  ],
+  keyboard: [
+    [
+      "Ctrl+K / Cmd+K",
+      '`shortcut="mod+k"`の時、ページのどこからでもパネルを開閉します。入力中も働きます。',
+    ],
+    ["Shift+J", '`shortcut="shift+j"`の時、入力欄の外でパネルを開閉します。'],
+    [
+      "↓ / ↑",
+      "検索欄か候補の中で、次・前の候補を選びます。無効な項目は飛ばし、端で止まります。候補の中では、選んだ候補へフォーカスも移ります。",
+    ],
+    ["Home / End", "候補の中で、先頭・末尾の候補を選びます。検索欄では文字の移動のままです。"],
+    [
+      "Enter",
+      "検索欄で、選んでいる候補を実行します。リンクは移動し、操作は`command-menu:select`を発火します。日本語の変換中は実行しません。",
+    ],
+    ["Esc", "パネルを閉じ、開くボタンへフォーカスを戻します。"],
+    [
+      "Tab",
+      "パネルの中の閉じるボタン・ショートカット・検索欄・候補を順に移ります。パネルの外へ出ると閉じます。",
+    ],
+  ],
+  accessibility: [
+    '開くボタンは`aria-haspopup="dialog"`・`aria-controls`・`aria-expanded`を持ちます。`shortcut`を指定すると、`aria-keyshortcuts`でキーを伝えます。',
+    'パネルは`role="dialog"`で、「（`label`）のコマンド」という読み上げ名を持ちます。ショートカットの並びは「よく使う場所」という読み上げ名の`nav`です。',
+    '検索欄は`role="combobox"`、候補の一覧は`role="tree"`、各項目は`role="treeitem"`です。フォーカスを検索欄に残したまま、選んでいる候補を`aria-activedescendant`と`aria-selected`で伝えます。',
+    '絞り込むたびに、候補の件数を`role="status"`で読み上げます。',
+    '現在地の項目は`aria-current="page"`と「現在地」の読み上げで伝えます。無効な項目は`aria-disabled="true"`です。',
+    "`description`は、一覧の移動の項目では名前の後に表示し、操作の項目とショートカットのタイルでは画面に出さず`aria-description`で読み上げます（無効なショートカットでも保ちます）。見える名前だけで選べるようにし、欠かせない情報を`description`だけに置きません。",
+  ],
+  events: [
+    [
+      "command-menu:select",
+      "`value`を持つ操作の項目を選んだ時に、ルートから発火します。`detail.value`は項目の`value`です。",
+    ],
+  ],
+} satisfies ComponentDoc;

@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "hono/jsx",
+    "types": ["node", "vite-plus/client"],
+    "resolveJsonModule": true,
+    "skipLibCheck": true
+  },
+  "include": ["src", "catalog", "test", "vite.config.ts"]
+}

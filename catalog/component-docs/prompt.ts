@@ -1,0 +1,25 @@
+import type { ComponentDoc } from "../reference";
+
+export default {
+  id: "prompt",
+  name: "Prompt",
+  description: "質問を層の見出しに置き、回答の選択肢をカードに並べます。",
+  api: ["Prompt"],
+  guidance: [
+    "すぐ下の対象について「どれに近いか」「最初に何をするか」など、作業の流れの中で一つの答えを求める時に使います。",
+    "作業を止めて確認や判断を求める時は `Dialog` を使います。",
+    "フォームの中で値を選ぶ時は、`Field` と `CheckboxGroup` や `Select` を使います。",
+    "見出しと中身をまとめるだけで答えを求めない時は `LayerCard` を使います。",
+  ],
+  usage: [
+    "`LayerCard` そのものの形で、`question` を淡い青の層の見出しに、`choices` を白いカードの中の行に置きます。行は丸いマーク・太字の `title`・淡い `description`・進む矢印で、ホバーすると淡い青の面と青から紫のマークになり、押すと内側へへこみます。",
+    '`href` を渡した選択肢は移動のリンク、渡さない選択肢は `type="submit"` のボタンになり、`name` と選択肢の `value` を送ります。フォームはPromptの外側に利用側が置き、答えの保存も利用側で行います。',
+    "`dismiss` には、選ばずに閉じる操作（「今は答えない」の `ActionLink` など）を渡し、見出しの行の終わりに置きます。閉じた後にまた出すかどうかは利用側で決めます。",
+    "既定で層の下に尾を付け、すぐ下の対象を指します。尾は層の外に出るので、下の対象との間を16px以上空けます。尾が要らない時は `pointer={false}` にします。",
+    "行は複数行の文を持つ専用の操作で、文字の指定は `prompt.css` が持ちます。利用側のCSSで行の文字を上書きしません。JavaScriptは使いません。",
+  ],
+  accessibility: [
+    "全体は `section` で、`question` を読み上げ名と見出し（`h3`）にします。",
+    "選択肢はリンクかボタンなので、Tabで順に移り、リンクはEnter、ボタンはEnterかSpaceで答えます。丸いマークと矢印は読み上げから外します。",
+  ],
+} satisfies ComponentDoc;

@@ -1,0 +1,32 @@
+@layer components {
+  .rx-suggestion > .note {
+    margin-block-start: var(--rx-space-2);
+    font-size: var(--rx-label);
+    line-height: calc(10 / 7);
+    color: var(--rx-muted);
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  .rx-suggestion {
+    & > .options > li:hover:not([data-state="active"]) {
+      background: var(--rx-info-soft);
+      color: var(--rx-link);
+    }
+
+    & > .toggle:disabled {
+      color: var(--rx-muted);
+      cursor: not-allowed;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .rx-suggestion > .options > li[data-state="active"] {
+      forced-color-adjust: none;
+      background: Highlight;
+      color: HighlightText;
+    }
+  }
+}

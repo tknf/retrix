@@ -1,0 +1,66 @@
+@layer components {
+  /* 線は背景として描き、実線と破線を同じ位置と太さの規則で切り替える。 */
+  .rx-divider {
+    --rx-divider-color: var(--rx-border);
+    --rx-divider-size: var(--rx-stroke-width);
+    --rx-divider-paint: linear-gradient(var(--rx-divider-color), var(--rx-divider-color));
+    display: flex;
+    align-items: center;
+    gap: var(--rx-space-2);
+    block-size: var(--rx-divider-size);
+    margin: 0;
+    border: 0;
+    background: var(--rx-divider-paint) 0 50% / 100% var(--rx-divider-size) no-repeat;
+    & > span {
+      flex: 0 1 auto;
+      min-inline-size: 0;
+      color: var(--rx-muted);
+      font-size: var(--rx-small);
+      font-weight: 600;
+      line-height: var(--rx-small-leading);
+    }
+    &:has(> span) {
+      block-size: auto;
+      background: none;
+    }
+    /* 操作がある時は、狭い場所で操作を次の行の末尾側へ回す。 */
+    &:has(> .actions) {
+      flex-wrap: wrap;
+      row-gap: var(--rx-space-1);
+    }
+    &:has(> span)::after {
+      content: "";
+      flex: 1 0 2rem;
+      block-size: var(--rx-divider-size);
+      background: var(--rx-divider-paint) 0 50% / 100% 100% no-repeat;
+    }
+    /* 線の末尾の操作。名前・線・操作の順に並べ、操作は線から少し離す。 */
+    & > .actions {
+      display: flex;
+      flex: none;
+      margin-inline-start: auto;
+      align-items: center;
+      order: 2;
+      gap: var(--rx-space-2);
+    }
+    &:has(> .actions)::after {
+      order: 1;
+    }
+    &[data-bare="true"]::after {
+      order: 0;
+    }
+    &[data-line="dashed"] {
+      --rx-divider-color: var(--rx-perforation);
+      --rx-divider-paint: repeating-linear-gradient(
+        to right,
+        var(--rx-divider-color) 0 var(--rx-dash),
+        transparent var(--rx-dash) calc(var(--rx-dash) + var(--rx-dash-gap))
+      );
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-divider {
+      --rx-divider-color: CanvasText;
+    }
+  }
+}

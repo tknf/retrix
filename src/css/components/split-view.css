@@ -1,0 +1,127 @@
+@layer components {
+  /*
+    二つの面は一枚のカードに並べ、境目には細い罫線を一本だけ引く。
+    狭い幅では上下に積み、罫線は横になる。
+  */
+  .rx-split-view {
+    --splitter-value: 50;
+    container: rx-split-view / inline-size;
+    min-inline-size: 0;
+    & > .panes {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      min-inline-size: 0;
+      overflow: hidden;
+      border-radius: var(--rx-radius-surface);
+      background: var(--rx-surface) var(--rx-fill-paper);
+      box-shadow: var(--rx-shadow-paper);
+      & > :is(.primary, .secondary) {
+        min-inline-size: 0;
+        padding-block: var(--rx-space-6);
+        padding-inline: var(--rx-space-8);
+        overflow-wrap: anywhere;
+      }
+      /* 縦に積んだ時の境目はハンドルを持たないので、枠線の色の半分ほどの淡さにする。 */
+      & > .secondary {
+        border-block-start: var(--rx-stroke-width) solid
+          color-mix(in srgb, var(--rx-border) 55%, var(--rx-surface));
+      }
+    }
+    @container rx-split-view (inline-size < 32rem) {
+      & > .panes > :is(.primary, .secondary) {
+        padding-block: var(--rx-space-5);
+        padding-inline: var(--rx-space-4);
+      }
+    }
+    @container rx-split-view (inline-size >= 52rem) {
+      & > .panes {
+        grid-template-columns: minmax(0, 1fr) minmax(16rem, 0.5fr);
+        & > .secondary {
+          border-block-start: 0;
+          border-inline-start: var(--rx-stroke-width) solid var(--rx-border);
+        }
+      }
+      &[data-layout="reader"] > .panes {
+        grid-template-columns: minmax(18rem, 0.6fr) minmax(0, 1fr);
+      }
+      /* 幅を変えない時の境目は、ハンドルの目印にならないので、縦に積んだ時と同じ淡い色にする。 */
+      &:not([data-resizable="true"][data-state]) > .panes > .secondary {
+        border-inline-start-color: color-mix(in srgb, var(--rx-border) 55%, var(--rx-surface));
+      }
+      /* 幅を変えられる時は、境目の罫線の上にハンドルを重ねる。 */
+      &[data-resizable="true"][data-state] > .panes {
+        position: relative;
+        grid-template-columns:
+          minmax(0, calc(100% * var(--splitter-value) / 100))
+          minmax(0, 1fr);
+        & > .handle {
+          display: block;
+        }
+      }
+    }
+    /*
+      ハンドルは、境目の罫線の中ほどに置いた控えめなつまみ。
+      境目全体をつかめるように、ハンドルは面の上下いっぱいに重ねる。
+    */
+    & > .panes > .handle {
+      display: none;
+      position: absolute;
+      z-index: 1;
+      inset-block: 0;
+      inset-inline-start: calc(100% * var(--splitter-value) / 100 - 0.75rem);
+      inline-size: 1.5rem;
+      cursor: col-resize;
+      touch-action: none;
+      &:focus-visible {
+        outline: none;
+      }
+      &::before {
+        content: "";
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: calc(50% - var(--rx-stroke-width) / 2);
+        inline-size: var(--rx-stroke-width);
+        background: transparent;
+        transition: background-color var(--rx-duration) ease;
+      }
+      & > .grip {
+        position: absolute;
+        inset-block-start: calc(50% - 1.25rem);
+        inset-inline-start: calc(50% - 0.25rem);
+        inline-size: 0.5rem;
+        block-size: 2.5rem;
+        border-radius: var(--rx-radius-pill);
+        background: var(--rx-surface) var(--rx-fill-control);
+        box-shadow: var(--rx-shadow-control);
+        transition: box-shadow var(--rx-duration) ease;
+      }
+      &:hover > .grip {
+        box-shadow: var(--rx-shadow-control-hover);
+      }
+      &:hover::before,
+      &[data-state="dragging"]::before,
+      &:focus-visible::before {
+        background: var(--rx-link);
+      }
+      /* つかんでいる間は、押したボタンと同じく影が内側へ移る。 */
+      &[data-state="dragging"] > .grip {
+        box-shadow: var(--rx-shadow-control-pressed);
+      }
+      &:focus-visible > .grip {
+        outline: var(--rx-frame-width) solid var(--rx-link);
+        outline-offset: var(--rx-stroke-width);
+      }
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-split-view > .panes {
+      border: var(--rx-stroke-width) solid CanvasText;
+      box-shadow: none;
+    }
+    .rx-split-view > .panes > .handle > .grip {
+      border: var(--rx-stroke-width) solid CanvasText;
+      background: Canvas;
+      box-shadow: none;
+    }
+  }
+}

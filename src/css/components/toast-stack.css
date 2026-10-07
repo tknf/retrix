@@ -1,0 +1,69 @@
+@layer components {
+  /*
+    ToastStackは開いているToastを束ねる。新しいものを手前に置き、古いものは上へ少しずつずらして小さく重ね、
+    奥ほど薄れて上端から消える。押すと一枚ずつ少し遅れて上へ広がり、外を押すかEscで畳む。
+    順番（--rx-toast-index）・広げた時の持ち上げ幅（--rx-toast-offset）・手前の高さはToastStackControllerが渡す。
+    重ね方はtransformで作り、出入りの動き（overlay.cssのtranslate・scale・opacity）と分ける。
+  */
+  .rx-toast-stack {
+    --rx-toast-front-size: auto;
+    display: contents;
+    /* 広げた時のToastの間。controllerが計算済みの値で読む。 */
+    row-gap: var(--rx-space-2);
+    &[data-placement="center"] > .rx-toast {
+      margin-inline: auto;
+    }
+    &[data-placement="start"] > .rx-toast {
+      margin-inline: 0 auto;
+    }
+    /*
+      出入りの動き（overlay.css）より強い指定にして、重ね方のtransformの動きを足す。
+      スタック内は幅をそろえ、奥のToastが手前と同じ幅の縁として覗くようにする。
+    */
+    & > .rx-toast.rx-overlay[popover] {
+      --rx-toast-index: 0;
+      --rx-toast-offset: 0rem;
+      inline-size: min(24rem, calc(100% - 2 * var(--rx-space-4)));
+      interpolate-size: allow-keywords;
+      transform-origin: top center;
+      transform: translateY(calc(var(--rx-toast-index) * -0.625rem))
+        scale(calc(1 - var(--rx-toast-index) * 0.05));
+      transition:
+        opacity var(--rx-duration-fade) ease-out,
+        scale var(--rx-duration-pop) var(--rx-ease-pop),
+        translate var(--rx-motion-slide) var(--rx-ease-slide),
+        display var(--rx-duration-pop) allow-discrete,
+        overlay var(--rx-duration-pop) allow-discrete,
+        transform calc(var(--rx-duration) * 2) var(--rx-ease-slide)
+          calc(var(--rx-toast-index) * var(--rx-duration) / 8),
+        block-size calc(var(--rx-duration) * 2) var(--rx-ease-slide);
+      & > * {
+        transition: opacity var(--rx-duration) ease;
+      }
+    }
+    /*
+      畳んだスタックの奥のToastは、手前と同じ高さに縮めて中身を隠し、上へずらした縁だけを見せる。
+      縁は上端へ向かって薄れ、三枚目より奥は消える。
+    */
+    &:not([data-expanded="true"]) > .rx-toast[data-stack="back"] {
+      block-size: var(--rx-toast-front-size);
+      overflow: clip;
+      opacity: clamp(0, calc(1 - var(--rx-toast-index) * 0.3), 1);
+      /* 覗く縁（上へずらした幅）の中だけで、上端へ向かって薄れさせる。 */
+      mask-image: linear-gradient(to bottom, transparent, currentColor 0.625rem);
+      cursor: pointer;
+      & > * {
+        opacity: 0;
+      }
+    }
+    /* 手前のToastは、奥にToastがある時だけ押して広げられることを示す。 */
+    &[data-count]:not([data-count="0"], [data-count="1"]) > .rx-toast[data-stack="front"] {
+      cursor: pointer;
+    }
+    /* 広げたスタックは、新しいものから上へ積む。四枚目より上は上端へ向かって薄れて消える。 */
+    &[data-expanded="true"] > .rx-toast[data-stack] {
+      transform: translateY(calc(-1 * var(--rx-toast-offset)));
+      opacity: clamp(0, calc(1 - (var(--rx-toast-index) - 3) * 0.35), 1);
+    }
+  }
+}

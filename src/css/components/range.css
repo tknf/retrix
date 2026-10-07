@@ -1,0 +1,263 @@
+@layer components {
+  @property --rx-range-fill-start {
+    syntax: "<number>";
+    inherits: true;
+    initial-value: 0;
+  }
+
+  @property --rx-range-fill-end {
+    syntax: "<number>";
+    inherits: true;
+    initial-value: 0;
+  }
+
+  .rx-range {
+    --slider-value: 0;
+    --slider-range-start: 0;
+    --slider-range-span: 0;
+    --rx-range-fill-start: 0;
+    --rx-range-fill-end: var(--slider-value);
+    --rx-range-direction: to right;
+    --rx-range-sign: 1;
+    --rx-range-thumb-offset: calc(var(--rx-range-fill-end) - var(--slider-value));
+    --rx-range-color: var(--rx-link);
+    container: rx-range / inline-size;
+    display: grid;
+    min-inline-size: 0;
+    padding: 0;
+    border: 0;
+    font-size: var(--rx-label);
+    line-height: calc(10 / 7);
+
+    &:dir(rtl) {
+      --rx-range-direction: to left;
+      --rx-range-sign: -1;
+    }
+
+    &[data-motion] {
+      transition:
+        --rx-range-fill-start var(--rx-duration) ease-out,
+        --rx-range-fill-end var(--rx-duration) ease-out;
+    }
+
+    &:has(> .controls > .native > .input:disabled) {
+      --rx-range-color: var(--rx-border);
+      color: var(--rx-muted);
+    }
+
+    & > .controls {
+      margin-block-start: var(--rx-space-2);
+    }
+
+    &[data-mode="interval"][data-state] {
+      --rx-range-fill-start: var(--slider-range-start);
+      --rx-range-fill-end: calc(var(--slider-range-start) + var(--slider-range-span));
+
+      & > .controls {
+        position: relative;
+      }
+
+      & > .controls::before {
+        content: "";
+        position: absolute;
+        inset-inline: calc(9em / 14);
+        inset-block: calc(5em / 7);
+        border-radius: var(--rx-radius-pill);
+        background: linear-gradient(
+          var(--rx-range-direction),
+          var(--rx-border) 0 calc(var(--rx-range-fill-start) * 100%),
+          var(--rx-range-color) 0 calc(var(--rx-range-fill-end) * 100%),
+          var(--rx-border) 0
+        );
+        pointer-events: none;
+      }
+
+      & > .controls > .native {
+        grid-area: 1 / 1;
+      }
+
+      & > .controls > .native:first-child {
+        --rx-range-thumb-offset: calc(var(--rx-range-fill-start) - var(--slider-range-start));
+      }
+
+      & > .controls > .native:last-child {
+        --rx-range-thumb-offset: calc(
+          var(--rx-range-fill-end) - var(--slider-range-start) - var(--slider-range-span)
+        );
+      }
+
+      & > .controls > .native > .label {
+        display: none;
+      }
+
+      & > .controls > .native > .input {
+        background: none;
+        pointer-events: none;
+      }
+    }
+  }
+
+  .rx-range > .heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--rx-space-2);
+  }
+
+  /* 範囲の名前（legend）も一つの値の名前と同じ太さと位置にする。 */
+  .rx-range > .heading > .label,
+  .rx-range > legend.label {
+    font-weight: var(--rx-label-weight);
+  }
+
+  .rx-range > legend.label {
+    padding: 0;
+  }
+
+  .rx-range > .heading > .value {
+    flex-shrink: 0;
+    margin-inline-start: auto;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .rx-range > .controls,
+  .rx-range > .controls > .native {
+    display: grid;
+    min-inline-size: 0;
+  }
+
+  .rx-range > .controls > .native > .input {
+    appearance: none;
+    position: relative;
+    inline-size: 100%;
+    block-size: calc(12em / 7);
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: none;
+    background: linear-gradient(
+        var(--rx-range-direction),
+        var(--rx-range-color) 0 calc(var(--rx-range-fill-end) * 100%),
+        var(--rx-border) 0
+      )
+      center / calc(100% - 9em / 7) calc(2em / 7) no-repeat;
+    accent-color: var(--rx-range-color);
+    cursor: pointer;
+
+    &::-webkit-slider-runnable-track {
+      background: transparent;
+    }
+
+    &::-moz-range-track {
+      background: transparent;
+      border: 0;
+    }
+
+    &::-webkit-slider-thumb {
+      appearance: none;
+      box-sizing: border-box;
+      inline-size: calc(9em / 7);
+      block-size: calc(9em / 7);
+      border: 0.125rem solid var(--rx-range-color);
+      border-radius: 50%;
+      background: linear-gradient(var(--rx-surface), var(--rx-background));
+      box-shadow: var(--rx-shadow-hardware);
+      pointer-events: auto;
+      cursor: grab;
+      /* ネイティブの位置を、バーと共通の補間位置へ寄せる。 */
+      translate: calc(var(--rx-range-thumb-offset) * (100cqi - 9em / 7) * var(--rx-range-sign));
+    }
+
+    &::-moz-range-thumb {
+      box-sizing: border-box;
+      inline-size: calc(9em / 7);
+      block-size: calc(9em / 7);
+      border: 0.125rem solid var(--rx-range-color);
+      border-radius: 50%;
+      background: linear-gradient(var(--rx-surface), var(--rx-background));
+      box-shadow: var(--rx-shadow-hardware);
+      pointer-events: auto;
+      cursor: grab;
+      translate: calc(var(--rx-range-thumb-offset) * (100cqi - 9em / 7) * var(--rx-range-sign));
+    }
+
+    &:focus {
+      z-index: 1;
+    }
+
+    &:active:not(:disabled) {
+      cursor: grabbing;
+    }
+
+    &:active:not(:disabled)::-webkit-slider-thumb {
+      cursor: grabbing;
+    }
+
+    &:active:not(:disabled)::-moz-range-thumb {
+      cursor: grabbing;
+    }
+
+    &:focus-visible::-webkit-slider-thumb {
+      outline: 0.125rem solid var(--rx-link);
+      outline-offset: 0.1875rem;
+    }
+
+    &:focus-visible::-moz-range-thumb {
+      outline: 0.125rem solid var(--rx-link);
+      outline-offset: 0.1875rem;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+
+    &:disabled::-webkit-slider-thumb {
+      background: var(--rx-background);
+      cursor: not-allowed;
+    }
+
+    &:disabled::-moz-range-thumb {
+      background: var(--rx-background);
+      cursor: not-allowed;
+    }
+  }
+
+  .rx-range > .limits {
+    display: flex;
+    justify-content: space-between;
+    color: var(--rx-muted);
+    font-size: var(--rx-small);
+    line-height: var(--rx-small-leading);
+  }
+
+  .rx-range > .values {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 10rem));
+    justify-content: space-between;
+    gap: var(--rx-space-4);
+    margin-block-start: var(--rx-space-2);
+  }
+
+  @container rx-range (inline-size < 18rem) {
+    .rx-range > .values {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (forced-colors: active) {
+    .rx-range {
+      --rx-border: GrayText;
+      --rx-range-color: Highlight;
+      --rx-link: Highlight;
+      --rx-surface: Canvas;
+      --rx-background: Canvas;
+    }
+
+    .rx-range > .controls,
+    .rx-range > .controls > .native > .input {
+      forced-color-adjust: none;
+    }
+  }
+}

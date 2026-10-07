@@ -1,0 +1,109 @@
+{
+  "name": "@tknf/retrix",
+  "version": "0.0.0",
+  "description": "Basecamp 2の頃の37signalsの画面を手本にした、管理画面・業務システム向けのデザインシステム。CSSを基盤に、Hono JSXのSSRコンポーネントとStimulus controllerを提供する",
+  "keywords": [
+    "css",
+    "design-system",
+    "hono",
+    "ssr",
+    "stimulus",
+    "ui-components"
+  ],
+  "homepage": "https://github.com/tknf/retrix#readme",
+  "bugs": {
+    "url": "https://github.com/tknf/retrix/issues"
+  },
+  "license": "MIT",
+  "author": "TKNF",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tknf/retrix.git"
+  },
+  "files": [
+    "dist/hono",
+    "dist/controllers",
+    "dist/css",
+    "dist/icons.svg",
+    "dist/PHOSPHOR-LICENSE"
+  ],
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    "./hono": {
+      "types": "./dist/hono/index.d.mts",
+      "import": "./dist/hono/index.mjs"
+    },
+    "./controllers": {
+      "types": "./dist/controllers/index.d.mts",
+      "import": "./dist/controllers/index.mjs"
+    },
+    "./css/*": "./dist/css/*",
+    "./icons.svg": "./dist/icons.svg"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "vp run check:css && vp run icons:build && vp dev",
+    "format": "vp fmt",
+    "check": "vp check && vp run check:css",
+    "check:css": "node scripts/check-css.mjs",
+    "test": "vp test run",
+    "build": "vp run check:css && node scripts/clean.mjs && vp run icons:build && vp pack && node scripts/copy-css.mjs && vp build && vp build --mode client && node scripts/build-catalog.mjs",
+    "preview": "vp preview --outDir dist/catalog",
+    "test:visual": "playwright test --grep-invert @sweep",
+    "test:visual:full": "playwright test",
+    "browsers:install": "playwright install chromium firefox webkit",
+    "check:package": "node scripts/check-package.mjs",
+    "icons:build": "node scripts/build-icons.mjs",
+    "docs:components": "vp test run test/component-docs.test.ts -u",
+    "check:workflow-safety": "node scripts/check-workflow-safety.mjs",
+    "prepare": "vp config --no-agent",
+    "prepublishOnly": "vp run build"
+  },
+  "devDependencies": {
+    "@hono/vite-dev-server": "^0.26.1",
+    "@hotwired/stimulus": "^3.2.2",
+    "@hotwired/turbo": "^8.0.23",
+    "@phosphor-icons/core": "^2.1.1",
+    "@playwright/test": "^1.63.0",
+    "@tknf/stimulus-ui": "^0.2.0",
+    "@types/node": "^26.5.0",
+    "hono": "^4.0.0",
+    "postcss": "^8.5.28",
+    "prettier": "^3.9.6",
+    "shiki": "^4.4.3",
+    "typescript": "^5.9.3",
+    "vite": "npm:@voidzero-dev/vite-plus-core@0.3.0",
+    "vite-plus": "^0.3.0"
+  },
+  "peerDependencies": {
+    "@hotwired/stimulus": "^3.2.2",
+    "@tknf/stimulus-ui": "0.2.0",
+    "hono": "^4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "hono": {
+      "optional": true
+    },
+    "@hotwired/stimulus": {
+      "optional": true
+    },
+    "@tknf/stimulus-ui": {
+      "optional": true
+    }
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.3.4",
+      "onFail": "download"
+    }
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

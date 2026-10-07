@@ -1,0 +1,213 @@
+@layer components {
+  .rx-message {
+    /* アバターの列の幅。アバターをこの大きさにそろえ、返信の線の位置もここから決める。 */
+    --rx-message-avatar: 2rem;
+    --rx-message-thread: color-mix(in srgb, var(--rx-ink) 16%, var(--rx-surface));
+    container: rx-message / inline-size;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--rx-space-1) var(--rx-space-2);
+    min-inline-size: 0;
+    max-inline-size: 48rem;
+    padding-block: var(--rx-space-2);
+    color: var(--rx-text);
+    font-size: var(--rx-label);
+    line-height: var(--rx-label-leading);
+    &:has(> .avatar) {
+      grid-template-columns: var(--rx-message-avatar) minmax(0, 1fr);
+    }
+    /* アバターは名前の行の横に置き、列の幅にそろえる。本文・操作・返信はその下の行に積む。 */
+    & > .avatar {
+      grid-column: 1;
+      grid-row: 1;
+      & > .rx-avatar {
+        inline-size: var(--rx-message-avatar);
+        block-size: var(--rx-message-avatar);
+        font-size: var(--rx-small);
+      }
+    }
+    & > .heading {
+      grid-row: 1;
+    }
+    & > .body {
+      grid-row: 2;
+    }
+    & > .actions {
+      grid-row: 3;
+    }
+    & > .replies {
+      grid-row: 4;
+    }
+    & > .heading > strong {
+      font-weight: 600;
+    }
+    & > .heading {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: var(--rx-space-2);
+      & > time {
+        color: var(--rx-muted);
+        font-size: var(--rx-small);
+      }
+    }
+    &:has(> .avatar) > :is(.heading, .body, .actions, .replies) {
+      grid-column: 2;
+    }
+    /* アバターがある時は、名前の行をアバターの高さにして中央にそろえる。 */
+    &:has(> .avatar) > .heading {
+      align-content: center;
+      min-block-size: var(--rx-message-avatar);
+    }
+    /* 狭いMessageでは、アバターは名前の行の横だけに置き、本文・操作・返信はアバターの下から全幅で書く。 */
+    &:has(> .avatar) > :is(.body, .actions) {
+      @container rx-message (inline-size < 20rem) {
+        grid-column: 1 / -1;
+      }
+    }
+    /*
+      会話の本文は吹き出しにする。人の側の上の角だけを立て、誰の言葉かを形で示す。
+      吹き出しは文の長さに合わせて縮む。
+    */
+    & > .body {
+      justify-self: start;
+      min-inline-size: 0;
+      max-inline-size: 100%;
+      padding-block: var(--rx-space-3);
+      padding-inline: var(--rx-space-4);
+      border-radius: var(--rx-radius-surface);
+      border-start-start-radius: var(--rx-radius-mark);
+      background: var(--rx-background);
+      overflow-wrap: anywhere;
+      /* 吹き出しの中の段落は、行の間（約6px）より少し広いだけの間にし、吹き出しの余白より狭く見せる。 */
+      & > * + * {
+        margin-block-start: var(--rx-space-1);
+      }
+      /* 本文に添えたファイルは、行の上下の余白を持ち込まず、本文から少しだけ離して添える。 */
+      & > .rx-file-item {
+        padding-block: 0;
+      }
+      & > * + .rx-file-item {
+        margin-block-start: var(--rx-space-2);
+      }
+    }
+    & > .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--rx-space-2);
+    }
+    /*
+      文書の形は、一通を一枚のカードにする。日付は見出しの行の終わりに寄せる。
+      続くメッセージのカードは前のカードに少し重ねて積み、スレッドを重なったカードに見せる。
+      後ろのカードが前のカードの文字より上に来るよう、配置済みにしてDOMの順に重ねる。
+    */
+    &[data-layout="document"] {
+      position: relative;
+      /* 本文の行高は1.75で行の余りが大きいので、段の間を詰めてカードの余白よりはっきり狭く見せる。 */
+      row-gap: var(--rx-space-2);
+      max-inline-size: none;
+      padding-block: var(--rx-space-6);
+      padding-inline: var(--rx-space-6);
+      border-radius: var(--rx-radius-surface);
+      background: var(--rx-surface) var(--rx-fill-paper);
+      box-shadow: var(--rx-shadow-paper);
+      & > .avatar {
+        grid-row: 1;
+      }
+      & > .heading {
+        align-items: center;
+        min-block-size: 2rem;
+        & > time {
+          margin-inline-start: auto;
+        }
+      }
+      & > .body {
+        grid-column: 1 / -1;
+        justify-self: stretch;
+        padding: 0;
+        border-radius: 0;
+        background: transparent;
+        font-size: var(--rx-body);
+        line-height: 1.75;
+        /* 行の間が12pxあるので、段落の間は4px足すだけで切れ目が分かる。 */
+        & > * + * {
+          margin-block-start: var(--rx-space-1);
+        }
+      }
+      /* 操作は本文と同じ書き始め（カードの内側の端）にそろえる。 */
+      & > .actions {
+        grid-column: 1 / -1;
+      }
+      &:has(+ .rx-message[data-layout="document"]) {
+        padding-block-end: calc(var(--rx-space-6) + var(--rx-space-4));
+      }
+      & + .rx-message[data-layout="document"] {
+        margin-block-start: calc(-1 * var(--rx-space-4));
+      }
+    }
+    /*
+      返信は線でつなぐ。親のアバターの下から返信の手前まで縦線を下ろし、各返信へ角丸に曲げた線を伸ばしてアバターにつなぐ。
+      途中の返信は次の返信まで縦線を伸ばす。線の位置はアバターの列の中央。
+    */
+    & > .replies {
+      /* 線の横の位置は親のアバターから決めるので、返信のアバターが小さくなっても親のアバターの大きさを渡しておく。 */
+      --rx-message-parent-avatar: var(--rx-message-avatar);
+      min-inline-size: 0;
+      & > .rx-message {
+        position: relative;
+        /* とても狭いMessage（文字を大きくした時など）の返信は、アバターを小さくして、入れ子が深くなっても名前の行の幅を残す。 */
+        @container rx-message (inline-size < 16rem) {
+          --rx-message-avatar: 1.5rem;
+        }
+      }
+    }
+    &:has(> .avatar):has(> .replies)::before {
+      content: "";
+      grid-column: 1;
+      grid-row: 2 / 4;
+      justify-self: center;
+      inline-size: var(--rx-frame-width);
+      background: var(--rx-message-thread);
+    }
+    &:has(> .avatar) > .replies > .rx-message:has(> .avatar) {
+      --rx-message-branch-start: calc(
+        -1 * (var(--rx-message-parent-avatar) / 2 + var(--rx-space-2)) - var(--rx-stroke-width)
+      );
+      &::after {
+        content: "";
+        position: absolute;
+        inset-block-start: calc(-1 * var(--rx-space-1));
+        inset-inline-start: var(--rx-message-branch-start);
+        inline-size: calc(
+          var(--rx-message-parent-avatar) / 2 + var(--rx-space-2) + var(--rx-stroke-width)
+        );
+        block-size: calc(
+          var(--rx-space-1) + var(--rx-space-2) + var(--rx-message-avatar) / 2 +
+            var(--rx-stroke-width)
+        );
+        border-inline-start: var(--rx-frame-width) solid var(--rx-message-thread);
+        border-block-end: var(--rx-frame-width) solid var(--rx-message-thread);
+        border-end-start-radius: var(--rx-radius-field);
+      }
+      &:not(:last-child)::before {
+        content: "";
+        position: absolute;
+        inset-block: calc(-1 * var(--rx-space-1)) 0;
+        inset-inline-start: var(--rx-message-branch-start);
+        inline-size: var(--rx-frame-width);
+        background: var(--rx-message-thread);
+      }
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-message > .body,
+    .rx-message[data-layout="document"] {
+      border: var(--rx-stroke-width) solid CanvasText;
+      background: Canvas;
+      box-shadow: none;
+    }
+    .rx-message[data-layout="document"] > .body {
+      border: 0;
+    }
+  }
+}

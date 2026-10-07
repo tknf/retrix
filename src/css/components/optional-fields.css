@@ -1,0 +1,58 @@
+@layer components {
+  /*
+    必要な時だけ追加する欄。追加した欄を上に積み、追加できる項目を細い縁のピルのチップで下に並べる。
+    追加した欄の終わりには削除の操作を置き、入力の行の下端にそろえる。
+    stackはチップを縦に並べる。チップは淡い黒の文字で、ホバーすると濃い黒にする。
+  */
+  .rx-optional-fields {
+    display: grid;
+    gap: var(--rx-space-3);
+    min-inline-size: 0;
+    & > .fields {
+      display: grid;
+      gap: var(--rx-space-3);
+      min-inline-size: 0;
+      &:not(:has(> .field:not([hidden]))) {
+        display: none;
+      }
+      /* 隠れた欄をまとめて使えなくするfieldset。枠と余白は持たず、削除の操作を欄の終わりに置く。 */
+      & > .field {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        align-items: end;
+        gap: var(--rx-space-2);
+        min-inline-size: 0;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        &:has(> .remove:not([hidden])) {
+          grid-template-columns: minmax(0, 1fr) auto;
+        }
+      }
+    }
+    & > .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--rx-space-2);
+      & > .rx-button.chip {
+        color: var(--rx-muted);
+        &:hover:not(:disabled) {
+          color: var(--rx-text);
+        }
+      }
+    }
+    &[data-layout="stack"] > .chips {
+      flex-direction: column;
+      align-items: start;
+      gap: var(--rx-space-1);
+      & > .rx-button.chip {
+        border-color: transparent;
+        background: transparent;
+        box-shadow: none;
+        &:hover:not(:disabled) {
+          background: var(--rx-background);
+        }
+      }
+    }
+  }
+}

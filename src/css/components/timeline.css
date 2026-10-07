@@ -1,0 +1,232 @@
+@layer components {
+  /*
+    出来事を時の順に読む一覧。細い線に沿って、出来事ごとにDropdownMenuと同じ青から紫へ塗ったマークか、起こした人のアバターを置く。
+    日の区切りは縦の線から伸びるDividerの名前の付いた線。起こした人の名前は太字、題名は普通の太さ。
+    節目は、終えたものを緑のマーク、今のものを青いマーク、これからを破線にし、今の時はCalendarの今日と同じ黄のピルを敷く。
+  */
+  .rx-timeline {
+    container: rx-timeline / inline-size;
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    padding-inline-start: var(--rx-space-2);
+    list-style: none;
+    color: var(--rx-text);
+    font-size: var(--rx-label);
+    line-height: var(--rx-label-leading);
+    & > li {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--rx-space-1) var(--rx-space-4);
+      min-inline-size: 0;
+      padding-block: var(--rx-space-3);
+      padding-inline-start: var(--rx-space-4);
+      border-inline-start: var(--rx-stroke-width) solid var(--rx-border);
+      /* マークはDropdownMenuと同じ青から紫へ塗った点。線から少し離して見せるため、地の色の輪で囲む。 */
+      & > .marker {
+        position: absolute;
+        inset-inline-start: -0.3125rem;
+        inset-block-start: 1.125rem;
+        display: grid;
+        place-items: center;
+        inline-size: 0.5625rem;
+        block-size: 0.5625rem;
+        border: 0;
+        border-radius: 50%;
+        background: var(--rx-fill-menu);
+        box-shadow: 0 0 0 0.1875rem var(--rx-surface);
+      }
+      & > time {
+        color: var(--rx-muted);
+        font-family: var(--rx-control-font-family);
+        font-size: var(--rx-small);
+        line-height: var(--rx-small-leading);
+        font-variant-numeric: tabular-nums;
+        overflow-wrap: anywhere;
+      }
+      & > .body {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+        & > .title {
+          font-size: var(--rx-label);
+          font-weight: 600;
+          line-height: var(--rx-label-leading);
+          & > .actor {
+            margin-inline-end: 0.375em;
+            font-weight: 700;
+          }
+        }
+        & > * + * {
+          margin-block-start: var(--rx-space-1);
+        }
+      }
+    }
+    /* 名前を添えた出来事は、名前だけを太字にし、何をしたかは普通の太さで続ける。 */
+    & > li[data-actor="true"] > .body > .title {
+      font-weight: 400;
+    }
+    /*
+      システムの出来事。線の上のマークを消し、斜線の淡い帯の中央に時刻と文を書く。
+      人の出来事と見分けられるよう、帯は線をまたいで本文の幅いっぱいに広げる。
+    */
+    & > li[data-kind="system"] {
+      grid-template-columns: minmax(0, 1fr);
+      justify-items: center;
+      gap: 0;
+      padding-block: var(--rx-space-2);
+      padding-inline: var(--rx-space-4);
+      border-radius: var(--rx-radius-control);
+      background: var(--rx-hatch), var(--rx-background);
+      text-align: center;
+      & > .marker {
+        display: none;
+      }
+      & > time {
+        grid-column: 1;
+      }
+      & > .body {
+        grid-column: 1;
+        & > .title {
+          font-weight: 400;
+        }
+      }
+    }
+    /* 何もなかった期間。線を破線にし、マークを置かずに淡い文だけを書く。 */
+    & > li[data-kind="gap"] {
+      grid-template-columns: minmax(0, 1fr);
+      border-inline-start-style: dashed;
+      border-inline-start-color: var(--rx-perforation);
+      color: var(--rx-muted);
+      & > .marker {
+        display: none;
+      }
+      & > time {
+        display: none;
+      }
+      & > .body > .title {
+        font-size: var(--rx-small);
+        font-weight: 400;
+      }
+    }
+    /*
+      日の区切り。線をまたぐラベルにはせず、Dividerの名前の付いた線を出来事の列に引く。
+      縦の線はそのまま通り、区切りの横線は縦の線から始まって日の名前の後ろへ伸びる。
+    */
+    & > li.day {
+      display: flex;
+      align-items: center;
+      /* 横線から名前までは、Dividerの名前から線までと同じ間隔にする。 */
+      gap: var(--rx-space-2);
+      padding-block: var(--rx-space-4) var(--rx-space-1);
+      padding-inline-start: 0;
+      &::before {
+        content: "";
+        flex: none;
+        inline-size: var(--rx-space-3);
+        block-size: var(--rx-stroke-width);
+        background: var(--rx-border);
+      }
+      & > .rx-divider {
+        flex: 1 1 auto;
+        min-inline-size: 0;
+      }
+      &:first-child {
+        padding-block-start: 0;
+      }
+    }
+    &[data-variant="milestones"] > li {
+      &[data-state="complete"] > .marker {
+        inline-size: 1rem;
+        block-size: 1rem;
+        inset-inline-start: -0.53125rem;
+        inset-block-start: 0.9375rem;
+        border: 0;
+        background: var(--rx-fill-success);
+        box-shadow: 0 0 0 0.125rem var(--rx-surface);
+        &::before {
+          content: "";
+          inline-size: 0.625rem;
+          block-size: 0.625rem;
+          background: var(--rx-surface);
+          mask: url("../assets/check.svg") center / contain no-repeat;
+        }
+      }
+      &[data-state="current"] > .marker {
+        box-shadow:
+          0 0 0 0.125rem var(--rx-surface),
+          0 0 0 0.3125rem var(--rx-cover);
+      }
+      /* 今の節目の時（「今日」など）は、Calendarの今日と同じ黄のピルを敷く。 */
+      &[data-state="current"] > time {
+        position: relative;
+        isolation: isolate;
+        justify-self: start;
+        color: var(--rx-ink);
+        font-weight: 700;
+        &::before {
+          content: "";
+          position: absolute;
+          inset-block: -0.125rem;
+          inset-inline: -0.375rem;
+          z-index: -1;
+          background: var(--rx-mark);
+          border-radius: var(--rx-radius-pill);
+        }
+      }
+      /* これからの節目は、マークではなくそこから先の線を破線にする。小さな円の破線は途切れて見えるため。 */
+      &[data-state="upcoming"] {
+        border-inline-start-style: dashed;
+        border-inline-start-color: var(--rx-perforation);
+        & > .marker {
+          border: 0.125rem solid var(--rx-perforation);
+          background: var(--rx-surface);
+        }
+      }
+    }
+    /* アバターを置く時は、アバターの中心を線に合わせ、本文をアバターの分だけ離す。一覧の始まりもアバターの半分だけ空け、外へはみ出さない。 */
+    &[data-avatars="true"] {
+      padding-inline-start: 0.875rem;
+    }
+    &[data-avatars="true"] > li:not(.day) {
+      padding-inline-start: var(--rx-space-6);
+      &:has(> .marker > *) > .marker {
+        inset-inline-start: calc(-0.875rem - var(--rx-stroke-width) / 2);
+        inset-block-start: 0.5rem;
+        inline-size: 1.75rem;
+        block-size: 1.75rem;
+        border: 0;
+        background: var(--rx-surface);
+        & > .rx-avatar {
+          inline-size: 100%;
+          block-size: 100%;
+          font-size: 0.625rem;
+        }
+      }
+    }
+    &[data-variant="compact"] > li:not(.day) {
+      gap: var(--rx-space-1) var(--rx-space-3);
+      padding-block: var(--rx-space-2);
+      & > .marker {
+        inset-block-start: 0.875rem;
+      }
+      & > .body > .title {
+        font-weight: 400;
+      }
+    }
+    @container rx-timeline (inline-size >= 28rem) {
+      & > li {
+        grid-template-columns: 7rem minmax(0, 1fr);
+      }
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-timeline > li > .marker {
+      box-shadow: none;
+    }
+    .rx-timeline[data-variant="milestones"] > li[data-state="current"] > time::before {
+      forced-color-adjust: none;
+      background: Mark;
+    }
+  }
+}

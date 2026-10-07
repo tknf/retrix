@@ -1,0 +1,35 @@
+@layer components {
+  /* 集計の値。数字はとても太く大きく書き、名前・単位・補足は淡く小さく添える。 */
+  .rx-statistic {
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    color: var(--rx-text);
+    & > dt {
+      color: var(--rx-muted);
+      font-size: var(--rx-small);
+      font-weight: var(--rx-label-weight);
+      line-height: var(--rx-label-leading);
+    }
+    & > .value {
+      margin-block-start: var(--rx-space-2);
+      font-family: var(--rx-control-font-family);
+      font-size: var(--rx-title);
+      font-weight: 800;
+      line-height: calc(8 / 7);
+      font-variant-numeric: tabular-nums;
+      overflow-wrap: anywhere;
+      & > small {
+        margin-inline-start: 0.35em;
+        color: var(--rx-muted);
+        font-size: var(--rx-label);
+        font-weight: 600;
+      }
+    }
+    & > .note {
+      margin-block-start: var(--rx-space-1);
+      color: var(--rx-muted);
+      font-size: var(--rx-small);
+      line-height: var(--rx-small-leading);
+    }
+  }
+}

@@ -1,0 +1,69 @@
+@layer components {
+  /*
+    検索の結果。罫線を引かずに行間で区切り、題名（濃い色の太字、ホバーすると青）・抜粋（二行まで）・淡い補足を積む。
+    一致した語は、文中の強調（mark）と同じ淡い黄の面で示す。アバターやアイコンを渡すと、先頭側に置く。
+  */
+  .rx-search-results {
+    display: grid;
+    gap: var(--rx-space-5);
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--rx-text);
+    font-size: var(--rx-label);
+    line-height: var(--rx-label-leading);
+    overflow-wrap: anywhere;
+    & > li {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.125rem;
+      min-inline-size: 0;
+      &[data-leading="true"] {
+        grid-template-columns: 2.5rem minmax(0, 1fr);
+        column-gap: var(--rx-space-3);
+        & > :not(.leading) {
+          grid-column: 2;
+        }
+      }
+      & > .leading {
+        display: grid;
+        grid-column: 1;
+        grid-row: 1 / span 3;
+        justify-items: center;
+        align-self: start;
+        color: var(--rx-muted);
+        font-size: 1.25rem;
+      }
+      & > .title {
+        color: var(--rx-text);
+        font-size: var(--rx-body);
+        font-weight: 700;
+        text-decoration: none;
+        transition: color var(--rx-duration) ease;
+        &:hover {
+          color: var(--rx-link);
+        }
+        &:focus-visible {
+          outline: 0.125rem solid var(--rx-link);
+          outline-offset: 0.125rem;
+          border-radius: var(--rx-radius-mark);
+        }
+      }
+      & > .excerpt {
+        display: -webkit-box;
+        margin: 0;
+        overflow: hidden;
+        color: var(--rx-muted);
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+      }
+      & > .meta {
+        margin: 0;
+        color: var(--rx-muted);
+        font-size: var(--rx-small);
+        line-height: var(--rx-small-leading);
+      }
+    }
+  }
+}

@@ -1,0 +1,89 @@
+@layer components {
+  /*
+    分類はピルのタグ。文字と同じ色の縁とMediumの文字にし、地は塗らない。
+    塗った地のBadge（状態）とは、地の有無で分ける。
+    一行の高さは26pxでBadgeと揃える（文字20px＋上下の余白と枠線3pxずつ）。
+  */
+  .rx-tag {
+    display: inline-block;
+    inline-size: fit-content;
+    justify-self: start;
+    max-inline-size: 100%;
+    padding-block: calc(0.1875rem - var(--rx-stroke-width));
+    padding-inline: 0.75rem;
+    border: var(--rx-stroke-width) solid currentColor;
+    border-radius: var(--rx-radius-surface);
+    background: transparent;
+    color: var(--rx-muted);
+    font-family: var(--rx-control-font-family);
+    font-size: var(--rx-small);
+    font-weight: 500;
+    line-height: var(--rx-small-leading);
+    overflow-wrap: anywhere;
+    text-decoration: none;
+    &[data-accent="blue"] {
+      color: var(--rx-blue-dark);
+    }
+    &[data-accent="green"] {
+      color: var(--rx-green);
+    }
+    &[data-accent="amber"] {
+      color: var(--rx-amber);
+    }
+    &[data-accent="coral"] {
+      color: var(--rx-coral-dark);
+    }
+    /* 分類へ移動するタグは、ホバーすると役割の色を淡く敷く。 */
+    &:is(a) {
+      cursor: pointer;
+      transition:
+        background-color var(--rx-duration) ease,
+        border-color var(--rx-duration) ease;
+      &:hover {
+        border-color: currentColor;
+        background: color-mix(in srgb, currentColor 8%, transparent);
+        text-decoration: none;
+      }
+      &:focus-visible {
+        outline: 0.125rem solid var(--rx-link);
+        outline-offset: 0.125rem;
+      }
+    }
+  }
+  .rx-tag.removable {
+    --rx-button-size: 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.125rem;
+    min-inline-size: 0;
+    padding-block: 0;
+    padding-inline-end: 0.125rem;
+    & > .remove {
+      flex: none;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      color: inherit;
+      box-shadow: none;
+      &:hover:enabled {
+        background: color-mix(in srgb, currentColor 12%, transparent);
+        box-shadow: none;
+      }
+      &:active:enabled {
+        box-shadow: none;
+      }
+      &:disabled {
+        opacity: 0.45;
+      }
+      /* 削除の×はタグの文字と同じ大きさ・濃さにし、太字の形で小さくても見えるようにする。 */
+      &::before {
+        content: "";
+        display: block;
+        inline-size: 1em;
+        block-size: 1em;
+        background: currentColor;
+        mask: url("../assets/x-bold.svg") center / contain no-repeat;
+      }
+    }
+  }
+}

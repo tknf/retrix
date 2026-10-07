@@ -1,0 +1,15 @@
+version: 2
+updates:
+  # セキュリティの更新だけを受け取る。`open-pull-requests-limit: 0` で定期の版の更新のPRを止める。
+  # リポジトリ設定のDependabot security updatesは影響を受けず、脆弱な依存のPRは作られる。
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0

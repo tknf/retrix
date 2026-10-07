@@ -1,0 +1,59 @@
+@layer components {
+  .rx-filter-bar {
+    /* 各リンクの自然幅で折り返すためFlex。 */
+    display: flex;
+    flex-wrap: wrap;
+    align-items: start;
+    gap: var(--rx-space-1);
+    min-inline-size: 0;
+
+    & > a {
+      min-inline-size: 0;
+      border-radius: var(--rx-radius-pill);
+
+      &:not([data-current="true"]) {
+        border-color: var(--rx-border);
+        color: var(--rx-text);
+      }
+      & > span {
+        min-inline-size: 0;
+      }
+      & > small {
+        flex: none;
+        font: inherit;
+        font-variant-numeric: tabular-nums;
+      }
+    }
+    /* 表示の切り替えはButtonGroupと同じく、両端だけピルに丸め、隣の枠線を1px重ねて一組に見せる。 */
+    &[data-appearance="segmented"] {
+      display: inline-flex;
+      flex-wrap: nowrap;
+      gap: 0;
+      max-inline-size: 100%;
+      /* 一行に並べ続けるので、丸いのは両端だけ。間の項目は左右を1emに抑える。 */
+      & > a {
+        padding-inline: 1em;
+        border-radius: 0;
+      }
+      & > a:first-child {
+        border-start-start-radius: var(--rx-radius-pill);
+        border-end-start-radius: var(--rx-radius-pill);
+      }
+      & > a:last-child {
+        border-start-end-radius: var(--rx-radius-pill);
+        border-end-end-radius: var(--rx-radius-pill);
+      }
+      & > a:not(:first-child) {
+        margin-inline-start: calc(var(--rx-stroke-width) * -1);
+      }
+      & > a:is([data-current="true"], :focus-visible) {
+        z-index: 1;
+      }
+    }
+  }
+  @media (pointer: coarse) {
+    .rx-filter-bar > a {
+      min-block-size: 2.75rem;
+    }
+  }
+}

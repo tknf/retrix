@@ -1,0 +1,66 @@
+@layer components {
+  .rx-pagination {
+    font-family: var(--rx-control-font-family);
+    font-size: var(--rx-label);
+    line-height: var(--rx-label-leading);
+    & > ul {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--rx-space-1);
+      padding: 0;
+      list-style: none;
+    }
+    /* 番号のピルはButtonと同じ高さ36px。 */
+    & > ul > li > :is(a, span) {
+      display: inline-grid;
+      place-items: center;
+      min-inline-size: var(--rx-control-size);
+      min-block-size: var(--rx-control-size);
+      padding-block: var(--rx-space-1);
+      padding-inline: var(--rx-space-3);
+      border: var(--rx-stroke-width) solid transparent;
+      border-radius: var(--rx-radius-pill);
+      color: var(--rx-muted);
+      text-decoration: none;
+    }
+    & > ul > li > a {
+      border-color: var(--rx-border);
+      background: var(--rx-surface) var(--rx-fill-control);
+      color: var(--rx-text);
+      /* Buttonと同じく浮かせず、ホバーすると縁を青くし、押すと内側へへこむ。 */
+      box-shadow: none;
+      &:hover {
+        border-color: var(--rx-link);
+      }
+      &:active {
+        box-shadow: var(--rx-shadow-control-pressed);
+      }
+    }
+    /* 押せない前後の送りは、ほかの無効なボタンと同じ斜線のピル。 */
+    & > ul > li > [data-disabled="true"] {
+      border-color: var(--rx-border);
+      background: var(--rx-hatch), var(--rx-surface);
+      color: var(--rx-muted);
+    }
+    & > ul > li > [data-current="true"] {
+      color: var(--rx-surface);
+      background: var(--rx-fill-primary);
+      border-color: var(--rx-link);
+      box-shadow: none;
+    }
+    @media (pointer: coarse) {
+      & > ul > li > :is(a, span) {
+        min-inline-size: 2.75rem;
+        min-block-size: 2.75rem;
+      }
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-pagination > ul > li > :is(a, [data-current="true"]) {
+      background: Canvas;
+      color: CanvasText;
+      box-shadow: none;
+    }
+  }
+}

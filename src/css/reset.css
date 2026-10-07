@@ -1,0 +1,15 @@
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  :where(body, h1, h2, h3, p, ol, ul, dl, dd, fieldset) {
+    margin: 0;
+  }
+
+  :where(button, input, textarea, select) {
+    font: inherit;
+  }
+}

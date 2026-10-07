@@ -1,0 +1,53 @@
+@layer components {
+  /*
+    期限や残りを示す丸いマーク。白い丸に大きな太字の数字を置き、上下に小さな文言を添える。
+    役割の色の細い輪で縁取り、カードの影で浮かせる。既定は注意の色（期限が近いことを示す）。
+  */
+  .rx-countdown {
+    --rx-countdown-ink: var(--rx-warning);
+    display: inline-grid;
+    place-content: center;
+    justify-items: center;
+    inline-size: 4.25rem;
+    block-size: 4.25rem;
+    border-radius: 50%;
+    background: var(--rx-surface);
+    box-shadow:
+      inset 0 0 0 0.125rem color-mix(in srgb, var(--rx-countdown-ink) 55%, var(--rx-surface)),
+      var(--rx-shadow-paper);
+    color: var(--rx-countdown-ink);
+    font-family: var(--rx-control-font-family);
+    line-height: 1;
+    text-align: center;
+    &[data-tone="info"] {
+      --rx-countdown-ink: var(--rx-info);
+    }
+    &[data-tone="success"] {
+      --rx-countdown-ink: var(--rx-success);
+    }
+    &[data-tone="danger"] {
+      --rx-countdown-ink: var(--rx-danger);
+    }
+    &[data-tone="neutral"] {
+      --rx-countdown-ink: var(--rx-muted);
+    }
+    & > .value {
+      color: var(--rx-text);
+      font-size: 1.375rem;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+    }
+    /* 上下の文言は丸の内側に収め、長い時は丸の幅の7割で折り返す。 */
+    & > :is(.before, .after) {
+      max-inline-size: 3rem;
+      font-size: 0.5625rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-countdown {
+      border: var(--rx-stroke-width) solid CanvasText;
+    }
+  }
+}

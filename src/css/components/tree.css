@@ -1,0 +1,100 @@
+@layer components {
+  .rx-tree,
+  .rx-tree ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /*
+    行はNavigationと同じ作り。高さ36px・角丸8px、ホバーすると淡い面。選んだ行は面を塗らず、太字と青い文字。
+    階層はガイド線を引かず、字下げだけで示す。開閉のアイコンは24pxにし、子の行のアイコンを親の名前の書き始めの下に置く。
+  */
+  .rx-tree {
+    display: grid;
+    gap: 0;
+    min-inline-size: 0;
+    font-size: var(--rx-label);
+    line-height: var(--rx-label-leading);
+    &:focus-visible {
+      outline: 0.125rem solid var(--rx-link);
+      outline-offset: 0.125rem;
+    }
+    &[data-empty="true"] {
+      padding-block: var(--rx-space-2);
+      padding-inline: var(--rx-space-4);
+      color: var(--rx-muted);
+    }
+  }
+
+  .rx-tree li > .row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: var(--rx-space-1);
+    min-inline-size: 0;
+    min-block-size: var(--rx-control-size);
+    padding-inline-end: var(--rx-space-3);
+    border-radius: var(--rx-radius-control);
+    transition: background-color var(--rx-duration) ease;
+    &:hover {
+      background: color-mix(in srgb, var(--rx-ink) 6%, var(--rx-surface));
+    }
+    & > :is(a, .label) {
+      min-inline-size: 0;
+      padding-block: var(--rx-space-2);
+      color: var(--rx-text);
+      overflow-wrap: anywhere;
+    }
+    & > a {
+      text-decoration: none;
+    }
+    & > .spacer {
+      inline-size: 1.5rem;
+    }
+    & > .toggle {
+      padding-inline: 0;
+      @media (pointer: fine) {
+        min-inline-size: 1.5rem;
+      }
+      & > .rx-icon {
+        transition: rotate var(--rx-duration) ease;
+      }
+    }
+  }
+
+  .rx-tree li:not([data-state]) > .row > .toggle {
+    visibility: hidden;
+  }
+
+  .rx-tree li[data-expanded="false"] > .row > .toggle > .rx-icon {
+    rotate: -90deg;
+  }
+
+  .rx-tree:dir(rtl) li[data-expanded="false"] > .row > .toggle > .rx-icon {
+    rotate: 90deg;
+  }
+
+  .rx-tree li[data-expanded="false"] > ul {
+    display: none;
+  }
+
+  .rx-tree li[data-state="selected"] > .row,
+  .rx-tree li[data-state="active"] > .row {
+    font-weight: 600;
+    & > :is(a, .label) {
+      color: var(--rx-link);
+    }
+  }
+
+  .rx-tree li[data-state="disabled"] > .row {
+    color: var(--rx-muted);
+    opacity: 0.6;
+  }
+
+  .rx-tree li > ul {
+    display: grid;
+    gap: 0;
+    padding-inline-start: calc(1.5rem + var(--rx-space-1));
+  }
+}

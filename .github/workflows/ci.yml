@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths-ignore:
+      - "docs/**"
+      - "**/*.md"
+      - ".gitignore"
+      - "LICENSE"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  ci:
+    name: 検査・単体テスト・ビルド
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      # Vite+（vp）を用意する。pnpmはdevEnginesの指定に従ってvpが取得する。
+      - uses: voidzero-dev/setup-vp@v1.21.1
+        with:
+          node-version: "22"
+          cache: true
+
+      - name: 依存を入れる
+        run: vp install --frozen-lockfile
+
+      # 整形・lint・型の検査
+      - name: 検査
+        run: vp check
+
+      - name: CSSの規約の検査
+        run: vp run check:css
+
+      - name: エージェントとスキルの構成の検査
+        run: vp run check:workflow-safety
+
+      - name: 単体テスト
+        run: vp run test
+
+      # 配布物とカタログを作り、配布物の型と中身を確かめる。公開の時ではなくCIで壊れを見つける。
+      - name: ビルド
+        run: vp run build
+
+      - name: 配布物の検査
+        run: vp run check:package

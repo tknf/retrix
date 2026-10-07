@@ -1,0 +1,265 @@
+/* 進み具合の円を、割合の変化に合わせて滑らかに塗り足すため、数値として登録する。 */
+@property --rx-task-progress {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+@layer components {
+  /*
+    やることの一覧。外側の見出しに開閉・名前と、塗りつぶしの円と「終えた数/全体」を置き、
+    その下の行を罫線で区切る。行の始まりにチェックを置き、終えたことはペンで引く線で消す。
+    最後の行は、項目を追加する欄。
+  */
+  .rx-task-list {
+    --rx-task-progress: 0;
+    container: rx-task-list / inline-size;
+    display: grid;
+    gap: var(--rx-space-3);
+    color: var(--rx-text);
+    font-size: var(--rx-label);
+    line-height: var(--rx-label-leading);
+    /* 外側の見出し。進み具合は円を終えた割合だけ塗り、全て終えると緑の円に白いチェックを置く。 */
+    & > summary {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--rx-space-2);
+      inline-size: fit-content;
+      max-inline-size: 100%;
+      cursor: pointer;
+      list-style: none;
+      &::-webkit-details-marker {
+        display: none;
+      }
+      &:focus-visible {
+        outline: 0.125rem solid var(--rx-link);
+        outline-offset: 0.125rem;
+        border-radius: var(--rx-radius-mark);
+      }
+      & > .marker {
+        display: grid;
+        place-items: center;
+        color: var(--rx-muted);
+        transition: rotate var(--rx-duration) ease;
+        & > .rx-icon {
+          font-size: 0.75rem;
+        }
+      }
+      & > .name {
+        font-weight: 600;
+      }
+      & > .pie {
+        display: grid;
+        place-items: center;
+        inline-size: 1rem;
+        block-size: 1rem;
+        margin-inline-start: var(--rx-space-1);
+        border-radius: 50%;
+        background: conic-gradient(
+          var(--rx-success) calc(var(--rx-task-progress) * 1turn),
+          color-mix(in srgb, var(--rx-success) 16%, var(--rx-surface)) 0
+        );
+        transition: --rx-task-progress var(--rx-duration) ease;
+      }
+      & > .count {
+        margin-inline-start: calc(var(--rx-space-1) * -1);
+        color: var(--rx-muted);
+        font-size: var(--rx-small);
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+      }
+    }
+    &[data-complete="true"] > summary {
+      & > .pie::before {
+        content: "";
+        inline-size: 0.625rem;
+        block-size: 0.625rem;
+        background: var(--rx-surface);
+        mask: url("../assets/check-bold.svg") center / contain no-repeat;
+        animation: rx-check-arrive calc(var(--rx-duration) * 1.5) ease-out;
+      }
+      & > .count {
+        color: var(--rx-success);
+      }
+    }
+    &:not([open]) > summary > .marker {
+      rotate: -90deg;
+    }
+    &:not([open]):dir(rtl) > summary > .marker {
+      rotate: 90deg;
+    }
+    /* 行の一覧。枠で囲まず、行の間と一覧の終わりに罫線を引く。 */
+    & > .sheet {
+      min-inline-size: 0;
+      margin: 0;
+      padding: 0;
+      border-block-end: var(--rx-stroke-width) solid var(--rx-border);
+      list-style: none;
+      & > li {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) fit-content(40%);
+        align-items: center;
+        gap: var(--rx-space-4);
+        min-inline-size: 0;
+        border-block-start: var(--rx-stroke-width) solid var(--rx-border);
+        /* この一覧の名前は、最初の罫線の上に書く。 */
+        &.heading {
+          display: block;
+          padding-block: 0 var(--rx-space-3);
+          border-block-start: 0;
+          & > .title {
+            margin: 0;
+            font-size: var(--rx-body);
+            font-weight: 600;
+            line-height: var(--rx-label-leading);
+          }
+        }
+        /* 行にホバーすると、DataListと同じ淡い青の面を行の幅いっぱいに出す。行のどこを押してもチェックが変わる。 */
+        &:not(.heading, .add):has(> .rx-choice > input:enabled):hover {
+          background: color-mix(in srgb, var(--rx-link) 4%, var(--rx-surface));
+        }
+        /* 追加する欄は、チェックの列に追加のアイコンを置き、題名と同じ位置から書く。入力中はアイコンを青い丸にする。 */
+        &.add {
+          grid-template-columns: calc(var(--rx-body) * 9 / 7) minmax(0, 1fr);
+          column-gap: calc(var(--rx-body) / 2);
+          padding-block: var(--rx-space-2);
+          color: var(--rx-muted);
+          font-size: var(--rx-body);
+          & > .plus {
+            display: grid;
+            place-items: center;
+            justify-self: center;
+            inline-size: calc(var(--rx-body) * 9 / 7);
+            block-size: calc(var(--rx-body) * 9 / 7);
+            border-radius: 50%;
+            transition:
+              background-color var(--rx-duration) ease,
+              color var(--rx-duration) ease;
+          }
+          &:focus-within {
+            background: color-mix(in srgb, var(--rx-link) 6%, var(--rx-surface));
+          }
+          &:focus-within > .plus {
+            background: var(--rx-fill-menu);
+            color: var(--rx-surface);
+          }
+          & > .entry {
+            min-inline-size: 0;
+            min-block-size: 2.25rem;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            color: var(--rx-text);
+            font: inherit;
+            &::placeholder {
+              color: var(--rx-muted);
+              opacity: 1;
+            }
+            /* 入力中は、欄を四角で囲まず、青い丸のアイコンと行の淡い青の面で示す。 */
+            &:focus-visible {
+              outline: 0;
+            }
+          }
+        }
+        & > .end {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: var(--rx-space-2);
+          color: var(--rx-muted);
+          font-size: var(--rx-small);
+        }
+        /* 項目の題名は一覧の題名の大きさにする。チェックの四角も文字に合わせて大きくなる。 */
+        & > .rx-choice {
+          padding-block: var(--rx-space-3);
+          font-size: var(--rx-body);
+          /* 完了のマークは、見出しの進み具合の円と同じ緑で塗る。 */
+          & > input:checked {
+            border-color: var(--rx-success);
+            background: var(--rx-fill-success);
+          }
+          & > input:checked::before {
+            animation: rx-check-arrive calc(var(--rx-duration) * 1.5) ease-out;
+          }
+          & > span {
+            min-inline-size: 0;
+            overflow-wrap: anywhere;
+          }
+          /*
+            終えたことは、ペンで引く線で消す。線は書き始めの側から伸ばし、折り返した題名は一行目から順に引く。
+            （背景は折り返した行をつないだ一本の帯として描かれるので、幅を伸ばすと行の順に引ける。）
+          */
+          & > span > strong {
+            /* 線を文字の長さで止めるため、題名だけインラインにする（説明はブロックなので次の行に置かれる）。 */
+            display: inline;
+            background: linear-gradient(
+                color-mix(in srgb, var(--rx-ink) 70%, transparent),
+                color-mix(in srgb, var(--rx-ink) 70%, transparent)
+              )
+              0 55% / 0 calc(var(--rx-stroke-width) * 1.5) no-repeat;
+            /* 項目の題名は、他の一覧の題名と同じ太さにする。 */
+            font-weight: 600;
+            transition:
+              background-size calc(var(--rx-duration) * 2.5) ease-out,
+              color var(--rx-duration) ease;
+            &:dir(rtl) {
+              background-position: 100% 55%;
+            }
+          }
+          & > input:checked + span > strong {
+            background-size: 100% calc(var(--rx-stroke-width) * 1.5);
+            color: var(--rx-muted);
+          }
+        }
+      }
+    }
+  }
+  @container rx-task-list (inline-size < 26rem) {
+    .rx-task-list > .sheet > li:not(.heading, .add) {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0;
+      & > .end {
+        padding-inline-start: calc(var(--rx-body) * 9 / 7 + var(--rx-body) / 2);
+        padding-block-end: var(--rx-space-3);
+      }
+    }
+  }
+  @media (pointer: coarse) {
+    .rx-task-list > .sheet > li > .rx-choice {
+      min-block-size: 2.75rem;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rx-task-list > .sheet > li > .rx-choice > input:checked::before,
+    .rx-task-list[data-complete="true"] > summary > .pie::before {
+      animation: none;
+    }
+    .rx-task-list > .sheet > li > .rx-choice > span > strong {
+      transition: none;
+    }
+  }
+  /* 強制カラーでは背景の線が消えるため、終えた題名は取り消し線で示す。 */
+  @media (forced-colors: active) {
+    .rx-task-list > .sheet > li.add:focus-within {
+      outline: 0.125rem solid Highlight;
+      outline-offset: -0.125rem;
+    }
+    .rx-task-list > .sheet > li > .rx-choice > input:checked + span > strong {
+      text-decoration: line-through;
+    }
+    .rx-task-list > summary > .pie {
+      border: var(--rx-stroke-width) solid CanvasText;
+    }
+  }
+  @keyframes rx-check-arrive {
+    0% {
+      transform: scale(0.6);
+    }
+    65% {
+      transform: scale(1.15);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+}

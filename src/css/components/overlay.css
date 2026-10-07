@@ -1,0 +1,217 @@
+@layer components {
+  /*
+    閉じる操作は青いアイコンだけのButtonにし、パネルの末尾側の上の角から少しはみ出させて置く。
+    Wingのハンドルと同じく、パネルの外から操作できる目印にする。見出しの行は操作の幅を取らない。
+  */
+  :is(.rx-overlay, .rx-table > .selection-bar) {
+    --rx-overlay-close-size: 1.75rem;
+    --rx-overlay-close-offset: 0.25rem;
+  }
+  .rx-overlay {
+    --rx-overlay-title-line: calc(var(--rx-label) * 10 / 7);
+    --rx-overlay-inset-inline: 1.25rem;
+    border: 0;
+    border-radius: var(--rx-radius-surface);
+    background: var(--rx-surface);
+    color: var(--rx-text);
+    font-family: var(--rx-control-font-family);
+    font-size: var(--rx-label);
+    line-height: var(--rx-label-leading);
+    box-shadow: var(--rx-shadow-menu);
+    overflow-wrap: anywhere;
+    & > .heading {
+      display: grid;
+      gap: var(--rx-space-1);
+      min-inline-size: 0;
+      padding-block-start: var(--rx-space-4);
+      padding-inline: var(--rx-overlay-inset-inline);
+      & > .heading-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        align-items: start;
+        min-inline-size: 0;
+        /* 角に置いた操作が余白より内側へ入る分だけ、題名の行末を空ける。 */
+        padding-inline-end: max(
+          0rem,
+          calc(
+            var(--rx-overlay-close-size) - var(--rx-overlay-close-offset) -
+              var(--rx-overlay-inset-inline)
+          )
+        );
+        & > :is(h2, h3, strong, .message) {
+          display: block;
+          min-inline-size: 0;
+        }
+        & > :is(h2, h3, strong) {
+          font-size: var(--rx-label);
+          font-weight: 600;
+          line-height: var(--rx-overlay-title-line);
+        }
+      }
+      & > p {
+        color: var(--rx-muted);
+      }
+    }
+    & > .body {
+      display: grid;
+      align-content: start;
+      gap: var(--rx-space-2);
+      min-inline-size: 0;
+      padding-block: var(--rx-space-1) 0.875rem;
+      padding-inline: var(--rx-overlay-inset-inline);
+      overflow-wrap: anywhere;
+      &:empty {
+        display: none;
+      }
+    }
+    &:has(> .body:empty) > .heading,
+    &:not(:has(> .body)) > .heading {
+      padding-block-end: var(--rx-space-2);
+    }
+    & > .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: end;
+      gap: var(--rx-space-2);
+      min-inline-size: 0;
+      padding-block: var(--rx-space-1) 0.875rem;
+      padding-inline: var(--rx-overlay-inset-inline);
+    }
+  }
+  /* 閉じる操作の位置。Dialog・Popover・Toast・Tableの選択バーで同じ角に置く。 */
+  :is(.rx-overlay > .heading > .heading-row, .rx-table > .selection-bar > .heading) > .close {
+    position: absolute;
+    inset-block-start: calc(-1 * var(--rx-overlay-close-offset));
+    inset-inline-end: calc(-1 * var(--rx-overlay-close-offset));
+    z-index: 1;
+    display: flex;
+    & > .rx-button {
+      --rx-button-size: var(--rx-overlay-close-size);
+    }
+  }
+  /*
+    浮かぶ要素の出入り。Dialog・Popover・HoverCard・Tooltip・Toast・DropdownMenu・CommandMenu・DatePicker・Tableの選択バーの全てで、
+    ここだけに書く。支点から小さく現れて一瞬膨らんでから収まり、閉じる時は同じ支点へ縮みながら速く消える。
+    各コンポーネントは支点（transform-origin）だけを決める。画面の端から出てくる要素（Toast・下に付くDialog）は、
+    --rx-motion-slideで滑らせる時間を、--rx-motion-scale-in・-outで膨らみを1にし、閉じた形と開き始めのtranslateを決める。
+    位置を決めるスクリプトは変形前の寸法（layoutRect）で測るため、大きさを変えても配置は狂わない。
+  */
+  :is(
+    .rx-overlay,
+    .rx-menu,
+    .rx-command-menu > .panel,
+    .rx-date-picker > .panel,
+    .rx-table > .selection-bar
+  ):is([popover], dialog) {
+    transition:
+      opacity var(--rx-duration-fade) ease-out,
+      scale var(--rx-duration-pop) var(--rx-ease-pop),
+      translate var(--rx-motion-slide) var(--rx-ease-slide),
+      display var(--rx-duration-pop) allow-discrete,
+      overlay var(--rx-duration-pop) allow-discrete;
+    &:is([popover]:not(:popover-open), dialog:not([open])) {
+      opacity: 0;
+      scale: var(--rx-motion-scale-out);
+      transition-duration: var(--rx-duration-out);
+      transition-timing-function: ease-in;
+    }
+  }
+  @starting-style {
+    :is(
+      .rx-overlay,
+      .rx-menu,
+      .rx-command-menu > .panel,
+      .rx-date-picker > .panel,
+      .rx-table > .selection-bar
+    ):is([popover]:popover-open, dialog[open]) {
+      opacity: 0;
+      scale: var(--rx-motion-scale-in);
+    }
+  }
+  /* アンカーに付くパネル（Popover・HoverCard）は、開いた操作の側の上の角を支点にする。 */
+  .rx-overlay[popover] {
+    transform-origin: top left;
+    &:dir(rtl),
+    &[data-align="end"]:dir(ltr) {
+      transform-origin: top right;
+    }
+    &[data-align="end"]:dir(rtl) {
+      transform-origin: top left;
+    }
+  }
+  .rx-overlay[data-placement="anchor"] {
+    --rx-overlay-anchor: auto;
+    --rx-overlay-width: 20rem;
+    position: fixed;
+    position-anchor: var(--rx-overlay-anchor);
+    inset-block: auto;
+    inset-inline: auto;
+    inset-inline-start: 50%;
+    inset-block-start: 50%;
+    translate: -50% -50%;
+    inline-size: min(var(--rx-overlay-width), calc(100vw - 1rem));
+    max-inline-size: calc(100vw - 1rem);
+    max-block-size: calc(100dvh - 1rem);
+    /* 角の操作をはみ出させるため、パネルは切り取らず本文だけをスクロールする。 */
+    overflow: visible;
+    margin: 0;
+    padding: 0;
+    &[data-size="compact"] {
+      --rx-overlay-width: 16rem;
+    }
+    &[data-size="wide"] {
+      --rx-overlay-width: 28rem;
+    }
+    &:popover-open {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+    }
+    & > .body {
+      min-block-size: 0;
+      overflow: auto;
+      overscroll-behavior: contain;
+    }
+    & > .actions {
+      grid-row: 3;
+    }
+  }
+  @supports (inset-block-start: anchor(end)) and (position-try-fallbacks: flip-block) {
+    .rx-overlay[data-placement="anchor"] {
+      translate: none;
+      inset-block-start: calc(anchor(end) + var(--rx-space-1));
+      inset-inline-start: anchor(start);
+      position-try-fallbacks:
+        flip-block,
+        flip-inline,
+        flip-block flip-inline,
+        --rx-overlay-fit,
+        --rx-overlay-fit flip-block;
+      &[data-align="end"] {
+        inset-inline-start: auto;
+        inset-inline-end: anchor(end);
+      }
+    }
+    @position-try --rx-overlay-fit {
+      inset-inline-start: 0.5rem;
+      inset-inline-end: auto;
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-overlay {
+      background: Canvas;
+      box-shadow: none;
+    }
+  }
+  @media (pointer: coarse) {
+    :is(.rx-overlay, .rx-table > .selection-bar) {
+      --rx-overlay-close-size: 2.75rem;
+    }
+  }
+  @media (forced-colors: active) {
+    :is(.rx-overlay > .heading > .heading-row, .rx-table > .selection-bar > .heading)
+      > .close
+      > .rx-button {
+      border-color: ButtonText;
+    }
+  }
+}

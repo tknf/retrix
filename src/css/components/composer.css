@@ -1,0 +1,155 @@
+@layer components {
+  /*
+    入力エリアは一枚のカード。カードそのものを入力欄にし、本文の欄は枠で囲まない。
+    入力中はカード全体にフォーカスリングを出す。
+  */
+  .rx-composer {
+    container: rx-composer / inline-size;
+    display: grid;
+    /* 欄・添付・操作の段の間は、カードの余白よりはっきり狭くする。 */
+    gap: var(--rx-space-3);
+    min-inline-size: 0;
+    padding-block: var(--rx-space-5);
+    padding-inline: var(--rx-space-6);
+    border-radius: var(--rx-radius-surface);
+    background: var(--rx-surface) var(--rx-fill-paper);
+    box-shadow: var(--rx-shadow-paper);
+    transition: box-shadow var(--rx-duration) ease;
+    &:has(> .rx-field > .rx-input:focus-visible, > .rx-field > .editor:focus-within) {
+      box-shadow:
+        0 0 0 var(--rx-frame-width) var(--rx-link),
+        var(--rx-shadow-paper);
+    }
+    &:has(> .rx-field > :is(.rx-input, .editor)[data-invalid="true"]) {
+      box-shadow:
+        0 0 0 var(--rx-stroke-width) var(--rx-danger),
+        var(--rx-shadow-paper);
+    }
+  }
+
+  /* 名前の行は本文の見出し。行の余りと合わせてカードの余白よりはっきり狭く見える間にし、本文に寄せる。 */
+  .rx-composer > .rx-field {
+    gap: var(--rx-space-1);
+  }
+
+  /* 名前・宛先・状態を一行に並べる。名前は本文と同じ大きさの太字、宛先と状態は補足の文字。 */
+  .rx-composer > .rx-field > .heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--rx-space-2) var(--rx-space-3);
+    & > :is(label, .label) {
+      font-size: var(--rx-body);
+      font-weight: 600;
+      line-height: var(--rx-control-leading);
+    }
+    & > .to {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--rx-space-2);
+      min-inline-size: 0;
+      color: var(--rx-muted);
+      font-size: var(--rx-small);
+    }
+    & > .status {
+      margin-inline-start: auto;
+      color: var(--rx-muted);
+      font-size: var(--rx-small);
+    }
+  }
+
+  /* 本文は本文の大きさと行間で書く。field-sizingに対応するブラウザでは、入力した分だけカードが伸びる。 */
+  .rx-composer > .rx-field > :is(.rx-input, .editor) {
+    min-block-size: 4lh;
+    padding-block: 0;
+    padding-inline: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    font-size: var(--rx-body);
+    line-height: var(--rx-leading);
+  }
+
+  .rx-composer > .rx-field > .rx-input {
+    max-block-size: 20lh;
+    resize: vertical;
+    field-sizing: content;
+    &:focus-visible {
+      outline: none;
+    }
+    &:disabled {
+      background: var(--rx-hatch);
+    }
+  }
+
+  /*
+    差し替えたエディター（ProseMirror・Tiptapなど）の入力エリアは、深さによらず本文と同じ文字で書く。
+    段落や箇条の間は、本文の欄と同じく一定の間隔にする。
+  */
+  .rx-composer > .rx-field > .editor {
+    & [contenteditable] {
+      min-block-size: 4lh;
+      outline: none;
+      line-height: inherit;
+      & :is(p, ul, ol, blockquote, h1, h2, h3, h4, pre) {
+        margin: 0;
+      }
+      &
+        :is(p, ul, ol, blockquote, h1, h2, h3, h4, pre)
+        + :is(p, ul, ol, blockquote, h1, h2, h3, h4, pre) {
+        margin-block-start: var(--rx-space-2);
+      }
+      &:empty::before {
+        content: attr(data-placeholder);
+        color: var(--rx-muted);
+      }
+    }
+  }
+
+  @supports (field-sizing: content) {
+    .rx-composer > .rx-field > .rx-input {
+      resize: none;
+    }
+  }
+
+  .rx-composer > .attachments {
+    display: grid;
+    gap: var(--rx-space-2);
+    min-inline-size: 0;
+  }
+
+  .rx-composer > .footer {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    flex-wrap: wrap;
+    gap: var(--rx-space-2);
+  }
+
+  .rx-composer > .footer > .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--rx-space-2);
+    margin-inline-end: auto;
+  }
+
+  @container rx-composer (inline-size < 26rem) {
+    .rx-composer > .footer {
+      justify-content: start;
+    }
+
+    .rx-composer > .footer > .actions {
+      inline-size: 100%;
+      margin-inline-end: 0;
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-composer {
+      border: var(--rx-stroke-width) solid CanvasText;
+      background: Canvas;
+      box-shadow: none;
+    }
+  }
+}

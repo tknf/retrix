@@ -1,0 +1,52 @@
+@layer components {
+  /*
+    操作バー。白いパネルを下の中央に浮かべ、アイコン・名前・ショートカットキーの表示を縦に積んだ操作を横に並べる。
+    操作バーの中の操作は面を持たないActionTileで、ホバー時だけ淡い面を出し、押すと内側へへこむ。
+    stickyは置いた場所の下端に留め、fixedは画面の下に浮かべる。狭い画面では横にスクロールする。
+    外側は置き場所の幅いっぱいの透明な枠（中身の幅で親を押し広げない）で、白いパネルは中の並びに塗る。
+  */
+  .rx-action-dock {
+    position: sticky;
+    inset-block-end: 0;
+    z-index: var(--rx-z-menu);
+    contain: inline-size;
+    inline-size: 100%;
+    padding-block: var(--rx-space-4);
+    padding-inline: var(--rx-space-2);
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    &[data-placement="fixed"] {
+      position: fixed;
+      inset-inline: 0;
+      inset-block-end: env(safe-area-inset-bottom);
+      inline-size: auto;
+    }
+    & > ul {
+      display: flex;
+      gap: var(--rx-space-1);
+      inline-size: max-content;
+      margin: 0;
+      margin-inline: auto;
+      padding-block: var(--rx-space-1);
+      padding-inline: var(--rx-space-1);
+      border-radius: var(--rx-radius-surface);
+      background: var(--rx-surface);
+      box-shadow: var(--rx-shadow-menu);
+      list-style: none;
+      & > li {
+        flex: none;
+        min-inline-size: 5.25rem;
+        /* 操作バーの中の操作は面を持たず、パネルの上に平らに置く。密度と手触りはActionTileのまま。 */
+        & > .rx-action-tile {
+          --rx-action-tile-rest: transparent;
+          inline-size: 100%;
+        }
+      }
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-action-dock > ul {
+      outline: var(--rx-stroke-width) solid CanvasText;
+    }
+  }
+}

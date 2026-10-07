@@ -1,0 +1,6 @@
+@layer components {
+  /* TaskListのルートは中の一覧の幅に合わせて縮む。カードの見た目と一覧の既定値の解除はTaskList自身が所有する。 */
+  .rx-task-list {
+    min-inline-size: 0;
+  }
+}

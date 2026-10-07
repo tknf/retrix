@@ -1,0 +1,27 @@
+import type { ComponentDoc } from "../reference";
+
+export default {
+  id: "task-list",
+  name: "TaskList",
+  description: "タスクの完了チェックと、担当・期日を並べます。",
+  api: ["TaskList"],
+  guidance: [
+    "やることを並べ、終えた項目にチェックを付けていく時に使います。担当や期日を行の終わりに添えられます。",
+    "設定の選択肢を複数選ぶ時は、`Field` と `CheckboxGroup` を使います。",
+    "状態ごとの列でタスクを移動して管理する時は `Board` を使います。",
+  ],
+  usage: [
+    "`items` の各行を標準のcheckboxで描き、`label` を題名、`detail` を題名の下の補足、`end` を行の終わりに置きます。`end` には担当の `Avatar` や期日の `Badge` を置けます。完了した題名は、先頭側からペンで引く線で消します。",
+    "各行の `name` と `value` は、囲むフォームで送る名前と値になります。完了の保存は、フォームの送信か、`change` を受ける利用側のcontrollerで行います。標準のcheckboxと同じく、チェックの無い行は送られません。",
+    "`title` を渡すと、行の一覧の先頭に一覧の名前を見出し（`h3`）で置きます。",
+    "`heading` を渡すと、一覧を開閉できる `details`（最初は開いた状態）で包み、見出しに完了した割合を示す円グラフと「完了数/全体」を添えます。`TaskListController` を `task-list` として登録すると、チェックに合わせて数え直し、全て完了すると円グラフを緑にしてチェックを表示します。この時、渡した `data-controller` と `data-action` は `task-list` のものに追加して付けます。",
+    "`add` を渡すと、最後の行に項目を追加する入力欄を置きます。入力欄は `name` で文字を送るだけで、行を増やす処理は利用側のフォームと応答で行います。一覧の外にあるフォームへ送る時は、`form` にそのフォームのidを渡します。",
+    "JavaScriptが無い時も、checkboxとフォームの送信は働きます。見出しの数と円グラフは描画時の値のままです。",
+  ],
+  accessibility: [
+    "行の一覧は `label` を読み上げ名にします。各行は `label` 要素で題名と結んだ標準のcheckboxです。",
+    "見出しの数は「完了 1/3」のように読み、割合の円グラフは読み上げから外します。",
+    "追加の入力欄は `placeholder` の文を読み上げ名にします。",
+    "`end` に置く `Avatar` や `Badge` は、それぞれの名前と文言で担当や期日を伝えます。",
+  ],
+} satisfies ComponentDoc;

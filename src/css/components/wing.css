@@ -1,0 +1,363 @@
+@layer components {
+  /*
+    Wingは作業面の後ろへ差し込む固定幅の白いパネル。縁取りを持たず、やわらかな影と作業面から落ちる影で分ける。
+    広い配置では開閉に関わらず作業面に合わせた全長の高さを持ち、閉じている間は作業面の縁からハンドルの幅だけを出す。
+    閉じたハンドルはアイコンと開閉のマークだけを載せ、名前はツールチップで示す。開くと幅が伸び、上端に横書きの見出しが並ぶ。
+  */
+  .rx-wing {
+    --rx-wing-handle: 2.75rem;
+    --rx-wing-panel: 14rem;
+    --rx-wing-tuck: var(--rx-radius-surface);
+    --rx-wing-inset: var(--rx-space-6);
+    /*
+      開閉の時間はDialog・Popoverと同じにする（overlay.cssの定義）。閉じる時は短く、開く時（[open]で上書き）は少し長くする。
+      Dialog・Popoverは閉じる時にease-inで加速して消えるが、Wingのパネルは閉じても作業面の縁に見えたまま止まる。
+      加速したまま止まると最後に跳んで見えるので、閉じる時も減速して止める。中身の出入りは短いease-outで薄れる。
+    */
+    --rx-wing-duration: var(--rx-duration-out);
+    --rx-wing-ease: ease;
+    container: rx-wing / inline-size;
+    min-inline-size: 0;
+    /* 狭い配置で、閉じた高さ0から内容の高さ（auto）へ伸び縮みさせる。 */
+    interpolate-size: allow-keywords;
+    & > .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--rx-space-3);
+      min-inline-size: 0;
+      & > .main {
+        position: relative;
+        z-index: 1;
+        min-inline-size: 0;
+      }
+      /* 狭い配置の既定。見出しの行を持つパネルとして、作業面の上下へ積む。 */
+      & > :is(.start, .end) {
+        position: relative;
+        min-inline-size: 0;
+        overflow: hidden;
+        /* ツールチップの基準を、Wingごとのハンドルに限る。 */
+        anchor-scope: --rx-wing-tab;
+        /* 寸法を保つため枠の幅は残し、線は見せない。ハンドルと中身も同じ色で、区切り線を引かない。 */
+        border: var(--rx-stroke-width) solid transparent;
+        border-radius: var(--rx-radius-surface);
+        background: var(--rx-surface);
+        /* パネルの白は透明な枠の内側だけに塗り、見出しの背景とパネルの縁の間に白い縁を残さない。 */
+        background-clip: padding-box;
+        box-shadow: var(--rx-shadow-paper);
+        color: var(--rx-text);
+        & > summary {
+          display: flex;
+          align-items: center;
+          gap: var(--rx-space-3);
+          /* 36pxのボタンを上下4pxで挟み、44pxの行にする。 */
+          padding-block: var(--rx-space-1);
+          padding-inline: var(--rx-space-1) var(--rx-space-4);
+          color: var(--rx-muted);
+          font-family: var(--rx-control-font-family);
+          font-size: var(--rx-label);
+          font-weight: 600;
+          /* 流体の文字サイズでも44pxの計算を崩さないよう、行は20pxに固定する。 */
+          line-height: 1.25rem;
+          list-style: none;
+          overflow-wrap: anywhere;
+          cursor: pointer;
+          anchor-name: --rx-wing-tab;
+          /* 背景の層をハンドルの中に収め、ボタンと名前の後ろに敷く。 */
+          position: relative;
+          isolation: isolate;
+          transition: color var(--rx-duration) ease;
+          /*
+            見出しの背景。上端の淡い面の色から下端でパネルの白へ変わるグラデーションにし、下の縁を線にしない。
+            グラデーションは色の変化として動かせないので、層ごと薄れさせる。開いている間だけ見せる。
+          */
+          &::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            border-radius: inherit;
+            background: linear-gradient(var(--rx-background), var(--rx-surface));
+            opacity: 0;
+            transition: opacity var(--rx-duration-fade) ease-out;
+          }
+          /* 名前のツールチップは、広い配置で閉じている時だけ出す。 */
+          & > .tip {
+            display: none;
+          }
+          &::-webkit-details-marker {
+            display: none;
+          }
+          &:hover {
+            color: var(--rx-link);
+          }
+          &:focus-visible {
+            outline-offset: -0.125rem;
+          }
+          /* ハンドルのボタンは共通Buttonの主操作のアイコンだけの形。アイコンがない時は開閉のマークで、向きで開閉を示す。 */
+          & > .handle {
+            flex: none;
+            &[data-fallback="caret"] > .rx-icon {
+              transition: rotate var(--rx-wing-duration) var(--rx-wing-ease);
+            }
+          }
+          & > .label {
+            flex: 1 1 auto;
+            min-inline-size: 0;
+          }
+        }
+        & > .body {
+          display: grid;
+          align-content: start;
+          gap: var(--rx-space-2);
+          min-inline-size: 0;
+          padding-block: var(--rx-space-4);
+          padding-inline: var(--rx-space-4);
+          font-size: var(--rx-label);
+          line-height: var(--rx-label-leading);
+          overflow-wrap: anywhere;
+          transition: opacity var(--rx-duration-fade) ease-out;
+          @starting-style {
+            opacity: 0;
+          }
+        }
+        /* 閉じる間も中身を残して薄れさせ、高さを0へ縮める。 */
+        &::details-content {
+          block-size: 0;
+          overflow: clip;
+          transition:
+            block-size var(--rx-wing-duration) var(--rx-wing-ease),
+            content-visibility var(--rx-wing-duration) allow-discrete;
+        }
+        &:not([open]) > .body {
+          opacity: 0;
+        }
+      }
+      & > :is(.start, .end)[open] {
+        --rx-wing-duration: var(--rx-duration-pop);
+        --rx-wing-ease: ease;
+        &::details-content {
+          block-size: auto;
+        }
+        /* 開いている間は見出しの背景を見せる。閉じる時はパネルが縮むのと同じ時間で薄れる。 */
+        & > summary {
+          color: var(--rx-text);
+          &::before {
+            opacity: 1;
+          }
+          & > .handle[data-fallback="caret"] > .rx-icon {
+            rotate: 180deg;
+          }
+        }
+      }
+    }
+    /*
+      作業面の後ろへ差し込む配置。左右の列は開閉に関わらずハンドル＋パネルの幅を確保し、作業面を動かさない。
+      Wingは作業面の上端から一段下げ、内側の縁を作業面の角丸の分だけ作業面の下に入れる。
+    */
+    @container rx-wing (inline-size >= 56rem) {
+      & > .layout {
+        grid-template-columns:
+          calc(var(--rx-wing-handle) + var(--rx-wing-panel))
+          minmax(0, var(--rx-page))
+          calc(var(--rx-wing-handle) + var(--rx-wing-panel));
+        justify-content: center;
+        align-items: start;
+        gap: 0;
+        & > :is(.start, .main, .end) {
+          grid-row: 1;
+        }
+        & > .main {
+          grid-column: 2;
+          align-self: stretch;
+        }
+        & > :is(.start, .end) {
+          /* 内容で行を伸ばさず、開閉に関わらず作業面の高さから上下のinsetを引いた高さに合わせる。 */
+          block-size: 0;
+          min-block-size: calc(100% - var(--rx-wing-inset) * 2);
+          margin-block-start: var(--rx-wing-inset);
+          /*
+            閉じている間は、パネルを作業面の縁から10pxだけのぞかせ、ハンドルのボタンをパネルの外側の縁にまたがせて半分はみ出させる。
+            ホバーするかハンドルへ移ると、のぞく幅が少し広がる。はみ出た中身や名前は作業面の側へ伸びて作業面に隠れるので、
+            この配置ではパネルで切らない。
+          */
+          overflow: visible;
+          inline-size: calc(0.625rem + var(--rx-wing-tuck));
+          transition: inline-size var(--rx-wing-duration) var(--rx-wing-ease);
+          /*
+            開く時はDialog・Popoverと同じく、少し行き過ぎてから戻る。列の幅は固定で作業面は動かないので、揺れるのはパネルだけ。
+            狭い配置では高さが行き過ぎて下の作業面まで揺れるので、この配置の時だけにする。
+          */
+          &[open] {
+            --rx-wing-ease: var(--rx-ease-pop);
+          }
+          &:not([open]):has(> summary:is(:hover, :focus-visible)) {
+            inline-size: calc(1.125rem + var(--rx-wing-tuck));
+          }
+          /*
+            ハンドルは開閉に関わらず、開き切った時の幅の横並びのまま外側の縁に付け、ボタンは常に外側の縁に置く。
+            閉じている間、名前はパネルの作業面の下に入った部分に隠れ、パネルの伸び縮みと一緒に現れ・隠れる。組み替えないのでちらつかない。
+            フォーカスの輪は、閉じても隠れないようボタンの周りに出す。
+          */
+          & > summary {
+            position: absolute;
+            inset-block-start: 0;
+            inline-size: calc(var(--rx-wing-handle) + var(--rx-wing-panel));
+            transition:
+              color var(--rx-duration) ease,
+              inset-inline-start var(--rx-wing-duration) var(--rx-wing-ease),
+              inset-inline-end var(--rx-wing-duration) var(--rx-wing-ease);
+            &:focus-visible {
+              outline: none;
+              & > .handle {
+                outline: 0.125rem solid var(--rx-link);
+                outline-offset: 0.125rem;
+              }
+            }
+          }
+          /*
+            中身は開き切った時の幅に固定し、外側の縁に付けて置く。パネルが作業面の後ろから出てくるのに合わせて
+            中身も縁と一緒に出てくるので、途中で折り返し直さない。はみ出た分はパネルの内側の縁で切れる。
+          */
+          & > .body {
+            position: absolute;
+            inset-block: var(--rx-wing-handle) 0;
+            inline-size: calc(var(--rx-wing-handle) + var(--rx-wing-panel) + var(--rx-wing-tuck));
+            overflow-y: auto;
+            padding-block: var(--rx-space-4);
+          }
+          /* 横の配置では高さを縮めず、パネルの伸び縮みと中身の薄れだけで開閉する。 */
+          &::details-content {
+            block-size: auto;
+            overflow: visible;
+          }
+        }
+        /*
+          閉じたハンドルの名前のツールチップ。共通Tooltipと同じ面で、ハンドルの外側に出す。
+          detailsはoverflowで切るが、固定配置の要素は切られない。
+        */
+        @supports (inset-block-start: anchor(start)) {
+          & > :is(.start, .end) > summary > .tip {
+            display: block;
+            position: fixed;
+            position-anchor: --rx-wing-tab;
+            inset-block-start: anchor(start);
+            inline-size: max-content;
+            max-inline-size: min(16rem, calc(100vw - 1rem));
+            padding-block: var(--rx-space-2);
+            padding-inline: var(--rx-space-3);
+            color: var(--rx-text);
+            font-size: var(--rx-small);
+            font-weight: 400;
+            line-height: var(--rx-small-leading);
+            white-space: normal;
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            position-try-fallbacks: flip-inline;
+            transition:
+              opacity var(--rx-duration) ease,
+              visibility 0s linear var(--rx-duration);
+          }
+          /* 開いている間は名前が見えているので出さない。閉じた瞬間に一瞬残って見えないよう、動きも付けない。 */
+          & > :is(.start, .end)[open] > summary > .tip {
+            transition: none;
+          }
+          & > .start > summary > .tip {
+            inset-inline-end: calc(anchor(start) + var(--rx-space-2));
+          }
+          & > .end > summary > .tip {
+            inset-inline-start: calc(anchor(end) + var(--rx-space-2));
+          }
+          & > :is(.start, .end):not([open]) > summary:is(:hover, :focus-visible) > .tip {
+            opacity: 1;
+            visibility: visible;
+            /* 閉じた直後にポインターが残っていても、パネルが縮み切ってから出す。 */
+            transition:
+              opacity var(--rx-duration) ease calc(var(--rx-duration-out) + 150ms),
+              visibility 0s linear calc(var(--rx-duration-out) + 150ms);
+          }
+        }
+        /* 開いたパネルは幅が伸び、隠れていた名前と中身が出てくる。 */
+        & > :is(.start, .end)[open] {
+          inline-size: calc(var(--rx-wing-handle) + var(--rx-wing-panel) + var(--rx-wing-tuck));
+        }
+        & > .start {
+          grid-column: 1;
+          justify-self: end;
+          margin-inline-end: calc(var(--rx-wing-tuck) * -1);
+          /* ボタンの中心（外側の縁から4px＋半径18px）をパネルの外側の縁に合わせる。 */
+          &:not([open]) > summary {
+            inset-inline-start: calc((var(--rx-space-1) + 1.125rem) * -1);
+          }
+          /* パネルで切らない配置なので、見出しの背景の外側の上の角をパネルの角丸に合わせる。 */
+          & > summary {
+            inset-inline-start: 0;
+            border-start-start-radius: calc(var(--rx-radius-surface) - var(--rx-stroke-width));
+            & > .handle[data-fallback="caret"] > .rx-icon {
+              rotate: 90deg;
+            }
+            &:dir(rtl) > .handle[data-fallback="caret"] > .rx-icon {
+              rotate: -90deg;
+            }
+          }
+          & > .body {
+            inset-inline-start: 0;
+            padding-inline: var(--rx-space-4) calc(var(--rx-wing-tuck) + var(--rx-space-4));
+          }
+          &[open] > summary {
+            & > .handle[data-fallback="caret"] > .rx-icon {
+              rotate: -90deg;
+            }
+            &:dir(rtl) > .handle[data-fallback="caret"] > .rx-icon {
+              rotate: 90deg;
+            }
+          }
+        }
+        & > .end {
+          grid-column: 3;
+          justify-self: start;
+          margin-inline-start: calc(var(--rx-wing-tuck) * -1);
+          &:not([open]) > summary {
+            inset-inline-end: calc((var(--rx-space-1) + 1.125rem) * -1);
+          }
+          & > summary {
+            inset-inline-end: 0;
+            border-start-end-radius: calc(var(--rx-radius-surface) - var(--rx-stroke-width));
+            flex-direction: row-reverse;
+            padding-inline: var(--rx-space-4) var(--rx-space-1);
+            & > .label {
+              text-align: end;
+            }
+            & > .handle[data-fallback="caret"] > .rx-icon {
+              rotate: -90deg;
+            }
+            &:dir(rtl) > .handle[data-fallback="caret"] > .rx-icon {
+              rotate: 90deg;
+            }
+          }
+          & > .body {
+            inset-inline-end: 0;
+            padding-inline: calc(var(--rx-wing-tuck) + var(--rx-space-4)) var(--rx-space-4);
+          }
+          &[open] > summary {
+            & > .handle[data-fallback="caret"] > .rx-icon {
+              rotate: 90deg;
+            }
+            &:dir(rtl) > .handle[data-fallback="caret"] > .rx-icon {
+              rotate: -90deg;
+            }
+          }
+        }
+      }
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-wing > .layout > :is(.start, .end) {
+      border-color: CanvasText;
+      box-shadow: none;
+      & > summary > .tip {
+        border: var(--rx-stroke-width) solid CanvasText;
+      }
+    }
+  }
+}

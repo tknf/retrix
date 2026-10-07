@@ -1,0 +1,102 @@
+@layer components {
+  .rx-page-header {
+    container: rx-page-header / inline-size;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--rx-space-3);
+    min-inline-size: 0;
+    & > .icon {
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      inline-size: 3rem;
+      block-size: 3rem;
+      border-radius: var(--rx-radius-field);
+      background: var(--rx-cover);
+      color: var(--rx-link);
+      font-size: 1.75rem;
+    }
+    /* 補足文があると見出し部分が縦に長くなるため、アイコンと操作は見出しの1行目の上端に揃える。 */
+    &:not([data-align="center"]):has(> .heading > p) > :is(.icon, .actions) {
+      align-self: start;
+    }
+    & > .heading {
+      flex: 1 1 14rem;
+      min-inline-size: 0;
+    }
+    /*
+      見出しの大きさは、画面幅から決まる画面の見出しの大きさと、PageHeader自身の幅から決まる上限の小さい方。
+      上限は幅16rem（256px）で28px、そこから1pxあたり0.027px大きくなる。画面全体に置いた時は常に画面の見出しより
+      大きいので効かず、狭い場所に置いた時だけ、同じ幅の画面（スマートフォン）と同じ大きさまで下がる。小見出しより下げない。
+    */
+    & > .heading > h1 {
+      font-family: var(--rx-control-font-family);
+      font-size: min(
+        var(--rx-title),
+        max(var(--rx-section-title), calc(1.75rem + (100cqi - 16rem) * 0.027))
+      );
+      font-weight: 700;
+      line-height: 1.25;
+      text-wrap: balance;
+    }
+    & > .heading > p {
+      max-inline-size: var(--rx-measure);
+      margin-block-start: var(--rx-space-2);
+      color: var(--rx-muted);
+      font-size: var(--rx-label);
+      line-height: var(--rx-label-leading);
+    }
+    & > .actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--rx-space-2);
+      min-inline-size: 0;
+    }
+    /* 中央揃えは作業面の主題。見出しの左右から線を伸ばし、ここからまとまりが始まることを示す。 */
+    &[data-align="center"] {
+      flex-direction: column;
+      text-align: center;
+      & > .heading {
+        flex-basis: auto;
+        align-self: stretch;
+      }
+      & > .heading > h1 {
+        display: flex;
+        align-items: center;
+        gap: var(--rx-space-4);
+        &::before,
+        &::after {
+          content: "";
+          flex: 1 1 1.5rem;
+          min-inline-size: 1.5rem;
+          block-size: var(--rx-stroke-width);
+          background: linear-gradient(
+            to right,
+            transparent,
+            color-mix(in srgb, var(--rx-link) 55%, var(--rx-surface))
+          );
+        }
+        &::after {
+          background: linear-gradient(
+            to left,
+            transparent,
+            color-mix(in srgb, var(--rx-link) 55%, var(--rx-surface))
+          );
+        }
+      }
+      & > .heading > p {
+        margin-inline: auto;
+      }
+      & > .actions {
+        justify-content: center;
+      }
+    }
+    @container rx-page-header (inline-size < 30rem) {
+      & > .actions {
+        flex-basis: 100%;
+      }
+    }
+  }
+}

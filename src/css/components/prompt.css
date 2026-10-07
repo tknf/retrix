@@ -1,0 +1,145 @@
+@layer components {
+  /*
+    判断を依頼する問いかけ。形はLayerCardのまま（淡い青の沈んだ層に問いの見出し、白いカードに中身）で、
+    カードの中に選択肢の行を並べる。行は丸いマーク・太字の要点・淡い説明・進む矢印で、ActionListの行と同じく
+    普段は平らにし、ホバーすると淡い青の面を出してマークを青から紫の塗りに、押すと内側へへこむ。
+    尾（下向きの三角）は層と同じ色で、すぐ下の対象を指す。
+    選択肢の行の文字の指定はこのファイルが持つ（共通Buttonとは別の専用の操作）。
+  */
+  .rx-prompt {
+    position: relative;
+    /* 尾は層の外へ出るので、下の要素との間は置く側の間隔（16px以上）で空ける。 */
+    &[data-pointer="true"]::after {
+      content: "";
+      position: absolute;
+      inset-block-start: 100%;
+      inset-inline-start: calc(var(--rx-space-6) + var(--rx-space-1));
+      border-inline: var(--rx-space-3) solid transparent;
+      border-block-start: var(--rx-space-3) solid var(--rx-cover);
+    }
+    /* カードは行の面を端近くまで広げ、行の要点を層の見出しと同じ書き始めにそろえる。 */
+    & > .body {
+      padding-block: var(--rx-space-2);
+      padding-inline: calc(var(--rx-layer-card-inline) - var(--rx-space-3));
+    }
+  }
+  .rx-prompt > .body > .choices {
+    display: grid;
+    min-inline-size: 0;
+    & > .choice {
+      appearance: none;
+      position: relative;
+      display: grid;
+      grid-template-columns: 1.25rem minmax(0, 1fr) auto;
+      align-items: start;
+      column-gap: var(--rx-space-3);
+      min-inline-size: 0;
+      margin: 0;
+      padding-block: var(--rx-space-3);
+      padding-inline: var(--rx-space-3);
+      border: 0;
+      border-radius: var(--rx-radius-control);
+      background: transparent;
+      color: var(--rx-text);
+      font-family: var(--rx-font);
+      font-size: var(--rx-label);
+      font-weight: 400;
+      line-height: var(--rx-label-leading);
+      text-align: start;
+      text-decoration: none;
+      overflow-wrap: anywhere;
+      word-break: auto-phrase;
+      cursor: pointer;
+      transition:
+        background-color var(--rx-duration) ease,
+        box-shadow var(--rx-duration) ease;
+      /* 丸いマーク。題名の一行目の高さにそろえ、答える前は淡い青の輪にする。 */
+      & > .mark {
+        display: grid;
+        place-items: center;
+        block-size: 1lh;
+        &::before {
+          content: "";
+          inline-size: 1rem;
+          block-size: 1rem;
+          border: var(--rx-frame-width) solid
+            color-mix(in srgb, var(--rx-link) 35%, var(--rx-surface));
+          border-radius: 50%;
+          transition:
+            border-color var(--rx-duration) ease,
+            background var(--rx-duration) ease;
+        }
+      }
+      & > .text {
+        display: grid;
+        gap: 0.125rem;
+        min-inline-size: 0;
+        & > strong {
+          font-weight: 700;
+        }
+        & > .description {
+          color: var(--rx-muted);
+        }
+      }
+      & > .go {
+        display: grid;
+        place-items: center;
+        block-size: 1lh;
+        color: var(--rx-muted);
+        opacity: 0;
+        transition:
+          opacity var(--rx-duration) ease,
+          color var(--rx-duration) ease;
+        &:dir(rtl) > .rx-icon {
+          rotate: 180deg;
+        }
+      }
+      &:hover {
+        background: color-mix(in srgb, var(--rx-link) 6%, var(--rx-surface));
+        & > .mark::before {
+          border-color: transparent;
+          background: var(--rx-fill-menu);
+        }
+        & > .go {
+          color: var(--rx-link);
+          opacity: 1;
+        }
+      }
+      &:active {
+        background: color-mix(in srgb, var(--rx-link) 9%, var(--rx-surface));
+        box-shadow: var(--rx-shadow-control-pressed);
+      }
+      &:focus-visible {
+        outline: 0.125rem solid var(--rx-link);
+        outline-offset: -0.125rem;
+        & > .go {
+          opacity: 1;
+        }
+      }
+    }
+    /* 行の間は、ActionListと同じく要点の書き始めから細い線で区切り、ホバーした行の前後は線を消す。 */
+    & > .choice + .choice::before {
+      content: "";
+      position: absolute;
+      inset-block-start: 0;
+      inset-inline: calc(var(--rx-space-3) * 2 + 1.25rem) var(--rx-space-3);
+      block-size: var(--rx-stroke-width);
+      background: color-mix(in srgb, var(--rx-ink) 8%, transparent);
+    }
+    & > .choice:hover::before,
+    & > .choice:hover + .choice::before {
+      opacity: 0;
+    }
+  }
+  @media (hover: none) {
+    .rx-prompt > .body > .choices > .choice > .go {
+      opacity: 1;
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-prompt > .body > .choices > .choice:hover > .mark::before {
+      forced-color-adjust: none;
+      background: Highlight;
+    }
+  }
+}

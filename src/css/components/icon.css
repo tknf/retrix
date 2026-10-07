@@ -1,0 +1,16 @@
+@layer components {
+  .rx-icon {
+    display: inline-block;
+    inline-size: 1em;
+    block-size: 1em;
+    flex: none;
+    vertical-align: -0.2em;
+    overflow: visible;
+    color: inherit;
+    /* 操作内は親の配置へ参加し、SVG内の余白を文字の移動で補正しない。 */
+    &:where([data-size="small"]) {
+      inline-size: calc(6em / 7);
+      block-size: calc(6em / 7);
+    }
+  }
+}

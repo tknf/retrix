@@ -1,0 +1,20 @@
+@layer components {
+  .rx-popover {
+    display: grid;
+    min-inline-size: 0;
+    justify-items: start;
+    &[data-align="end"] {
+      justify-items: end;
+    }
+  }
+  .rx-popover > .panel {
+    font-family: var(--rx-control-font-family);
+  }
+  .rx-popover > .panel::backdrop {
+    background: transparent;
+  }
+  /* 開く操作の名前のTooltipは、パネルが開いている間は隠し、パネルと重ねない。 */
+  .rx-popover:has(> .panel:popover-open) > .rx-tooltip > .content {
+    visibility: hidden;
+  }
+}
