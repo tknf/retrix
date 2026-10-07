@@ -1,25 +1,27 @@
 @layer components {
   /*
-    文の中の選択。前後の文と同じ大きさ・行高のまま、選べる語を青い太字にし、終わりに小さな▾を添える。
-    Tagと同じく淡い青の縁のピルで囲み、文の中で「ここは押して変えられる」と見分けられるようにする。
-    下線は引かず、ホバーすると淡い青の面を出す。幅は選んだ語に合わせる。
+    文の中の選択。前後の文と同じ大きさ・行高のまま、選べる語をInputと同じ欄で囲み、終わりに小さな▾を添える。
+    枠は濃い灰色で上側をさらに濃くし、角は欄と同じ3pxにする。フォーカスは青い縁の外に淡い青の輪を広げる。
+    幅は選んだ語に合わせる。
   */
   .rx-inline-select {
     position: relative;
     display: inline-flex;
     min-inline-size: 0;
     align-items: baseline;
-    /* 日本語の文は語の間に空白を置かないので、縁と前後の文字が触れないよう少し離す。 */
+    /* 日本語の文は語の間に空白を置かないので、枠と前後の文字が触れないよう少し離す。 */
     margin-inline: 0.2em;
     max-inline-size: calc(100% - 0.4em);
-    border: var(--rx-stroke-width) solid color-mix(in srgb, var(--rx-link) 35%, var(--rx-surface));
-    border-radius: var(--rx-radius-pill);
-    color: var(--rx-link);
-    font-weight: 700;
+    border: var(--rx-stroke-width) solid var(--rx-control-border);
+    border-block-start-color: color-mix(in srgb, var(--rx-control-border) 75%, var(--rx-ink));
+    border-radius: var(--rx-radius-control);
+    background: var(--rx-surface);
+    box-shadow: var(--rx-shadow-input);
+    color: var(--rx-text);
     vertical-align: baseline;
     transition:
-      background-color var(--rx-duration) ease,
-      border-color var(--rx-duration) ease;
+      border-color var(--rx-duration) ease,
+      box-shadow var(--rx-duration) ease;
     & > select {
       appearance: none;
       field-sizing: content;
@@ -27,7 +29,7 @@
       max-inline-size: 100%;
       margin: 0;
       padding-block: 0;
-      padding-inline: 0.5em 1.35em;
+      padding-inline: 0.375em 1.35em;
       border: 0;
       border-radius: inherit;
       background: transparent;
@@ -37,35 +39,44 @@
       white-space: nowrap;
       text-overflow: ellipsis;
       cursor: pointer;
+      /* 縁と輪は囲みに描く。選択そのものには透明な輪郭だけを残し、強制カラーで見えるようにする。 */
       &:focus-visible {
-        outline: 0.125rem solid var(--rx-link);
-        outline-offset: 0.0625rem;
+        outline: 0.125rem solid transparent;
       }
       &:disabled {
         color: var(--rx-muted);
         cursor: not-allowed;
       }
     }
-    &:has(> select:disabled) {
-      border-color: var(--rx-border);
-      color: var(--rx-muted);
-    }
     & > .rx-icon {
       position: absolute;
       inset-block-start: 50%;
       inset-inline-end: 0.45em;
       translate: 0 -50%;
+      color: var(--rx-muted);
       font-size: 0.7em;
       pointer-events: none;
     }
     &:has(> select:enabled):hover {
-      border-color: color-mix(in srgb, var(--rx-link) 60%, var(--rx-surface));
-      background: var(--rx-cover);
+      border-color: color-mix(in srgb, var(--rx-control-border) 75%, var(--rx-ink));
+    }
+    &:has(> select:focus-visible) {
+      border-color: var(--rx-blue);
+      box-shadow:
+        0 0 0 0.125rem var(--rx-focus-ring),
+        var(--rx-shadow-input);
+    }
+    /* 使えない選択はInputと同じ斜線にする。 */
+    &:has(> select:disabled) {
+      border-color: var(--rx-border);
+      background: var(--rx-hatch), var(--rx-surface);
+      box-shadow: none;
+      color: var(--rx-muted);
     }
   }
   @media (forced-colors: active) {
     .rx-inline-select {
-      border-color: LinkText;
+      border-color: ButtonText;
     }
   }
 }

@@ -2,7 +2,11 @@
   .rx-calendar {
     --rx-calendar-scroll-size: min(40rem, 75dvh);
     --rx-calendar-meta-size: clamp(0.6875rem, calc(0.666667rem + 0.104167vw), 0.75rem);
-    --rx-calendar-quiet: color-mix(in srgb, var(--rx-background) 55%, var(--rx-surface));
+    --rx-calendar-quiet: var(--rx-gray-20);
+    /* 日の区切りの線。表の罫線より一段濃い、暖かい灰色の細い線にする。 */
+    --rx-calendar-line: color-mix(in srgb, var(--rx-border) 55%, var(--rx-gray-200));
+    /* 今日の列（週の時間割）に敷く、ごく淡い黄色。 */
+    --rx-calendar-today-soft: color-mix(in srgb, var(--rx-mark) 45%, var(--rx-surface));
     min-inline-size: 0;
     color: var(--rx-text);
     font-family: var(--rx-control-font-family);
@@ -13,21 +17,22 @@
       grid-template-columns: minmax(0, 1fr) auto auto;
       align-items: start;
       gap: var(--rx-space-2) var(--rx-space-3);
-      /* 操作の段の間（8px）より、上端と下の罫線までをはっきり広くする。 */
-      padding-block: var(--rx-space-3);
-      border-block-end: var(--rx-stroke-width) solid var(--rx-border);
+      /* 見出しの行は線で区切らず、下の曜日の行との間を空けるだけにする。 */
+      padding-block: 0 var(--rx-space-3);
+      /* 期間の見出しはSectionの見出しと同じ、赤茶の通常の太さの文字。 */
       & > h2 {
         min-inline-size: 0;
         margin: 0;
-        padding-block: var(--rx-space-1);
-        font-size: var(--rx-body);
-        font-weight: 600;
-        line-height: var(--rx-control-leading);
+        color: var(--rx-heading);
+        font-family: var(--rx-font);
+        font-size: var(--rx-section-title);
+        font-weight: 400;
+        line-height: var(--rx-button-size);
         & > .week-number {
           margin-inline-start: var(--rx-space-2);
-          color: var(--rx-muted);
+          color: var(--rx-meta);
           font-size: var(--rx-small);
-          font-weight: 500;
+          font-weight: 400;
         }
       }
       & > .period {
@@ -61,8 +66,8 @@
         outline-offset: -0.125rem;
       }
       /*
-        月は外枠を持たず、日の間の淡い線だけで区切る静かな表。
-        日付は日のセルの末尾側の上に置き、今日は日付だけをマーカーで塗って、セル全体を塗らない。
+        月はBasecamp 2のカレンダーと同じく、外枠を持たず、日の間の暖かい灰色の細い線だけで区切る表。
+        日付は日のセルの末尾側の上に灰色の数字で置き、今日はセル全体を黄色で塗って「今日 21」と太字で書く。
       */
       & > table {
         inline-size: 100%;
@@ -80,13 +85,14 @@
           clip-path: inset(50%);
           white-space: nowrap;
         }
+        /* 曜日は灰色の小さな文字を中央に置き、下に日の区切りと同じ線を引く。 */
         & > thead > tr > th {
           padding-block: var(--rx-space-2);
           padding-inline: var(--rx-space-1);
-          border-block-end: var(--rx-stroke-width) solid var(--rx-border);
+          border-block-end: var(--rx-stroke-width) solid var(--rx-calendar-line);
           color: var(--rx-muted);
-          font-size: var(--rx-calendar-meta-size);
-          font-weight: 500;
+          font-size: var(--rx-label);
+          font-weight: 400;
           line-height: 1rem;
           text-align: center;
         }
@@ -95,8 +101,8 @@
           block-size: 6.5rem;
           padding-block: var(--rx-space-1) var(--rx-space-2);
           padding-inline: var(--rx-space-1);
-          border-inline-end: var(--rx-stroke-width) solid var(--rx-border);
-          border-block-end: var(--rx-stroke-width) solid var(--rx-border);
+          border-inline-end: var(--rx-stroke-width) solid var(--rx-calendar-line);
+          border-block-end: var(--rx-stroke-width) solid var(--rx-calendar-line);
           background: var(--rx-surface);
           text-align: end;
           vertical-align: top;
@@ -106,6 +112,9 @@
           &[data-outside="true"] {
             background: var(--rx-calendar-quiet);
           }
+          &[data-current="true"] {
+            background: var(--rx-mark);
+          }
           & > .weekday {
             display: none;
           }
@@ -114,7 +123,7 @@
             gap: 0.125rem;
             min-inline-size: 0;
             margin: 0;
-            margin-block-start: var(--rx-space-1);
+            margin-block-start: 0.125rem;
             padding: 0;
             list-style: none;
             text-align: start;
@@ -126,57 +135,24 @@
         & > tbody > tr:last-child > :is(td, th) {
           border-block-end: 0;
         }
-        /* 使えない日は斜線。今日を含む週は、濃い色の太い角丸の枠で一週間をまとめて囲む。 */
+        /* 使えない日は斜線。 */
         & > tbody > tr > td[data-disabled="true"] {
           background-image: var(--rx-hatch);
         }
-        /* 行に疑似要素を置くと表の列が一つ増えるため、枠は各セルの内側の影で描き、両端のセルだけ角を丸める。 */
-        & > tbody > tr[data-current="true"] > :is(td, th) {
-          box-shadow:
-            inset 0 var(--rx-frame-width) 0 var(--rx-ink),
-            inset 0 calc(var(--rx-frame-width) * -1) 0 var(--rx-ink);
-          &:first-child {
-            border-start-start-radius: var(--rx-radius-control);
-            border-end-start-radius: var(--rx-radius-control);
-            box-shadow:
-              inset 0 var(--rx-frame-width) 0 var(--rx-ink),
-              inset 0 calc(var(--rx-frame-width) * -1) 0 var(--rx-ink),
-              inset var(--rx-frame-width) 0 0 var(--rx-ink);
-            &:dir(rtl) {
-              box-shadow:
-                inset 0 var(--rx-frame-width) 0 var(--rx-ink),
-                inset 0 calc(var(--rx-frame-width) * -1) 0 var(--rx-ink),
-                inset calc(var(--rx-frame-width) * -1) 0 0 var(--rx-ink);
-            }
-          }
-          &:last-child {
-            border-start-end-radius: var(--rx-radius-control);
-            border-end-end-radius: var(--rx-radius-control);
-            box-shadow:
-              inset 0 var(--rx-frame-width) 0 var(--rx-ink),
-              inset 0 calc(var(--rx-frame-width) * -1) 0 var(--rx-ink),
-              inset calc(var(--rx-frame-width) * -1) 0 0 var(--rx-ink);
-            &:dir(rtl) {
-              box-shadow:
-                inset 0 var(--rx-frame-width) 0 var(--rx-ink),
-                inset 0 calc(var(--rx-frame-width) * -1) 0 var(--rx-ink),
-                inset var(--rx-frame-width) 0 0 var(--rx-ink);
-            }
-          }
-        }
-        /* 週番号は日付の数字と同じ高さの淡い列。 */
+        /* 週番号は日付の数字と同じ高さの、小さな茶色の数字の列。 */
         & > thead > tr > th.week-number {
           inline-size: 2rem;
-          border-inline-end: var(--rx-stroke-width) solid var(--rx-border);
+          border-inline-end: var(--rx-stroke-width) solid var(--rx-calendar-line);
+          font-size: var(--rx-calendar-meta-size);
         }
         & > tbody > tr > th.week-number {
           padding-block: var(--rx-space-1) 0;
           padding-inline: 0;
-          border-inline-end: var(--rx-stroke-width) solid var(--rx-border);
-          border-block-end: var(--rx-stroke-width) solid var(--rx-border);
-          color: var(--rx-muted);
+          border-inline-end: var(--rx-stroke-width) solid var(--rx-calendar-line);
+          border-block-end: var(--rx-stroke-width) solid var(--rx-calendar-line);
+          color: var(--rx-meta);
           font-size: var(--rx-calendar-meta-size);
-          font-weight: 500;
+          font-weight: 400;
           font-variant-numeric: tabular-nums;
           line-height: 1.5rem;
           text-align: center;
@@ -184,22 +160,22 @@
         }
       }
     }
-    & > .viewport > table > tbody > tr > td[data-outside="true"] > :is(a, time).day {
-      color: var(--rx-muted);
-      font-weight: 500;
-    }
-    /* 選択用の日付は共通Buttonを使い、面と影を外して数字の丸にそろえる。button.cssより強い詳細度を保ち、読み込み順に左右されない。 */
+    /* 選択用の日付は共通Buttonを使い、面と影を外して数字だけにそろえる。button.cssより強い詳細度を保ち、読み込み順に左右されない。 */
     & > .viewport > table > tbody > tr > td,
     & > .viewport > .week > .column > .heading > .date {
       & > .rx-button.day {
         border-color: transparent;
         background: transparent;
         background-image: none;
+        color: var(--rx-muted);
         box-shadow: none;
         font-variant-numeric: tabular-nums;
         &:hover:not(:disabled):not([data-state]) {
-          background: var(--rx-calendar-quiet);
-          box-shadow: none;
+          border-color: var(--rx-control-border);
+          background: var(--rx-surface);
+          background-image: var(--rx-fill-control);
+          color: var(--rx-text);
+          box-shadow: var(--rx-shadow-control);
         }
         &:active:not(:disabled):not([data-state]) {
           background: var(--rx-cover);
@@ -210,24 +186,27 @@
             [data-state="range-start"],
             [data-state="range-end"]
           ) {
-          color: var(--rx-coral);
+          color: var(--rx-ink);
         }
+        /* 選んだ日はオンのボタンと同じ青緑の塗り、期間の間の日は淡い青緑の面。 */
         &:is([data-state="selected"], [data-state="range-start"], [data-state="range-end"]) {
-          border-color: var(--rx-link);
-          background: var(--rx-link);
-          background-image: var(--rx-fill-primary);
+          border-color: var(--rx-teal-dark);
+          background: var(--rx-teal);
+          background-image: linear-gradient(180deg, var(--rx-teal) 0%, var(--rx-teal-dark) 100%);
           color: var(--rx-surface);
-          box-shadow: none;
+          box-shadow: var(--rx-shadow-control-primary);
         }
         &[data-state="in-range"] {
-          background: var(--rx-info-soft);
-          border-color: var(--rx-link);
+          border-color: color-mix(in srgb, var(--rx-teal) 35%, var(--rx-surface));
+          background: var(--rx-cover);
+          color: var(--rx-text);
         }
       }
     }
     /*
-      予定は分類の色で淡く塗って小さく置き、淡い時刻と太字の題名を一行に並べる。
-      色は面だけに使い、文字は濃い色にする。既定は青。過去の予定は面と文字を淡くする。
+      予定はBasecamp 2のカレンダーと同じく、分類の色（既定は青）の「• 時刻 題名」の文字で置く。面は塗らない。
+      終日の予定（月の日と週の終日の行）は、分類の色で塗った角丸の帯に白い文字で書く（下の規則）。
+      過去の予定は文字を淡くする。
     */
     & > .viewport > table > tbody > tr > td > .events > li > .event,
     & > .viewport > .week > .column > .all-day > ul > li > .event,
@@ -235,25 +214,22 @@
     & > .agenda > .agenda-group > .events > li > .event {
       --rx-calendar-event-color: var(--rx-blue);
       --rx-calendar-event-soft: var(--rx-cover);
-      --rx-calendar-event-fill: var(--rx-calendar-event-soft);
-      --rx-calendar-event-line: color-mix(
-        in srgb,
-        var(--rx-calendar-event-color) 55%,
-        var(--rx-surface)
-      );
+      --rx-calendar-event-fill: transparent;
       display: flex;
       align-items: baseline;
       gap: var(--rx-space-1);
       min-inline-size: 0;
-      padding-block: 0.125rem;
-      padding-inline: 0.375rem;
+      padding-block: 0.0625rem;
+      padding-inline: 0.125rem;
       border-radius: var(--rx-radius-mark);
       background: var(--rx-calendar-event-fill);
-      color: var(--rx-text);
+      color: var(--rx-calendar-event-color);
       font-size: var(--rx-small);
       line-height: 1rem;
       text-decoration: none;
-      transition: background-color var(--rx-duration) ease;
+      transition:
+        background-color var(--rx-duration) ease,
+        color var(--rx-duration) ease;
       /* 詳細を持つ予定はbutton。リンクの予定と同じ見た目にそろえ、文字の指定はこのファイルが持つ。 */
       &:is(button) {
         appearance: none;
@@ -265,8 +241,10 @@
         text-align: start;
         cursor: pointer;
       }
-      &:hover {
-        background: color-mix(in srgb, var(--rx-calendar-event-fill) 88%, var(--rx-ink));
+      &:hover > .label {
+        text-decoration-line: underline;
+        text-decoration-thickness: var(--rx-stroke-width);
+        text-underline-offset: 0.15em;
       }
       &:focus-visible {
         outline: 0.125rem solid var(--rx-link);
@@ -278,55 +256,72 @@
       }
       &[data-accent="amber"] {
         --rx-calendar-event-color: var(--rx-amber);
-        --rx-calendar-event-soft: var(--rx-butter);
+        --rx-calendar-event-soft: var(--rx-warning-soft);
       }
       &[data-accent="coral"] {
         --rx-calendar-event-color: var(--rx-coral);
         --rx-calendar-event-soft: var(--rx-danger-soft);
       }
-      /* 色は面だけで示すので、縦の線は描かない。 */
+      /* 題名の前の点。分類の色の小さな丸で、一行の題名の高さの中ほどに置く。 */
       & > .bar {
-        display: none;
+        flex: none;
+        align-self: center;
+        inline-size: 0.25rem;
+        block-size: 0.25rem;
+        border-radius: 50%;
+        background: currentColor;
       }
       & > .time {
         flex: none;
-        color: color-mix(in srgb, var(--rx-calendar-event-color) 70%, var(--rx-text));
         font-size: var(--rx-calendar-meta-size);
         font-variant-numeric: tabular-nums;
       }
       & > .label {
         min-inline-size: 0;
         overflow: hidden;
-        font-weight: 700;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
-      /* 終日は時刻の代わりに、分類の色の文字で題名を書く。 */
-      &[data-all-day="true"] {
-        color: var(--rx-calendar-event-color);
-      }
-      /*
-        仮の予定は「まだ確定していない」なので、面を塗らずに破線の縁だけで示す。
-        斜線は「使えない」の語彙なので重ねない。
-      */
+      /* 仮の予定は「まだ確定していない」なので、破線の縁で囲む。斜線は「使えない」の語彙なので重ねない。 */
       &[data-tentative="true"] {
-        --rx-calendar-event-fill: var(--rx-surface);
         outline: var(--rx-stroke-width) dashed var(--rx-perforation);
         outline-offset: calc(var(--rx-stroke-width) * -1);
       }
-      /* 過去は各色の面と文字を同じ割合で淡くし、色の組み合わせを保ったまま読める濃さに留める。 */
       &[data-past="true"] {
-        --rx-calendar-event-fill: color-mix(
-          in srgb,
-          var(--rx-calendar-event-soft) 55%,
-          var(--rx-surface)
-        );
-        color: var(--rx-muted);
-        & > .time {
-          color: var(--rx-muted);
+        color: color-mix(in srgb, var(--rx-calendar-event-color) 55%, var(--rx-muted));
+      }
+    }
+    /*
+      終日の予定は、分類の色で塗った角丸の帯に白い文字。Basecamp 2の複数日の予定の帯に合わせる。
+      仮の予定は塗らずに分類の色の破線で囲み、過去の予定は淡い面に分類の色の文字にする。
+    */
+    & > .viewport > table > tbody > tr > td > .events > li > .event[data-all-day="true"],
+    & > .viewport > .week > .column > .all-day > ul > li > .event[data-all-day="true"] {
+      --rx-calendar-event-fill: var(--rx-calendar-event-color);
+      padding-block: 0.125rem;
+      padding-inline: 0.375rem;
+      border-radius: var(--rx-radius-surface);
+      color: var(--rx-surface);
+      font-weight: 600;
+      & > .bar {
+        display: none;
+      }
+      &:hover {
+        background: color-mix(in srgb, var(--rx-calendar-event-color) 86%, var(--rx-ink));
+      }
+      &[data-tentative="true"] {
+        --rx-calendar-event-fill: var(--rx-surface);
+        color: var(--rx-calendar-event-color);
+        outline-color: var(--rx-calendar-event-color);
+        &:hover {
+          background: var(--rx-calendar-event-soft);
         }
-        &[data-all-day="true"] {
-          color: color-mix(in srgb, var(--rx-calendar-event-color) 75%, var(--rx-surface));
+      }
+      &[data-past="true"] {
+        --rx-calendar-event-fill: var(--rx-calendar-event-soft);
+        color: color-mix(in srgb, var(--rx-calendar-event-color) 80%, var(--rx-ink));
+        &:hover {
+          background: color-mix(in srgb, var(--rx-calendar-event-soft) 90%, var(--rx-ink));
         }
       }
     }
@@ -375,7 +370,7 @@
         z-index: 4;
         grid-row: 1;
         grid-column: 1;
-        border-block-end: var(--rx-stroke-width) solid var(--rx-border);
+        border-block-end: var(--rx-stroke-width) solid var(--rx-calendar-line);
         background: var(--rx-surface);
       }
       & > :is(.all-day-label, .hours) {
@@ -396,8 +391,7 @@
         grid-row: 2;
         padding-block: var(--rx-space-1);
         padding-inline: 0 var(--rx-space-2);
-        border-block-end: var(--rx-stroke-width) solid var(--rx-border);
-        font-weight: 600;
+        border-block-end: var(--rx-stroke-width) solid var(--rx-calendar-line);
       }
       & > .hours {
         position: sticky;
@@ -407,7 +401,6 @@
           position: absolute;
           inset-block-start: calc(var(--rx-calendar-hour-index) * var(--rx-calendar-hour));
           inset-inline-end: var(--rx-space-2);
-          font-weight: 500;
           /* 時刻を線の高さの中央に置く。上端の時刻だけは時間割の外へはみ出さないよう上端に揃える。 */
           translate: 0 -50%;
           &:first-child {
@@ -438,27 +431,35 @@
           position: sticky;
           inset-block-start: 0;
           z-index: 3;
-          /* 曜日と日付は、日の末尾側に「木 24」と並べる。 */
+          /* 曜日と日付は、日の末尾側に「木 24」と灰色の文字で並べる。 */
           display: flex;
           justify-content: end;
           align-items: center;
           block-size: var(--rx-calendar-heading-size);
           padding-inline: var(--rx-space-2);
-          border-block-end: var(--rx-stroke-width) solid var(--rx-border);
+          border-block-end: var(--rx-stroke-width) solid var(--rx-calendar-line);
           background: var(--rx-surface);
           & > .date {
             display: inline-flex;
             align-items: center;
-            gap: 0.125rem;
+            gap: 0.25rem;
+            color: var(--rx-muted);
             & > .weekday {
-              color: var(--rx-muted);
               font-size: var(--rx-small);
-              font-weight: 500;
             }
           }
         }
-        &[data-current="true"] > .heading > .date > .weekday {
-          color: var(--rx-text);
+        /* 今日の列は、月の今日と同じく見出しを黄色で塗り、時間割にもごく淡い黄色を敷く。 */
+        &[data-current="true"] {
+          & > .heading {
+            background: var(--rx-mark);
+          }
+          & > .heading > .date {
+            color: var(--rx-ink);
+          }
+          & > :is(.all-day, .timed) {
+            background-color: var(--rx-calendar-today-soft);
+          }
         }
         &[data-weekend="true"]:not([data-current="true"]) > .heading > .date > :is(.weekday, .day) {
           color: color-mix(in srgb, var(--rx-muted) 65%, var(--rx-surface));
@@ -468,7 +469,7 @@
         }
         & > :is(.all-day, .timed) {
           min-inline-size: 0;
-          border-inline-start: var(--rx-stroke-width) solid var(--rx-border);
+          border-inline-start: var(--rx-stroke-width) solid var(--rx-calendar-line);
         }
         & > .all-day {
           position: sticky;
@@ -477,7 +478,7 @@
           background: var(--rx-surface);
           padding-block: var(--rx-space-1);
           padding-inline: 0.125rem;
-          border-block-end: var(--rx-stroke-width) solid var(--rx-border);
+          border-block-end: var(--rx-stroke-width) solid var(--rx-calendar-line);
           & > ul {
             display: grid;
             gap: 0.125rem;
@@ -503,7 +504,7 @@
             repeating-linear-gradient(
               to bottom,
               transparent 0 calc(var(--rx-calendar-hour) - var(--rx-stroke-width)),
-              var(--rx-border) calc(var(--rx-calendar-hour) - var(--rx-stroke-width))
+              var(--rx-calendar-line) calc(var(--rx-calendar-hour) - var(--rx-stroke-width))
                 var(--rx-calendar-hour)
             ),
             linear-gradient(
@@ -554,18 +555,50 @@
                     60 - 0.125rem
                 )
               );
-              /* 短い予定や狭い列でも題名を先に読めるよう、題名を折り返して時刻を後に置く。 */
+              /*
+                時刻のある予定は時間の長さの小さな札。分類の淡い色の面に、先頭側の縁を分類の色の線にし、文字は濃い色にする。
+                短い予定や狭い列でも題名を先に読めるよう、題名を折り返して時刻を後に置く。
+              */
               & > .event {
+                --rx-calendar-event-fill: var(--rx-calendar-event-soft);
                 position: relative;
                 flex-direction: column;
                 align-items: stretch;
                 gap: 0;
                 block-size: 100%;
                 padding-block: 0.1875rem;
-                padding-inline: 0.375rem;
+                padding-inline: 0.5rem 0.375rem;
                 overflow: hidden;
+                color: var(--rx-text);
+                box-shadow: inset var(--rx-frame-width) 0 0 var(--rx-calendar-event-color);
                 font-size: var(--rx-calendar-meta-size);
+                &:dir(rtl) {
+                  box-shadow: inset calc(var(--rx-frame-width) * -1) 0 0
+                    var(--rx-calendar-event-color);
+                }
+                &:hover {
+                  background: color-mix(in srgb, var(--rx-calendar-event-soft) 90%, var(--rx-ink));
+                }
+                &[data-tentative="true"] {
+                  --rx-calendar-event-fill: var(--rx-surface);
+                  box-shadow: none;
+                }
+                &[data-past="true"] {
+                  --rx-calendar-event-fill: color-mix(
+                    in srgb,
+                    var(--rx-calendar-event-soft) 55%,
+                    var(--rx-surface)
+                  );
+                  color: var(--rx-muted);
+                }
+                & > .bar {
+                  display: none;
+                }
+                & > .time {
+                  color: color-mix(in srgb, var(--rx-calendar-event-color) 75%, var(--rx-text));
+                }
                 & > .label {
+                  font-weight: 600;
                   order: -1;
                   flex: none;
                   white-space: normal;
@@ -629,13 +662,13 @@
           月・週の表示と同じく、グリッドは外枠に角丸を付けず、セルの線だけで区切る
           （角丸で切り抜くと、角のセルの縁の線と、セルいっぱいのホバー時の枠が角で欠けてずれる）。
         */
-        border-block-start: var(--rx-stroke-width) solid var(--rx-border);
-        border-inline-start: var(--rx-stroke-width) solid var(--rx-border);
+        border-block-start: var(--rx-stroke-width) solid var(--rx-calendar-line);
+        border-inline-start: var(--rx-stroke-width) solid var(--rx-calendar-line);
         & > :is(.lead, .year-day) {
           min-inline-size: 0;
           min-block-size: 3.25rem;
-          border-inline-end: var(--rx-stroke-width) solid var(--rx-border);
-          border-block-end: var(--rx-stroke-width) solid var(--rx-border);
+          border-inline-end: var(--rx-stroke-width) solid var(--rx-calendar-line);
+          border-block-end: var(--rx-stroke-width) solid var(--rx-calendar-line);
         }
         & > .year-day {
           position: relative;
@@ -643,14 +676,21 @@
           padding-inline: var(--rx-space-1);
           background: var(--rx-surface);
           &[data-weekend="true"] {
-            background: color-mix(in srgb, var(--rx-surface) 96%, var(--rx-ink));
+            background: var(--rx-calendar-quiet);
           }
+          /* 月の始まりは、先頭側の縁の線を濃くして月の切れ目を見せる。 */
           &[data-month-start="true"] {
             padding-block-start: 1.125rem;
-            box-shadow: inset 0.125rem 0 0 var(--rx-border);
+            box-shadow: inset var(--rx-frame-width) 0 0 var(--rx-control-border);
+            &:dir(rtl) {
+              box-shadow: inset calc(var(--rx-frame-width) * -1) 0 0 var(--rx-control-border);
+            }
           }
           &[data-events="true"] {
             background: var(--rx-info-soft);
+          }
+          &[data-current="true"] {
+            background: var(--rx-mark);
           }
           /*
             ホバー時の面と枠は角丸にし、セルの線から上下左右とも同じ2pxだけ内側に離して浮かべる
@@ -663,13 +703,16 @@
             border-radius: var(--rx-radius-control);
             color: inherit;
             text-decoration: none;
-            &:hover,
+            &:hover {
+              outline: var(--rx-stroke-width) solid var(--rx-link);
+              outline-offset: 0;
+            }
             &:focus-visible {
-              background: var(--rx-info-soft);
               outline: 0.125rem solid var(--rx-link);
               outline-offset: 0;
             }
           }
+          /* 月の名前は、セルの先頭側の上に赤茶の小さな太字で書く。 */
           & > .month-label,
           & > .month-link > .month-label {
             position: absolute;
@@ -678,8 +721,7 @@
             z-index: 2;
             padding-block: 0.0625rem;
             padding-inline: var(--rx-space-1);
-            background: var(--rx-muted);
-            color: var(--rx-surface);
+            color: var(--rx-heading);
             font-size: var(--rx-calendar-year-meta-size);
             font-weight: 600;
             line-height: 1.2;
@@ -705,14 +747,17 @@
             border-radius: var(--rx-radius-control);
             color: inherit;
             text-decoration: none;
-            &:hover,
+            &:hover {
+              outline: var(--rx-stroke-width) solid var(--rx-link);
+              outline-offset: 0;
+            }
             &:focus-visible {
-              background: var(--rx-info-soft);
               outline: 0.125rem solid var(--rx-link);
               outline-offset: 0;
             }
             &:is(:hover, :focus-visible) > time > .number {
               color: var(--rx-link);
+              text-decoration-line: underline;
             }
           }
           /* 月へのリンクはセル全体を覆うため、日付をその塗りより手前に置き、操作はリンクへ通す。 */
@@ -734,7 +779,6 @@
             & > .number {
               color: var(--rx-text);
               font-size: var(--rx-small);
-              font-weight: 600;
             }
           }
           &[data-current="true"] > time,
@@ -758,7 +802,7 @@
           }
         }
         & > .lead {
-          background: var(--rx-background);
+          background: var(--rx-calendar-quiet);
         }
       }
       @container rx-calendar-year (inline-size >= 44rem) {
@@ -786,9 +830,9 @@
         margin: 0;
         padding-block: var(--rx-space-3) var(--rx-space-1);
         border-block-start: var(--rx-stroke-width) solid var(--rx-border);
-        color: var(--rx-text);
-        font-size: var(--rx-small);
-        font-weight: 600;
+        color: var(--rx-heading);
+        font-size: var(--rx-label);
+        font-weight: 400;
         line-height: 1rem;
         & + .agenda-group {
           border-block-start: 0;
@@ -801,7 +845,7 @@
         gap: var(--rx-space-3);
         min-inline-size: 0;
         /* 一日のまとまりの上下は、予定の行の間より広くし、日ごとの切れ目を見せる。 */
-        padding-block: var(--rx-space-5);
+        padding-block: var(--rx-space-3);
         border-block-start: var(--rx-stroke-width) solid var(--rx-border);
         &:first-of-type {
           border-block-start: 0;
@@ -814,16 +858,16 @@
             inline-size: fit-content;
             align-items: center;
             gap: var(--rx-space-1);
-            color: var(--rx-muted);
+            padding-inline: 0.25rem;
+            border-radius: var(--rx-radius-mark);
+            color: var(--rx-meta);
             font-size: var(--rx-calendar-meta-size);
-            font-weight: 500;
             line-height: 1rem;
             & > .number {
               display: inline-grid;
               place-items: center;
-              min-inline-size: 1.75rem;
+              min-inline-size: 1.25rem;
               block-size: 1.75rem;
-              border-radius: var(--rx-radius-pill);
               color: var(--rx-text);
               font-size: var(--rx-body);
               font-weight: 600;
@@ -831,7 +875,9 @@
             }
           }
         }
+        /* 今日の日付は黄色のハイライトで塗る。 */
         &[data-current="true"] > h3 > time {
+          background: var(--rx-mark);
           color: var(--rx-ink);
           & > .number {
             font-weight: 700;
@@ -847,12 +893,14 @@
           & > li {
             min-inline-size: 0;
           }
-          /* 行の高さは行高で作り、左の線を行の高さいっぱいに伸ばす。 */
+          /* 行の高さは行高で作り、時刻の列をそろえる。題名は本文の大きさで読む。 */
           & > li > .event {
             padding-inline-end: var(--rx-space-2);
+            font-size: var(--rx-label);
             line-height: 1.75rem;
             & > .time {
               min-inline-size: 6.5rem;
+              color: var(--rx-meta);
             }
           }
         }
@@ -868,86 +916,63 @@
     }
   }
   /* 月の表と週の見出しの日付は同じ見た目。経路をまとめても詳細度が上がらないよう:whereで包む。 */
-  /* 日付は太字の数字だけ。今日はマーカーで塗り、月の初日には月の旗を立てる。 */
+  /* 日付は灰色の数字だけ。今日は太字の黒にし、月の初日には月の名前を添える。 */
   :where(
     .rx-calendar > .viewport > table > tbody > tr > td,
     .rx-calendar > .viewport > .week > .column > .heading > .date
   ) {
     & > :is(a, time).day {
-      display: inline-grid;
-      place-items: center;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       min-inline-size: 1.5rem;
       block-size: 1.5rem;
       padding-inline: 0.25rem;
-      border-radius: var(--rx-radius-pill);
-      color: var(--rx-text);
-      font-size: var(--rx-small);
-      font-weight: 700;
+      border-radius: var(--rx-radius-mark);
+      color: var(--rx-muted);
+      font-size: var(--rx-label);
+      font-weight: 400;
       line-height: 1rem;
       font-variant-numeric: tabular-nums;
       text-decoration: none;
       vertical-align: middle;
       &[data-current="true"] {
         color: var(--rx-ink);
+        font-weight: 700;
       }
     }
-    & > a.day:not([data-current="true"]):hover {
-      background: var(--rx-calendar-quiet);
+    & > a.day:hover {
+      color: var(--rx-link-hover);
+      text-decoration-line: underline;
+      text-decoration-thickness: var(--rx-stroke-width);
+      text-underline-offset: 0.15em;
     }
     & > a.day:focus-visible {
       outline: 0.125rem solid var(--rx-link);
       outline-offset: 0.0625rem;
     }
-    /*
-      月の始まりは小さな旗。日の先頭側の縁に淡い縦線を立て、上に月の名前のラベルを付ける。
-    */
+    /* 月の始まりは、日の先頭側の上に赤茶の小さな太字で月の名前を書く（「10月　…　1」）。 */
     & > .month-start {
       position: absolute;
-      inset-block: 0;
-      inset-inline-start: 0;
+      inset-block-start: var(--rx-space-1);
+      inset-inline-start: 0.375rem;
       z-index: 1;
-      padding-inline: 0.3125rem;
-      background: linear-gradient(var(--rx-muted), var(--rx-muted)) 0 0 / 100% 1.25rem no-repeat;
-      box-shadow: inset var(--rx-frame-width) 0 0 var(--rx-perforation);
-      color: var(--rx-surface);
+      color: var(--rx-heading);
       font-size: var(--rx-calendar-meta-size);
-      font-weight: 700;
-      line-height: 1.25rem;
+      font-weight: 600;
+      line-height: 1.5rem;
       pointer-events: none;
-      &:dir(rtl) {
-        box-shadow: inset calc(var(--rx-frame-width) * -1) 0 0 var(--rx-perforation);
-      }
     }
   }
   /*
-    今日のマーカー。蛍光ペンの黄を、傾けずにそのままのピル形で日付の後ろに敷く。
-    月の日付、週の見出し（曜日と日付）、一覧の日付、年の日付で同じマーカーにする。
+    月の表の今日は、セルの黄色に加えて日付の前に「今日」と書き、「今日 21」と読めるようにする。
+    読み上げはaria-current="date"が伝えるため、書き足す文字は読み上げから外す。
   */
-  :where(
-    .rx-calendar > .viewport > table > tbody > tr > td > :is(a, time).day[data-current="true"],
-    .rx-calendar > .viewport > .week > .column > .heading > .date[data-current="true"],
-    .rx-calendar > .agenda > .agenda-group[data-current="true"] > h3 > time,
-    .rx-calendar > .year-overview > .year-grid > .year-day[data-current="true"] > time,
-    .rx-calendar > .year-overview > .year-grid > .year-day[data-current="true"] > .date-link > time
-  ) {
-    position: relative;
-    isolation: isolate;
-    &::before {
-      content: "";
-      position: absolute;
-      inset-block: -0.1875rem;
-      inset-inline: -0.25rem;
-      z-index: -1;
-      background: var(--rx-mark);
-      border-radius: var(--rx-radius-pill);
-      pointer-events: none;
-    }
-  }
-  /* 月の日付は数字の要素そのものが丸なので、マーカーを要素の外へ張り出さず、隣の日の線に触れないようにする。 */
   :where(
     .rx-calendar > .viewport > table > tbody > tr > td > :is(a, time).day[data-current="true"]
   )::before {
-    inset: 0;
+    content: "今日" / "";
+    margin-inline-end: 0.25em;
   }
   @media (max-width: 40rem) {
     .rx-calendar {
@@ -1004,10 +1029,13 @@
               min-inline-size: 0;
               inline-size: 100%;
             }
-            /* 文字を拡大しても7列に収まるよう、日付の丸はセルの幅を超えない。 */
+            /* 文字を拡大しても7列に収まるよう、日付はセルの幅を超えない。「今日」の文字はセルの黄色に任せて省く。 */
             & > :is(a, time).day {
               min-inline-size: min(1.5rem, 100%);
               padding-inline: 0;
+            }
+            & > :is(a, time).day[data-current="true"]::before {
+              content: none;
             }
             & > .events {
               display: none;
@@ -1020,7 +1048,7 @@
               inline-size: 0.25rem;
               block-size: 0.25rem;
               border-radius: 50%;
-              background: var(--rx-link);
+              background: var(--rx-blue);
               pointer-events: none;
             }
           }
@@ -1029,15 +1057,15 @@
     }
   }
   @media (forced-colors: active) {
-    /* 強制カラーでは背景色が消えるため、今日のマーカーをシステムの強調色で塗る。 */
+    /* 強制カラーでは今日の黄色が消えるため、今日のセル・見出し・日付をシステムの強調色の枠で囲む。 */
     :where(
-      .rx-calendar > .viewport > table > tbody > tr > td > :is(a, time).day[data-current="true"],
-      .rx-calendar > .viewport > .week > .column > .heading > .date[data-current="true"],
+      .rx-calendar > .viewport > table > tbody > tr > td[data-current="true"],
+      .rx-calendar > .viewport > .week > .column[data-current="true"] > .heading,
       .rx-calendar > .agenda > .agenda-group[data-current="true"] > h3 > time,
-      .rx-calendar > .year-overview > .year-grid > .year-day[data-current="true"] time
-    )::before {
-      forced-color-adjust: none;
-      background: Mark;
+      .rx-calendar > .year-overview > .year-grid > .year-day[data-current="true"]
+    ) {
+      outline: var(--rx-frame-width) solid Mark;
+      outline-offset: calc(var(--rx-frame-width) * -1);
     }
     .rx-calendar > .viewport > table > tbody > tr > td:is(:hover, :focus-within) {
       outline: var(--rx-stroke-width) solid Highlight;

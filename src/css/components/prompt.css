@@ -1,21 +1,27 @@
 @layer components {
   /*
-    判断を依頼する問いかけ。形はLayerCardのまま（淡い青の沈んだ層に問いの見出し、白いカードに中身）で、
-    カードの中に選択肢の行を並べる。行は丸いマーク・太字の要点・淡い説明・進む矢印で、ActionListの行と同じく
-    普段は平らにし、ホバーすると淡い青の面を出してマークを青から紫の塗りに、押すと内側へへこむ。
-    尾（下向きの三角）は層と同じ色で、すぐ下の対象を指す。
+    判断を依頼する問いかけ。形はLayerCardのまま（沈んだ層に問いの見出し、白いカードに中身）で、
+    カードの中に選択肢の行を並べる。行は丸いマーク・太字の要点・灰色の説明・進む矢印で、ActionListの行と同じく
+    普段は平らにし、ホバーすると淡い青緑の面を出してマークを青緑で塗り、押すと内側へへこむ。
+    尾（下向きの三角）はカードと同じ白に輪郭の色の縁を付け、すぐ下の対象を指す。
     選択肢の行の文字の指定はこのファイルが持つ（共通Buttonとは別の専用の操作）。
   */
   .rx-prompt {
     position: relative;
     /* 尾は層の外へ出るので、下の要素との間は置く側の間隔（16px以上）で空ける。 */
+    &[data-pointer="true"]::before,
     &[data-pointer="true"]::after {
       content: "";
       position: absolute;
       inset-block-start: 100%;
       inset-inline-start: calc(var(--rx-space-6) + var(--rx-space-1));
       border-inline: var(--rx-space-3) solid transparent;
-      border-block-start: var(--rx-space-3) solid var(--rx-cover);
+      border-block-start: var(--rx-space-3) solid var(--rx-surface);
+    }
+    /* 縁の三角を一段外側に置き、白い三角の下から覗かせる。 */
+    &[data-pointer="true"]::before {
+      inset-block-start: calc(100% + var(--rx-stroke-width));
+      border-block-start-color: color-mix(in srgb, var(--rx-ink) 18%, var(--rx-surface));
     }
     /* カードは行の面を端近くまで広げ、行の要点を層の見出しと同じ書き始めにそろえる。 */
     & > .body {
@@ -53,7 +59,7 @@
       transition:
         background-color var(--rx-duration) ease,
         box-shadow var(--rx-duration) ease;
-      /* 丸いマーク。題名の一行目の高さにそろえ、答える前は淡い青の輪にする。 */
+      /* 丸いマーク。題名の一行目の高さにそろえ、答える前は淡い青緑の輪にする。 */
       & > .mark {
         display: grid;
         place-items: center;
@@ -75,7 +81,7 @@
         gap: 0.125rem;
         min-inline-size: 0;
         & > strong {
-          font-weight: 700;
+          font-weight: 600;
         }
         & > .description {
           color: var(--rx-muted);
@@ -95,10 +101,10 @@
         }
       }
       &:hover {
-        background: color-mix(in srgb, var(--rx-link) 6%, var(--rx-surface));
+        background: var(--rx-cover);
         & > .mark::before {
-          border-color: transparent;
-          background: var(--rx-fill-menu);
+          border-color: var(--rx-teal-dark);
+          background: var(--rx-teal);
         }
         & > .go {
           color: var(--rx-link);
@@ -106,7 +112,7 @@
         }
       }
       &:active {
-        background: color-mix(in srgb, var(--rx-link) 9%, var(--rx-surface));
+        background: color-mix(in srgb, var(--rx-link) 14%, var(--rx-surface));
         box-shadow: var(--rx-shadow-control-pressed);
       }
       &:focus-visible {
@@ -124,7 +130,7 @@
       inset-block-start: 0;
       inset-inline: calc(var(--rx-space-3) * 2 + 1.25rem) var(--rx-space-3);
       block-size: var(--rx-stroke-width);
-      background: color-mix(in srgb, var(--rx-ink) 8%, transparent);
+      background: var(--rx-border);
     }
     & > .choice:hover::before,
     & > .choice:hover + .choice::before {

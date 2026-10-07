@@ -1,9 +1,10 @@
 @layer components {
+  /* タグはHighriseと同じく、間を詰めて並べる。 */
   .rx-tag-group {
     display: flex;
     flex-wrap: wrap;
     align-items: start;
     min-inline-size: 0;
-    gap: var(--rx-space-2);
+    gap: var(--rx-space-1);
   }
 }

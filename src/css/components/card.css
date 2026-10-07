@@ -4,9 +4,12 @@
     display: flex;
     flex-direction: column;
     min-inline-size: 0;
-    padding-block: var(--rx-space-5);
-    padding-inline: var(--rx-space-6);
-    /* Cardは枠線を使わず、カードの影と大きな角丸で見せる。 */
+    /*
+      Cardは机に置いた白い紙。輪郭はカードの影の一つ目で描き、枠線は別に引かない。角は小さくする。
+      余白はBasecamp 2のプロジェクトのカードと同じく詰め、上下16px・左右20pxにする。
+    */
+    padding-block: var(--rx-space-4);
+    padding-inline: var(--rx-space-5);
     border: 0;
     border-radius: var(--rx-radius-surface);
     background: var(--rx-surface) var(--rx-fill-paper);
@@ -31,6 +34,7 @@
         block-size: auto;
       }
     }
+    /* 種類・分類の小さな補足は、字間を空けた小さな灰色の文字にする。 */
     & > .eyebrow {
       display: flex;
       flex-wrap: wrap;
@@ -39,27 +43,36 @@
       color: var(--rx-muted);
       font-size: var(--rx-small);
       line-height: var(--rx-small-leading);
+      letter-spacing: 0.04em;
       & + .title {
         margin-block-start: var(--rx-space-1);
       }
     }
-    /* 題名はCardの中でいちばん強い字。補足・バッジより大きく太くする。 */
+    /*
+      題名はCardの中でいちばん強い字。Basecamp 2のプロジェクトのカードと同じく、黒い太字にする。
+      リンクの題名も普段は黒い太字のまま静かに置き、ホバーした時だけ赤茶の文字と下線でリンクだと示す。
+    */
     & > .title {
+      color: var(--rx-ink);
       font-size: var(--rx-body);
       font-weight: 600;
-      line-height: 1.5;
+      line-height: 1.4;
       word-break: auto-phrase;
       & > a {
         color: inherit;
-        text-decoration: none;
+        text-decoration-line: none;
         &:hover {
-          color: var(--rx-link);
-          text-decoration: none;
+          color: var(--rx-link-hover);
+          text-decoration-line: underline;
         }
       }
     }
+    /* 本文は説明として灰色にする。中に置いたBadge・ボタン・リンクは、それぞれの色を持つ。 */
+    & > .body {
+      color: var(--rx-muted);
+    }
     & > .body:not(:empty) {
-      margin-block-start: var(--rx-space-2);
+      margin-block-start: var(--rx-space-1);
     }
     /* 段落の間はカードの余白よりはっきり狭くする。行の余りと合わせて、段落の切れ目だけが分かる幅にする。 */
     & > .body > * + * {
@@ -70,17 +83,17 @@
       flex-wrap: wrap;
       align-items: center;
       justify-content: start;
-      gap: var(--rx-space-2) var(--rx-space-3);
+      gap: var(--rx-space-1) var(--rx-space-2);
       margin-block-start: auto;
       /* メタ情報は本文のすぐ下に添える。本文との間はカードの余白より狭くし、カードの中の一まとまりに見せる。 */
       padding-block-start: var(--rx-space-2);
-      color: var(--rx-muted);
+      color: var(--rx-meta);
       font-size: var(--rx-small);
       line-height: var(--rx-small-leading);
-      /* 並べたメタ情報は縦の罫線で区切る。 */
-      & > * + *:not(.end) {
-        padding-inline-start: var(--rx-space-3);
-        border-inline-start: var(--rx-stroke-width) solid var(--rx-border);
+      /* 並べたメタ情報は、茶色の小さな文字を点で区切る（「田中 遥 · 9月15日」）。操作の前には点を置かない。 */
+      & > :not(.end, .rx-input, .rx-button) + :not(.end, .rx-input, .rx-button)::before {
+        content: "·";
+        margin-inline-end: var(--rx-space-2);
       }
       & > .end {
         margin-inline-start: auto;

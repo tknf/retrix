@@ -1,9 +1,11 @@
 @layer components {
   /*
     コードは名前とコピーをLayerCardの層の見出しに置き、層の上のカードに書く（層とカードの見た目はLayerCardが持つ）。
-    ここではコードの書き方だけを決める。ハイライト行は平らな淡い黄色の背景にし、行番号は余白に小さく書いてコピーには含めない。
+    ここではコードの書き方だけを決める。コードの面は淡い灰色にし、等幅の文字で書く。
+    ハイライト行は平らな淡い黄色の背景にし、行番号は余白に小さく書いてコピーには含めない。
   */
   .rx-code-block {
+    --rx-code-block-paper: var(--rx-gray-20);
     min-inline-size: 0;
     margin: 0;
     color: var(--rx-text);
@@ -19,10 +21,11 @@
       max-block-size: 28rem;
       overflow: auto;
       margin: 0;
-      padding-block: var(--rx-space-4);
-      padding-inline: var(--rx-space-5);
+      padding-block: var(--rx-space-3);
+      padding-inline: var(--rx-space-4);
       /* カードの角丸の中でスクロールさせ、ハイライト行の背景を角からはみ出させない。 */
       border-radius: inherit;
+      background: var(--rx-code-block-paper);
       font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
       font-size: var(--rx-small);
       line-height: var(--rx-leading);
@@ -58,7 +61,7 @@
       min-inline-size: 3ch;
       margin-inline-end: var(--rx-space-4);
       padding-inline-end: var(--rx-space-2);
-      background: var(--rx-surface);
+      background: var(--rx-code-block-paper);
       color: var(--rx-muted);
       text-align: end;
       user-select: none;

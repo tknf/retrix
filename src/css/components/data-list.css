@@ -1,7 +1,8 @@
 @layer components {
   /*
-    比べる行の一覧。MessageListと同じ作りにする。罫線を引かず行間で区切り、
-    ホバーした行と今開いている行だけを角丸の淡い面で示す。題名は太字、説明とメタ情報は一段小さい淡い文字。
+    比べる行の一覧。Basecamp 2の議論の一覧と同じく、行の幅いっぱいに罫線を引いて区切る。
+    題名は下線付きのリンク（リンクでない時は黒い太字）、説明は灰色、日付などのメタ情報は茶色の小さな文字。
+    ホバーした行は淡い黄色、今開いている行は淡い青緑の面で示す。面は角を丸めず、行の幅いっぱいに塗る。
   */
   .rx-data-list {
     container: rx-data-list / inline-size;
@@ -18,25 +19,23 @@
       position: relative;
       display: grid;
       grid-template-columns: minmax(0, 1fr);
-      gap: 0.125rem var(--rx-space-4);
+      gap: 0.125rem var(--rx-space-3);
       align-items: center;
       min-inline-size: 0;
-      padding-block: var(--rx-space-4);
-      padding-inline: var(--rx-space-3);
-      border-radius: var(--rx-radius-field);
-      transition:
-        background-color var(--rx-duration) ease,
-        box-shadow var(--rx-duration) ease;
-      &:has(> .body > a.title):hover {
-        background: color-mix(in srgb, var(--rx-ink) 4%, var(--rx-surface));
+      padding-block: var(--rx-space-3);
+      padding-inline: var(--rx-space-2);
+      transition: background-color var(--rx-duration) ease;
+      & + li {
+        border-block-start: var(--rx-stroke-width) solid var(--rx-border);
       }
-      /* 押した時はActionListの行と同じく、面を少し濃くして内側へへこませる。 */
+      &:has(> .body > a.title):hover {
+        background: color-mix(in srgb, var(--rx-mark) 50%, var(--rx-surface));
+      }
       &:has(> .body > a.title:active) {
-        background: color-mix(in srgb, var(--rx-ink) 6%, var(--rx-surface));
-        box-shadow: var(--rx-shadow-control-pressed);
+        background: var(--rx-mark);
       }
       &[data-current="true"] {
-        background: color-mix(in srgb, var(--rx-link) 8%, var(--rx-surface));
+        background: var(--rx-cover);
       }
       & > .start {
         grid-column: 1;
@@ -48,9 +47,9 @@
       & > .body {
         min-inline-size: 0;
         overflow-wrap: anywhere;
-        /* 項目の題名は太字にする。行全体の面で反応を示すので、題名の色は変えない。 */
+        /* 項目の題名は黒い太字。リンクの題名は本文のリンクと同じ青緑の文字と下線にし、ホバーで赤茶にする。 */
         & > .title {
-          color: var(--rx-text);
+          color: var(--rx-ink);
           font-size: var(--rx-body);
           font-weight: 600;
           line-height: var(--rx-label-leading);
@@ -60,7 +59,10 @@
           行の末尾の操作は、その上に重ねて押せるようにする。
         */
         & > a.title {
-          text-decoration: none;
+          color: var(--rx-link);
+          &:hover {
+            color: var(--rx-link-hover);
+          }
           &::before {
             content: "";
             position: absolute;
@@ -72,16 +74,17 @@
             outline-offset: 0.125rem;
           }
         }
-        /* 説明は本文より一段小さい淡い文字にし、題名に寄せて一人分・一件分のまとまりに見せる。 */
+        /* 説明は灰色の抜粋。題名に寄せて一人分・一件分のまとまりに見せる。 */
         & > .description {
           margin-block-start: 0.125rem;
           color: var(--rx-muted);
-          font-size: var(--rx-small);
-          line-height: var(--rx-small-leading);
+          font-size: var(--rx-label);
+          line-height: var(--rx-label-leading);
         }
+        /* 投稿者・日付などは茶色の小さな文字。 */
         & > .meta {
-          margin-block-start: var(--rx-space-1);
-          color: var(--rx-muted);
+          margin-block-start: 0.125rem;
+          color: var(--rx-meta);
           font-size: var(--rx-small);
           line-height: var(--rx-small-leading);
         }
@@ -94,7 +97,8 @@
         align-items: center;
         gap: var(--rx-space-2);
         min-inline-size: 0;
-        color: var(--rx-muted);
+        /* 末尾の日付は茶色。件数・状態はBadgeなどがそれぞれの色を持つ。 */
+        color: var(--rx-meta);
         font-size: var(--rx-small);
         line-height: var(--rx-small-leading);
         overflow-wrap: anywhere;
@@ -109,7 +113,7 @@
     @container rx-data-list (inline-size >= 28rem) {
       & > li {
         grid-template-columns: minmax(0, 1fr) fit-content(32%);
-        column-gap: var(--rx-space-6);
+        column-gap: var(--rx-space-4);
         & > .end {
           grid-column: 2;
           grid-row: 1;

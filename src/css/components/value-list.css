@@ -1,7 +1,7 @@
 @layer components {
   /*
-    一つの対象の属性。各行の下に濃い色の細い線を行の幅いっぱいに引いて区切る。
-    項目名は淡いMedium、値は濃い色の文字にする。項目名の前には、ActionListと同じく塗りつぶしのアイコンを淡い色の丸に入れて添えられる。
+    一つの対象の属性。Highriseの右の列のように、項目名と値を一行ずつ並べ、各行の下に罫線を行の幅いっぱいに引いて区切る。
+    項目名は灰色の小さな太字、値は本文の黒い文字にする。項目名の前には、小さなアイコンを面を付けずに添えられる。
   */
   .rx-value-list {
     container: rx-value-list / inline-size;
@@ -13,40 +13,35 @@
       display: grid;
       grid-template-columns: minmax(0, 1fr);
       gap: var(--rx-space-1);
-      padding-block: var(--rx-space-3);
-      border-block-end: var(--rx-stroke-width) solid
-        color-mix(in srgb, var(--rx-ink) 12%, transparent);
-      --rx-value-list-accent: var(--rx-link);
-      --rx-value-list-soft: var(--rx-info-soft);
+      padding-block: var(--rx-space-2);
+      border-block-end: var(--rx-stroke-width) solid var(--rx-border);
+      --rx-value-list-accent: var(--rx-muted);
       &[data-accent="green"] {
         --rx-value-list-accent: var(--rx-success);
-        --rx-value-list-soft: var(--rx-success-soft);
       }
       &[data-accent="amber"] {
         --rx-value-list-accent: var(--rx-amber);
-        --rx-value-list-soft: var(--rx-warning-soft);
       }
       &[data-accent="coral"] {
         --rx-value-list-accent: var(--rx-coral-dark);
-        --rx-value-list-soft: var(--rx-danger-soft);
       }
       & > dt {
         display: flex;
         align-items: center;
         gap: var(--rx-space-2);
         color: var(--rx-muted);
-        font-weight: 500;
+        font-size: var(--rx-small);
+        font-weight: var(--rx-label-weight);
+        /* 小さな字の項目名を、値の一行目と同じ高さの行に置く。 */
+        line-height: calc(var(--rx-label) * var(--rx-label-leading));
+        /* アイコンは丸い面に入れず、項目名の前に小さく添える。色は利用側が指定した分類の色。 */
         & > .icon {
           display: grid;
           flex: none;
           place-items: center;
-          inline-size: 1.75rem;
-          block-size: 1.75rem;
-          border-radius: 50%;
-          background: var(--rx-value-list-soft);
           color: var(--rx-value-list-accent);
           & > .rx-icon {
-            font-size: 1rem;
+            font-size: 0.875rem;
           }
         }
       }
@@ -72,7 +67,7 @@
       & > div {
         grid-template-columns: minmax(6rem, 0.4fr) minmax(0, 1fr);
         column-gap: var(--rx-space-4);
-        align-items: baseline;
+        align-items: start;
       }
     }
   }

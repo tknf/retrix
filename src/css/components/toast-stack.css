@@ -30,10 +30,10 @@
         scale(calc(1 - var(--rx-toast-index) * 0.05));
       transition:
         opacity var(--rx-duration-fade) ease-out,
-        scale var(--rx-duration-pop) var(--rx-ease-pop),
+        scale var(--rx-duration) var(--rx-ease-slide),
         translate var(--rx-motion-slide) var(--rx-ease-slide),
-        display var(--rx-duration-pop) allow-discrete,
-        overlay var(--rx-duration-pop) allow-discrete,
+        display var(--rx-duration) allow-discrete,
+        overlay var(--rx-duration) allow-discrete,
         transform calc(var(--rx-duration) * 2) var(--rx-ease-slide)
           calc(var(--rx-toast-index) * var(--rx-duration) / 8),
         block-size calc(var(--rx-duration) * 2) var(--rx-ease-slide);

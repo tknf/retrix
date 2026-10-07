@@ -1,7 +1,7 @@
 @layer components {
   /*
     期限や残りを示す丸いマーク。白い丸に大きな太字の数字を置き、上下に小さな文言を添える。
-    役割の色の細い輪で縁取り、カードの影で浮かせる。既定は注意の色（期限が近いことを示す）。
+    役割の色の細い輪で縁取り、紙と同じ浅い影を付ける。既定は注意の色（期限が近いことを示す）。
   */
   .rx-countdown {
     --rx-countdown-ink: var(--rx-warning);
@@ -13,8 +13,9 @@
     border-radius: 50%;
     background: var(--rx-surface);
     box-shadow:
-      inset 0 0 0 0.125rem color-mix(in srgb, var(--rx-countdown-ink) 55%, var(--rx-surface)),
-      var(--rx-shadow-paper);
+      inset 0 0 0 var(--rx-frame-width)
+        color-mix(in srgb, var(--rx-countdown-ink) 70%, var(--rx-surface)),
+      0 0.0625rem 0.125rem color-mix(in srgb, var(--rx-ink) 12%, transparent);
     color: var(--rx-countdown-ink);
     font-family: var(--rx-control-font-family);
     line-height: 1;
@@ -34,7 +35,7 @@
     & > .value {
       color: var(--rx-text);
       font-size: 1.375rem;
-      font-weight: 800;
+      font-weight: 700;
       font-variant-numeric: tabular-nums;
     }
     /* 上下の文言は丸の内側に収め、長い時は丸の幅の7割で折り返す。 */

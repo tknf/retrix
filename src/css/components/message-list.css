@@ -1,9 +1,9 @@
 @layer components {
   /*
-    受け取った連絡の一覧。作業面の上に行を平らに並べ、罫線は引かずに行間で区切る。
-    ホバーした行だけ、角丸の淡い面で示す。
-    行は「件名」と「差出人 – 書き出し」の二段にし、差出人のアバターを左に、時刻と未読の点を右に置く。
-    まだ開けていない連絡は、件名と差出人を太字にして青い点を添える。
+    受け取った連絡の一覧。Basecamp 2の議論の一覧と同じく、作業面の上に行を平らに並べ、行の幅いっぱいの罫線で区切る。
+    ホバーした行は淡い黄色、今開いている行は淡い青緑の面で示す。面は角を丸めない。
+    行は「下線付きの件名」と「差出人 – 灰色の書き出し」の二段にし、差出人のアバターを左に、茶色の時刻と未読の点を右に置く。
+    件数は淡い青のピルにする。まだ開けていない連絡は、件名と差出人を太字にして青緑の点を添える。
   */
   .rx-message-list {
     container: rx-message-list / inline-size;
@@ -28,37 +28,39 @@
     & > li {
       position: relative;
       min-inline-size: 0;
+      & + li {
+        border-block-start: var(--rx-stroke-width) solid var(--rx-border);
+      }
       & > .row {
         /* 行は二段だけ。件名と「差出人 – 書き出し」を左に、時刻と未読の点を右の上下中央に置く。 */
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
         grid-template-areas: "body meta";
         align-items: center;
-        gap: var(--rx-space-4);
+        gap: var(--rx-space-3);
         min-inline-size: 0;
-        /* 件名と書き出しの二段の間より、行の上下をはっきり広くし、行ごとのまとまりを見せる。 */
-        padding-block: var(--rx-space-4);
-        padding-inline: var(--rx-space-3);
-        border-radius: var(--rx-radius-field);
+        /* 件名と書き出しの二段の間より、行の上下を広くし、行ごとのまとまりを見せる。 */
+        padding-block: var(--rx-space-3);
+        padding-inline: var(--rx-space-2);
         color: inherit;
         text-decoration: none;
         transition: background-color var(--rx-duration) ease;
         &:is(a):hover {
-          background: color-mix(in srgb, var(--rx-ink) 4%, var(--rx-surface));
+          background: color-mix(in srgb, var(--rx-mark) 50%, var(--rx-surface));
         }
         &:focus-visible {
           outline: 0.125rem solid var(--rx-link);
           outline-offset: -0.125rem;
         }
-        /* 差出人は共通のAvatar。画像のない行は、同じ大きさの淡い円に手紙のアイコンを置く。 */
+        /* 差出人は共通のAvatar。画像のない行は、同じ大きさの淡い灰色の円に手紙のアイコンを置く。 */
         & > .avatar {
           grid-area: avatar;
           display: grid;
           place-items: center;
-          inline-size: 2.5rem;
-          block-size: 2.5rem;
+          inline-size: 2rem;
+          block-size: 2rem;
           border-radius: 50%;
-          background: var(--rx-background);
+          background: var(--rx-gray-50);
           color: var(--rx-muted);
           /* 渡されたAvatarの大きさの指定にかかわらず、行のアバターの大きさとAvatarの既定の文字にそろえる。 */
           & > .rx-avatar {
@@ -85,11 +87,17 @@
               flex: none;
               margin-inline-end: var(--rx-space-2);
             }
+            /* 件名は本文のリンクと同じ青緑の文字と下線にする。行のどこを押しても開く。 */
             & > .subject {
               min-inline-size: 0;
               overflow: hidden;
+              color: var(--rx-link);
+              text-decoration-line: underline;
+              text-decoration-thickness: var(--rx-stroke-width);
+              text-underline-offset: 0.15em;
               text-overflow: ellipsis;
               white-space: nowrap;
+              transition: color var(--rx-duration) ease;
             }
             & > :is(.count, .attachment) {
               display: inline-flex;
@@ -102,6 +110,14 @@
               font-weight: 400;
               font-variant-numeric: tabular-nums;
             }
+            /* 返信の件数は、Basecamp 2のコメント数と同じ淡い青のピル。 */
+            & > .count {
+              padding-inline: 0.375rem;
+              border-radius: var(--rx-radius-pill);
+              background: var(--rx-info-soft);
+              color: var(--rx-link);
+              line-height: 1.125rem;
+            }
           }
           /* 差出人と書き出しは一行にまとめ、はみ出す分は書き出しの側で省略する。 */
           & > .summary {
@@ -109,8 +125,8 @@
             align-items: baseline;
             min-inline-size: 0;
             color: var(--rx-muted);
-            font-size: var(--rx-small);
-            line-height: var(--rx-small-leading);
+            font-size: var(--rx-label);
+            line-height: var(--rx-label-leading);
             white-space: nowrap;
             & > .sender {
               flex: 0 1 auto;
@@ -137,11 +153,11 @@
           display: flex;
           align-items: center;
           gap: var(--rx-space-2);
-          color: var(--rx-muted);
+          color: var(--rx-meta);
           font-size: var(--rx-small);
           font-variant-numeric: tabular-nums;
           white-space: nowrap;
-          /* 未読は時刻の後ろに置く小さな青い点。 */
+          /* 未読は時刻の後ろに置く小さな青緑の点。 */
           & > .unread {
             display: block;
             order: 1;
@@ -152,20 +168,26 @@
           }
         }
       }
+      & > a.row:hover > .body > .title > .subject {
+        color: var(--rx-link-hover);
+      }
       &[data-unread="true"] > .row > .body > .title,
       &[data-unread="true"] > .row > .body > .summary > .sender {
         font-weight: 600;
       }
-      /* 今、隣で開いている連絡は、DataListと同じ角丸の淡い青の面で示す。 */
+      /* 今、隣で開いている連絡は、DataListと同じ淡い青緑の面で示す。 */
       &[data-current="true"] > .row {
-        background: color-mix(in srgb, var(--rx-link) 8%, var(--rx-surface));
+        background: var(--rx-cover);
       }
       /* 送信中は届くまでの間なので、行全体を少しだけ控えめにする。 */
       &[data-state="sending"] > .row {
         opacity: 0.72;
       }
       /* 閲覧できない連絡は、件名と差出人も淡い文字にして、開けないことを行全体で示す。 */
-      &[data-unavailable="true"] > .row > .body > :is(.title, .summary > .sender) {
+      &[data-unavailable="true"]
+        > .row
+        > .body
+        > :is(.title, .title > .subject, .summary > .sender) {
         color: var(--rx-muted);
       }
     }
@@ -182,7 +204,7 @@
     }
     /* 差出人のアバターは左に置き、二段の本文をその右へ並べる。 */
     &[data-avatars="true"] > li > .row {
-      grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+      grid-template-columns: 2rem minmax(0, 1fr) auto;
       grid-template-areas: "avatar body meta";
     }
     /* 書き出しを二行にする指定では、差出人の下で折り返す。 */
@@ -240,7 +262,7 @@
         }
       }
       &[data-avatars="true"] > li > .row {
-        grid-template-columns: 2.5rem minmax(0, 1fr) fit-content(40%);
+        grid-template-columns: 2rem minmax(0, 1fr) fit-content(40%);
         grid-template-areas:
           "avatar title meta"
           "avatar summary summary";

@@ -1,14 +1,14 @@
 @layer components {
   /*
     グリッドに並べるリンクや操作のタイル。塗りつぶしのアイコンを上・名前を下に置く。
-    ActionDockの操作と同じく、普段は影を持たない平らな淡い面にし、ホバーするとアイコンの色を淡く敷き、
-    押すと面が内側へへこむ（浮かせてから沈めるのではなく、平らな所から沈める）。
+    普段は白い面に罫線の色の細い枠を付けた小さな四角にし、ホバーすると淡い黄色の面にし、押すと面が内側へへこむ。
+    枠の色は面の色から作るので、ActionDockの操作バーのように面を透明にした時は枠も消える。
     文字の指定（書体・大きさ・太さ・行高）はこのファイルが持つ（共通Buttonとは別の専用の操作）。
   */
   .rx-action-tile {
     --rx-action-tile-accent: var(--rx-link);
     /* 通常時の面。ActionDockの操作バーのようにパネルの上に置く時は、置く側が透明にする。 */
-    --rx-action-tile-rest: color-mix(in srgb, var(--rx-ink) 3%, var(--rx-surface));
+    --rx-action-tile-rest: var(--rx-surface);
     appearance: none;
     position: relative;
     display: flex;
@@ -25,6 +25,9 @@
     border: 0;
     border-radius: var(--rx-radius-control);
     background: var(--rx-action-tile-rest);
+    /* 枠は面の色を一段暗くした色で内側に描き、面を透明にした時は同じく透明になる。 */
+    box-shadow: inset 0 0 0 var(--rx-stroke-width)
+      oklch(from var(--rx-action-tile-rest) calc(l - 0.13) c h / alpha);
     color: var(--rx-text);
     font-family: inherit;
     font-size: var(--rx-label);
@@ -48,10 +51,10 @@
       --rx-action-tile-accent: var(--rx-coral);
     }
     &:is(a, button:enabled):hover {
-      background: color-mix(in srgb, var(--rx-action-tile-accent) 8%, var(--rx-surface));
+      background: color-mix(in srgb, var(--rx-mark) 60%, var(--rx-surface));
     }
     &:is(a, button:enabled):active {
-      background: color-mix(in srgb, var(--rx-action-tile-accent) 11%, var(--rx-surface));
+      background: var(--rx-mark);
       box-shadow: var(--rx-shadow-control-pressed);
     }
     &:focus-visible {

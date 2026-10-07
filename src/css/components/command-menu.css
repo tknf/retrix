@@ -3,24 +3,49 @@
     display: inline-grid;
     min-inline-size: 0;
     max-inline-size: 100%;
+    /*
+      開く操作は、Basecamp 2のヘッダーの「Jump to a project, person, label, or search...」と同じく、
+      枠のある白い検索欄に見せる。上の枠を少し濃くして沈んだ欄にし、虫めがねと灰色の文言を先頭から並べる。
+      欄に見せるので、開くことを示す下向きの矢印は出さない。
+    */
     & > .rx-button {
-      border-color: transparent;
-      background: transparent;
-      color: var(--rx-text);
-      box-shadow: none;
-      &:hover {
-        background: color-mix(in srgb, var(--rx-text) 5%, transparent);
-        box-shadow: none;
+      justify-content: start;
+      min-inline-size: min(16rem, 100%);
+      padding-inline: 0.625em;
+      border-color: var(--rx-control-border);
+      border-block-start-color: color-mix(in srgb, var(--rx-control-border) 80%, var(--rx-ink));
+      border-block-end-color: var(--rx-control-border);
+      background: var(--rx-surface);
+      background-image: none;
+      color: var(--rx-muted);
+      box-shadow: var(--rx-shadow-input);
+      &:hover:not(:disabled) {
+        border-color: color-mix(in srgb, var(--rx-control-border) 75%, var(--rx-ink));
+        background: var(--rx-surface);
+        background-image: none;
+        color: var(--rx-text);
+        box-shadow: var(--rx-shadow-input);
       }
-      &:active {
-        background: color-mix(in srgb, var(--rx-text) 9%, transparent);
-        box-shadow: none;
+      &:active:not(:disabled) {
+        background: var(--rx-surface);
+        background-image: none;
+        box-shadow: var(--rx-shadow-input);
       }
+      & > .rx-icon:last-child:not(:first-child) {
+        display: none;
+      }
+    }
+    /* パネルを開いている間は、欄にフォーカスがある時と同じ青緑の枠と淡い輪を付ける。 */
+    &:has(> .panel:popover-open) > .rx-button {
+      border-color: var(--rx-link);
+      box-shadow:
+        var(--rx-shadow-input),
+        0 0 0 0.1875rem var(--rx-focus-ring);
     }
     & > .panel {
       container: rx-command-panel / inline-size;
       position: fixed;
-      /* 開閉のアニメーションはoverlay.cssの共通の定義。上部中央の操作の下から膨らむ。 */
+      /* 開閉のアニメーションはoverlay.cssの共通の定義。上部中央を支点にする。 */
       transform-origin: top center;
       inset-block: var(--rx-space-4) auto;
       inset-inline: 0;
@@ -90,10 +115,12 @@
             margin-block-start: var(--rx-space-3);
             border-block-start: var(--rx-stroke-width) solid var(--rx-border);
           }
+          /* まとまりの名前は小さな灰色の太字。 */
           & > h2 {
-            font-size: var(--rx-label);
+            color: var(--rx-muted);
+            font-size: var(--rx-small);
             font-weight: 600;
-            line-height: var(--rx-label-leading);
+            line-height: var(--rx-small-leading);
           }
           & > .list {
             display: grid;
@@ -161,9 +188,7 @@
                   margin-inline-start: auto;
                   color: var(--rx-link);
                 }
-                &:is(a):hover {
-                  background: var(--rx-background);
-                }
+
                 &:focus-visible {
                   outline-offset: -0.125rem;
                 }
@@ -176,8 +201,17 @@
                 color: var(--rx-text);
                 text-decoration: none;
               }
+              /*
+                ホバーした項目と矢印キーで選んでいる項目は、DropdownMenuと同じく青緑で塗って白い文字にする。
+                アイコン・補足・現在地の印も白へそろえる。
+              */
+              &:not([data-disabled="true"]) > :is(a.link, .command):hover,
               &[data-active="true"] > :is(.link, .command) {
-                background: var(--rx-cover);
+                background: var(--rx-menu-active);
+                color: var(--rx-surface);
+                & > :is(.icon, .context, .current) {
+                  color: inherit;
+                }
               }
             }
           }

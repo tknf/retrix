@@ -1,4 +1,5 @@
 @layer components {
+  /* 折りたたみの並び。罫線は引かず、狭い間隔で縦に積む。 */
   .rx-disclosure-group {
     display: grid;
     gap: var(--rx-space-1);

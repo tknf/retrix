@@ -1,6 +1,11 @@
 @layer components {
+  /*
+    パンくず。Basecamp 2の「To-doリストから：Salvaged, up-cycled materials」と同じく、
+    上の階層は下線付きの青緑のリンク、区切りは灰色の小さな記号にする。今いる場所は黒い太字。
+  */
   .rx-breadcrumb {
     min-inline-size: 0;
+    color: var(--rx-muted);
     font-size: var(--rx-small);
     line-height: var(--rx-small-leading);
     & > ol {
@@ -18,18 +23,21 @@
       min-inline-size: 0;
     }
     & > ol > li + li::before {
-      content: "/";
+      content: "›";
       flex-shrink: 0;
-      color: var(--rx-muted);
+      color: var(--rx-gray-500);
     }
     & > ol > li > :is(a, span) {
       min-inline-size: 0;
       overflow-wrap: anywhere;
     }
+    /* 上の階層はリンクと同じ青緑の文字に下線。ホバーで赤茶。当たり判定だけを上下に広げる。 */
     & > ol > li > a {
       position: relative;
-      color: var(--rx-muted);
-      text-decoration: none;
+      color: var(--rx-link);
+      text-decoration-line: underline;
+      text-decoration-thickness: var(--rx-stroke-width);
+      text-underline-offset: 0.15em;
       &::before {
         content: "";
         position: absolute;
@@ -37,13 +45,12 @@
         inset-inline: -0.25rem;
       }
       &:hover {
-        color: var(--rx-link);
-        text-decoration: none;
+        color: var(--rx-link-hover);
       }
     }
-    /* 今いる場所はインクの太字。並びの末尾なので区切りのアイコンは付けない。 */
+    /* 今いる場所は黒い太字。並びの末尾なので区切りの後ろには何も付けない。 */
     & > ol > li:last-child {
-      color: var(--rx-text);
+      color: var(--rx-ink);
       font-weight: 600;
     }
   }

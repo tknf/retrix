@@ -1,7 +1,8 @@
 @layer components {
   /*
-    折りたたみは控えめな矢印と名前だけにする。
+    折りたたみは控えめな灰色の矢印と、小さな太字の名前だけにする。白い紙の上にそのまま置き、
     枠付きの開閉ボタンや中身の縦線は引かず、中身は名前の書き始めに揃え、入れ子は字下げだけで示す（Treeと同じ）。
+    ホバーすると名前がリンクと同じ青緑の下線付きになり、押せることを示す。
     開く時は高さが伸びながら中身が現れ、閉じる時は縮みながら薄れる。矢印も同じ時間で回る。
   */
   .rx-disclosure {
@@ -20,7 +21,7 @@
       border-radius: var(--rx-radius-control);
       font-family: var(--rx-control-font-family);
       font-size: var(--rx-body);
-      font-weight: 500;
+      font-weight: var(--rx-label-weight);
       line-height: 1.5;
       list-style: none;
       cursor: pointer;
@@ -54,6 +55,11 @@
         color: var(--rx-link);
         & > .marker {
           color: var(--rx-link);
+        }
+        & > .label > .title {
+          text-decoration-line: underline;
+          text-decoration-thickness: var(--rx-stroke-width);
+          text-underline-offset: 0.15em;
         }
       }
       & > .label {

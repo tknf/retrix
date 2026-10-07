@@ -1,7 +1,7 @@
 @layer components {
   /*
-    切り替えて読むカード。前後の丸いボタンをカードの左右の縁の中央にまたがせる。
-    自動再生の操作はカードの下の末尾側に置く。狭い幅では縁の外へはみ出さないよう、前後の丸いボタンもカードの下に並べる。
+    切り替えて読むカード。前後の小さなボタン（共通のButton）をカードの左右の縁の中央にまたがせる。
+    自動再生の操作はカードの下の末尾側に置く。狭い幅では縁の外へはみ出さないよう、前後のボタンもカードの下に並べる。
   */
   .rx-carousel {
     container: rx-carousel / inline-size;
@@ -66,7 +66,7 @@
       }
     }
     & > .viewport > .slide > .rx-card > .eyebrow > .position {
-      color: var(--rx-muted);
+      color: var(--rx-meta);
       font-family: var(--rx-control-font-family);
       font-variant-numeric: tabular-nums;
       letter-spacing: 0.025em;

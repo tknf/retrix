@@ -1,20 +1,15 @@
 @layer components {
   /*
-    ツールへのリンクの一覧。罫線や進む矢印を使わず、淡い背景の上にアイコンと太字の名前を並べる。
-    アイコンはValueListと同じく、ツールの色を淡く敷いた丸に塗りつぶしのアイコンを置き、名前と説明のまとまりの縦の中央にそろえる。
-    一覧（list）は背景の上に行を積み、ホバーした行を角丸の面にする。並べる時（grid）も同じ行の形のまま、
-    淡い面の角丸のタイルにしてグリッドに並べる。行もタイルも普段は平らで、押すと内側へへこむ（ActionTileと同じ手触り）。
+    ツールへのリンクの一覧。Basecamp 2の操作のリンクの並びと同じく、紙の上に行を積み、行の幅いっぱいの罫線で区切る。
+    名前は青緑の下線付きのリンク、説明は灰色。アイコンはValueListと同じく、丸い面に入れずに名前の前へ小さく添える。
+    ホバーした行は淡い黄色の面にする。並べる時（grid）は同じ行の形のまま、細い枠の小さなタイルにしてグリッドに並べる。
   */
   .rx-action-list {
     display: grid;
     gap: 0;
     min-inline-size: 0;
     margin: 0;
-    padding-block: var(--rx-space-1);
-    padding-inline: var(--rx-space-1);
-    border-radius: var(--rx-radius-field);
-    /* 背景はページの灰色より淡くし、中の行の面と押した時のへこみを見分けやすくする。 */
-    background: color-mix(in srgb, var(--rx-ink) 2.5%, var(--rx-surface));
+    padding: 0;
     list-style: none;
     color: var(--rx-text);
     font-size: var(--rx-body);
@@ -24,36 +19,41 @@
       & > a {
         --rx-action-list-accent: var(--rx-link);
         display: grid;
-        grid-template-columns: 2rem minmax(0, 1fr);
+        grid-template-columns: 1rem minmax(0, 1fr);
         /* 並べたタイルの背が違っても、名前の書き始めの高さをそろえる。 */
         align-content: start;
         align-items: start;
-        gap: 0 var(--rx-space-3);
+        gap: 0.125rem var(--rx-space-2);
         block-size: 100%;
         min-inline-size: 0;
         padding-block: var(--rx-space-2);
-        padding-inline: var(--rx-space-2) var(--rx-space-3);
-        border-radius: var(--rx-radius-control);
+        padding-inline: var(--rx-space-2);
         color: inherit;
         text-decoration: none;
         overflow-wrap: anywhere;
-        transition:
-          background-color var(--rx-duration) ease,
-          box-shadow var(--rx-duration) ease;
+        transition: background-color var(--rx-duration) ease;
         &:hover {
-          background: color-mix(in srgb, var(--rx-ink) 4%, transparent);
+          background: color-mix(in srgb, var(--rx-mark) 50%, var(--rx-surface));
         }
         &:active {
-          background: color-mix(in srgb, var(--rx-ink) 6%, transparent);
-          box-shadow: var(--rx-shadow-control-pressed);
+          background: var(--rx-mark);
         }
         &:focus-visible {
           outline: 0.125rem solid var(--rx-link);
           outline-offset: -0.125rem;
         }
+        /* 名前は本文のリンクと同じ青緑の文字と下線。ホバーで赤茶にする。 */
         & > .title {
           grid-column: 2;
-          font-weight: 700;
+          color: var(--rx-link);
+          font-weight: 600;
+          text-decoration-line: underline;
+          text-decoration-thickness: var(--rx-stroke-width);
+          text-underline-offset: 0.15em;
+          transition: color var(--rx-duration) ease;
+        }
+        &:hover > .title {
+          color: var(--rx-link-hover);
         }
         & > .description {
           grid-column: 2;
@@ -61,25 +61,17 @@
           font-size: var(--rx-label);
           line-height: var(--rx-label-leading);
         }
-        /* ツールのアイコン。ツールの色を淡く敷いた丸に置き、名前と説明のまとまりの縦の中央にそろえる。 */
+        /* ツールのアイコン。面を付けず、ツールの色で名前の一行目の高さに添える。 */
         & > .icon {
           grid-column: 1;
-          grid-row: 1 / span 2;
-          align-self: center;
+          grid-row: 1;
           display: grid;
           place-items: center;
-          inline-size: 2rem;
-          block-size: 2rem;
-          border-radius: 50%;
-          background: color-mix(in srgb, var(--rx-action-list-accent) 12%, var(--rx-surface));
+          block-size: calc(var(--rx-body) * var(--rx-label-leading));
           color: var(--rx-action-list-accent);
           & > .rx-icon {
             font-size: 1rem;
           }
-        }
-        /* 中身の見本がある行は背が高くなるので、アイコンを題名の一行目にそろえる。 */
-        &:has(> .preview) > .icon {
-          align-self: start;
         }
         /* 名前だけの行は、アイコンと名前を一行の中央でそろえる。 */
         &:not(:has(> .description, > .preview)) {
@@ -118,62 +110,37 @@
         /* 対応が必要な行は、アイコン・名前・説明を危険の色で書く。 */
         &[data-attention="true"] {
           --rx-action-list-accent: var(--rx-danger);
-          /* 淡い背景の上でも本文と同じ7:1を保つよう、危険の色に濃い色（黒）を少し混ぜる。 */
           & > :is(.title, .description) {
-            color: color-mix(in srgb, var(--rx-danger) 88%, var(--rx-ink));
+            color: var(--rx-danger);
           }
         }
       }
     }
-    /* 行の間はNavigationと同じく、名前の書き始めから細い線で区切る。 */
-    &:not([data-layout="grid"]) > li + li > a {
-      position: relative;
-      &::before {
-        content: "";
-        position: absolute;
-        inset-block-start: 0;
-        inset-inline: calc(var(--rx-space-2) + 2rem + var(--rx-space-3)) var(--rx-space-3);
-        block-size: var(--rx-stroke-width);
-        background: color-mix(in srgb, var(--rx-ink) 8%, transparent);
-      }
-      &:not(:has(> .icon))::before {
-        inset-inline-start: var(--rx-space-3);
-      }
-      /* ホバーした行と、その次の行の区切りは面に溶かす。 */
-      &:hover::before {
-        opacity: 0;
-      }
+    /* 行の間は、行の幅いっぱいに罫線を引いて区切る。 */
+    &:not([data-layout="grid"]) > li + li {
+      border-block-start: var(--rx-stroke-width) solid var(--rx-border);
     }
-    &:not([data-layout="grid"]) > li:has(> a:hover) + li > a::before {
-      opacity: 0;
-    }
-    /*
-      並べる時は、行と同じ形のまま淡い面の角丸のタイルにしてグリッドに並べる。背景は持たない。
-    */
+    /* 並べる時は、行と同じ形のまま、白い面に罫線の色の枠を付けた小さなタイルにしてグリッドに並べる。 */
     &[data-layout="grid"] {
       grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
       gap: var(--rx-space-2);
-      padding-block: 0;
-      padding-inline: 0;
-      border-radius: 0;
-      background: transparent;
       & > li > a {
-        padding-block: var(--rx-space-3);
+        padding-block: var(--rx-space-2);
         padding-inline: var(--rx-space-3);
-        border-radius: var(--rx-radius-field);
-        background: color-mix(in srgb, var(--rx-ink) 2.5%, var(--rx-surface));
+        border: var(--rx-stroke-width) solid var(--rx-border);
+        border-radius: var(--rx-radius-control);
+        background: var(--rx-surface);
         &:hover {
-          background: color-mix(in srgb, var(--rx-ink) 5%, var(--rx-surface));
+          border-color: var(--rx-control-border);
+          background: color-mix(in srgb, var(--rx-mark) 50%, var(--rx-surface));
         }
         &:active {
-          background: color-mix(in srgb, var(--rx-ink) 7%, var(--rx-surface));
-          box-shadow: var(--rx-shadow-control-pressed);
+          background: var(--rx-mark);
         }
       }
     }
   }
   @media (forced-colors: active) {
-    .rx-action-list,
     .rx-action-list[data-layout="grid"] > li > a {
       border: var(--rx-stroke-width) solid CanvasText;
     }

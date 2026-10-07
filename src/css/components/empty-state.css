@@ -1,17 +1,16 @@
 @layer components {
   /*
-    まだ何もない場所。中央に破線の枠を置き、太字の題名と説明を書く。
-    破線は「ここに入る・置ける」ことを表すので、これから内容が入る場所を示す。枠と文字は場面の色にする
-    （検索で0件は灰、初回は青、完了時は緑）。操作は枠の下に置く。
+    まだ何もない場所。Basecamp 2の空の一覧と同じく、枠や面は付けずに、中央に太字の題名と灰色の説明を簡素に書く。
+    アイコンを渡した時だけ、場面の色（検索で0件は灰、初回は青緑、完了時は緑）の小さな丸に置く。操作は文の下に置く。
   */
   .rx-empty-state {
     --rx-empty-color: var(--rx-muted);
     display: grid;
     justify-items: center;
-    gap: var(--rx-space-5);
+    gap: var(--rx-space-3);
     min-inline-size: 0;
     inline-size: 100%;
-    padding-block: var(--rx-space-8);
+    padding-block: var(--rx-space-6);
     padding-inline: var(--rx-space-4);
     color: var(--rx-text);
     font-size: var(--rx-label);
@@ -26,18 +25,12 @@
     &[data-kind="complete"] {
       --rx-empty-color: var(--rx-success);
     }
-    /* 枠。場面の色の2pxの破線と、ごく淡い同じ色の面。 */
+    /* 文のまとまり。枠も面も持たず、読みやすい幅に収める。 */
     & > .slip {
       display: grid;
       justify-items: center;
       min-inline-size: 0;
       max-inline-size: min(100%, 28rem);
-      padding-block: var(--rx-space-5);
-      padding-inline: var(--rx-space-6);
-      border: var(--rx-frame-width) dashed
-        color-mix(in srgb, var(--rx-empty-color) 35%, var(--rx-surface));
-      border-radius: var(--rx-radius-field);
-      background: color-mix(in srgb, var(--rx-empty-color) 5%, var(--rx-surface));
       & > .symbol {
         display: grid;
         place-items: center;
@@ -52,9 +45,9 @@
       }
       & > .title {
         margin: 0;
-        color: color-mix(in srgb, var(--rx-empty-color) 70%, var(--rx-text));
+        color: var(--rx-text);
         font-size: var(--rx-body);
-        font-weight: 700;
+        font-weight: 600;
         line-height: 1.5;
         text-wrap: balance;
       }
@@ -75,7 +68,7 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: var(--rx-space-3);
+      gap: var(--rx-space-2);
     }
     /* 渡されたアイコンは、場面の色で塗った丸の上に白で置く。完了時は完了の色で、ペンでチェックを描く。 */
     &:not([data-kind="complete"]) > .slip > .symbol {
@@ -106,9 +99,6 @@
     }
   }
   @media (forced-colors: active) {
-    .rx-empty-state > .slip {
-      border-color: CanvasText;
-    }
     .rx-empty-state > .slip > .symbol {
       outline: var(--rx-stroke-width) solid CanvasText;
     }

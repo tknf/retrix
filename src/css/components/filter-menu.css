@@ -1,8 +1,8 @@
 @layer components {
   /*
-    絞り込めるメニュー。DropdownMenuと同じ青い面のパネルに、
-    上に白い絞り込みの欄と「新しく作る」、その下に淡い大文字の見出しと候補を並べる。
-    候補は選んだものに白いチェックを置き、上下の矢印キーで選んでいる候補とホバーした候補は白を薄く重ねる。
+    絞り込めるメニュー。DropdownMenuと同じ白いパネルに黒い文字で、
+    上に枠のある絞り込みの欄と「新しく作る」、その下に小さな灰色の見出しと候補を並べる。
+    候補は選んだものにチェックを置き、上下の矢印キーで選んでいる候補とホバーした候補は青緑（--rx-menu-active）で塗って白い文字にする。
     位置と出入りの動きは、Popoverと同じoverlay.cssの共通の定義に任せる。
   */
   .rx-filter-menu {
@@ -16,15 +16,15 @@
       --rx-overlay-width: 17rem;
       padding-block: var(--rx-space-2);
       padding-inline: var(--rx-space-2);
-      background: var(--rx-link);
+      background: var(--rx-surface);
       background-image: var(--rx-fill-menu);
-      color: var(--rx-surface);
+      color: var(--rx-text);
       &:popover-open {
         display: grid;
         grid-template-rows: auto auto minmax(0, 1fr) auto;
         gap: var(--rx-space-1);
       }
-      /* 絞り込みの欄。枠のない白い面のピルにする。 */
+      /* 絞り込みの欄。Inputと同じく枠を持ち、上の枠を少し濃くして沈んだ欄に見せる。 */
       & > .search {
         display: flex;
         align-items: center;
@@ -36,14 +36,17 @@
           align-items: center;
           gap: var(--rx-space-2);
           min-inline-size: 0;
-          padding-inline: var(--rx-space-3);
-          border-radius: var(--rx-radius-pill);
+          padding-inline: var(--rx-space-2);
+          border: var(--rx-stroke-width) solid var(--rx-control-border);
+          border-block-start-color: color-mix(in srgb, var(--rx-control-border) 80%, var(--rx-ink));
+          border-radius: var(--rx-radius-control);
           background: var(--rx-surface);
           color: var(--rx-muted);
+          box-shadow: var(--rx-shadow-input);
           & > input {
             flex: 1 1 auto;
             min-inline-size: 0;
-            block-size: var(--rx-button-size);
+            block-size: calc(var(--rx-button-size) - 2 * var(--rx-stroke-width));
             padding: 0;
             border: 0;
             background: transparent;
@@ -56,7 +59,10 @@
             }
           }
           &:has(> input:focus-visible) {
-            box-shadow: 0 0 0 0.125rem color-mix(in srgb, var(--rx-surface) 60%, transparent);
+            border-color: var(--rx-link);
+            box-shadow:
+              var(--rx-shadow-input),
+              0 0 0 0.1875rem var(--rx-focus-ring);
           }
         }
         & > .create {
@@ -67,9 +73,9 @@
         margin: 0;
         padding-block: var(--rx-space-2) 0;
         padding-inline: var(--rx-space-2);
-        color: color-mix(in srgb, var(--rx-surface) 75%, transparent);
+        color: var(--rx-muted);
         font-size: var(--rx-small);
-        font-weight: 700;
+        font-weight: 600;
         line-height: var(--rx-small-leading);
       }
       & > .options {
@@ -94,10 +100,13 @@
           }
           &:hover,
           &[data-active="true"] {
-            background: color-mix(in srgb, var(--rx-surface) 16%, transparent);
+            background: var(--rx-menu-active);
+            color: var(--rx-surface);
           }
           &[data-disabled="true"] {
-            opacity: 0.5;
+            background: transparent;
+            color: var(--rx-muted);
+            opacity: 0.6;
             cursor: not-allowed;
           }
           /* アイコンの枠。アイコンのない候補は、選んだ時だけチェックを見せる。 */
@@ -127,7 +136,7 @@
           visibility: hidden;
         }
         & > .option[data-selected="true"] {
-          font-weight: 700;
+          font-weight: 600;
           & > .check {
             display: grid;
           }
@@ -140,7 +149,7 @@
         margin: 0;
         padding-block: var(--rx-space-2);
         padding-inline: var(--rx-space-2);
-        color: color-mix(in srgb, var(--rx-surface) 75%, transparent);
+        color: var(--rx-muted);
       }
     }
   }

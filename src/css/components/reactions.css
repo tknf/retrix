@@ -1,9 +1,9 @@
 @layer components {
   /*
-    リアクション。同じ絵文字や言葉を一つの小さなリアクションにまとめ、付けた人数を淡い太字で添える。
-    リアクションは枠の細い平らなピルで、自分も付けているリアクションは淡い青の面と青い縁・青い数にする。
-    押せるリアクションはホバーすると淡い面、押すと内側へへこむ（ActionTileと同じ手触り）。
-    追加の操作はリアクションの終わりに置くPopoverで、開く操作は枠も影もない青いアイコン（Buttonのlink）にTooltipで名前を出す。
+    リアクション。同じ絵文字や言葉を一つの小さなリアクションにまとめ、付けた人数を灰色の太字で添える。
+    リアクションは灰色の細い枠の小さな白いピルで、自分も付けているリアクションは淡い青緑の面と青緑の枠・青緑の数にする。
+    押せるリアクションはホバーすると淡い灰色の面、押すと内側へへこむ（ボタンと同じ手触り）。
+    追加の操作はリアクションの終わりに置くPopoverで、開く操作は枠も影もない青緑のアイコン（Buttonのlink）にTooltipで名前を出す。
     中は短い言葉でリアクションする欄（開いた時に移る）とEmojiPicker。文字の指定はこのファイルが持つ（専用の操作）。
   */
   .rx-reactions {
@@ -27,23 +27,23 @@
         gap: 0.25rem;
         min-inline-size: 0;
         max-inline-size: 100%;
-        min-block-size: 1.75rem;
+        min-block-size: 1.5rem;
         margin: 0;
         /*
           Badgeと同じく、折り返した行の間（行の余り2つ分）と、縁から文字まで（余白＋行の余り）を同じにする。
           行の高さを「一行の高さと文字の大きさの間」に詰め、残りを上下に半分ずつ取る（縁の幅は一行の高さに含める）。
         */
-        padding-block: calc((1.75rem - 2 * var(--rx-stroke-width) - 1lh) / 2);
-        padding-inline: 0.5rem 0.625rem;
-        border: var(--rx-stroke-width) solid var(--rx-border);
-        /* 一行では高さの半分で止まってピルになり、折り返すとカードと同じ角丸になる。 */
-        border-radius: var(--rx-radius-surface);
+        padding-block: calc((1.5rem - 2 * var(--rx-stroke-width) - 1lh) / 2);
+        padding-inline: 0.4375rem 0.5rem;
+        border: var(--rx-stroke-width) solid var(--rx-gray-200);
+        /* 一行の高さの半分の角丸。一行ではピルになり、折り返しても角が膨らみすぎない。 */
+        border-radius: 0.75rem;
         background: var(--rx-surface);
         color: var(--rx-text);
         font-family: inherit;
         font-size: var(--rx-small);
         font-weight: 400;
-        line-height: calc((1.75rem - 2 * var(--rx-stroke-width) + 1em) / 2);
+        line-height: calc((1.5rem - 2 * var(--rx-stroke-width) + 1em) / 2);
         text-align: start;
         transition:
           background-color var(--rx-duration) ease,
@@ -64,26 +64,28 @@
           font-variant-numeric: tabular-nums;
         }
         &[data-mine="true"] {
-          border-color: color-mix(in srgb, var(--rx-link) 45%, var(--rx-surface));
+          border-color: color-mix(in srgb, var(--rx-teal) 45%, var(--rx-surface));
           background: var(--rx-cover);
           & > .count {
-            color: var(--rx-link);
+            color: var(--rx-teal);
           }
         }
       }
       & > li > button.reaction {
         cursor: pointer;
         &:hover {
-          background: color-mix(in srgb, var(--rx-ink) 4%, var(--rx-surface));
+          border-color: var(--rx-control-border);
+          background: var(--rx-gray-20);
         }
         &[data-mine="true"]:hover {
-          background: color-mix(in srgb, var(--rx-link) 14%, var(--rx-surface));
+          border-color: color-mix(in srgb, var(--rx-teal) 60%, var(--rx-surface));
+          background: color-mix(in srgb, var(--rx-teal) 14%, var(--rx-surface));
         }
         &:active {
           box-shadow: var(--rx-shadow-control-pressed);
         }
         &:focus-visible {
-          outline: 0.125rem solid var(--rx-link);
+          outline: 0.125rem solid var(--rx-blue);
           outline-offset: 0.0625rem;
         }
       }

@@ -7,21 +7,19 @@
     gap: var(--rx-space-2) var(--rx-space-1);
     min-inline-size: 0;
     /* 題名・補足・バッジの段の間（4〜8px）より、カードの上下の余白をはっきり広くする。 */
-    padding-block: var(--rx-space-4);
-    padding-inline: var(--rx-space-4) var(--rx-space-2);
+    padding-block: var(--rx-space-3);
+    padding-inline: var(--rx-space-3) var(--rx-space-2);
+    /* 白い紙のカード。輪郭と浅い影（--rx-shadow-paper）、小さな角丸。列の色では染めない。 */
     border-radius: var(--rx-radius-surface);
-    /* 列の色で斜めに淡く染まったカード。Boardの外と中立の列では白いカードになる。 */
-    background: var(--rx-board-tint, none), var(--rx-fill-paper);
-    background-color: var(--rx-surface);
+    background: var(--rx-surface);
     box-shadow: var(--rx-shadow-paper);
     color: var(--rx-text);
-    transition:
-      box-shadow var(--rx-duration) ease,
-      translate var(--rx-duration) ease;
-    /* 動かせる項目にホバーすると、少し持ち上がる。 */
+    transition: box-shadow var(--rx-duration) ease;
+    /* 動かせる項目にホバーすると、輪郭を少し濃くする。 */
     &:not([data-disabled="true"]):hover {
-      box-shadow: var(--rx-shadow-paper-lift);
-      translate: 0 calc(var(--rx-stroke-width) * -1);
+      box-shadow:
+        0 0 0 var(--rx-stroke-width) var(--rx-control-border),
+        0 0.0625rem 0.1875rem color-mix(in srgb, var(--rx-ink) 10%, transparent);
     }
     /*
       中身は項目のグリッドに直接並べる。右上のハンドルの隣は一行目（題名）だけにし、
@@ -34,11 +32,11 @@
         min-inline-size: 0;
         overflow-wrap: anywhere;
       }
-      /* 題名は太くして項目の中でいちばん強くする。補足と日付は一段小さく弱くする。 */
+      /* 題名は一覧の題名と同じ600の太さにし、項目の中でいちばん強くする。補足と日付は一段小さく弱くする。 */
       & > h4 {
         margin: 0;
         font-size: var(--rx-body);
-        font-weight: 700;
+        font-weight: 600;
         line-height: var(--rx-label-leading);
       }
       & > p {
@@ -48,29 +46,23 @@
       }
     }
     /*
-      番号などのバッジ。カードの上の先頭側の角に、列の色の淡い面と列の色の文字で置く。
-      バッジの角はカードと同じ角丸にし、反対の下の角も面の内側の角丸で大きく丸めて、葉の形にする。中立の列では灰色にする。
+      番号などの小さな文字。カードの上の先頭側に、列の色の小さな太字で置く。面は塗らない。中立の列では灰色にする。
     */
     & > .code {
       position: absolute;
-      inset-block-start: 0;
-      inset-inline-start: 0;
-      padding-block: 0.125rem;
-      padding-inline: var(--rx-space-3) var(--rx-space-2);
-      border-start-start-radius: var(--rx-radius-surface);
-      border-end-end-radius: var(--rx-radius-field);
-      background: color-mix(in srgb, var(--rx-lane-accent, var(--rx-muted)) 14%, var(--rx-surface));
+      inset-block-start: var(--rx-space-2);
+      inset-inline-start: var(--rx-space-3);
       color: color-mix(in srgb, var(--rx-lane-accent, var(--rx-muted)) 85%, var(--rx-text));
       font-size: var(--rx-small);
-      font-weight: 700;
+      font-weight: 600;
       line-height: var(--rx-small-leading);
       font-variant-numeric: tabular-nums;
       white-space: nowrap;
     }
-    /* バッジの高さ（行高＋上下の余白）の下に、題名との間を段の間と同じだけ空ける。 */
+    /* 番号の行（上の余白＋行高）の下に、題名との間を補足の段と同じだけ空ける。 */
     &:has(> .code) {
       padding-block-start: calc(
-        var(--rx-small) * var(--rx-small-leading) + 0.25rem + var(--rx-space-2)
+        var(--rx-space-2) + var(--rx-small) * var(--rx-small-leading) + var(--rx-space-1)
       );
     }
     /* ハンドルがある時は、一行目の文字をハンドルの中央の高さにそろえる。 */
@@ -101,7 +93,6 @@
       outline: var(--rx-frame-width) dashed var(--rx-link);
       outline-offset: calc(var(--rx-frame-width) * -1);
       box-shadow: var(--rx-shadow-paper-lift);
-      translate: none;
     }
     &[data-moving="true"] > .rx-button.handle:not(:disabled) {
       cursor: grabbing;

@@ -1,8 +1,8 @@
 @layer components {
   /*
-    出来事を時の順に読む一覧。細い線に沿って、出来事ごとにDropdownMenuと同じ青から紫へ塗ったマークか、起こした人のアバターを置く。
-    日の区切りは縦の線から伸びるDividerの名前の付いた線。起こした人の名前は太字、題名は普通の太さ。
-    節目は、終えたものを緑のマーク、今のものを青いマーク、これからを破線にし、今の時はCalendarの今日と同じ黄のピルを敷く。
+    出来事を時の順に読む一覧。細い罫線に沿って、出来事ごとに青緑の小さな点か、起こした人のアバターを置く。
+    時刻は茶色の小さな文字。日の区切りは縦の線から伸びるDividerの名前の付いた線。起こした人の名前は太字、題名は普通の太さ。
+    節目は、終えたものを緑のマーク、今のものを青緑のマーク、これからを破線にし、今の時はCalendarの今日と同じ黄のピルを敷く。
   */
   .rx-timeline {
     container: rx-timeline / inline-size;
@@ -23,7 +23,7 @@
       padding-block: var(--rx-space-3);
       padding-inline-start: var(--rx-space-4);
       border-inline-start: var(--rx-stroke-width) solid var(--rx-border);
-      /* マークはDropdownMenuと同じ青から紫へ塗った点。線から少し離して見せるため、地の色の輪で囲む。 */
+      /* マークは青緑の点。線から少し離して見せるため、紙の色の輪で囲む。 */
       & > .marker {
         position: absolute;
         inset-inline-start: -0.3125rem;
@@ -34,11 +34,11 @@
         block-size: 0.5625rem;
         border: 0;
         border-radius: 50%;
-        background: var(--rx-fill-menu);
+        background: var(--rx-teal);
         box-shadow: 0 0 0 0.1875rem var(--rx-surface);
       }
       & > time {
-        color: var(--rx-muted);
+        color: var(--rx-meta);
         font-family: var(--rx-control-font-family);
         font-size: var(--rx-small);
         line-height: var(--rx-small-leading);
@@ -49,6 +49,7 @@
         min-inline-size: 0;
         overflow-wrap: anywhere;
         & > .title {
+          color: var(--rx-ink);
           font-size: var(--rx-label);
           font-weight: 600;
           line-height: var(--rx-label-leading);
@@ -76,8 +77,8 @@
       gap: 0;
       padding-block: var(--rx-space-2);
       padding-inline: var(--rx-space-4);
-      border-radius: var(--rx-radius-control);
-      background: var(--rx-hatch), var(--rx-background);
+      border-radius: var(--rx-radius-mark);
+      background: var(--rx-hatch), var(--rx-gray-20);
       text-align: center;
       & > .marker {
         display: none;
@@ -105,6 +106,7 @@
         display: none;
       }
       & > .body > .title {
+        color: var(--rx-muted);
         font-size: var(--rx-small);
         font-weight: 400;
       }

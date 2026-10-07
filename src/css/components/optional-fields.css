@@ -1,8 +1,8 @@
 @layer components {
   /*
-    必要な時だけ追加する欄。追加した欄を上に積み、追加できる項目を細い縁のピルのチップで下に並べる。
+    必要な時だけ追加する欄。追加した欄を上に積み、追加できる項目を枠付きの小さなボタンで下に並べる。
     追加した欄の終わりには削除の操作を置き、入力の行の下端にそろえる。
-    stackはチップを縦に並べる。チップは淡い黒の文字で、ホバーすると濃い黒にする。
+    ボタンは灰色の文字で、ホバーすると本文の黒にする。stackは枠を外したボタンを縦に並べ、ホバーで淡い灰色の面を出す。
   */
   .rx-optional-fields {
     display: grid;
@@ -50,7 +50,7 @@
         background: transparent;
         box-shadow: none;
         &:hover:not(:disabled) {
-          background: var(--rx-background);
+          background: var(--rx-gray-50);
         }
       }
     }

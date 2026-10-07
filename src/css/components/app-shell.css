@@ -8,6 +8,8 @@
     --rx-shell-aside: 13rem;
     --rx-shell-gap: var(--rx-space-6);
     --rx-shell-width: var(--rx-page);
+    /* ヘッダーの最小の幅。compactの画面でも移動先が折り返さないよう、既定の作業面の幅を保つ。 */
+    --rx-shell-bar-width: 61.25rem;
     /* 背後に重ねたシートの、手前のシートへの重なり。 */
     --rx-trail-overlap: var(--rx-space-5);
     container: rx-app-shell / inline-size;
@@ -42,7 +44,10 @@
       align-items: center;
       column-gap: var(--rx-space-6);
       row-gap: var(--rx-space-1);
-      inline-size: min(calc(100% - var(--rx-space-8)), var(--rx-shell-width));
+      inline-size: min(
+        calc(100% - var(--rx-space-8)),
+        max(var(--rx-shell-width), var(--rx-shell-bar-width))
+      );
       min-inline-size: 0;
       padding-block: var(--rx-space-2) var(--rx-space-5);
       & > .account {
@@ -192,7 +197,8 @@
     }
     & > .body > .main > .workspace,
     & > .body > .main > .rx-wing > .layout > .main > .workspace {
-      container: rx-workspace / inline-size;
+      /* Surfaceと同じ名前も持ち、作業面の幅で段組みを切り替える配置（.rx-workspaceなど）をAppShellの中でも効かせる。 */
+      container: rx-workspace rx-surface / inline-size;
       display: grid;
       /* 列は作業面の幅に収め、広い表などの最小幅で作業面を押し広げない（中身の側で横にスクロールする）。 */
       grid-template-columns: minmax(0, 1fr);

@@ -1,5 +1,5 @@
 @layer components {
-  /* 集計の値。数字はとても太く大きく書き、名前・単位・補足は淡く小さく添える。 */
+  /* 集計の値。数字は黒い太字で大きく書き、名前と単位は灰色、期間などの補足は茶色の小さな文字で添える。 */
   .rx-statistic {
     min-inline-size: 0;
     max-inline-size: 100%;
@@ -11,10 +11,11 @@
       line-height: var(--rx-label-leading);
     }
     & > .value {
-      margin-block-start: var(--rx-space-2);
+      margin-block-start: var(--rx-space-1);
+      color: var(--rx-ink);
       font-family: var(--rx-control-font-family);
       font-size: var(--rx-title);
-      font-weight: 800;
+      font-weight: 700;
       line-height: calc(8 / 7);
       font-variant-numeric: tabular-nums;
       overflow-wrap: anywhere;
@@ -22,12 +23,12 @@
         margin-inline-start: 0.35em;
         color: var(--rx-muted);
         font-size: var(--rx-label);
-        font-weight: 600;
+        font-weight: 400;
       }
     }
     & > .note {
       margin-block-start: var(--rx-space-1);
-      color: var(--rx-muted);
+      color: var(--rx-meta);
       font-size: var(--rx-small);
       line-height: var(--rx-small-leading);
     }

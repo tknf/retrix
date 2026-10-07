@@ -1,4 +1,8 @@
 @layer components {
+  /*
+    現在地の行。灰色の小さな補足として、パンくずを先頭側に、関連する操作を末尾側に並べる。
+    下に罫線を引き、ここから中身が始まることを示す。
+  */
   .rx-context-bar {
     display: flex;
     flex-wrap: wrap;
@@ -10,6 +14,9 @@
     padding-block: var(--rx-space-2);
     padding-inline: var(--rx-space-4);
     border-block-end: var(--rx-stroke-width) solid var(--rx-border);
+    color: var(--rx-muted);
+    font-size: var(--rx-small);
+    line-height: var(--rx-small-leading);
     & > .rx-breadcrumb {
       flex: 1 1 12rem;
     }

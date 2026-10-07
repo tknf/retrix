@@ -1,10 +1,11 @@
 @layer components {
   /*
-    アバターは、中間の濃さで塗った丸に濃いインクの太いイニシャルを置く。
-    淡い背景に色の文字では、一覧の中でアバターが目立たない。
+    アバターはBasecamp 2と同じ丸い写真。写真がない時は、灰色で塗った丸に白い太字のイニシャルを置く（Highriseの人の丸）。
+    色の指定（tone）は利用側が明示した時だけ使い、どれも白い文字との対比を4.5:1以上に保つ。
+    写真の縁には淡い輪郭を重ね、白い写真でも紙の上で丸く見えるようにする。
   */
   .rx-avatar {
-    --rx-avatar-fill: color-mix(in srgb, var(--rx-blue) 42%, var(--rx-surface));
+    --rx-avatar-fill: var(--rx-gray-650);
     position: relative;
     display: inline-grid;
     place-items: center;
@@ -12,22 +13,30 @@
     block-size: 2.25rem;
     flex: none;
     overflow: hidden;
-    /* 縁取りを持たず、塗りの円だけにする。 */
     border-radius: 50%;
     background: var(--rx-avatar-fill);
-    color: var(--rx-ink);
+    color: var(--rx-surface);
     font-family: var(--rx-control-font-family);
     font-size: var(--rx-small);
     font-weight: 700;
     line-height: 1;
     &[data-tone="green"] {
-      --rx-avatar-fill: color-mix(in srgb, var(--rx-green) 42%, var(--rx-surface));
+      --rx-avatar-fill: var(--rx-green);
     }
     &[data-tone="amber"] {
-      --rx-avatar-fill: color-mix(in srgb, var(--rx-gold) 48%, var(--rx-surface));
+      --rx-avatar-fill: var(--rx-gold);
     }
     &[data-tone="coral"] {
-      --rx-avatar-fill: color-mix(in srgb, var(--rx-coral) 42%, var(--rx-surface));
+      --rx-avatar-fill: var(--rx-coral);
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      inset-block: 0;
+      inset-inline: 0;
+      border-radius: inherit;
+      box-shadow: inset 0 0 0 var(--rx-stroke-width) rgb(38 38 36 / 12%);
+      pointer-events: none;
     }
     & > .initials {
       max-inline-size: 100%;
@@ -70,6 +79,7 @@
     .rx-avatar {
       border: var(--rx-stroke-width) solid CanvasText;
       background: Canvas;
+      color: CanvasText;
       box-shadow: none;
     }
   }

@@ -1,4 +1,8 @@
 @layer components {
+  /*
+    絞り込みの条件を、枠付きの共通Buttonとして並べる。選んでいる条件はButtonのcurrentと同じ青緑の縦の塗り。
+    件数は条件名の後ろに灰色の数字で添え、選んでいる条件では白い文字のままにする。
+  */
   .rx-filter-bar {
     /* 各リンクの自然幅で折り返すためFlex。 */
     display: flex;
@@ -9,12 +13,6 @@
 
     & > a {
       min-inline-size: 0;
-      border-radius: var(--rx-radius-pill);
-
-      &:not([data-current="true"]) {
-        border-color: var(--rx-border);
-        color: var(--rx-text);
-      }
       & > span {
         min-inline-size: 0;
       }
@@ -23,30 +21,29 @@
         font: inherit;
         font-variant-numeric: tabular-nums;
       }
+      &:not([data-current="true"]) > small {
+        color: var(--rx-muted);
+      }
     }
-    /* 表示の切り替えはButtonGroupと同じく、両端だけピルに丸め、隣の枠線を1px重ねて一組に見せる。 */
+    /*
+      表示の切り替えはButtonGroupと同じく、隙間なくつなげて間を1本の線にし、外側の角だけを丸める。
+      隣の枠線を1px重ねる。
+    */
     &[data-appearance="segmented"] {
       display: inline-flex;
       flex-wrap: nowrap;
       gap: 0;
       max-inline-size: 100%;
-      /* 一行に並べ続けるので、丸いのは両端だけ。間の項目は左右を1emに抑える。 */
-      & > a {
-        padding-inline: 1em;
-        border-radius: 0;
-      }
-      & > a:first-child {
-        border-start-start-radius: var(--rx-radius-pill);
-        border-end-start-radius: var(--rx-radius-pill);
-      }
-      & > a:last-child {
-        border-start-end-radius: var(--rx-radius-pill);
-        border-end-end-radius: var(--rx-radius-pill);
+      & > a:not(:last-child) {
+        border-start-end-radius: 0;
+        border-end-end-radius: 0;
       }
       & > a:not(:first-child) {
         margin-inline-start: calc(var(--rx-stroke-width) * -1);
+        border-start-start-radius: 0;
+        border-end-start-radius: 0;
       }
-      & > a:is([data-current="true"], :focus-visible) {
+      & > a:is([data-current="true"], :hover, :focus-visible) {
         z-index: 1;
       }
     }

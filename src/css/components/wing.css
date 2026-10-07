@@ -1,11 +1,12 @@
 @layer components {
   /*
-    Wingは作業面の後ろへ差し込む固定幅の白いパネル。縁取りを持たず、やわらかな影と作業面から落ちる影で分ける。
+    Wingは作業面の後ろへ差し込む固定幅の白いパネル。カードと同じ輪郭と浅い影（--rx-shadow-paper）を持つ。
     広い配置では開閉に関わらず作業面に合わせた全長の高さを持ち、閉じている間は作業面の縁からハンドルの幅だけを出す。
     閉じたハンドルはアイコンと開閉のマークだけを載せ、名前はツールチップで示す。開くと幅が伸び、上端に横書きの見出しが並ぶ。
   */
   .rx-wing {
-    --rx-wing-handle: 2.75rem;
+    /* ハンドルの行の高さ。30pxのボタンを上下4pxで挟む。 */
+    --rx-wing-handle: calc(var(--rx-control-size) + 2 * var(--rx-space-1));
     --rx-wing-panel: 14rem;
     --rx-wing-tuck: var(--rx-radius-surface);
     --rx-wing-inset: var(--rx-space-6);
@@ -37,7 +38,7 @@
         overflow: hidden;
         /* ツールチップの基準を、Wingごとのハンドルに限る。 */
         anchor-scope: --rx-wing-tab;
-        /* 寸法を保つため枠の幅は残し、線は見せない。ハンドルと中身も同じ色で、区切り線を引かない。 */
+        /* 寸法を保つため枠の幅は残し、線は見せない。輪郭は影が描く。 */
         border: var(--rx-stroke-width) solid transparent;
         border-radius: var(--rx-radius-surface);
         background: var(--rx-surface);
@@ -49,14 +50,14 @@
           display: flex;
           align-items: center;
           gap: var(--rx-space-3);
-          /* 36pxのボタンを上下4pxで挟み、44pxの行にする。 */
+          /* 30pxのボタンを上下4pxで挟み、38pxの行にする。 */
           padding-block: var(--rx-space-1);
           padding-inline: var(--rx-space-1) var(--rx-space-4);
           color: var(--rx-muted);
           font-family: var(--rx-control-font-family);
           font-size: var(--rx-label);
           font-weight: 600;
-          /* 流体の文字サイズでも44pxの計算を崩さないよう、行は20pxに固定する。 */
+          /* 流体の文字サイズでも38pxの計算を崩さないよう、行は20pxに固定する。 */
           line-height: 1.25rem;
           list-style: none;
           overflow-wrap: anywhere;
@@ -67,7 +68,7 @@
           isolation: isolate;
           transition: color var(--rx-duration) ease;
           /*
-            見出しの背景。上端の淡い面の色から下端でパネルの白へ変わるグラデーションにし、下の縁を線にしない。
+            見出しの帯。LayerCardの見出しと同じく、白から淡い灰色へのごく淡い縦の塗りに、下の罫線を引く。
             グラデーションは色の変化として動かせないので、層ごと薄れさせる。開いている間だけ見せる。
           */
           &::before {
@@ -76,7 +77,8 @@
             inset: 0;
             z-index: -1;
             border-radius: inherit;
-            background: linear-gradient(var(--rx-background), var(--rx-surface));
+            background: var(--rx-emphasis-neutral);
+            box-shadow: inset 0 calc(var(--rx-stroke-width) * -1) var(--rx-border);
             opacity: 0;
             transition: opacity var(--rx-duration-fade) ease-out;
           }
@@ -88,14 +90,26 @@
             display: none;
           }
           &:hover {
-            color: var(--rx-link);
+            color: var(--rx-ink);
           }
           &:focus-visible {
             outline-offset: -0.125rem;
           }
-          /* ハンドルのボタンは共通Buttonの主操作のアイコンだけの形。アイコンがない時は開閉のマークで、向きで開閉を示す。 */
+          /*
+            ハンドルは共通Buttonのアイコンだけの形。閉じている間は控えめな白いボタン、開いている間はオンの青緑の塗りにする。
+            Buttonの主操作の印を持つので、塗りの変数ごと置き換え、ホバーと押した時の濃さもButtonの規則のまま効かせる。
+            アイコンがない時は開閉のマークで、向きで開閉を示す。
+          */
           & > .handle {
+            --rx-button-color: var(--rx-surface);
+            --rx-button-fill: var(--rx-fill-control);
             flex: none;
+            border-color: var(--rx-control-border);
+            border-block-end-color: color-mix(in srgb, var(--rx-control-border) 80%, var(--rx-ink));
+            background: var(--rx-surface);
+            background-image: var(--rx-fill-control);
+            color: var(--rx-text);
+            box-shadow: var(--rx-shadow-control);
             &[data-fallback="caret"] > .rx-icon {
               transition: rotate var(--rx-wing-duration) var(--rx-wing-ease);
             }
@@ -140,9 +154,18 @@
         }
         /* 開いている間は見出しの背景を見せる。閉じる時はパネルが縮むのと同じ時間で薄れる。 */
         & > summary {
-          color: var(--rx-text);
+          color: var(--rx-ink);
           &::before {
             opacity: 1;
+          }
+          & > .handle {
+            --rx-button-color: var(--rx-teal);
+            --rx-button-fill: linear-gradient(180deg, var(--rx-teal) 0%, var(--rx-teal-dark) 100%);
+            border-color: var(--rx-teal-dark);
+            background: var(--rx-teal);
+            background-image: var(--rx-button-fill);
+            color: var(--rx-surface);
+            box-shadow: var(--rx-shadow-control-primary);
           }
           & > .handle[data-fallback="caret"] > .rx-icon {
             rotate: 180deg;
@@ -209,7 +232,7 @@
             &:focus-visible {
               outline: none;
               & > .handle {
-                outline: 0.125rem solid var(--rx-link);
+                outline: 0.125rem solid var(--rx-blue);
                 outline-offset: 0.125rem;
               }
             }
@@ -285,9 +308,9 @@
           grid-column: 1;
           justify-self: end;
           margin-inline-end: calc(var(--rx-wing-tuck) * -1);
-          /* ボタンの中心（外側の縁から4px＋半径18px）をパネルの外側の縁に合わせる。 */
+          /* ボタンの中心（外側の縁から4px＋半径15px）をパネルの外側の縁に合わせる。 */
           &:not([open]) > summary {
-            inset-inline-start: calc((var(--rx-space-1) + 1.125rem) * -1);
+            inset-inline-start: calc((var(--rx-space-1) + var(--rx-control-size) / 2) * -1);
           }
           /* パネルで切らない配置なので、見出しの背景の外側の上の角をパネルの角丸に合わせる。 */
           & > summary {
@@ -318,7 +341,7 @@
           justify-self: start;
           margin-inline-start: calc(var(--rx-wing-tuck) * -1);
           &:not([open]) > summary {
-            inset-inline-end: calc((var(--rx-space-1) + 1.125rem) * -1);
+            inset-inline-end: calc((var(--rx-space-1) + var(--rx-control-size) / 2) * -1);
           }
           & > summary {
             inset-inline-end: 0;

@@ -1,17 +1,17 @@
 @layer components {
   /*
-    修正が必要な箇所のまとめ。カードと、アイコンと見出しのピルはNoticeの危険の役割（.rx-notice[data-tone="danger"]）がそのまま描き、
+    修正が必要な箇所のまとめ。淡い赤の面と枠、アイコンと見出しはNoticeの危険の役割（.rx-notice[data-tone="danger"]）がそのまま描き、
     ここでは本文に置く、各欄へ移動するリンクの一覧だけを持つ。
   */
   .rx-error-summary > .body > ul {
     display: grid;
-    /* 一覧の項目の間は、カードの余白よりはっきり狭くする。 */
-    gap: var(--rx-space-2);
+    /* 一覧の項目の間は、面の余白よりはっきり狭くする。 */
+    gap: var(--rx-space-1);
     margin: 0;
     padding: 0;
     padding-inline-start: calc(0.375rem + var(--rx-space-2));
     list-style: none;
-    /* 修正する欄へ移動するリンク。下線を引かず濃い色の文字にし、先頭に危険の色の小さな点を置いて、ホバー時は危険の色にする。 */
+    /* 修正する欄へ移動するリンク。危険の色の文字に下線を引き、先頭に危険の色の小さな点を置く。ホバーすると濃い赤にする。 */
     & > li {
       position: relative;
       &::before {
@@ -26,12 +26,10 @@
       }
     }
     & > li > a {
-      color: var(--rx-text);
-      font-weight: 500;
-      text-decoration: none;
+      color: var(--rx-danger);
       transition: color var(--rx-duration) ease;
       &:hover {
-        color: var(--rx-danger);
+        color: var(--rx-red-dark);
       }
     }
   }

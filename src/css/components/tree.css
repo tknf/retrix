@@ -7,7 +7,8 @@
   }
 
   /*
-    行はNavigationと同じ作り。高さ36px・角丸8px、ホバーすると淡い面。選んだ行は面を塗らず、太字と青い文字。
+    行は高さ30px・小さな角丸で、ホバーするとTableの行と同じ淡い黄色。選んだ行は黄色に塗り、黒い太字にする。
+    項目のリンクは本文と同じ青緑の文字と下線。
     階層はガイド線を引かず、字下げだけで示す。開閉のアイコンは24pxにし、子の行のアイコンを親の名前の書き始めの下に置く。
   */
   .rx-tree {
@@ -35,19 +36,22 @@
     min-inline-size: 0;
     min-block-size: var(--rx-control-size);
     padding-inline-end: var(--rx-space-3);
-    border-radius: var(--rx-radius-control);
+    border-radius: var(--rx-radius-mark);
     transition: background-color var(--rx-duration) ease;
     &:hover {
-      background: color-mix(in srgb, var(--rx-ink) 6%, var(--rx-surface));
+      background: color-mix(in srgb, var(--rx-mark) 40%, var(--rx-surface));
     }
     & > :is(a, .label) {
       min-inline-size: 0;
-      padding-block: var(--rx-space-2);
+      padding-block: 0.3125rem;
       color: var(--rx-text);
       overflow-wrap: anywhere;
     }
     & > a {
-      text-decoration: none;
+      color: var(--rx-link);
+    }
+    & > a:hover {
+      color: var(--rx-link-hover);
     }
     & > .spacer {
       inline-size: 1.5rem;
@@ -79,12 +83,20 @@
     display: none;
   }
 
+  /* 選んだ行は黄色、操作中（キーボードで移動中）の行は淡い青緑。文字は黒い太字にして現在地を示す。 */
   .rx-tree li[data-state="selected"] > .row,
   .rx-tree li[data-state="active"] > .row {
     font-weight: 600;
     & > :is(a, .label) {
-      color: var(--rx-link);
+      color: var(--rx-ink);
+      text-decoration-line: none;
     }
+  }
+  .rx-tree li[data-state="selected"] > .row {
+    background: var(--rx-mark);
+  }
+  .rx-tree li[data-state="active"] > .row {
+    background: var(--rx-cover);
   }
 
   .rx-tree li[data-state="disabled"] > .row {

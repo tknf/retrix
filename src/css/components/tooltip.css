@@ -12,11 +12,12 @@
     inline-size: max-content;
     max-inline-size: min(20rem, calc(100vw - 1rem));
     margin: 0;
-    padding-block: var(--rx-space-2);
-    padding-inline: var(--rx-space-3);
+    /* 白い小さなパネル。短い名前を添えるだけなので、余白を詰める。 */
+    padding-block: var(--rx-space-1);
+    padding-inline: var(--rx-space-2);
     font-size: var(--rx-small);
     line-height: var(--rx-small-leading);
-    /* 操作の中央の下に出るため、上の中央を支点に膨らむ。 */
+    /* 操作の中央の下に出るため、上の中央を支点にする。 */
     transform-origin: top center;
     /* 下のつなぎの領域を切り取らない。 */
     overflow: visible;

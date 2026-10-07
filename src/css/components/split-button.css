@@ -1,7 +1,7 @@
 @layer components {
   /*
-    主操作と▾をつなげたピル。二つは別々の共通Buttonのまま、向き合う側の角を落として一つのピルに見せ、
-    間に細い区切りを入れる。塗りの操作では区切りを白、控えめな操作では黒を薄く引く。
+    主操作と▾をつなげた一組。二つは別々の共通Buttonのまま、向き合う側の角を落とし、枠を1px重ねて間を1本の線にする。
+    塗りの操作では区切りを白く透かし、控えめな操作ではボタンと同じ濃い灰色の枠にする。
   */
   .rx-split-button {
     display: inline-flex;
@@ -11,18 +11,21 @@
       border-start-end-radius: 0;
       border-end-end-radius: 0;
     }
+    & > .rx-dropdown-menu {
+      margin-inline-start: calc(var(--rx-stroke-width) * -1);
+    }
     /* ▾の部分は細くし、四角い最小幅を持たせない。 */
     & > .rx-dropdown-menu > .rx-button {
       min-inline-size: 0;
-      padding-inline: 0.625em 0.75em;
+      padding-inline: 0.5em 0.625em;
       border-start-start-radius: 0;
       border-end-start-radius: 0;
-      border-inline-start-color: color-mix(in srgb, var(--rx-surface) 45%, transparent);
+      border-inline-start-color: color-mix(in srgb, var(--rx-surface) 40%, transparent);
     }
     &[data-variant="secondary"] > .rx-dropdown-menu > .rx-button {
-      border-inline-start-color: var(--rx-border);
+      border-inline-start-color: var(--rx-control-border);
     }
-    /* 片方にホバーしても、もう片方と重なる影が前に出ないよう、ホバーした方を手前に置く。 */
+    /* 片方にホバーしても、もう片方と重なる影と枠が前に出ないよう、ホバーした方を手前に置く。 */
     & > :is(.main, .rx-dropdown-menu) {
       position: relative;
       &:hover,

@@ -11,9 +11,10 @@
   }
 
   .rx-suggestion {
+    /* ホバーした候補は、選んでいる候補（淡い青緑）より薄い面にする。 */
     & > .options > li:hover:not([data-state="active"]) {
-      background: var(--rx-info-soft);
-      color: var(--rx-link);
+      background: color-mix(in srgb, var(--rx-cover) 55%, var(--rx-surface));
+      color: var(--rx-text);
     }
 
     & > .toggle:disabled {

@@ -1,83 +1,105 @@
 @layer components {
   /*
-    人物の見出し。大きなアバター・太字の大きな名前・淡い補足を中央に積み、
-    上の二つの角に所属のバッジと操作を置く。この人への設定は、名前の下の灰色のバーにまとめて並べる。
+    人物の見出し。Highriseの人物ページと同じく、白い枠に輪郭と浅い影を付けた写真を先頭側に置き、
+    その横に太字の黒い名前、灰色の肩書きや連絡先、所属のバッジを積む。操作は末尾側の上に置く。
+    この人への設定は、下の罫線の後ろに面を持たない操作として並べる。
   */
   .rx-profile-header {
     container: rx-profile-header / inline-size;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     grid-template-areas:
-      "badge actions"
-      "avatar avatar"
-      "name name"
-      "detail detail"
-      "preferences preferences";
-    justify-items: center;
-    row-gap: var(--rx-space-2);
+      "avatar name actions"
+      "avatar detail actions"
+      "avatar badge actions"
+      "preferences preferences preferences";
+    grid-template-rows: auto auto 1fr auto;
+    align-items: start;
+    column-gap: var(--rx-space-4);
     min-inline-size: 0;
     color: var(--rx-text);
-    text-align: center;
     overflow-wrap: anywhere;
-    & > .badge {
-      grid-area: badge;
-      justify-self: start;
-    }
-    & > .actions {
-      grid-area: actions;
-      display: flex;
-      gap: var(--rx-space-2);
-      justify-self: end;
-    }
+    /* 写真はPageHeaderのアイコンと同じく、白い枠と輪郭の四角に収める。丸くしない。 */
     & > .avatar {
       grid-area: avatar;
+      display: flex;
       & > .rx-avatar {
         inline-size: 4rem;
         block-size: 4rem;
+        border: 0.1875rem solid var(--rx-surface);
+        border-radius: var(--rx-radius-mark);
+        box-shadow: var(--rx-shadow-paper);
         font-size: 1.5rem;
       }
     }
     & > .name {
       grid-area: name;
       margin: 0;
+      color: var(--rx-ink);
       font-size: var(--rx-title);
-      font-weight: 800;
-      line-height: 1.15;
+      font-weight: 700;
+      line-height: 1.2;
     }
     & > .detail {
       grid-area: detail;
       margin: 0;
-      margin-block-start: calc(var(--rx-space-2) * -1);
+      margin-block-start: var(--rx-space-1);
       color: var(--rx-muted);
       font-size: var(--rx-label);
+      line-height: var(--rx-label-leading);
     }
-    /* 設定のバー。灰色の面のピルに、アイコンと名前の操作を面を持たない形で並べる。 */
+    & > .badge {
+      grid-area: badge;
+      justify-self: start;
+      margin-block-start: var(--rx-space-2);
+    }
+    & > .actions {
+      grid-area: actions;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: end;
+      gap: var(--rx-space-2);
+    }
+    /* 設定の並び。罫線の下に、面と枠を持たない操作を並べ、ホバーした時だけ淡い面を出す。 */
     & > .preferences {
       grid-area: preferences;
       display: flex;
       flex-wrap: wrap;
-      justify-content: center;
       gap: var(--rx-space-1);
       max-inline-size: 100%;
       margin-block-start: var(--rx-space-3);
-      padding-block: var(--rx-space-1);
-      padding-inline: var(--rx-space-2);
-      border-radius: var(--rx-radius-field);
-      background: var(--rx-background);
+      padding-block-start: var(--rx-space-2);
+      border-block-start: var(--rx-stroke-width) solid var(--rx-border);
       & > .rx-button,
       & > .rx-dropdown-menu > .rx-button {
         border-color: transparent;
         background: transparent;
         box-shadow: none;
         &:hover:not(:disabled) {
-          background: var(--rx-surface);
+          border-color: transparent;
+          background: var(--rx-gray-50);
+          box-shadow: none;
         }
       }
     }
   }
-  @container rx-profile-header (inline-size < 20rem) {
-    .rx-profile-header > .preferences {
-      padding-inline: 0;
+  /* 狭い場所では写真を小さくし、名前の大きさも小見出しまで下げる。 */
+  @container rx-profile-header (inline-size < 24rem) {
+    .rx-profile-header {
+      column-gap: var(--rx-space-3);
+      & > .avatar > .rx-avatar {
+        inline-size: 3rem;
+        block-size: 3rem;
+        font-size: 1.125rem;
+      }
+      & > .name {
+        font-size: var(--rx-section-title);
+      }
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-profile-header > .avatar > .rx-avatar {
+      border-color: CanvasText;
     }
   }
 }

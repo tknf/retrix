@@ -1,7 +1,8 @@
 @layer components {
   /*
-    書式ツールを並べた入力エリア。欄と同じ1pxの枠と内側の浅い影で沈め、ツールバーは細い線で入力エリアと分ける。
-    書式ツールは淡い黒のアイコンだけのButtonにし、ホバー時だけ淡い面を出す。ツールの間の区切りは細い縦線（狭い幅では間隔だけ）。
+    書式ツールを並べた入力エリア。Inputと同じ濃い枠（上の枠を少し濃く）と内側の浅い影で沈める。
+    ツールバーは淡い灰色の帯にして、罫線で入力エリアと分ける。書式ツールは枠と縦の淡い塗りを持つ小さなボタンにし、
+    まとまりの間は間隔だけで分ける。今の書式のツールは、オンのボタンと同じ青緑の塗りにする。
     フォーカスは他の欄と同じく、青い縁の外に淡い青の輪を広げる。
   */
   .rx-text-editor {
@@ -9,15 +10,17 @@
     display: grid;
     grid-template-rows: auto minmax(0, 1fr);
     min-inline-size: 0;
-    border: var(--rx-stroke-width) solid var(--rx-border);
-    border-radius: var(--rx-radius-field);
+    overflow: hidden;
+    border: var(--rx-stroke-width) solid var(--rx-control-border);
+    border-block-start-color: color-mix(in srgb, var(--rx-control-border) 75%, var(--rx-ink));
+    border-radius: var(--rx-radius-control);
     background: var(--rx-surface);
     box-shadow: var(--rx-shadow-input);
     transition:
       border-color var(--rx-duration) ease,
       box-shadow var(--rx-duration) ease;
     &:focus-within {
-      border-color: var(--rx-link);
+      border-color: var(--rx-blue);
       box-shadow:
         0 0 0 0.125rem var(--rx-focus-ring),
         var(--rx-shadow-input);
@@ -26,29 +29,53 @@
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: var(--rx-space-1);
+      gap: var(--rx-space-1) var(--rx-space-3);
       min-inline-size: 0;
       padding-block: var(--rx-space-1);
-      padding-inline: var(--rx-space-2);
+      padding-inline: var(--rx-space-1);
       border-block-end: var(--rx-stroke-width) solid var(--rx-border);
+      background: var(--rx-gray-20);
       & > .group {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        gap: 0.125rem;
-        & + .group {
-          padding-inline-start: var(--rx-space-1);
-          border-inline-start: var(--rx-stroke-width) solid var(--rx-border);
-        }
+        gap: var(--rx-space-1);
+        /*
+          書式ツールは文字だけの操作（link）として渡されるので、ここで普通のボタンと同じ枠・縦の塗り・影を付け直す。
+          文字の指定と高さは共通のButtonのまま変えない。
+        */
         & > .rx-button {
-          color: var(--rx-muted);
+          border-color: var(--rx-control-border);
+          border-block-end-color: color-mix(in srgb, var(--rx-control-border) 80%, var(--rx-ink));
+          background: var(--rx-surface);
+          background-image: var(--rx-fill-control);
+          color: var(--rx-text);
+          box-shadow: var(--rx-shadow-control);
           &:hover:not(:disabled) {
+            border-color: color-mix(in srgb, var(--rx-control-border) 75%, var(--rx-ink));
+            background-image:
+              linear-gradient(rgb(38 38 36 / 4%), rgb(38 38 36 / 4%)), var(--rx-fill-control);
             color: var(--rx-text);
+            box-shadow: var(--rx-shadow-control-hover);
+          }
+          &:active:not(:disabled) {
+            background-color: color-mix(in srgb, var(--rx-ink) 8%, var(--rx-surface));
+            background-image: none;
+            box-shadow: var(--rx-shadow-control-pressed);
           }
           /* 現在の書式の表示。接続したエディターが、選択範囲の書式ツールにdata-active="true"を付ける。 */
           &[data-active="true"] {
-            background: var(--rx-cover);
-            color: var(--rx-link);
+            border-color: var(--rx-teal-dark);
+            background: var(--rx-teal);
+            background-image: linear-gradient(180deg, var(--rx-teal) 0%, var(--rx-teal-dark) 100%);
+            color: var(--rx-surface);
+            box-shadow: var(--rx-shadow-control-primary);
+          }
+          &:disabled {
+            border-color: var(--rx-border);
+            background: var(--rx-hatch), var(--rx-surface);
+            color: var(--rx-muted);
+            box-shadow: none;
           }
         }
       }
@@ -57,17 +84,6 @@
         align-items: center;
         gap: var(--rx-space-2);
         margin-inline-start: auto;
-      }
-      /*
-        既定の書式ツールと操作が一行に収まらない幅（36rem未満）ではツールが折り返し、区切りの縦線が行の始まりに来てしまう。
-        行の始まりはCSSで見分けられないので、この幅では縦線を引かず、まとまりの間を広げて分ける。
-      */
-      @container (inline-size < 36rem) {
-        column-gap: var(--rx-space-3);
-        & > .group + .group {
-          padding-inline-start: 0;
-          border-inline-start: 0;
-        }
       }
     }
     & > .area {

@@ -1,9 +1,10 @@
 @layer components {
   /*
     読み込み中のインジケーターは、文字の横に置く小さなアニメーション。
-    waveは三つの点が書き始めの側から順に小さく跳ねる（既定）。点はDropdownMenuと同じ青から紫の塗りを
-    三つにまたがせて塗り、跳ねていない点は消さずに淡くするだけにして、止まった瞬間でもインジケーターが読めるようにする。
-    orbitは回る丸、haloは広がって消える輪。この領域で待つ時は、面を敷かずに大きめのインジケーターと文を中央に縦に並べる。
+    waveは三つの灰色の点が書き始めの側から順に濃くなる（既定）。点は跳ねさせず、濃さだけを変える。
+    濃くなっていない点も消さずに淡く残し、止まった瞬間でもインジケーターが読めるようにする。
+    orbitは回る丸、haloは広がって消える輪。色は灰色と青緑の控えめなものにする。
+    この領域で待つ時は、面を敷かずに少し大きめのインジケーターと文を中央に縦に並べる。
   */
   .rx-loading {
     display: flex;
@@ -38,7 +39,7 @@
       padding-inline: var(--rx-space-5);
       text-align: center;
       & > .indicator {
-        font-size: 2.5rem;
+        font-size: 1.75rem;
         margin-block-start: 0;
       }
     }
@@ -47,28 +48,26 @@
       content: "";
       position: absolute;
       inset: 0.0625em;
-      border: 0.125em solid color-mix(in srgb, var(--rx-link) 20%, transparent);
-      border-block-start-color: var(--rx-link);
+      border: 0.125em solid var(--rx-border);
+      border-block-start-color: var(--rx-muted);
       border-radius: 50%;
       animation: rx-loading-spin 0.8s linear infinite;
     }
-    /* 三つの点。青から紫の塗りを三つの点にまたがせ、順に跳ねさせる。 */
+    /* 三つの点。灰色の点を順に濃くする。 */
     &[data-variant="wave"] > .indicator {
       inline-size: auto;
       gap: 0.1875em;
       & > i {
-        inline-size: 0.375em;
-        block-size: 0.375em;
+        inline-size: 0.3125em;
+        block-size: 0.3125em;
         border-radius: 50%;
-        background: var(--rx-link) var(--rx-fill-menu) 0 0 / 300% 100%;
-        opacity: 0.45;
+        background: var(--rx-muted);
+        opacity: 0.3;
         animation: rx-loading-wave 1.2s ease-in-out infinite both;
         &:nth-child(2) {
-          background-position-x: 50%;
           animation-delay: 0.15s;
         }
         &:nth-child(3) {
-          background-position-x: 100%;
           animation-delay: 0.3s;
         }
       }
@@ -78,7 +77,7 @@
       content: "";
       position: absolute;
       inset: 0.0625em;
-      border: 0.125em solid var(--rx-link);
+      border: 0.125em solid var(--rx-muted);
       border-radius: 50%;
       animation: rx-loading-halo 1.4s ease-out infinite;
     }
@@ -92,11 +91,9 @@
     0%,
     60%,
     100% {
-      translate: 0 0;
-      opacity: 0.45;
+      opacity: 0.3;
     }
     30% {
-      translate: 0 -0.25em;
       opacity: 1;
     }
   }

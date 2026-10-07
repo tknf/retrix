@@ -6,9 +6,9 @@
 }
 @layer components {
   /*
-    やることの一覧。外側の見出しに開閉・名前と、塗りつぶしの円と「終えた数/全体」を置き、
-    その下の行を罫線で区切る。行の始まりにチェックを置き、終えたことはペンで引く線で消す。
-    最後の行は、項目を追加する欄。
+    やることの一覧。Basecamp 2のTo-doと同じく、四角いチェックと題名の行を罫線を引かずに詰めて並べる。
+    外側の見出しには開閉・名前と、塗りつぶしの円と「終えた数/全体」を置く。
+    終えたことはペンで引く線で消し、題名を灰色にする。最後の行は「項目を追加する」の青緑の欄。
   */
   .rx-task-list {
     --rx-task-progress: 0;
@@ -88,12 +88,11 @@
     &:not([open]):dir(rtl) > summary > .marker {
       rotate: 90deg;
     }
-    /* 行の一覧。枠で囲まず、行の間と一覧の終わりに罫線を引く。 */
+    /* 行の一覧。枠で囲まず、罫線も引かずに行を詰めて並べる。 */
     & > .sheet {
       min-inline-size: 0;
       margin: 0;
       padding: 0;
-      border-block-end: var(--rx-stroke-width) solid var(--rx-border);
       list-style: none;
       & > li {
         display: grid;
@@ -101,12 +100,10 @@
         align-items: center;
         gap: var(--rx-space-4);
         min-inline-size: 0;
-        border-block-start: var(--rx-stroke-width) solid var(--rx-border);
-        /* この一覧の名前は、最初の罫線の上に書く。 */
+        /* この一覧の名前は、最初の行の上に小さな太字で書く。 */
         &.heading {
           display: block;
-          padding-block: 0 var(--rx-space-3);
-          border-block-start: 0;
+          padding-block: 0 var(--rx-space-1);
           & > .title {
             margin: 0;
             font-size: var(--rx-body);
@@ -114,16 +111,19 @@
             line-height: var(--rx-label-leading);
           }
         }
-        /* 行にホバーすると、DataListと同じ淡い青の面を行の幅いっぱいに出す。行のどこを押してもチェックが変わる。 */
+        /* 行にホバーすると、DataListと同じ淡い黄色の面を行の幅いっぱいに出す。行のどこを押してもチェックが変わる。 */
         &:not(.heading, .add):has(> .rx-choice > input:enabled):hover {
-          background: color-mix(in srgb, var(--rx-link) 4%, var(--rx-surface));
+          background: color-mix(in srgb, var(--rx-mark) 50%, var(--rx-surface));
         }
-        /* 追加する欄は、チェックの列に追加のアイコンを置き、題名と同じ位置から書く。入力中はアイコンを青い丸にする。 */
+        /*
+          追加する欄は、Basecamp 2の「Add a to-do」のように青緑の文字で書き、チェックの列に追加のアイコンを置く。
+          入力中はアイコンを青緑の丸にし、行を淡い青緑の面にする。
+        */
         &.add {
           grid-template-columns: calc(var(--rx-body) * 9 / 7) minmax(0, 1fr);
           column-gap: calc(var(--rx-body) / 2);
-          padding-block: var(--rx-space-2);
-          color: var(--rx-muted);
+          padding-block: var(--rx-space-1);
+          color: var(--rx-link);
           font-size: var(--rx-body);
           & > .plus {
             display: grid;
@@ -137,10 +137,10 @@
               color var(--rx-duration) ease;
           }
           &:focus-within {
-            background: color-mix(in srgb, var(--rx-link) 6%, var(--rx-surface));
+            background: var(--rx-cover);
           }
           &:focus-within > .plus {
-            background: var(--rx-fill-menu);
+            background: var(--rx-teal);
             color: var(--rx-surface);
           }
           & > .entry {
@@ -152,10 +152,10 @@
             color: var(--rx-text);
             font: inherit;
             &::placeholder {
-              color: var(--rx-muted);
+              color: var(--rx-link);
               opacity: 1;
             }
-            /* 入力中は、欄を四角で囲まず、青い丸のアイコンと行の淡い青の面で示す。 */
+            /* 入力中は、欄を四角で囲まず、青緑の丸のアイコンと行の淡い青緑の面で示す。 */
             &:focus-visible {
               outline: 0;
             }
@@ -171,7 +171,7 @@
         }
         /* 項目の題名は一覧の題名の大きさにする。チェックの四角も文字に合わせて大きくなる。 */
         & > .rx-choice {
-          padding-block: var(--rx-space-3);
+          padding-block: calc(var(--rx-space-1) + 0.125rem);
           font-size: var(--rx-body);
           /* 完了のマークは、見出しの進み具合の円と同じ緑で塗る。 */
           & > input:checked {
@@ -185,6 +185,10 @@
             min-inline-size: 0;
             overflow-wrap: anywhere;
           }
+          /* 題名の下の補足（担当者・期日）は茶色の小さな文字。 */
+          & > span > :not(strong) {
+            color: var(--rx-meta);
+          }
           /*
             終えたことは、ペンで引く線で消す。線は書き始めの側から伸ばし、折り返した題名は一行目から順に引く。
             （背景は折り返した行をつないだ一本の帯として描かれるので、幅を伸ばすと行の順に引ける。）
@@ -197,8 +201,9 @@
                 color-mix(in srgb, var(--rx-ink) 70%, transparent)
               )
               0 55% / 0 calc(var(--rx-stroke-width) * 1.5) no-repeat;
-            /* 項目の題名は、他の一覧の題名と同じ太さにする。 */
-            font-weight: 600;
+            /* Basecamp 2のTo-doと同じく、項目の題名は通常の太さにし、行を軽く詰めて読ませる。 */
+            color: var(--rx-ink);
+            font-weight: 400;
             transition:
               background-size calc(var(--rx-duration) * 2.5) ease-out,
               color var(--rx-duration) ease;
@@ -220,7 +225,7 @@
       gap: 0;
       & > .end {
         padding-inline-start: calc(var(--rx-body) * 9 / 7 + var(--rx-body) / 2);
-        padding-block-end: var(--rx-space-3);
+        padding-block-end: var(--rx-space-2);
       }
     }
   }

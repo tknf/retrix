@@ -1,19 +1,22 @@
 @layer components {
+  /*
+    作業面（シート）。白い面・角丸・輪郭と浅い影は、AppShellの作業面と共通の定義（layout.css）が持つ。
+    ここでは中の余白だけを決める。Basecamp 2のシートと同じく、左右32px・上下24pxに詰める。
+  */
   .rx-surface {
     container: rx-surface / inline-size;
     min-inline-size: 0;
-    /* 寸法を保つため枠の幅は残し、線は見せない。 */
+    /* 寸法を保つため枠の幅は残し、線は見せない。輪郭は影が描く。 */
     border: var(--rx-stroke-width) solid transparent;
-    /* パンくずの行は区切り線を持たず、本文と同じ左右の余白に揃える。 */
-    /* パンくずの行は面の上端から左右と同じだけ離し、本文はパンくずの下から始める。 */
+    /* パンくずの行は区切り線を持たず、面の上端から本文と同じだけ離し、本文と同じ左右の位置に揃える。 */
     & > .rx-context-bar {
-      min-block-size: calc(var(--rx-control-size) + var(--rx-space-12) + var(--rx-space-2));
-      padding-block-start: var(--rx-space-12);
-      padding-inline: var(--rx-space-12);
+      min-block-size: calc(var(--rx-control-size) + var(--rx-space-6) + var(--rx-space-2));
+      padding-block-start: var(--rx-space-6);
+      padding-inline: var(--rx-space-8);
       border-block-end: 0;
       @container rx-surface (inline-size < 40rem) {
-        min-block-size: calc(var(--rx-control-size) + var(--rx-space-6) + var(--rx-space-2));
-        padding-block-start: var(--rx-space-6);
+        min-block-size: calc(var(--rx-control-size) + var(--rx-space-5) + var(--rx-space-2));
+        padding-block-start: var(--rx-space-5);
         padding-inline: var(--rx-space-4);
       }
     }
@@ -26,15 +29,15 @@
         左右は上下より広く取り、狭い面では詰める。
         上下は同じ余白にそろえ、中の段の間（16px）より面の余白をはっきり広くする。
       */
-      padding-block: var(--rx-space-8) var(--rx-space-8);
-      padding-inline: var(--rx-space-12);
+      padding-block: var(--rx-space-6) var(--rx-space-6);
+      padding-inline: var(--rx-space-8);
       overflow-wrap: anywhere;
       &:empty {
         display: none;
       }
       /* 狭い面でも、段の間（16px）より上下の余白を広くする。 */
       @container rx-surface (inline-size < 40rem) {
-        padding-block: var(--rx-space-8);
+        padding-block: var(--rx-space-5);
         padding-inline: var(--rx-space-4);
       }
     }
@@ -44,13 +47,13 @@
     }
     /* 文書の配置では、パンくずも本文と同じ行長の書き始めにそろえる。 */
     &[data-layout="document"] > .rx-context-bar {
-      padding-inline: max(var(--rx-space-12), calc((100% - 42rem) / 2));
+      padding-inline: max(var(--rx-space-8), calc((100% - 42rem) / 2));
       @container rx-surface (inline-size < 40rem) {
         padding-inline: var(--rx-space-4);
       }
     }
     &[data-layout="document"] > .body {
-      padding-inline: max(var(--rx-space-12), calc((100% - 42rem) / 2));
+      padding-inline: max(var(--rx-space-8), calc((100% - 42rem) / 2));
       @container rx-surface (inline-size < 40rem) {
         padding-inline: var(--rx-space-4);
       }

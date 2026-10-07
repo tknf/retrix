@@ -1,8 +1,8 @@
 @layer components {
   /*
-    比較は、現在と変更後をそれぞれ角丸の面に入れて並べ、間の矢印を二つの面の境をまたぐ白い丸にする。
-    現在は淡い灰の面に弱い文字、変更後は淡い青の面にして読ませる。変わらない時は両方を灰の面にし、矢印を等号にする。
-    状態は枠線のピルにする。
+    比較は、現在と変更後をそれぞれ細い枠の小さな角丸の面に入れて並べ、間の矢印を二つの面の境をまたぐ白い丸にする。
+    現在は淡い灰の面に弱い文字、変更後は37signalsの「更新した所」と同じ黄色の面にして読ませる。
+    変わらない時は両方を灰の面にし、矢印を等号にする。状態は小さなピルにする。
   */
   .rx-comparison {
     --rx-comparison-mark: 2rem;
@@ -22,13 +22,13 @@
       font-size: inherit;
       font-weight: 600;
       & > .state {
-        padding-block: calc(0.125rem - var(--rx-stroke-width));
+        padding-block: 0.125rem;
         padding-inline: var(--rx-space-2);
-        border: var(--rx-stroke-width) solid currentColor;
         border-radius: var(--rx-radius-pill);
+        background: var(--rx-gray-50);
         color: var(--rx-muted);
         font-size: var(--rx-small);
-        font-weight: 500;
+        font-weight: 400;
         line-height: var(--rx-small-leading);
       }
     }
@@ -42,8 +42,9 @@
         min-inline-size: 0;
         padding-block: var(--rx-space-3);
         padding-inline: var(--rx-space-4);
+        border: var(--rx-stroke-width) solid var(--rx-border);
         border-radius: var(--rx-radius-field);
-        background: var(--rx-background);
+        background: var(--rx-gray-20);
         & > h4 {
           margin: 0;
           color: var(--rx-muted);
@@ -92,14 +93,16 @@
         rotate: 90deg;
       }
     }
-    /* 変わる時は、状態を情報の色にし、変更後を淡い青の面で読ませる。 */
+    /* 変わる時は、状態を件数のピルと同じ淡い青にし、変更後を黄色の面で読ませる。 */
     &[data-changed="true"] {
       & > .title > .state {
-        color: var(--rx-info);
+        background: var(--rx-info-soft);
+        color: var(--rx-link);
       }
       & > .pair {
         & > .after {
-          background: color-mix(in srgb, var(--rx-link) 8%, var(--rx-surface));
+          border-color: var(--rx-note-edge);
+          background: var(--rx-mark);
           & > h4 {
             color: var(--rx-text);
           }

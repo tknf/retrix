@@ -1,33 +1,24 @@
 @layer components {
   /*
-    通知は本文のそばに置く「ここを見て」のカード。白いカードを影で浮かべ、アイコンと題名を役割の色で塗った一つのピルにまとめて、
-    カードの上の縁にまたがせる（Carouselの丸と同じく、縁をまたぐコンポーネント）。カードの上側には役割の色を
-    うっすら乗せ、本文と操作をピルの下に並べる。ピルの半分がカードの外に出るので、その分だけ上を空ける。
+    本文のそばに置く「ここを見て」の案内。Basecamp 2・Highriseの黄色の案内と同じく、黄色の紙に細い枠を付け、
+    アイコンと太字の題名を一行目に、本文と操作をその下に並べる。
+    基本（info）と注意（warning）は黄色。成功と危険は、役割の色の淡い面と枠にし、アイコンと題名を役割の色で書く。
   */
   .rx-notice {
-    --rx-notice-accent: var(--rx-info);
-    --rx-notice-fill: var(--rx-fill-menu);
-    /* ピルの一行の高さ。カードの上の縁はピルの高さの半分の所を通る。 */
-    --rx-notice-pill: 2rem;
+    --rx-notice-accent: var(--rx-ink);
+    --rx-notice-icon: var(--rx-info);
+    --rx-notice-face: var(--rx-note);
+    --rx-notice-edge: var(--rx-note-edge);
     display: grid;
     /* 列はカードの幅に収め、長い題名やURLでも中身の最小幅でカードを押し広げない。 */
     grid-template-columns: minmax(0, 1fr);
     justify-items: start;
     min-inline-size: 0;
-    margin-block-start: calc(var(--rx-notice-pill) / 2);
-    padding-block: 0 var(--rx-space-5);
-    padding-inline: var(--rx-space-5) var(--rx-space-6);
-    /* 見出しのピルは本文より書き始めの側へ寄せ、カードの角の近くからまたがせる。 */
-    --rx-notice-pill-start: var(--rx-space-3);
+    padding-block: var(--rx-space-3);
+    padding-inline: var(--rx-space-4);
+    border: var(--rx-stroke-width) solid var(--rx-notice-edge);
     border-radius: var(--rx-radius-surface);
-    background:
-      linear-gradient(
-        to bottom,
-        color-mix(in srgb, var(--rx-notice-accent) 7%, var(--rx-surface)),
-        var(--rx-surface) 4.5rem
-      ),
-      var(--rx-surface);
-    box-shadow: var(--rx-shadow-paper);
+    background: var(--rx-notice-face);
     color: var(--rx-text);
     font-size: var(--rx-label);
     line-height: var(--rx-label-leading);
@@ -35,28 +26,15 @@
     /* 日本語は文節の切れ目で折り返し、行末に一、二文字だけを残さない。 */
     word-break: auto-phrase;
     /*
-      アイコンと題名のピル。役割の色で塗り、白いアイコンと白い太字の題名を横に並べる。地の色の輪でカードの縁と切り離す。
-      アイコンの枠は題名の一行の高さにそろえて上揃えにし、題名が折り返してもアイコンは一行目の横に置く。
-      上下の余白は、一行の時のピルの高さから行の高さを引いた残りを半分ずつにする。折り返す時は、
-      一行の時の丸みのまま角丸の面として下へ伸びる。
+      アイコンと題名。アイコンの枠は題名の一行の高さにそろえて上揃えにし、題名が折り返してもアイコンは一行目の横に置く。
     */
     & > .heading {
-      display: inline-flex;
+      display: flex;
       align-items: start;
       /* アイコンと題名は一つの塊として読ませるので、Toastのアイコンと文と同じく詰める。 */
       gap: 0.375rem;
       max-inline-size: 100%;
-      margin-block-start: calc(var(--rx-notice-pill) / -2);
-      margin-inline-start: calc(var(--rx-notice-pill-start) - var(--rx-space-5));
-      padding-block: calc((var(--rx-notice-pill) - 1lh) / 2);
-      padding-inline: var(--rx-space-2) var(--rx-space-4);
-      border-radius: calc(var(--rx-notice-pill) / 2);
-      background: var(--rx-notice-fill);
-      box-shadow:
-        0 0 0 0.1875rem var(--rx-surface),
-        var(--rx-shadow-chip);
-      color: var(--rx-surface);
-      /* 題名は操作の文字と同じ大きさにし、ピルを本文より強くしすぎない。 */
+      color: var(--rx-notice-accent);
       font-size: var(--rx-label);
       line-height: var(--rx-label-leading);
       & > .symbol {
@@ -64,6 +42,7 @@
         flex: none;
         place-items: center;
         block-size: 1lh;
+        color: var(--rx-notice-icon);
         & > .rx-icon {
           font-size: 1rem;
         }
@@ -80,41 +59,41 @@
     & > .body {
       justify-self: stretch;
       min-inline-size: 0;
-      margin-block-start: var(--rx-space-3);
+      margin-block-start: var(--rx-space-1);
       & > * + * {
-        margin-block-start: var(--rx-space-3);
-      }
-      /* 本文の中の通知は、段の間に加えてピルのはみ出す分も空け、上の行にピルを重ねない。 */
-      & > * + .rx-notice {
-        margin-block-start: calc(var(--rx-notice-pill) / 2 + var(--rx-space-3));
+        margin-block-start: var(--rx-space-2);
       }
       &:empty {
         display: none;
       }
     }
-    &[data-tone="success"] {
-      --rx-notice-accent: var(--rx-success);
-      --rx-notice-fill: var(--rx-fill-success);
+    /* 題名だけの時は本文の段を持たない。題名のない時は本文を一行目から書く。 */
+    & > .body:first-child {
+      margin-block-start: 0;
     }
     &[data-tone="warning"] {
-      --rx-notice-accent: var(--rx-warning);
-      --rx-notice-fill: var(--rx-fill-warning);
+      --rx-notice-face: var(--rx-mark);
+      --rx-notice-edge: color-mix(in srgb, var(--rx-warning) 30%, var(--rx-note-edge));
+      --rx-notice-accent: var(--rx-ink);
+      --rx-notice-icon: var(--rx-warning);
+    }
+    &[data-tone="success"] {
+      --rx-notice-face: var(--rx-success-soft);
+      --rx-notice-edge: color-mix(in srgb, var(--rx-success) 28%, var(--rx-surface));
+      --rx-notice-accent: var(--rx-green-dark);
+      --rx-notice-icon: var(--rx-success);
     }
     &[data-tone="danger"] {
+      --rx-notice-face: var(--rx-danger-soft);
+      --rx-notice-edge: color-mix(in srgb, var(--rx-danger) 28%, var(--rx-surface));
       --rx-notice-accent: var(--rx-danger);
-      --rx-notice-fill: var(--rx-fill-danger);
+      --rx-notice-icon: var(--rx-danger);
     }
   }
   @media (forced-colors: active) {
     .rx-notice {
-      outline: var(--rx-frame-width) solid CanvasText;
-      outline-offset: calc(var(--rx-frame-width) * -1);
+      border-color: CanvasText;
       background: Canvas;
-    }
-    .rx-notice > .heading {
-      forced-color-adjust: none;
-      background: CanvasText;
-      color: Canvas;
     }
   }
 }

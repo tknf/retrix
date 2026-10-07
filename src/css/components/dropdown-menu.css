@@ -27,8 +27,9 @@
     }
   }
   /*
-    操作のメニューは白いパネルではなく青の面に白い文字で出す。
-    項目にホバーすると白を薄く重ね、区切りや補足も白の濃さで分ける。読み物を載せるPopoverやDialogは白いパネルのまま。
+    操作のメニューは、輪郭と影を持つ白いパネルに黒い文字で出す。
+    ホバーした項目と矢印キーで選んでいる項目は、昔のOSのメニューのように青緑（--rx-menu-active）で塗って白い文字にする。
+    補足と区切りは文字の色の濃さで分け、塗った行の上でも同じ規則で読めるようにする。
   */
   .rx-menu {
     position: fixed;
@@ -47,16 +48,15 @@
     padding-inline: var(--rx-space-1);
     border: 0;
     border-radius: var(--rx-radius-surface);
-    background: var(--rx-link);
+    background: var(--rx-surface);
     background-image: var(--rx-fill-menu);
-    color: var(--rx-surface);
+    color: var(--rx-text);
     font-family: var(--rx-control-font-family);
     font-size: var(--rx-label);
     line-height: calc(10 / 7);
     letter-spacing: 0;
     list-style: none;
     box-shadow: var(--rx-shadow-menu);
-    scrollbar-color: color-mix(in srgb, var(--rx-surface) 40%, transparent) transparent;
     /* 開閉のアニメーションはoverlay.cssの共通の定義。支点は開いた操作の側の角にする。 */
     transform-origin: top left;
     &::backdrop {
@@ -64,7 +64,7 @@
       pointer-events: none;
     }
     &:focus-visible {
-      outline: 0.125rem solid var(--rx-surface);
+      outline: 0.125rem solid var(--rx-blue);
       outline-offset: -0.125rem;
     }
     &:dir(rtl) {
@@ -121,28 +121,39 @@
     transition: background-color var(--rx-duration) ease;
     &:hover:not(:disabled, [data-disabled="true"]),
     &[data-state="active"]:not(:disabled, [data-disabled="true"]) {
-      background: color-mix(in srgb, var(--rx-surface) 16%, transparent);
+      border-color: transparent;
+      background: var(--rx-menu-active);
+      color: var(--rx-surface);
       box-shadow: none;
     }
     &:active:not(:disabled, [data-disabled="true"]) {
-      background: color-mix(in srgb, var(--rx-surface) 24%, transparent);
+      background: var(--rx-teal-dark);
+      color: var(--rx-surface);
       box-shadow: none;
     }
     &:focus-visible {
-      outline: 0.125rem solid var(--rx-surface);
+      outline: 0.125rem solid var(--rx-focus-ring);
       outline-offset: -0.125rem;
     }
-    /* 青の面の上では赤の文字が沈むため、危険の操作は淡い赤の文字とアイコンで分ける。 */
+    /* 危険の操作は赤茶の文字にし、選ぶと赤茶で塗る。 */
     &[data-tone="danger"] {
-      color: var(--rx-danger-soft);
+      color: var(--rx-danger);
+      &:hover:not(:disabled, [data-disabled="true"]),
+      &[data-state="active"]:not(:disabled, [data-disabled="true"]) {
+        background: var(--rx-danger);
+        color: var(--rx-surface);
+      }
+      &:active:not(:disabled, [data-disabled="true"]) {
+        background: var(--rx-red-dark);
+      }
     }
     &:disabled,
     &[data-disabled="true"] {
       background: transparent;
       border-color: transparent;
-      color: inherit;
+      color: var(--rx-muted);
       box-shadow: none;
-      opacity: 0.45;
+      opacity: 0.6;
       cursor: not-allowed;
     }
     &[data-checked="false"] > .content > .heading > .mark {
@@ -213,20 +224,24 @@
   .rx-menu > li > .item > .content > .heading > .mark > .mixed {
     display: none;
   }
+  /* まとまりの名前は小さな灰色の太字。 */
   .rx-menu > li > .label,
   .rx-menu > .empty {
     display: block;
-    padding-block: var(--rx-space-2);
+    padding-block: var(--rx-space-2) var(--rx-space-1);
     padding-inline: var(--rx-space-2);
-    color: color-mix(in srgb, currentColor 76%, transparent);
+    color: var(--rx-muted);
     font-size: var(--rx-small);
     font-weight: 600;
+  }
+  .rx-menu > .empty {
+    padding-block-end: var(--rx-space-2);
+    font-weight: 400;
   }
   .rx-menu > .separator {
     margin-block-start: var(--rx-space-1);
     padding-block-start: var(--rx-space-1);
-    border-block-start: var(--rx-stroke-width) solid
-      color-mix(in srgb, currentColor 24%, transparent);
+    border-block-start: var(--rx-stroke-width) solid var(--rx-border);
   }
   @media (pointer: coarse) {
     .rx-menu > li > .item.rx-button {

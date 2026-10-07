@@ -23,19 +23,18 @@
       flex: none;
       inline-size: var(--rx-treegrid-toggle-size);
     }
-    /* 題名はリンクかどうかに関わらず、濃い色のMediumの文字にそろえる。 */
+    /* 題名はリンクかどうかに関わらず、Mediumの文字にそろえる。 */
     & > :is(.label, a) {
       min-inline-size: 0;
       font-weight: 500;
       overflow-wrap: anywhere;
     }
-    /* 行の題名のリンクはTableと同じく濃い色のMediumの文字にし、ホバー時だけ青くする。 */
+    /* 行の題名のリンクはTableと同じく、青緑の文字と下線。ホバーで赤茶にする。 */
     & > a {
-      color: var(--rx-text);
-      text-decoration: none;
+      color: var(--rx-link);
     }
     & > a:hover {
-      color: var(--rx-link);
+      color: var(--rx-link-hover);
     }
   }
 
@@ -52,8 +51,9 @@
     rotate: 90deg;
   }
 
+  /* 選んだ行はTableと同じ黄色にする。 */
   .rx-treegrid > table > tbody > tr[data-selected="true"] {
-    background: var(--rx-info-soft);
+    background: var(--rx-mark);
   }
 
   .rx-treegrid > table > tbody > tr[data-disabled="true"] > th .label {

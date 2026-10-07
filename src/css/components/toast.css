@@ -1,11 +1,17 @@
 @layer components {
   /*
-    結果の通知は、画面の右下（末尾側の下）から出して浮かべる小さなパネル。通知は見落とされてはいけないので、
-    DropdownMenuと同じく白いパネルではなく、通知の種類の色（情報・成功・注意・失敗）で塗って白い文字で出す。
+    結果の通知は、画面の右下（末尾側の下）から出して浮かべる小さなパネル。37signalsの黄色の通知と同じく、
+    黄色（--rx-mark）の面に黒い文字で出し、輪郭と浮かぶパネルの影を付ける。
+    成功は黄色の面のまま、輪郭とアイコンを緑にする。注意と失敗は、面をそれぞれの役割の淡い色にし、
+    輪郭とアイコンを役割の色にして見分ける。
     文と操作は一行に並べ、入らなければ文を先に折り返して操作を末尾側へ送る。
-    角の閉じる操作が入る分だけ、末尾側を空ける。閉じる操作は塗った面に沈まないよう白地に反転する。
+    角の閉じる操作が入る分だけ、末尾側を空ける。
   */
   .rx-toast {
+    --rx-toast-fill: var(--rx-mark);
+    --rx-toast-edge: color-mix(in srgb, var(--rx-note-edge) 70%, var(--rx-gray-500));
+    --rx-toast-accent: var(--rx-ink);
+    --rx-overlay-heading-start: var(--rx-space-3);
     position: fixed;
     inset-block-start: auto;
     inset-block-end: max(var(--rx-space-4), env(safe-area-inset-bottom));
@@ -18,31 +24,37 @@
     margin: 0;
     margin-inline-start: auto;
     padding-block: var(--rx-space-3);
-    padding-inline: var(--rx-space-5)
-      calc(var(--rx-overlay-close-size) - var(--rx-overlay-close-offset) + var(--rx-space-2));
-    background: var(--rx-link);
-    background-image: var(--rx-fill-menu);
-    color: var(--rx-surface);
+    padding-inline: var(--rx-space-4)
+      calc(var(--rx-overlay-close-size) + var(--rx-overlay-close-inset) + var(--rx-space-1));
+    background: var(--rx-toast-fill);
+    color: var(--rx-text);
+    /* 輪郭は役割の色にし、影は--rx-shadow-menuと同じ落ち方にする。 */
+    box-shadow:
+      0 0 0 var(--rx-stroke-width) var(--rx-toast-edge),
+      0 0.25rem 0.875rem rgb(38 38 36 / 20%);
     /* 日本語は文節の切れ目で折り返し、行末に一、二文字だけを残さない。 */
     word-break: auto-phrase;
     /* 出入りの動きはoverlay.cssの共通の定義。下から出して置き、閉じる時は同じ向きへ下げながら消す。 */
-    --rx-motion-slide: var(--rx-duration-pop);
+    --rx-motion-slide: var(--rx-duration);
     --rx-motion-scale-in: 1;
     --rx-motion-scale-out: 1;
     &:not(:popover-open) {
-      translate: 0 1rem;
+      translate: 0 0.5rem;
     }
     &[data-tone="success"] {
-      background: var(--rx-success);
-      background-image: var(--rx-fill-success);
+      --rx-toast-edge: color-mix(in srgb, var(--rx-success) 45%, var(--rx-surface));
+      --rx-toast-accent: var(--rx-success);
     }
     &[data-tone="warning"] {
-      background: var(--rx-warning);
-      background-image: var(--rx-fill-warning);
+      /* 注意の淡い色（--rx-warning-soft）だけでは黄色の面と見分けにくいため、琥珀色を少し混ぜる。 */
+      --rx-toast-fill: color-mix(in srgb, var(--rx-warning) 12%, var(--rx-warning-soft));
+      --rx-toast-edge: color-mix(in srgb, var(--rx-warning) 55%, var(--rx-surface));
+      --rx-toast-accent: var(--rx-warning);
     }
     &[data-tone="danger"] {
-      background: var(--rx-danger);
-      background-image: var(--rx-fill-danger);
+      --rx-toast-fill: var(--rx-danger-soft);
+      --rx-toast-edge: color-mix(in srgb, var(--rx-danger) 45%, var(--rx-surface));
+      --rx-toast-accent: var(--rx-danger);
     }
     &:popover-open {
       display: flex;
@@ -54,7 +66,7 @@
   @starting-style {
     .rx-toast:popover-open {
       opacity: 0;
-      translate: 0 1.5rem;
+      translate: 0 0.75rem;
     }
   }
   /* Overlayの見出し・操作の行の余白は、パネルの余白に置き換える。 */
@@ -73,15 +85,11 @@
         font-weight: 500;
         & > .rx-icon {
           flex: none;
+          color: var(--rx-toast-accent);
           inline-size: 1.125em;
           block-size: 1.125em;
           margin-block-start: calc((1lh - 1.125em) / 2);
         }
-      }
-      & > .close > .rx-button {
-        border-color: var(--rx-surface);
-        background: var(--rx-surface);
-        color: var(--rx-text);
       }
     }
   }

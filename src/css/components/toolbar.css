@@ -1,4 +1,5 @@
 @layer components {
+  /* 操作の並び。Buttonは共通の角の小さな形のまま並べ、狭い場所では折り返す。 */
   .rx-toolbar {
     display: flex;
     align-items: start;
@@ -16,10 +17,6 @@
     & > * {
       min-inline-size: 0;
       max-inline-size: 100%;
-    }
-    & > .rx-button,
-    & > :is(.start, .end) > .rx-button {
-      border-radius: var(--rx-radius-pill);
     }
   }
 }

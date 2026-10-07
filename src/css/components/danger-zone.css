@@ -1,16 +1,22 @@
 @layer components {
   /*
-    取り返しのつかない操作は、題名と説明、危険の色で塗ったButtonでまとめる。
-    赤はButtonの一か所だけにし、題名はインクの太字にする。面を塗らず、先頭側の罫線でほかの設定と分ける。
+    取り返しのつかない操作の範囲。淡い赤の面に赤茶の枠を付けた区画にし、ほかの設定と見分ける。
+    題名は危険の色の太字、説明は灰色にし、危険の色で塗ったButtonを添える。
+    本文がなく幅もある時は、題名と説明の末尾側に操作を置き、狭い時や本文がある時は下の段へ回す。
   */
   .rx-danger-zone {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    /* 説明と操作の段の間は、上下の余白よりはっきり狭くする。 */
-    gap: var(--rx-space-3);
+    /* 題名・本文・操作を内容幅で並べ、入らない時に次の段へ折り返すためFlex。 */
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    /* 段の間は、上下の余白よりはっきり狭くする。 */
+    gap: var(--rx-space-3) var(--rx-space-6);
     min-inline-size: 0;
-    padding-block: var(--rx-space-6);
-    border-block-start: var(--rx-stroke-width) solid var(--rx-border);
+    padding-block: var(--rx-space-4);
+    padding-inline: var(--rx-space-5);
+    border: var(--rx-stroke-width) solid color-mix(in srgb, var(--rx-danger) 35%, var(--rx-surface));
+    border-radius: var(--rx-radius-field);
+    background: var(--rx-danger-soft);
     color: var(--rx-text);
     font-size: var(--rx-label);
     line-height: var(--rx-label-leading);
@@ -18,12 +24,13 @@
   }
 
   .rx-danger-zone > .heading {
+    flex: 1 1 18rem;
     display: grid;
     gap: var(--rx-space-1);
     min-inline-size: 0;
     & > h2 {
       margin: 0;
-      color: var(--rx-text);
+      color: var(--rx-danger);
       font-size: var(--rx-body);
       font-weight: 600;
       line-height: var(--rx-control-leading);
@@ -35,6 +42,7 @@
   }
 
   .rx-danger-zone > .body {
+    flex: 1 1 100%;
     display: grid;
     gap: var(--rx-space-2);
     min-inline-size: 0;
@@ -47,6 +55,7 @@
   }
 
   .rx-danger-zone > .actions {
+    flex: 0 1 auto;
     /* 操作を内容幅で並べ、コンポーネントの幅に合わせて折り返すためFlex。 */
     display: flex;
     flex-wrap: wrap;
@@ -61,9 +70,10 @@
       display: none;
     }
   }
+
   @media (forced-colors: active) {
     .rx-danger-zone {
-      border: var(--rx-stroke-width) solid CanvasText;
+      border-color: CanvasText;
       background: Canvas;
     }
   }

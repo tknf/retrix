@@ -1,6 +1,6 @@
 @layer components {
   /*
-    開始と終了の日時。二つを淡い面の一つの枠に並べ、間を矢印でつなぐ。
+    開始と終了の日時。二つを罫線で囲んだ淡い灰色の一つの枠に並べ、間を矢印でつなぐ。欄そのものはInputのまま。
     どちらも上に淡い小さな名前、その下に日付と時刻の欄を積む。終日にすると時刻の欄を隠す。
     狭い場所では開始と終了を縦に積み、矢印を下向きにする。
   */
@@ -25,10 +25,11 @@
       grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
       align-items: center;
       gap: var(--rx-space-3);
-      padding-block: var(--rx-space-4);
+      padding-block: var(--rx-space-3);
       padding-inline: var(--rx-space-4);
+      border: var(--rx-stroke-width) solid var(--rx-border);
       border-radius: var(--rx-radius-field);
-      background: var(--rx-background);
+      background: var(--rx-gray-20);
       & > .point {
         display: grid;
         gap: var(--rx-space-2);

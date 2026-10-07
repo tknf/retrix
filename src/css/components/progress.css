@@ -12,56 +12,48 @@
       gap: var(--rx-space-1) var(--rx-space-3);
       overflow-wrap: anywhere;
       & > .value {
-        color: var(--rx-text);
+        color: var(--rx-meta);
         font-size: var(--rx-small);
-        font-weight: 700;
+        font-weight: 600;
         font-variant-numeric: tabular-nums;
       }
     }
     /*
-      面に沈んだ溝に、進んだ分だけバーを引く。バーはDropdownMenuと同じく青から紫へ塗り、終わると成功の色になる。
+      淡い灰色の面に沈んだ細い溝に、進んだ分だけバーを引く。バーはオンの塗りと同じ青緑の縦の塗りにし、
+      終わると成功の緑の縦の塗りになる。溝とバーの角は小さく丸める。
     */
     & > .track {
       display: block;
       position: relative;
-      block-size: 0.625rem;
-      margin-block-start: var(--rx-space-2);
+      block-size: 0.5rem;
+      margin-block-start: var(--rx-space-1);
       overflow: hidden;
-      border-radius: var(--rx-radius-pill);
-      background: var(--rx-background);
+      border-radius: var(--rx-radius-mark);
+      background: var(--rx-gray-50);
       box-shadow: var(--rx-shadow-sunken);
       & > .fill {
         display: block;
         block-size: 100%;
         border-radius: inherit;
-        background: linear-gradient(
-          to right,
-          color-mix(in srgb, var(--rx-link) 85%, var(--rx-surface)),
-          color-mix(in srgb, var(--rx-link) 60%, var(--rx-plum))
-        );
+        background: var(--rx-teal);
+        background-image: linear-gradient(180deg, var(--rx-teal) 0%, var(--rx-teal-dark) 100%);
         transition: inline-size var(--rx-duration) ease-out;
-        &:dir(rtl) {
-          background: linear-gradient(
-            to left,
-            color-mix(in srgb, var(--rx-link) 85%, var(--rx-surface)),
-            color-mix(in srgb, var(--rx-link) 60%, var(--rx-plum))
-          );
-        }
       }
       &[data-state="complete"] > .fill {
-        background: var(--rx-fill-success);
+        background: var(--rx-green);
+        background-image: var(--rx-fill-success);
       }
       /*
-        終わりが分からない処理は、溝いっぱいのバーの中で、淡い青と紫のグラデーションが途切れずにゆっくり一方向へ流れ続ける。
+        終わりが分からない処理は、溝いっぱいのバーの中で、淡い青緑の濃淡が途切れずにゆっくり一方向へ流れ続ける。
         バーそのものは動かさず、色だけを流す（模様はバーの幅の二倍で繰り返し、一巡りでちょうど元の色に戻る）。
       */
       &[data-state="indeterminate"] > .fill {
         inline-size: 100%;
         background: linear-gradient(
             to right,
-            color-mix(in srgb, var(--rx-link) 30%, var(--rx-surface)),
-            color-mix(in srgb, var(--rx-link) 55%, var(--rx-plum)),
-            color-mix(in srgb, var(--rx-link) 30%, var(--rx-surface))
+            color-mix(in srgb, var(--rx-teal) 20%, var(--rx-surface)),
+            color-mix(in srgb, var(--rx-teal) 60%, var(--rx-surface)),
+            color-mix(in srgb, var(--rx-teal) 20%, var(--rx-surface))
           )
           0 0 / 200% 100% repeat-x;
         animation: rx-progress-flow 2.4s linear infinite;
@@ -76,7 +68,7 @@
       background-position-x: -200%;
     }
   }
-  /* 動きを減らす時は、色を流さず、青と紫のグラデーションを溝いっぱいに敷いたまま止める。 */
+  /* 動きを減らす時は、色を流さず、青緑の濃淡を溝いっぱいに敷いたまま止める。 */
   @media (prefers-reduced-motion: reduce) {
     .rx-progress > .track[data-state="indeterminate"] > .fill {
       animation: none;

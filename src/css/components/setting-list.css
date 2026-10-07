@@ -1,11 +1,10 @@
 @layer components {
   /*
-    設定の行。名前（太字）と淡い補足を先頭側に、操作を末尾側に置き、その間を淡い点線でつなぐ。
-    線の役目は「この名前にこの操作が付く」ことを目でたどらせることなので、行の間に罫線は引かない。
+    設定の行。名前（太字）と淡い補足を先頭側に、操作を末尾側に置き、行の間に罫線を引いて区切る（Basecamp 2の設定の一覧）。
+    名前と操作の間の余った幅は空けておき、線は引かない。行を罫線で区切るので、目でたどる線は要らない。
   */
   .rx-setting-list {
     display: grid;
-    gap: var(--rx-space-1);
     min-inline-size: 0;
     margin: 0;
     padding: 0;
@@ -18,10 +17,10 @@
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: var(--rx-space-2);
+      gap: var(--rx-space-2) var(--rx-space-3);
       min-inline-size: 0;
-      min-block-size: 2.5rem;
-      padding-block: var(--rx-space-1);
+      min-block-size: 2.75rem;
+      padding-block: var(--rx-space-2);
       & > .leading {
         display: grid;
         flex: none;
@@ -33,7 +32,7 @@
         min-inline-size: 0;
         overflow-wrap: anywhere;
         & > .name {
-          font-weight: 700;
+          font-weight: var(--rx-label-weight);
         }
         & > .description {
           color: var(--rx-muted);
@@ -41,11 +40,10 @@
           line-height: var(--rx-small-leading);
         }
       }
-      /* 点線は名前と操作の間の余った幅いっぱいに引く。狭くても1.5remは残して、つながりを見せる。 */
+      /* 名前と操作の間の余白。操作を末尾側へ押し出すだけで、線は描かない。 */
       & > .leader {
-        flex: 1 1 1.5rem;
-        min-inline-size: 1.5rem;
-        border-block-end: var(--rx-stroke-width) dotted var(--rx-perforation);
+        flex: 1 1 0;
+        min-inline-size: 0;
       }
       & > .control {
         display: flex;
@@ -58,10 +56,8 @@
         gap: var(--rx-space-1);
       }
     }
-  }
-  @media (forced-colors: active) {
-    .rx-setting-list > li > .leader {
-      border-block-end-color: CanvasText;
+    & > li + li {
+      border-block-start: var(--rx-stroke-width) solid var(--rx-border);
     }
   }
 }

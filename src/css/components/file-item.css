@@ -1,4 +1,8 @@
 @layer components {
+  /*
+    添付したファイルの一件。Basecamp 2のファイルと同じく、紙の形のアイコン、太字のファイル名、
+    茶色の小さなメタ情報（種類・大きさ・日付）を並べる。
+  */
   .rx-file-item {
     container: rx-file-item / inline-size;
     display: grid;
@@ -11,18 +15,21 @@
     color: var(--rx-text);
     font-size: var(--rx-label);
     line-height: var(--rx-label-leading);
-    /* ファイルのアイコンは枠で囲まず、淡く塗った背景に置く。 */
+    /* ファイルのアイコンは、机に置いた白い紙のように輪郭と浅い影を持つ縦長の四角に置く。 */
     & > .icon {
       display: grid;
       place-items: center;
       grid-column: 1;
+      justify-self: center;
+      inline-size: 2rem;
       block-size: 2.5rem;
-      border-radius: var(--rx-radius-control);
-      background: var(--rx-info-soft);
-      color: var(--rx-link);
+      border-radius: var(--rx-radius-mark);
+      background: var(--rx-surface);
+      box-shadow: var(--rx-shadow-paper);
+      color: var(--rx-teal);
     }
     /*
-      サムネイルは角丸を付けず淡い縁だけで囲み、アイコンと同じ高さの正方形に切り抜く。
+      サムネイルは角丸を付けず紙の輪郭だけで囲み、アイコンと同じ高さの正方形に切り抜く。
       送信待ちはサムネイルを薄くする。
     */
     & > .preview {
@@ -30,8 +37,8 @@
       inline-size: 2.5rem;
       block-size: 2.5rem;
       overflow: hidden;
-      border: var(--rx-stroke-width) solid color-mix(in srgb, var(--rx-ink) 15%, transparent);
-      background: var(--rx-background);
+      border: var(--rx-stroke-width) solid var(--rx-gray-200);
+      background: var(--rx-gray-20);
       & > :is(img, svg:not(.rx-icon)) {
         display: block;
         inline-size: 100%;
@@ -44,7 +51,7 @@
     }
     /* 送信待ちはアイコンを控えめな色にし、状態は説明の文言で伝える。 */
     &[data-state="pending"] > .icon {
-      background: var(--rx-background);
+      background: var(--rx-gray-20);
       color: var(--rx-muted);
     }
     &[data-state="error"] > .icon {
@@ -55,7 +62,9 @@
       grid-column: 2;
       min-inline-size: 0;
       overflow-wrap: anywhere;
+      /* ファイル名は黒い太字。リンクのファイル名はホバーした時だけ赤茶の文字と下線にする。 */
       & > .title {
+        color: var(--rx-ink);
         font-size: var(--rx-label);
         font-weight: 600;
         line-height: var(--rx-label-leading);
@@ -63,17 +72,17 @@
           font-weight: inherit;
         }
         & > a {
-          color: var(--rx-text);
-          text-decoration: none;
+          color: inherit;
+          text-decoration-line: none;
           &:hover {
-            color: var(--rx-link);
-            text-decoration: none;
+            color: var(--rx-link-hover);
+            text-decoration-line: underline;
           }
         }
       }
       & > .description {
-        margin-block-start: var(--rx-space-1);
-        color: var(--rx-muted);
+        margin-block-start: 0.125rem;
+        color: var(--rx-meta);
         font-size: var(--rx-small);
         line-height: var(--rx-small-leading);
       }

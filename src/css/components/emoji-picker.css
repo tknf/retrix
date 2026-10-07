@@ -1,7 +1,7 @@
 @layer components {
   /*
     絵文字パネル。上に検索欄（InputGroup）、下に種類の淡い見出しと絵文字のグリッドを並べる。
-    絵文字は枠も影もない平らなセルに置き、ホバーすると淡い面、押すと内側へへこむ。
+    絵文字は枠も影もない平らなセルに置き、ホバーすると淡い面、押すと内側へへこむ。種類の見出しは小さな灰色の太字。
     格子はセルの大きさを保って入る数だけ並べ、狭い場所では列を減らす。文字の指定はこのファイルが持つ（専用の操作）。
   */
   .rx-emoji-picker {
@@ -29,7 +29,7 @@
           padding-inline: var(--rx-space-1);
           color: var(--rx-muted);
           font-size: var(--rx-small);
-          font-weight: 700;
+          font-weight: 600;
           line-height: var(--rx-small-leading);
         }
         & > .grid {

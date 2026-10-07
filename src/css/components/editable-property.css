@@ -1,9 +1,9 @@
 @layer components {
   /*
-    その場で書き換えられる値。表示の時の値は下線も枠もない文字にする。
+    その場で書き換えられる値。Highriseの「Background info　Edit」のように、項目名は小さな太字、値は下線も枠もない文字にする。
     値の行は表示でも編集でも同じ箱（文字の幅のまま、高さは欄と同じ）にし、面だけを文字の外へ張り出して描く。文字の書き始めと上下の位置は動かさない。
-    表示の箱は値と鉛筆だけを包み、ホバーすると淡い面を出す。値を押しても鉛筆を押しても編集を始める。
-    編集中は同じ箱を淡い背景の面にし、フォーカスリングを出す。確定・取消は一行でも複数行でも面の下に並べる。
+    表示の箱は値と控えめな鉛筆だけを包み、ホバーすると37signalsの「押すと書き換えられる」淡い黄色の面を出す。値を押しても鉛筆を押しても編集を始める。
+    編集中は同じ箱を白い欄にし、欄と同じ濃い枠を引く。フォーカスすると青緑の縁と淡い青のリングを出す。確定・取消は一行でも複数行でも欄の下に並べる。
     確定すると、新しい値を先頭側からペンで書き、鉛筆の領域に完了のマークをしばらく出す。
   */
   .rx-editable-property {
@@ -28,8 +28,8 @@
   }
 
   .rx-editable-property > .label {
-    color: var(--rx-muted);
-    font-weight: 500;
+    color: var(--rx-text);
+    font-weight: var(--rx-label-weight);
   }
 
   .rx-editable-property > .preview[hidden],
@@ -50,7 +50,7 @@
 
   /*
     表示の箱は値と鉛筆だけを包み、鉛筆を値から離さない。面は先頭側にだけ張り出す（鉛筆の領域が末尾側の余白になる）。
-    ホバーすると淡い面を一枚だけ出し、鉛筆にフォーカスがある時は、編集中の欄と同じ青い縁と淡い青のリングを出す。
+    ホバーすると淡い黄色の面を一枚だけ出し、鉛筆にフォーカスがある時は、編集中の欄と同じ青緑の縁と淡い青のリングを出す。
   */
   .rx-editable-property > .preview {
     display: flex;
@@ -85,7 +85,7 @@
       pointer-events: none;
     }
     &:has(> .edit:enabled):hover {
-      --rx-editable-face: color-mix(in srgb, var(--rx-text) 5%, var(--rx-surface));
+      --rx-editable-face: color-mix(in srgb, var(--rx-mark) 70%, var(--rx-surface));
     }
     &:has(> .edit:focus-visible) {
       box-shadow:
@@ -127,9 +127,13 @@
     }
   }
 
-  /* 鉛筆は自分の面とリングを持たず、箱の面とリングで示す。 */
+  /* 鉛筆は自分の面とリングを持たず、箱の面とリングで示す。普段は灰色で控えめに置き、ホバーした時だけリンクの色にする。 */
   .rx-editable-property > .preview > .edit.rx-button {
     flex: none;
+    color: var(--rx-muted);
+    &:hover:not(:disabled) {
+      color: var(--rx-link-hover);
+    }
     &:is(:hover, :active) {
       background: transparent;
     }
@@ -146,14 +150,14 @@
   }
 
   /*
-    編集中の欄は、列の幅いっぱい（30remまで）に広げる。枠を持たず、文字は箱の端から書く（表示と同じ位置）。
-    面は淡い背景色で両側へ張り出し、フォーカスは他の欄と同じ青い縁と淡い青のリングを面の外周に出す。
+    編集中の欄は、列の幅いっぱい（30remまで）に広げる。文字は箱の端から書く（表示と同じ位置）。
+    面は白い欄の色で両側へ張り出し、外周に欄と同じ濃い枠を描く。フォーカスは他の欄と同じ青緑の縁と淡い青のリングにする。
   */
   .rx-editable-property > .editor > .rx-input {
     --rx-input-size: var(--rx-editable-row);
     --rx-input-border-size: 0rem;
-    --rx-editable-face: var(--rx-background);
-    --rx-editable-edge: transparent;
+    --rx-editable-face: var(--rx-surface);
+    --rx-editable-edge: var(--rx-control-border);
     --rx-editable-ring: transparent;
     inline-size: 100%;
     max-inline-size: 30rem;

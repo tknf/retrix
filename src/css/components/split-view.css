@@ -1,7 +1,7 @@
 @layer components {
   /*
-    二つの面は一枚のカードに並べ、境目には細い罫線を一本だけ引く。
-    狭い幅では上下に積み、罫線は横になる。
+    二つの面は一枚の白い紙（輪郭と浅い影のカード）に並べ、境目には細い罫線を一本だけ引く。
+    内側の余白はカードと同じ上下16px・左右20pxに詰める。狭い幅では上下に積み、罫線は横になる。
   */
   .rx-split-view {
     --splitter-value: 50;
@@ -17,8 +17,8 @@
       box-shadow: var(--rx-shadow-paper);
       & > :is(.primary, .secondary) {
         min-inline-size: 0;
-        padding-block: var(--rx-space-6);
-        padding-inline: var(--rx-space-8);
+        padding-block: var(--rx-space-4);
+        padding-inline: var(--rx-space-5);
         overflow-wrap: anywhere;
       }
       /* 縦に積んだ時の境目はハンドルを持たないので、枠線の色の半分ほどの淡さにする。 */
@@ -29,7 +29,7 @@
     }
     @container rx-split-view (inline-size < 32rem) {
       & > .panes > :is(.primary, .secondary) {
-        padding-block: var(--rx-space-5);
+        padding-block: var(--rx-space-4);
         padding-inline: var(--rx-space-4);
       }
     }
@@ -60,7 +60,7 @@
       }
     }
     /*
-      ハンドルは、境目の罫線の中ほどに置いた控えめなつまみ。
+      ハンドルは、境目の罫線の中ほどに置いた、ボタンと同じ手触りの細いつまみ。
       境目全体をつかめるように、ハンドルは面の上下いっぱいに重ねる。
     */
     & > .panes > .handle {
@@ -90,7 +90,8 @@
         inset-inline-start: calc(50% - 0.25rem);
         inline-size: 0.5rem;
         block-size: 2.5rem;
-        border-radius: var(--rx-radius-pill);
+        border: var(--rx-stroke-width) solid var(--rx-control-border);
+        border-radius: var(--rx-radius-mark);
         background: var(--rx-surface) var(--rx-fill-control);
         box-shadow: var(--rx-shadow-control);
         transition: box-shadow var(--rx-duration) ease;
