@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { html } from "hono/html";
 import { getCookie } from "hono/cookie";
-import { stylesheets } from "../src/hono/index";
+import { stylesheets, tableWidthsCookieName } from "../src/hono/index";
 import { getHonoExample } from "./hono-examples";
 import { formatExample } from "./code-format";
 import { componentDocs } from "./reference";
@@ -17,6 +17,12 @@ import { SalesScreen } from "./apps/sales";
 import { SearchScreen } from "./apps/search";
 import { PeopleScreen } from "./apps/people";
 import { SettingsScreen } from "./apps/settings";
+import {
+  CustomersScreen,
+  CustomerScreen,
+  CustomerEditScreen,
+  customerCodes,
+} from "./apps/customers";
 
 const inboxMessages = ["categories", "meeting", "review"] as const;
 
@@ -27,6 +33,10 @@ export const paths = [
   "/components/page-header/preview",
   ...screens.map((screen) => appPath(screen.id)),
   ...inboxMessages.map((id) => `${appPath("inbox")}/${id}`),
+  ...customerCodes.flatMap((code) => [
+    `${appPath("customers")}/${code}`,
+    `${appPath("customers")}/${code}/edit`,
+  ]),
 ];
 
 export const app = new Hono();
@@ -92,6 +102,33 @@ app.get("/components/:id", async (c) => {
 
 // 利用例のアプリのトップページ。静的な書き出しには含めず、開発サーバーでだけプロジェクトの画面へ移動させる。
 app.get("/apps", (c) => c.redirect(appPath("project")));
+app.get(appPath("customers"), (c) =>
+  c.html(
+    html`<!doctype html>${(
+        <Document title="取引先">
+          <CustomersScreen savedColumnWidths={getCookie(c, tableWidthsCookieName("customers"))} />
+        </Document>
+      )}`,
+  ),
+);
+app.get(`${appPath("customers")}/:code`, (c) =>
+  c.html(
+    html`<!doctype html>${(
+        <Document title="取引先の詳細">
+          <CustomerScreen code={c.req.param("code")} />
+        </Document>
+      )}`,
+  ),
+);
+app.get(`${appPath("customers")}/:code/edit`, (c) =>
+  c.html(
+    html`<!doctype html>${(
+        <Document title="取引先を編集">
+          <CustomerEditScreen code={c.req.param("code")} />
+        </Document>
+      )}`,
+  ),
+);
 app.get(appPath("project"), (c) =>
   c.html(
     html`<!doctype html>${(

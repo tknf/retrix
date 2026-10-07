@@ -3,6 +3,7 @@ import { AppShell, Avatar, CommandMenu, type AppShellProps, type IconName } from
 
 /** 利用例のアプリ「つむぐ」の画面。小さな制作チームが、ヘルプセンターを作り直す仕事を進めている。 */
 export type AppScreen =
+  | "customers"
   | "project"
   | "inbox"
   | "schedule"
@@ -23,6 +24,14 @@ type ScreenEntry = {
 };
 
 export const screens: readonly ScreenEntry[] = [
+  {
+    id: "customers",
+    label: "取引先",
+    icon: "user",
+    accent: "green",
+    description: "取引先のマスタを一覧・編集する",
+    keywords: ["マスタ", "顧客", "表"],
+  },
   {
     id: "project",
     label: "プロジェクト",
@@ -97,14 +106,21 @@ export const screens: readonly ScreenEntry[] = [
 
 export const appPath = (screen: AppScreen) => `/apps/${screen}`;
 
-/** アプリの画面の枠。ヘッダーの移動先で画面を切り替え、中央のシートに画面を置く。sizeは作業面の幅。 */
+/**
+ * アプリの画面の枠。ヘッダーの移動先で画面を切り替え、中央のシートに画面を置く。
+ * sizeは作業面の幅、trailは背後に重ねる上の階層、asideはシートの先頭側の列。
+ */
 export const AppFrame = ({
   current,
   size,
+  trail,
+  aside,
   children,
-}: PropsWithChildren<{ current: AppScreen; size?: AppShellProps["size"] }>) => (
+}: PropsWithChildren<{ current: AppScreen } & Pick<AppShellProps, "size" | "trail" | "aside">>) => (
   <AppShell
     size={size}
+    trail={trail}
+    aside={aside}
     home={<a href={appPath("project")}>つむぐ</a>}
     navigation={screens.map((screen) => ({
       label: screen.label,
