@@ -3,8 +3,12 @@
     その場で書き換えられる値。Highriseの右の列の「Background info　Edit」（structure.md）のように、項目名は小さな太字、値は下線も枠もない文字にする。
     値の行は表示でも編集でも同じ箱（文字の幅のまま、高さは欄と同じ）にし、面だけを文字の外へ張り出して描く。文字の書き始めと上下の位置は動かさない。
     表示の箱は値と控えめな鉛筆だけを包み、ホバーすると37signalsの黄色のハイライト（#ffffcc）を出す（ホバーで出すのは推測）。値を押しても鉛筆を押しても編集を始める。
-    編集中は同じ箱を一行の入力欄と同じ見た目（controls.md 6a章: 1px #dedede、角丸2px、内側の影なし）にする。
-    フォーカスは他の欄と同じ青い縁と外側の淡い青の輪。確定・取消は一行でも複数行でも欄の下に並べる。
+    編集中はBC2のTo-doの題名のその場での編集と同じく、枠と面を持たず、文字の下に1pxの点線だけを引く。
+    実測: basecamp2-thirdparty/bc2-todolist-inline-edit-youtube-2014.jpg (130, 395, 610, 60)。文字は表示の時と同じ位置のまま、
+    下に灰色の点線が欄の幅だけ伸び、その下に「Save changes or Cancel」を置く。点線の色と間隔は controls.md 6b章
+    （bc2-tour-2014-01-name-project.jpg、2倍: 1px dotted #cccccc。2画素描いて2画素空ける）。
+    フォーカスした欄は、点線を他の欄のフォーカスと同じ青（#7cb0e2）の2pxの実線にする（手本はキャレットだけ。推測）。
+    確定・取消は一行でも複数行でも欄の下に並べる。
     確定すると、鉛筆の領域に完了のマークを出す（アニメーションは使わない）。
   */
   .rx-editable-property {
@@ -16,7 +20,6 @@
     /* 面を文字の外へ張り出す幅は、鉛筆の領域の中でアイコンが端から空く幅と同じにし、面の端・値・鉛筆の間をそろえる。 */
     --rx-editable-inset: calc((var(--rx-editable-row) - 1em) / 2);
     --rx-editable-start: calc(-1 * var(--rx-editable-inset));
-    --rx-editable-end: var(--rx-editable-inset);
     display: grid;
     /* 並べた隣の欄が高くても、名前と値の行を伸ばさない。 */
     align-content: start;
@@ -26,7 +29,6 @@
     line-height: var(--rx-label-leading);
     &:dir(rtl) {
       --rx-editable-start: var(--rx-editable-inset);
-      --rx-editable-end: calc(-1 * var(--rx-editable-inset));
     }
   }
 
@@ -41,21 +43,14 @@
   }
 
   /*
-    値の箱は文字の幅のまま置き、書き始めを名前にそろえる。面は箱をずらした影で文字の外へ張り出して描く
-    （影は横の大きさに数えないので、狭い場所やスクロールする場所でも横にはみ出さない）。
+    表示の箱は値と鉛筆だけを包み、文字の幅のまま置いて書き始めを名前にそろえ、鉛筆を値から離さない。
+    面は箱をずらした影で先頭側にだけ文字の外へ張り出して描く（影は横の大きさに数えないので、狭い場所でも横にはみ出さない。
+    鉛筆の領域が末尾側の余白になる）。ホバーすると黄色の面を一枚だけ出し、鉛筆にフォーカスがある時は、他の欄のフォーカスと同じ青い縁と淡い青の輪を出す。
   */
-  .rx-editable-property > .preview,
-  .rx-editable-property > .editor > .rx-input {
+  .rx-editable-property > .preview {
     --rx-editable-face: transparent;
     border-radius: var(--rx-radius-mark);
     background: var(--rx-editable-face);
-  }
-
-  /*
-    表示の箱は値と鉛筆だけを包み、鉛筆を値から離さない。面は先頭側にだけ張り出す（鉛筆の領域が末尾側の余白になる）。
-    ホバーすると黄色の面を一枚だけ出し、鉛筆にフォーカスがある時は、編集中の欄と同じ青い縁と淡い青の輪を出す。
-  */
-  .rx-editable-property > .preview {
     display: flex;
     align-items: start;
     inline-size: fit-content;
@@ -134,41 +129,34 @@
 
   /*
     編集中の欄は、列の幅いっぱい（30remまで）に広げる。文字は箱の端から書く（表示と同じ位置）。
-    面は白い欄の色で両側へ張り出し、外周に一行の入力欄と同じ1px #dedede の枠を描く。フォーカスは他の欄と同じ青い縁と淡い青の輪にする。
+    枠・面・角丸を持たず、下端に1px #ccc の点線（1px描いて1px空ける）を引く。点線は背景の繰り返しで描き、欄の高さを変えない。
   */
   .rx-editable-property > .editor > .rx-input {
     --rx-input-size: var(--rx-editable-row);
     --rx-input-border-size: 0rem;
-    --rx-editable-face: var(--rx-surface);
-    --rx-editable-edge: var(--rx-input-border);
-    --rx-editable-ring: transparent;
+    --rx-editable-dots: #cccccc;
+    --rx-editable-underline: linear-gradient(to right, var(--rx-editable-dots) 50%, transparent 50%)
+      left bottom / calc(2 * var(--rx-stroke-width)) var(--rx-stroke-width) repeat-x;
     inline-size: 100%;
     /* 一行の入力欄の文字（12px）ではなく表示の値と同じ大きさで書き、編集を始めても文字の大きさと位置を変えない。 */
     font-size: var(--rx-label);
     max-inline-size: 30rem;
     padding-inline: 0;
-    box-shadow:
-      var(--rx-editable-start) 0 0 0 var(--rx-editable-face),
-      var(--rx-editable-end) 0 0 0 var(--rx-editable-face),
-      var(--rx-editable-start) 0 0 var(--rx-stroke-width) var(--rx-editable-edge),
-      var(--rx-editable-end) 0 0 var(--rx-stroke-width) var(--rx-editable-edge),
-      var(--rx-editable-start) 0 0 calc(var(--rx-stroke-width) + 0.1875rem) var(--rx-editable-ring),
-      var(--rx-editable-end) 0 0 calc(var(--rx-stroke-width) + 0.1875rem) var(--rx-editable-ring);
+    border-radius: 0;
+    background: var(--rx-editable-underline);
+    box-shadow: none;
     &:focus-visible {
-      --rx-editable-edge: var(--rx-focus-border);
-      --rx-editable-ring: var(--rx-editable-glow);
-      box-shadow:
-        var(--rx-editable-start) 0 0 0 var(--rx-editable-face),
-        var(--rx-editable-end) 0 0 0 var(--rx-editable-face),
-        var(--rx-editable-start) 0 0 var(--rx-stroke-width) var(--rx-editable-edge),
-        var(--rx-editable-end) 0 0 var(--rx-stroke-width) var(--rx-editable-edge),
-        var(--rx-editable-start) 0 0 calc(var(--rx-stroke-width) + 0.1875rem)
-          var(--rx-editable-ring),
-        var(--rx-editable-end) 0 0 calc(var(--rx-stroke-width) + 0.1875rem) var(--rx-editable-ring);
+      background: linear-gradient(var(--rx-focus-border), var(--rx-focus-border)) left bottom / 100%
+        0.125rem no-repeat;
+      box-shadow: none;
     }
     &[data-invalid="true"],
     &:user-invalid {
-      --rx-editable-edge: var(--rx-danger);
+      --rx-editable-dots: var(--rx-danger);
+      &:focus-visible {
+        background: linear-gradient(var(--rx-danger), var(--rx-danger)) left bottom / 100% 0.125rem
+          no-repeat;
+      }
     }
   }
 
@@ -221,7 +209,7 @@
     opacity: 0;
   }
   @media (forced-colors: active) {
-    /* 影の面とリングは消えるので、欄と鉛筆のフォーカスは張り出す幅の輪郭で示す。 */
+    /* 背景の点線は消えるので、欄と鉛筆のフォーカスは張り出す幅の輪郭で示す。 */
     .rx-editable-property > .editor > .rx-input {
       outline: var(--rx-stroke-width) solid CanvasText;
       outline-offset: var(--rx-editable-inset);

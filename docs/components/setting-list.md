@@ -11,9 +11,9 @@
 
 ## 使い方
 
-`items` に `label` と `control` を渡します。名前（太字）と灰色の小さな `description` を先頭側に、`control` の操作（`Switch`・チェックマーク・`Button` など）を末尾側に置きます。名前と操作の間は空けておき、線は引きません。`leading` にアバターやアイコンを渡すと名前の前に置きます。
+`items` に `label` と `control` を渡します。名前（本文と同じ13pxの太字）と灰色の12pxの `description` を先頭側に、`control` の操作（`Switch`・チェックマーク・`Button` など）を末尾側に置きます。名前と操作の間は空けておき、線は引きません。`leading` にアバターやアイコンを渡すと名前の前に置きます。
 
-行の間には罫線を引いて区切ります。名前と操作が一行に入らない時は、操作を次の行の末尾側へ回します。
+BC2の権限の表に合わせ、行の高さは40pxを最小にし、行の間には淡い灰色（#e5e5e5）の1pxの罫線を引いて区切ります。名前と操作が一行に入らない時は、操作を次の行の末尾側へ回します。
 
 SettingListは並べ方だけを持ち、設定の値・送信・保存は `control` に渡したコンポーネントと利用側が持ちます。controllerを持たないので、JavaScriptなしでも渡した操作の振る舞いのまま表示されます。
 
@@ -93,7 +93,7 @@ export default () => (
               label: "秋の読書会",
               control: (
                 <Button
-                  variant="primary"
+                  data-current="true"
                   data-icon-only="true"
                   aria-label="通知を止める"
                 >
@@ -243,11 +243,12 @@ export default () => (
             ><span class="leader" aria-hidden="true"></span
             ><span class="control"
               ><button
+                data-current="true"
                 data-icon-only="true"
                 aria-label="通知を止める"
                 class="rx-button"
                 type="button"
-                data-variant="primary"
+                data-variant="secondary"
                 data-size="default"
               >
                 <svg

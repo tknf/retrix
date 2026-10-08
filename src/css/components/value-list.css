@@ -1,34 +1,30 @@
 @layer components {
   /*
-    一つの対象の属性。実測: structure.md「Highrise 2011 の構成」の右の列と、lists.md「Highrise Latest activity（2011）」の「Regarding:」。
-    - 項目名と値を一行ずつ並べ、各行の下に1pxの罫線（手本 #efefef、Retrixの罫線 #ececec）を行の幅いっぱいに引いて区切る。
-    - 項目名は灰色（手本 #888 前後。白地で4.5:1に届かないので --rx-muted の #666）の小さな太字、値は黒。
-    手本の11px・行の高さ14pxは、Retrixの文字の段に合わせて13px（値）と12px（項目名）にする。
+    一つの対象の属性。Highriseの案件の右の列の「Additional info」（項目名の下に値を置く一覧）を手本にする。
+    実測: highrise/highrise-deal-page-custom-fields-2015.png (1540, 940, 370, 270)。2倍。
+    - 項目名「Account Number」: #777777、通常の太さ。大文字の高さから12px前後。値「123456788」は#000000、14px前後。
+    - 項目名のベースラインから値の大文字の上まで7.5px。値のベースラインから次の項目名の大文字の上まで21px。
+    - 項目の間に罫線は引かない（罫線は列の見出しの下だけ）。
+    補助: highrise-person-page-new-layout-2011.png の「Personal Info」（縮小）も、灰色の項目名の下に黒い値を置き、罫線なしで並べる。
+    Retrixの文字の段に当てはめ、項目名は11px（--rx-small）、値は本文の13px（--rx-body）にする。
+    項目名の灰色は白地で4.5:1に届かないので、実測 #777777 → #666666（--rx-muted）。
+    項目の間は、値の行の下から次の項目名の行の上まで12px（手本の21pxから文字の上下の空きを引いて4pxの段に丸めた値）。
+    幅が22rem以上では、項目名と値を横に並べる（手本に無い。推測）。並べた時も罫線は引かず、項目名を値の一行目のベースラインにそろえる。
     項目名の前には、小さなアイコンを面を付けずに添えられる（推測）。
   */
   .rx-value-list {
     container: rx-value-list / inline-size;
     min-inline-size: 0;
     color: var(--rx-text);
-    font-size: var(--rx-label);
-    line-height: var(--rx-label-leading);
+    font-size: var(--rx-body);
+    line-height: var(--rx-leading);
     & > div {
       display: grid;
       grid-template-columns: minmax(0, 1fr);
-      gap: var(--rx-space-1);
-      padding-block: var(--rx-space-2);
-      border-block-end: var(--rx-stroke-width) solid var(--rx-border);
       --rx-value-list-accent: var(--rx-muted);
-      /*
-        外側の余白は置く側（カード・パネル・列）が持つ。一覧の上端と下端には余白を足さず、
-        最後の行の罫線も置く側の縁と重なるので引かない。
-      */
-      &:first-child {
-        padding-block-start: 0;
-      }
-      &:last-child {
-        padding-block-end: 0;
-        border-block-end-color: transparent;
+      /* 外側の余白は置く側（カード・パネル・列）が持つ。一覧の上端と下端には余白を足さない。 */
+      & + div {
+        margin-block-start: var(--rx-space-3);
       }
       &[data-accent="green"] {
         --rx-value-list-accent: var(--rx-success);
@@ -45,9 +41,8 @@
         gap: var(--rx-space-2);
         color: var(--rx-muted);
         font-size: var(--rx-small);
-        font-weight: var(--rx-label-weight);
-        /* 小さな字の項目名を、値の一行目と同じ高さの行に置く。 */
-        line-height: calc(var(--rx-label) * var(--rx-label-leading));
+        font-weight: 400;
+        line-height: var(--rx-small-leading);
         /* アイコンは丸い面に入れず、項目名の前に小さく添える。色は利用側が指定した分類の色。 */
         & > .icon {
           display: grid;
@@ -81,7 +76,7 @@
       & > div {
         grid-template-columns: minmax(6rem, 0.4fr) minmax(0, 1fr);
         column-gap: var(--rx-space-4);
-        align-items: start;
+        align-items: baseline;
       }
     }
   }

@@ -1,10 +1,15 @@
 @layer components {
   /*
-    検索の結果。BC2の検索の結果の画面は測れていないので、同じ作りのBC2の議論の一覧（lists.md）を手本にする。
-    - 行の幅いっぱいの1px #ececec の罫線で区切り、行の上下の余白は約9px、行の高さ18px。
-    - 題名は14〜15pxの太字の青緑に1pxの下線（ホバーすると赤茶）。抜粋は同じ大きさの #666 で二行まで。補足は茶色の小さな文字。
-    - 先頭側のアバターは30pxの円で、本文の列まで10px。
-    一致した語は、文中の強調（mark）と同じ黄色（#ffffcc）の面で示す。
+    検索の結果。BC2の検索の結果の画面（「Searching for typeface」）を手本にする。
+    実測: basecamp2-official/bc2-help-searching-in-04.png (30, 113, 890, 230)。1倍。
+    - 行の幅いっぱいの1px #e5e5e5 の罫線（y=113・217・342）で区切る。罫線から最初の行の上まで、最後の行の下から次の罫線まで約20px。
+    - 一行目は題名（#1c5c76 の太字に1pxの下線）、二行目は「投稿者 – 抜粋」（#000000）、三行目は補足「Project: BCX: Help」（#808080）。
+      どの行も14px前後で、行の間隔は21px（y=138・159・180）。
+    - 先頭側のアバターは56pxの円（x 246〜301）で、罫線から21px下。アバターの右から題名まで11px。
+    - 一致した語は #ffffcc の面（「typeface」の後ろの塗り）。
+    Retrixの文字の段に当てはめ、文字は13px（--rx-body）・行の高さ20px、行の上下の余白は16px、アバターは48px（Avatarのlarge）、
+    アバターと本文の間は12pxにする。補足の灰色は白地で4.5:1に届かないので、実測 #808080 → #666666（--rx-muted）。
+    手本の左の日付の列は持たない（補足の行に日付を入れる）。
   */
   .rx-search-results {
     display: grid;
@@ -14,24 +19,26 @@
     padding: 0;
     list-style: none;
     color: var(--rx-text);
+    --rx-search-results-rule: #e5e5e5;
+    --rx-search-results-avatar: 3rem;
     font-size: var(--rx-body);
-    line-height: calc(18 / 15);
+    line-height: calc(20 / 13);
     overflow-wrap: anywhere;
     & > li {
       display: grid;
       grid-template-columns: minmax(0, 1fr);
-      gap: 0.125rem;
+      gap: 0;
       min-inline-size: 0;
-      padding-block: 0.5625rem;
+      padding-block: var(--rx-space-4);
       & + li {
-        border-block-start: var(--rx-stroke-width) solid var(--rx-border);
+        border-block-start: var(--rx-stroke-width) solid var(--rx-search-results-rule);
       }
       &:first-child {
         padding-block-start: 0;
       }
       &[data-leading="true"] {
-        grid-template-columns: 1.875rem minmax(0, 1fr);
-        column-gap: 0.625rem;
+        grid-template-columns: var(--rx-search-results-avatar) minmax(0, 1fr);
+        column-gap: var(--rx-space-3);
         & > :not(.leading) {
           grid-column: 2;
         }
@@ -45,9 +52,9 @@
         color: var(--rx-muted);
         font-size: 1.25rem;
         & > .rx-avatar {
-          inline-size: 1.875rem;
-          block-size: 1.875rem;
-          font-size: var(--rx-small);
+          inline-size: var(--rx-search-results-avatar);
+          block-size: var(--rx-search-results-avatar);
+          font-size: calc(var(--rx-search-results-avatar) / 3);
         }
       }
       & > .title {
@@ -67,19 +74,19 @@
           border-radius: var(--rx-radius-mark);
         }
       }
+      /* 抜粋は手本と同じ黒にし、二行で切る。 */
       & > .excerpt {
         display: -webkit-box;
         margin: 0;
         overflow: hidden;
-        color: var(--rx-muted);
+        color: var(--rx-text);
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
       }
+      /* 補足は抜粋と同じ大きさの灰色の一行。 */
       & > .meta {
         margin: 0;
-        color: var(--rx-meta);
-        font-size: var(--rx-small);
-        line-height: var(--rx-small-leading);
+        color: var(--rx-muted);
       }
     }
   }

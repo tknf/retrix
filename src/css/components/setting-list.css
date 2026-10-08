@@ -1,7 +1,12 @@
 @layer components {
   /*
     設定の行。名前（太字）と灰色の補足を先頭側に、操作を末尾側に置き、行の間に罫線を引いて区切る。
-    設定の画面そのものは手本に無い（推測）。罫線はBC2の一覧の行の下の線（実測: lists.md「BC2 議論の一覧」1px #ececec）にする。
+    手本はBC2の「People with access to this project」の権限の表（人ごとに末尾側のチェックボックスで権限を切り替える）。
+    実測: basecamp2-official/bc2-help-granting-and-revoking-project-access-06.png (15, 103, 370, 96)。1倍。
+    - 行の間の罫線は1px #e5e5e5（y=103・158・198）。行の間隔は40px（158 → 198）。
+    - 名前「will@37signals.com」は黒の太字で14px前後（大文字の上から下端まで12px）。罫線から大文字の上まで15px、下端から次の罫線まで13px。
+    Retrixの文字の段に当てはめ、名前は本文の13px（--rx-body）の太字、補足は12px（--rx-label）の#666にする。
+    行の高さは手本と同じ40pxを最小にし、上下の余白は8pxにそろえる。最初の行の上と最後の行の下には罫線を引かない。
     名前と操作の間の余った幅は空けておき、線は引かない。行を罫線で区切るので、目でたどる線は要らない。
   */
   .rx-setting-list {
@@ -10,9 +15,10 @@
     margin: 0;
     padding: 0;
     list-style: none;
+    --rx-setting-list-rule: #e5e5e5;
     color: var(--rx-text);
-    font-size: var(--rx-label);
-    line-height: var(--rx-label-leading);
+    font-size: var(--rx-body);
+    line-height: var(--rx-leading);
     /* 狭い場所では、操作を次の行の末尾側へ回す。 */
     & > li {
       display: flex;
@@ -20,7 +26,7 @@
       align-items: center;
       gap: var(--rx-space-2) var(--rx-space-3);
       min-inline-size: 0;
-      min-block-size: 2.75rem;
+      min-block-size: 2.5rem;
       padding-block: var(--rx-space-2);
       & > .leading {
         display: grid;
@@ -37,8 +43,8 @@
         }
         & > .description {
           color: var(--rx-muted);
-          font-size: var(--rx-small);
-          line-height: var(--rx-small-leading);
+          font-size: var(--rx-label);
+          line-height: var(--rx-label-leading);
         }
       }
       /* 名前と操作の間の余白。操作を末尾側へ押し出すだけで、線は描かない。 */
@@ -58,7 +64,7 @@
       }
     }
     & > li + li {
-      border-block-start: var(--rx-stroke-width) solid var(--rx-border);
+      border-block-start: var(--rx-stroke-width) solid var(--rx-setting-list-rule);
     }
   }
 }

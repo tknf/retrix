@@ -1,15 +1,19 @@
 @layer components {
   /*
-    見出しの帯を持つ白い紙。カード全体は枠の無い、四方へのぼかし影の白い紙（--rx-shadow-paper。structure.md「BC2 のプロジェクトのカード」）。
-    見出しの帯は overlays.md「1b. カレンダーの予定のパネル」の帯と同じ、平らな #f7f7f7 に下の1px #dedede。
+    見出しの帯を持つ白いカード。カード全体は枠の無い、四方へのぼかし影の白いカード（--rx-shadow-paper。structure.md「BC2 のプロジェクトのカード」）。
+    見出しの帯は、BC2のカレンダーの予定のパネルの帯と同じ、平らな #f7f7f7 に下の1px #dedede。
+    実測: basecamp2-official/bc2-help-add-and-edit-events-03.png (6, 7, 322, 85)。1倍。x=100 の縦の列で、帯 #f7f7f7（y 8〜90）、
+    下の線 #dedede（y 91）、その下は #ffffff。帯の題名の書き始めはパネルの縁から20px。
+    題名は、カードの中の見出しの決まり（docs/principles.md「文字」）どおり本文と同じ13pxの黒い太字にする。
+    余白はCardと同じ16pxで上下左右をそろえ、帯の題名と中身の書き始めを同じ位置にする（手本の20pxはパネルの値なので使わない）。
     中身は帯の下の白い面にそのまま書き、内側にもう一枚カードを重ねない。
   */
   .rx-layer-card {
     --rx-layer-card-band: #f7f7f7;
     /* 見出しの帯の上下の余白。 */
     --rx-layer-card-gap: var(--rx-space-1);
-    /* カードの内側はCardと同じ左右の余白にする。同じ種類のカードで余白を変えない。 */
-    --rx-layer-card-inline: var(--rx-space-5);
+    /* カードの内側はCardと同じ16pxにし、本文の上下の余白ともそろえる。同じ種類のカードで余白を変えない。 */
+    --rx-layer-card-inline: var(--rx-space-4);
     /* 見出しの一行の高さ。操作のボタンと同じ高さにし、題名の中央をボタンの中央にそろえる。 */
     --rx-layer-card-row: var(--rx-control-size);
     container: rx-layer-card / inline-size;
@@ -48,22 +52,18 @@
         gap: var(--rx-space-2);
         margin-inline-start: auto;
       }
-      /* 狭いカードでは中身の左右と題名の書き始めを一緒に詰める。 */
-      @container rx-layer-card (inline-size < 24rem) {
-        --rx-layer-card-inline: var(--rx-space-4);
-      }
     }
     /*
-      題名は黒い小さな太字。上下の余白は題名が持ち、一行で操作の高さにそろい、折り返しても帯の上下の端から離れる。
+      題名は本文と同じ13pxの黒い太字。上下の余白は題名が持ち、一行で操作の高さにそろい、折り返しても帯の上下の端から離れる。
     */
     & > .heading > .title {
       flex: 1 1 8rem;
       min-inline-size: 0;
-      padding-block: calc((var(--rx-layer-card-row) - 1em * var(--rx-label-leading)) / 2);
+      padding-block: calc((var(--rx-layer-card-row) - 1em * var(--rx-leading)) / 2);
       color: var(--rx-ink);
-      font-size: var(--rx-label);
-      font-weight: 600;
-      line-height: var(--rx-label-leading);
+      font-size: var(--rx-body);
+      font-weight: 700;
+      line-height: var(--rx-leading);
       word-break: auto-phrase;
     }
     & > .body {
@@ -91,9 +91,6 @@
       }
       &:has(> .rx-action-list:not([data-layout="grid"]):last-child) {
         padding-block-end: calc(var(--rx-space-4) - 0.3125rem);
-      }
-      @container rx-layer-card (inline-size < 24rem) {
-        --rx-layer-card-inline: var(--rx-space-4);
       }
     }
   }

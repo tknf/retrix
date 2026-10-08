@@ -21,10 +21,10 @@
       flex: none;
       inline-size: var(--rx-treegrid-toggle-size);
     }
-    /* 題名はリンクかどうかに関わらず、Mediumの文字にそろえる。 */
+    /* 題名はリンクかどうかに関わらず、Tableの行の文字と同じ通常の太さにそろえる。 */
     & > :is(.label, a) {
       min-inline-size: 0;
-      font-weight: 500;
+      font-weight: 400;
       overflow-wrap: anywhere;
     }
     /* 行の題名のリンクはTableと同じく、青緑の文字と下線。ホバーで赤茶にする。 */
