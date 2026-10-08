@@ -4,7 +4,8 @@
     1px #dddddd の枠、角丸 約1.5px、#666666 の文字にする。行の地が透けるよう、面は塗らない。
     （2011年の丸いピルは下の縁だけ濃い線で、角丸と片側の線を組み合わせることになるので使わない。）
     一行の高さは20px（文字16px＋上下の余白と枠線2pxずつ。実測の16.5〜20pxの範囲）。
-    色を指定したタグは、その色を淡く混ぜた枠と、その色の文字にする（推測）。
+    色を指定したタグは、HighriseのDealsの色付きのタグ（「Hotels」#c50000）と同じく、その色の平らな塗りに白い文字にする。
+    色はBadgeと同じ手本の塗り（白い文字と4.5:1に届くよう明るさを下げた値）を使う。
     強調するタグ（data-current="true"）はHighriseの絞り込み中のタグと同じ灰色の塗りに白い文字
     （実測 #848484 は白い文字と4.5:1に届かないので、明るさだけ下げて #747474）。
   */
@@ -28,21 +29,26 @@
     line-height: var(--rx-small-leading);
     overflow-wrap: anywhere;
     text-decoration: none;
+    &:is(
+      [data-accent="blue"],
+      [data-accent="green"],
+      [data-accent="amber"],
+      [data-accent="coral"]
+    ) {
+      --rx-tag-ink: var(--rx-surface);
+      --rx-tag-edge: var(--rx-tag-face);
+    }
     &[data-accent="blue"] {
-      --rx-tag-ink: var(--rx-blue-dark);
-      --rx-tag-edge: color-mix(in srgb, var(--rx-blue) 40%, var(--rx-surface));
+      --rx-tag-face: #3e79ae;
     }
     &[data-accent="green"] {
-      --rx-tag-ink: var(--rx-green);
-      --rx-tag-edge: color-mix(in srgb, var(--rx-green) 40%, var(--rx-surface));
+      --rx-tag-face: #498235;
     }
     &[data-accent="amber"] {
-      --rx-tag-ink: var(--rx-amber);
-      --rx-tag-edge: color-mix(in srgb, var(--rx-amber) 40%, var(--rx-surface));
+      --rx-tag-face: #be561d;
     }
     &[data-accent="coral"] {
-      --rx-tag-ink: var(--rx-coral-dark);
-      --rx-tag-edge: color-mix(in srgb, var(--rx-coral) 40%, var(--rx-surface));
+      --rx-tag-face: #c50000;
     }
     &[data-current="true"] {
       --rx-tag-ink: var(--rx-surface);
@@ -57,6 +63,12 @@
         background: var(--rx-gray-50);
         color: var(--rx-tag-ink);
         text-decoration: none;
+      }
+      /* 塗りのあるタグは、ホバーすると塗りを一段濃くする（推測）。 */
+      &[data-accent]:hover {
+        border-color: color-mix(in srgb, var(--rx-tag-face) 85%, var(--rx-ink));
+        background: color-mix(in srgb, var(--rx-tag-face) 85%, var(--rx-ink));
+        color: var(--rx-surface);
       }
       &[data-current="true"]:hover {
         border-color: var(--rx-gray-650);

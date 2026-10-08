@@ -5,7 +5,7 @@
       手本の線の幅7pxは画面全体の大きさなので、一覧の部品では2pxに縮める（推測）。出来事の印は日付の丸を小さくした白い丸に同じ色の輪。
     - 項目は「Jonas D. commented on」の太字の黒の名前に、何をしたかを続ける。時刻は茶色の小さな文字（実測 #aa9d83 は4.5:1に届かないので --rx-meta）。
     - システムの出来事は、Highrise 2016のLatest activityと同じく #f8f8f8 の帯にする。
-    節目は、終えたものを緑のマーク、今のものを青緑のマーク、これからを破線にし（推測）、今の時はCalendarの今日と同じ黄のピルを敷く。
+    節目は、終えたものを緑のマーク、今のものを青緑のマーク、これからを破線にし（推測）、今の時はCalendarの今日と同じ黄色の面を敷く。
   */
   .rx-timeline {
     --rx-timeline-rule: var(--rx-calendar-rule);
@@ -163,7 +163,7 @@
         background: var(--rx-teal);
         box-shadow: 0 0 0 0.125rem var(--rx-surface);
       }
-      /* 今の節目の時（「今日」など）は、Calendarの今日と同じ黄のピルを敷く。 */
+      /* 今の節目の時（「今日」など）は、Calendarの今日と同じ黄色の面を敷く。 */
       &[data-state="current"] > time {
         position: relative;
         isolation: isolate;

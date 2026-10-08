@@ -133,7 +133,7 @@ export default () => (
             {
               name: "snack",
               label: "お茶と菓子を用意する",
-              end: <Badge>10月3日</Badge>,
+              detail: "10月3日",
             },
           ]}
         />
@@ -377,12 +377,9 @@ export default () => (
             <li>
               <label class="rx-choice" data-kind="plain"
                 ><input name="snack" type="checkbox" /><span
-                  ><strong>お茶と菓子を用意する</strong></span
+                  ><strong>お茶と菓子を用意する</strong><small>10月3日</small></span
                 ></label
               >
-              <div class="end">
-                <span class="rx-badge" data-tone="neutral">10月3日</span>
-              </div>
             </li>
           </ul>
         </details>

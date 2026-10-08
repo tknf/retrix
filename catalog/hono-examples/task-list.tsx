@@ -52,7 +52,7 @@ export default () => (
             {
               name: "snack",
               label: "お茶と菓子を用意する",
-              end: <Badge>10月3日</Badge>,
+              detail: "10月3日",
             },
           ]}
         />

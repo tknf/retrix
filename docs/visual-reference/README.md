@@ -30,7 +30,8 @@ Retrixの見た目は、雰囲気ではなく、Basecamp 2（2012〜2015）とHi
 | 選択欄・チェック・ラジオ | OSの標準の部品のまま                                                                       | controls.md 8〜10章                    |
 | 無効                     | 形と塗りはそのまま、文字だけ灰色`#9a9a9a`                                                  | controls.md 13・15章                   |
 | ポップオーバー           | 白、1px `#bbb`、角丸5〜6px、外へ約8pxの柔らかい影、45°のしっぽ                             | overlays.md                            |
-| 選んだ項目               | 淡い青のピル（`#dde4f5`に`#244960`の文字）                                                 | overlays.md                            |
+| 選んだ項目               | 手本は淡い青のピル（`#dde4f5`）。ユーザーの指定でピルにせず、角の無い`#ddeefe`に黒い文字   | overlays.md                            |
+| 状態のラベル（Badge）    | 濃い塗りに白い太字、角丸2〜3px、高さ16〜21px（WON `#51913b`、CREATED `#323232`ほか）       | lists.md「Highrise Latest activity」   |
 | ピル                     | 高さ18px・角丸9px・12px。件数は`#e1e8f8`に`#1c5c77`、担当者と期日は`#eeeeee`に灰色         | lists.md「BC2 のピル」                 |
 | 黄色のハイライト         | `#ffffcc`（今日・選んだ行・新着。各所の値は±3以内）                                        | lists.md「黄色のハイライト」           |
 | 罫線                     | 一覧の行1px `#ececec`、見出しの下1px `#dedede`、カレンダー1px `#dcd9d2`                    | structure.md・lists.md                 |
