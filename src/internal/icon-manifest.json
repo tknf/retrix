@@ -45,5 +45,7 @@
   "user": "user",
   "sparkle": "sparkle",
   "reply": "arrow-bend-up-left",
-  "lightning": "lightning"
+  "lightning": "lightning",
+  "caret-up-down": "caret-up-down",
+  "minus": "minus"
 }

@@ -246,20 +246,12 @@
     line-height: calc(10 / 7);
     cursor: pointer;
     /*
-      チェックボックスとラジオは、Basecamp 2・Highriseと同じくOSの標準の部品のまま使う（実測でも独自の装飾は無い）。
-      大きさは手本の13pxにし、名前の一行目と上下の中央をそろえる。
+      チェックボックスとラジオの見た目はbase.css（手本のMacの標準の部品を測って描いたもの）が持つ。
+      ここでは名前の一行目と上下の中央をそろえるだけにする。
     */
     & > input {
-      appearance: auto;
-      inline-size: 0.8125rem;
-      block-size: 0.8125rem;
-      margin: 0;
-      margin-block-start: calc((10em / 7 - 0.8125rem) / 2);
+      margin-block-start: calc((10em / 7 - 0.875rem) / 2);
       cursor: inherit;
-      &:focus-visible {
-        outline: 0.125rem solid var(--rx-focus-border);
-        outline-offset: var(--rx-stroke-width);
-      }
     }
     & > span {
       min-inline-size: 0;
@@ -284,7 +276,8 @@
     }
     /*
       説明を伴う選択肢は、枠で囲んだ白い面。ホバーすると枠を濃くし、
-      選んだ面は淡い青緑にして枠を青緑にする。
+      選んだ面は、選ぶ操作の共通の紺の縁（--rx-selected-edge）と、選んでいる項目の淡い青（--rx-option-active）にする。
+      使えない選択肢は、面と枠をそのままにして文字だけを灰色にする。
     */
     &[data-kind="option"] {
       padding-block: var(--rx-space-3);
@@ -298,12 +291,8 @@
       border-color: var(--rx-control-border);
     }
     &[data-kind="option"]:has(> input:checked) {
-      border-color: var(--rx-teal);
-      background: var(--rx-cover);
-    }
-    &[data-kind="option"]:has(> input:disabled) {
-      background: var(--rx-hatch), var(--rx-surface);
-      box-shadow: none;
+      border-color: var(--rx-selected-edge);
+      background: var(--rx-option-active);
     }
   }
   /*
@@ -411,19 +400,48 @@
 }
 @layer components {
   /*
-    一つを選ぶ欄は、Basecamp 2・Highriseと同じくOSの標準のポップアップボタンのまま使う（実測でも独自の装飾は無い）。
+    一つを選ぶ欄。手本はBasecamp 2・Highriseが使っていた2012年前後のMacの標準のポップアップボタン（実測: controls.md 8章）。
+    今のブラウザの標準の部品は形も色も違うので、測った枠と塗りで描く。
+    - 1px #9c9c9c（上だけ #a6a6a6）の枠、角丸 約4px、#ffffff → #f5f5f5 → 中ほどで #ececec → #f2f2f2 の縦の塗り（手本で確かめた例外）、下に1px #f0f0f0
+    - 末尾に上下の矢印。手本の高さ18pxは13pxの文字の時の値なので、Retrixでは控えめなボタンと同じ22pxにそろえる
   */
-  select.rx-input:not([multiple]):not([size]) {
-    all: revert;
+  select.rx-input:not([multiple], [size], [data-variant="inline"]) {
+    appearance: none;
     justify-self: start;
+    inline-size: auto;
     max-inline-size: 100%;
+    min-block-size: var(--rx-button-size);
+    padding-block: 0;
+    padding-inline: var(--rx-space-2) calc(var(--rx-space-2) + 0.75rem + var(--rx-space-1));
+    border: var(--rx-stroke-width) solid #9c9c9c;
+    border-block-start-color: #a6a6a6;
+    border-radius: 0.25rem;
+    background:
+      url("../assets/caret-up-down-bold.svg") right var(--rx-space-2) center / 0.75rem 0.75rem
+        no-repeat,
+      linear-gradient(#ffffff, #fdfdfd 20%, #f5f5f5 49%, #ececec 50%, #f2f2f2);
+    box-shadow: 0 var(--rx-stroke-width) 0 #f0f0f0;
+    color: var(--rx-ink);
     font-family: var(--rx-control-font-family);
     font-size: var(--rx-label);
+    line-height: calc(17 / 12);
     cursor: pointer;
+    &:dir(rtl) {
+      background-position:
+        left var(--rx-space-2) center,
+        0 0;
+    }
+    &:disabled {
+      color: var(--rx-disabled-text);
+      cursor: default;
+    }
     &:focus-visible {
       outline: 0.125rem solid var(--rx-focus-border);
       outline-offset: var(--rx-stroke-width);
       box-shadow: none;
+    }
+    &[data-invalid="true"] {
+      border-color: var(--rx-danger);
     }
   }
   .rx-input[type="file"] {

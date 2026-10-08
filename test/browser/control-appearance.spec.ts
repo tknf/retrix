@@ -72,7 +72,7 @@ test("主操作の色を変えてもhover・押下が既定の色へ戻らず、
   expect(hover).not.toEqual(normal);
 });
 
-test("選択中のButtonを無効にした場合も、通常の無効状態と同じ見た目で見分けられる", async ({
+test("選択中のButtonを無効にした場合は、選んだ状態の塗りを残して文字だけを灰色にする", async ({
   page,
 }) => {
   await page.goto("/components/button");
@@ -81,20 +81,14 @@ test("選択中のButtonを無効にした場合も、通常の無効状態と�
     element.setAttribute("data-current", "true");
     element.setAttribute("disabled", "");
   });
-  const look = (element: Element) => {
-    const style = getComputedStyle(element);
-    return { color: style.color, background: style.backgroundColor, opacity: style.opacity };
-  };
-  const expected = await page
-    .locator('[data-example="hono"]')
-    .getByRole("button", { name: "変更なし", exact: true })
-    .evaluate(look);
   // 使えない操作は、Highriseの「First」と同じく形と塗りをそのままにし、文字だけを灰色にする。
-  expect(expected).toEqual({
-    color: "rgb(154, 154, 154)",
-    background: "rgb(255, 255, 255)",
-    opacity: "1",
-  });
-  await expect.poll(() => button.evaluate(look)).toEqual(expected);
+  // 選んでいる状態の塗りは淡い青（選ぶ操作の共通の見た目）なので、白い面に戻さずそのまま残す。
+  await expect
+    .poll(() => button.evaluate((element) => getComputedStyle(element).color))
+    .toBe("rgb(154, 154, 154)");
+  expect(await button.evaluate((element) => getComputedStyle(element).backgroundImage)).toContain(
+    "linear-gradient",
+  );
+  await expect(button).toHaveCSS("border-inline-start-color", "rgb(94, 100, 179)");
   await expect(button).toBeDisabled();
 });

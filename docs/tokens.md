@@ -6,25 +6,26 @@ Retrixの見た目は`--rx-*`のCSSカスタムプロパティで決まります
 
 ## 色
 
-| 種類             | 主なトークン                                                                       | 使い方                                                                                                 |
-| ---------------- | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| 地と面           | `--rx-background`、`--rx-desk-texture`、`--rx-surface`                             | 画面の地（クリーム色の机と細かいノイズ）と、シート・カード・パネル・欄の白                             |
-| 文字             | `--rx-text`、`--rx-ink`、`--rx-muted`、`--rx-meta`、`--rx-quiet`                   | 本文、題名と現在地の黒、補足の灰色、日付・投稿者の茶色、机の上の小さな灰色の文字                       |
-| 入力と使えない時 | `--rx-placeholder`、`--rx-disabled-text`                                           | 入力欄のプレースホルダーと、使えない操作の灰色の文字                                                   |
-| 線と枠           | `--rx-border`、`--rx-control-border`、`--rx-input-border`、`--rx-textarea-border`  | 一覧の行の罫線、控えめなボタンの枠、一行の入力欄の枠、複数行の入力欄の枠                               |
-| ヘッダー         | `--rx-logo`、`--rx-header-rule`                                                    | アプリの名前の濃い灰色と、名前と移動先の間の縦の線                                                     |
-| リンクと見出し   | `--rx-link`、`--rx-link-hover`、`--rx-heading`                                     | 青緑のリンクとホバーの赤、まとまりの見出しの赤                                                         |
-| 選んでいる状態   | `--rx-option-active`、`--rx-option-active-text`、`--rx-menu-active`                | メニュー・候補の一覧で選んでいる項目の、角の無い淡い青と黒い文字                                       |
-| オンと選んだ値   | `--rx-teal`、`--rx-cover`                                                          | Switchのオンと選んでいるButtonの青緑の塗り、選んだ選択肢・フォーカスのある行・ドロップ先の淡い青緑の面 |
-| ピル             | `--rx-pill-count`、`--rx-pill-count-text`、`--rx-pill-meta`、`--rx-pill-meta-text` | 件数の淡い青と青緑の文字、担当者・期日の灰色の地と灰色の文字                                           |
-| 黄色のハイライト | `--rx-mark`                                                                        | 今日、選んだ行、更新した行、文中の一致した語、Toast                                                    |
-| 黄色の紙         | `--rx-note`、`--rx-note-edge`                                                      | テキスト文書やメモのカードと、その縁                                                                   |
-| 浮かぶパネル     | `--rx-popover-edge`、`--rx-popover-radius`、`--rx-popover-shadow`                  | ポップオーバー・メニューなどの1px `#bbb`の枠、5pxの角丸、外へ約8pxの柔らかい影                         |
-| 背後のシート     | `--rx-sheet-behind`、`--rx-sheet-behind-edge`                                      | `AppShell`の`trail`で重ねる上の階層のシートの淡い灰色と、その1pxの枠                                   |
-| カレンダー       | `--rx-calendar-rule`                                                               | カレンダーとProgressの暖かい灰色の罫線                                                                 |
-| 状態             | `--rx-info`、`--rx-success`、`--rx-warning`、`--rx-danger`と各`-soft`              | 情報・成功・注意・危険の文字と、その淡い面。`--rx-info-soft`は件数のピルと同じ淡い青                   |
-| フォーカス       | `--rx-focus-border`、`--rx-focus-glow`、`--rx-focus-ring`                          | 入力欄とボタンのフォーカスの青い縁と、その外側の淡い青の輪                                             |
-| 分類             | `--rx-blue`、`--rx-green`、`--rx-amber`、`--rx-coral`、`--rx-plum`、`--rx-tan`など | Avatar・Tag・ActionListの`accent`などで、利用側が明示した分類                                          |
+| 種類             | 主なトークン                                                                                                           | 使い方                                                                                                         |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| 地と面           | `--rx-background`、`--rx-desk-texture`、`--rx-surface`                                                                 | 画面の地（クリーム色の机と細かいノイズ）と、シート・カード・パネル・欄の白                                     |
+| 文字             | `--rx-text`、`--rx-ink`、`--rx-muted`、`--rx-meta`、`--rx-quiet`                                                       | 本文、題名と現在地の黒、補足の灰色、日付・投稿者の茶色、机の上の小さな灰色の文字                               |
+| 入力と使えない時 | `--rx-placeholder`、`--rx-disabled-text`                                                                               | 入力欄のプレースホルダーと、使えない操作の灰色の文字                                                           |
+| 線と枠           | `--rx-border`、`--rx-control-border`、`--rx-input-border`、`--rx-textarea-border`                                      | 一覧の行の罫線、控えめなボタンの枠、一行の入力欄の枠、複数行の入力欄の枠                                       |
+| ヘッダー         | `--rx-logo`、`--rx-header-rule`                                                                                        | アプリの名前の濃い灰色と、名前と移動先の間の縦の線                                                             |
+| リンクと見出し   | `--rx-link`、`--rx-link-hover`、`--rx-heading`                                                                         | 青緑のリンクとホバーの赤、まとまりの見出しの赤                                                                 |
+| 選んでいる状態   | `--rx-option-active`、`--rx-option-active-text`、`--rx-menu-active`                                                    | メニュー・候補の一覧で選んでいる項目の、角の無い淡い青と黒い文字                                               |
+| 選んだ状態とオン | `--rx-selected-fill`、`--rx-selected-fill-hover`、`--rx-selected-edge`、`--rx-selected-edge-end`、`--rx-selected-text` | チェックボックス・ラジオ・切り替え・選んでいるButton・選んだ日・Switchのオンの、淡い青の縦の塗りと紺の縁と文字 |
+| 青緑             | `--rx-teal`、`--rx-cover`                                                                                              | 進み具合（Progress・Steps・Timelineの今）の青緑と、フォーカスのある行・ドロップ先の淡い青緑の面                |
+| ピル             | `--rx-pill-count`、`--rx-pill-count-text`、`--rx-pill-meta`、`--rx-pill-meta-text`                                     | 件数の淡い青と青緑の文字、担当者・期日の灰色の地と灰色の文字                                                   |
+| 黄色のハイライト | `--rx-mark`                                                                                                            | 今日、選んだ行、更新した行、文中の一致した語、Toast                                                            |
+| 黄色の紙         | `--rx-note`、`--rx-note-edge`                                                                                          | テキスト文書やメモのカードと、その縁                                                                           |
+| 浮かぶパネル     | `--rx-popover-edge`、`--rx-popover-radius`、`--rx-popover-shadow`                                                      | ポップオーバー・メニューなどの1px `#bbb`の枠、5pxの角丸、外へ約8pxの柔らかい影                                 |
+| 背後のシート     | `--rx-sheet-behind`、`--rx-sheet-behind-edge`                                                                          | `AppShell`の`trail`で重ねる上の階層のシートの淡い灰色と、その1pxの枠                                           |
+| カレンダー       | `--rx-calendar-rule`                                                                                                   | カレンダーとProgressの暖かい灰色の罫線                                                                         |
+| 状態             | `--rx-info`、`--rx-success`、`--rx-warning`、`--rx-danger`と各`-soft`                                                  | 情報・成功・注意・危険の文字と、その淡い面。`--rx-info-soft`は件数のピルと同じ淡い青                           |
+| フォーカス       | `--rx-focus-border`、`--rx-focus-glow`、`--rx-focus-ring`                                                              | 入力欄とボタンのフォーカスの青い縁と、その外側の淡い青の輪                                                     |
+| 分類             | `--rx-blue`、`--rx-green`、`--rx-amber`、`--rx-coral`、`--rx-plum`、`--rx-tan`など                                     | Avatar・Tag・ActionListの`accent`などで、利用側が明示した分類                                                  |
 
 背景・本文・リンク・状態の色は用途のトークンで指定します。コンポーネントの背景を変える場合は、利用側でもコントラストを確認してください。
 

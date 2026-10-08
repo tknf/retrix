@@ -75,7 +75,9 @@ test("単日と期間の両端はホバー・押下中も選択色を保つ", as
   }
 });
 
-test("今日は黄色の面で示し、選んだ日は青緑の塗りに白い文字にする", async ({ page }) => {
+test("今日は黄色の面で示し、選んだ日は選ぶ操作の共通の淡い青の塗りに紺の文字にする", async ({
+  page,
+}) => {
   await page.clock.setFixedTime(new Date(2026, 8, 12, 12));
   await page.goto("/components/date-picker");
   const single = await open(page, "single");
@@ -86,7 +88,8 @@ test("今日は黄色の面で示し、選んだ日は青緑の塗りに白い�
       background: getComputedStyle(element).backgroundColor,
     }));
   const selected = await look();
-  expect(selected.text).toBe("rgb(255, 255, 255)");
+  // 選んだ日は、チェックボックスの選んだ状態と同じ紺の文字（#001831）。
+  expect(selected.text).toBe("rgb(0, 24, 49)");
   await single.panel.getByRole("button", { name: "2026年9月15日", exact: true }).click();
   const neutral = await look();
   const regular = await single.panel

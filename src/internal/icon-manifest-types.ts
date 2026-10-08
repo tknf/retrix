@@ -46,4 +46,6 @@ export type IconName =
   | "user"
   | "sparkle"
   | "reply"
-  | "lightning";
+  | "lightning"
+  | "caret-up-down"
+  | "minus";

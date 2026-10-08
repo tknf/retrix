@@ -95,21 +95,20 @@
       & > a:is([data-current="true"], :hover, :focus-visible) {
         z-index: 1;
       }
+      /* 今の表示は、チェックボックスの選んだ状態と同じ淡い青の塗りに紺の縁と文字（--rx-selected-*）。 */
       & > a[data-current="true"] {
-        border-color: var(--rx-ink);
-        background: var(--rx-ink);
-        color: var(--rx-surface);
-        box-shadow: 0 var(--rx-stroke-width) 0 var(--rx-ink);
+        border-color: var(--rx-selected-edge);
+        border-block-end-color: var(--rx-selected-edge-end);
+        background: var(--rx-selected-fill);
+        color: var(--rx-selected-text);
         &:is(:hover, :active) {
-          border-color: var(--rx-ink);
-          background: color-mix(in srgb, var(--rx-ink) 82%, var(--rx-surface));
-          box-shadow: 0 var(--rx-stroke-width) 0 var(--rx-ink);
+          border-color: var(--rx-selected-edge);
+          border-block-end-color: var(--rx-selected-edge-end);
+          background: var(--rx-selected-fill-hover);
+          color: var(--rx-selected-text);
         }
         &:focus-visible {
-          border-color: var(--rx-ink);
-          box-shadow:
-            var(--rx-focus-glow),
-            0 var(--rx-stroke-width) 0 var(--rx-ink);
+          box-shadow: var(--rx-focus-glow);
         }
       }
     }

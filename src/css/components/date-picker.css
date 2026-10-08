@@ -233,9 +233,10 @@
       background: var(--rx-date-picker-today);
     }
 
+    /* 期間の間の日は、選んでいる項目と同じ淡い青の面。 */
     &[data-state="in-range"] {
-      background: color-mix(in srgb, var(--rx-teal) 18%, var(--rx-surface));
-      color: var(--rx-teal-dark);
+      background: var(--rx-option-active);
+      color: var(--rx-text);
     }
 
     /* 通常のホバーは未選択日にだけ適用し、選択済みの塗りを保つ。 */
@@ -252,12 +253,14 @@
       border-color: var(--rx-link);
     }
 
+    /* 選んだ日は、選ぶ操作の共通の見た目（--rx-selected-*）。 */
     &[data-state="selected"],
     &[data-state="range-start"],
     &[data-state="range-end"] {
-      border-color: var(--rx-teal-dark);
-      background: var(--rx-teal);
-      color: var(--rx-surface);
+      border-color: var(--rx-selected-edge);
+      border-block-end-color: var(--rx-selected-edge-end);
+      background: var(--rx-selected-fill);
+      color: var(--rx-selected-text);
       font-weight: 600;
     }
 

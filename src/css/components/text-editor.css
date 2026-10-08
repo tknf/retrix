@@ -58,10 +58,10 @@
           }
           /* 現在の書式の表示。接続したエディターが、選択範囲の書式ツールにdata-active="true"を付ける。 */
           &[data-active="true"] {
-            border-color: var(--rx-teal-dark);
-            background: var(--rx-teal);
-            color: var(--rx-surface);
-            box-shadow: 0 var(--rx-stroke-width) 0 var(--rx-teal-dark);
+            border-color: var(--rx-selected-edge);
+            border-block-end-color: var(--rx-selected-edge-end);
+            background: var(--rx-selected-fill);
+            color: var(--rx-selected-text);
           }
           /* 使えない書式ツールは、形・枠・塗りをそのままにして文字だけを灰色にする。 */
           &:disabled {

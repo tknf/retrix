@@ -56,14 +56,16 @@
       inline-size: 0.75rem;
     }
 
+    /* オンは、選ぶ操作の共通の見た目（チェックボックスの選んだ状態と同じ淡い青の塗りと紺の縁）。 */
     & > input:checked::before {
-      border-color: var(--rx-teal-dark);
-      background: var(--rx-teal);
+      border-color: var(--rx-selected-edge);
+      border-block-end-color: var(--rx-selected-edge-end);
+      background: var(--rx-selected-fill);
     }
 
     & > input:checked::after {
       justify-self: end;
-      border-color: var(--rx-teal-dark);
+      border-color: var(--rx-selected-edge);
     }
 
     /* ホバーは手本が無い（推測）。枠を一段濃くする。 */

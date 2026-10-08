@@ -141,14 +141,15 @@
           &::before {
             opacity: 1;
           }
+          /* 開いている間のハンドルは、選ぶ操作の共通の見た目（--rx-selected-*）。 */
           & > .handle {
-            --rx-button-color: var(--rx-teal);
-            --rx-button-fill: linear-gradient(var(--rx-teal), var(--rx-teal));
-            border-color: var(--rx-teal-dark);
-            background: var(--rx-teal);
-            background-image: var(--rx-button-fill);
-            color: var(--rx-surface);
-            box-shadow: 0 var(--rx-stroke-width) 0 var(--rx-teal-dark);
+            --rx-button-color: var(--rx-selected-text);
+            --rx-button-fill: var(--rx-selected-fill);
+            border-color: var(--rx-selected-edge);
+            border-block-end-color: var(--rx-selected-edge-end);
+            background: var(--rx-selected-fill);
+            color: var(--rx-selected-text);
+            box-shadow: none;
           }
           & > .handle[data-fallback="caret"] > .rx-icon {
             rotate: 180deg;

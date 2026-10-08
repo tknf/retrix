@@ -107,6 +107,16 @@
     */
     --rx-option-active: #ddeefe;
     --rx-option-active-text: var(--rx-ink);
+    /*
+      選んだ状態・オン。手本のMacの標準のチェックボックスとラジオの選んだ状態（controls.md 9・10章）と同じ、
+      淡い青の縦の塗り、紺の縁（下だけ一段濃い）、濃い紺の文字。切り替え・選んだボタン・選んだ日・Switchのオンなど、
+      選ぶ操作の「選んでいる」はどれもこの見た目にそろえる。ホバーの一段濃い塗りは手本が無い（推測）。
+    */
+    --rx-selected-fill: linear-gradient(#e4faff, #bcddfa 50%, #a1cff9);
+    --rx-selected-fill-hover: linear-gradient(#d4f2ff, #aad3f8 50%, #8fc4f6);
+    --rx-selected-edge: #5e64b3;
+    --rx-selected-edge-end: #545773;
+    --rx-selected-text: #001831;
     /* カレンダー・Progressの暖かい灰色の罫線（lists.md）。 */
     --rx-calendar-rule: #dcd9d2;
     /* ヘッダーの名前の濃い灰色と、名前と移動先の間の縦の線（BC2の実測）。 */

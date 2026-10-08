@@ -47,27 +47,22 @@
         border-start-end-radius: 0;
         border-block-start-color: transparent;
       }
-      /* オンのボタンは上の枠も黒くし、黒い塗りの上端を欠けさせない。 */
+      /* オンのボタンは上の枠も紺にし、塗りの上端を欠けさせない。 */
       & > .rx-button[data-state="on"]:not(:first-child, :disabled) {
-        border-block-start-color: var(--rx-ink);
+        border-block-start-color: var(--rx-selected-edge);
       }
     }
+    /* オンは、チェックボックスの選んだ状態と同じ淡い青の塗りに紺の縁と文字（--rx-selected-*）。 */
     & > .rx-button[data-state="on"]:not(:disabled) {
-      border-color: var(--rx-ink);
-      background: var(--rx-ink);
-      color: var(--rx-surface);
-      box-shadow: 0 var(--rx-stroke-width) 0 var(--rx-ink);
-      /* ホバーと押した時は手本が無い（推測）。黒をわずかに明るくする。 */
+      border-color: var(--rx-selected-edge);
+      border-block-end-color: var(--rx-selected-edge-end);
+      background: var(--rx-selected-fill);
+      color: var(--rx-selected-text);
       &:hover {
-        border-color: var(--rx-ink);
-        background: color-mix(in srgb, var(--rx-ink) 82%, var(--rx-surface));
-        box-shadow: 0 var(--rx-stroke-width) 0 var(--rx-ink);
+        background: var(--rx-selected-fill-hover);
       }
       &:focus-visible {
-        border-color: var(--rx-ink);
-        box-shadow:
-          var(--rx-focus-glow),
-          0 var(--rx-stroke-width) 0 var(--rx-ink);
+        box-shadow: var(--rx-focus-glow);
       }
     }
   }

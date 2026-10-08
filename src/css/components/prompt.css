@@ -107,8 +107,8 @@
       &:hover {
         background: var(--rx-option-active);
         & > .mark::before {
-          border-color: var(--rx-teal-dark);
-          background: var(--rx-teal);
+          border-color: var(--rx-selected-edge);
+          background: var(--rx-selected-fill);
         }
         & > .go {
           color: var(--rx-link);
