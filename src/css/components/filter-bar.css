@@ -1,7 +1,11 @@
 @layer components {
   /*
-    絞り込みの条件。BC2の絞り込みのメニュー（実測: overlays.md 1c「All matches / Comments / Messages」）を横に並べた形にする。
-    条件は枠も面も無い黒い文字で、選んでいる条件だけを両端の丸い淡い青のピル（#dde4f5 に #244960 の文字）にする。
+    絞り込みの条件。BC2の絞り込みのメニュー（実測: overlays.md 1c「All matches / Comments / Messages」。
+    screenshots/basecamp2-official/bc2-help-searching-in-03.png (24, 95, 129, 137)。1倍）の項目を横に並べた形にし、
+    Highriseの「Find contacts by name title city …」（highrise/highrise-contact-filters-chips-2011.png。1倍）と同じく、
+    条件を枠も面も無い文字のまま一行に並べる。
+    条件は黒い文字で、選んでいる条件だけをメニューの選んでいる項目と同じ角の無い淡い青（--rx-option-active）にする。
+    手本の選んだ項目は淡い青のピル（#dde4f5 に #244960 の太字）だが、Retrixは選んだ状態をピルで囲まない（ユーザーの指定）。
     件数は条件名の後ろに淡い青の数字で添える（実測 #7f9dd2 は白地で4.5:1に届かないので、色合いを保って #5574b0）。
     リンクの文字と高さは共通Button（button.css）のまま使う。
   */
@@ -27,7 +31,7 @@
     }
     &:not([data-appearance="segmented"]) > a {
       border-color: transparent;
-      border-radius: var(--rx-radius-mark);
+      border-radius: 0;
       background: transparent;
       color: var(--rx-text);
       box-shadow: none;
@@ -58,7 +62,8 @@
         & > small {
           color: var(--rx-option-active-text);
         }
-        &:is(:hover, :active) {
+        /* Buttonの選んでいる状態のホバー（button.css）より強くし、ホバーしても淡い青のままにする。 */
+        &:is(:hover, :active):not(:disabled) {
           border-color: var(--rx-option-active);
           background: var(--rx-option-active);
           box-shadow: none;
@@ -72,8 +77,8 @@
     }
     /*
       表示の切り替えはToggleGroupと同じく、控えめなボタン（実測: controls.md 1）を隙間なくつなげて間を1本の線にし、
-      外側の角だけを丸める。隣の枠線を1px重ねる。選んでいる条件は、BC2の切り替えで選んだ側の黒い丸薬形
-      （実測: overlays.md 1c・3d。塗り #000 に白い文字）と同じ黒い塗りにする。
+      外側の角だけを丸める（BC2の書式ツールの一組と同じつなぎ方。text-editor.css）。隣の枠線を1px重ねる。
+      選んでいる条件は、選ぶ操作の共通の見た目（--rx-selected-*）にする。BC2の切り替えの黒い丸薬形は使わない。
     */
     &[data-appearance="segmented"] {
       display: inline-flex;

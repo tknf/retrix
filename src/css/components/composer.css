@@ -3,6 +3,9 @@
     構成はHighriseのノート欄（controls.md 7b・14）と同じく、太字の見出しの下に白い本文の欄を置き、その下に添付と小さなボタンを並べる。
     本文の欄の見た目はBC2のコメント欄（controls.md 7a）: 1px #c1c1c1・角丸5px・内側と外の影なし・左の余白14px・
     16pxの文字・プレースホルダー#999。Composerそのものは面も影も持たない。
+    添付はFileInput（BC2のファイルの追加の欄。file-input.css）を本文の欄の下に置く。BC2のコメントの欄
+    （bc2-whats-new-drag-drop.jpg）は送信の緑のボタンを欄の下の先頭側に置くが、Retrixは送信ボタンを末尾側に置く
+    （propsの説明どおり。DOMの順を変えずに先頭側へ移すとフォーカスの順と見た目の順がずれるため）。
   */
   .rx-composer {
     --rx-composer-placeholder: #999999;

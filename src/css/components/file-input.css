@@ -1,24 +1,32 @@
 @layer components {
   /*
-    ファイルを受け入れる場所。ドロップ先の箱そのものは手本に無い（推測）。
-    「ここに置ける」目印の破線の枠は、BC2の枠の無い欄の点線（実測: controls.md 6b。1px #cccccc）と同じ太さと色にし、
-    面はBC2のフォームの下の灰色の箱（実測: overlays.md 1e。#f9f9f9）にする。
-    灰色のアイコン・ドロップの案内・選ぶ操作を一行に並べ、選んだファイルはFileItemの形で枠の中に並べて解除の操作を添える。
-    ドロップを待つ間は枠を実線の青緑にして淡い青緑の面を敷く。標準の入力は隠し、フォーカスの輪は選ぶ操作に出す。
+    ファイルを受け入れる場所。BC2のファイルの追加の欄（実測: screenshots/basecamp2-official/bc2-help-files-03.png
+    (71, 34, 430, 238)。1倍）に合わせる。白い面に1px #d5d5d5 の破線（3画素描いて3画素空ける。Chromiumの1px dashedと同じ）、
+    角丸約3px。枠の内側から灰色のクリップのアイコン（#9b9b9b）まで約7px、案内の文字は#757575で約12px、
+    続けて「select files from your computer…」のリンク（#23485f、下線あり）を一行に並べる
+    （同じ形: bc2-whats-new-drag-drop.jpg・bc2-features-drag-and-drop-drag-zone.jpg・bc2-help-projects-101-04.png）。
+    内側の余白は段の12pxに丸め、アイコン・案内・リンクの間は8pxにする。
+    選んだファイルはFileItemの形で枠の中に並べて解除の操作を添える。
+    ドロップを待つ間の見た目は手本に無い（推測）。枠を実線の青緑にして淡い青緑の面を敷く。
+    標準の入力は隠し、フォーカスの輪は選ぶ操作に出す。
   */
   .rx-file-input {
+    --rx-file-input-edge: #d5d5d5;
+    --rx-file-input-hint: #757575;
+    --rx-file-input-symbol: #9b9b9b;
     container: rx-file-input / inline-size;
     position: relative;
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
+    /* 案内は文字の幅だけ取り、リンクをそのすぐ後ろに続ける（BC2の一文の並び）。狭い時は案内が折り返す。 */
+    grid-template-columns: auto minmax(0, max-content) minmax(0, 1fr);
     align-items: center;
-    gap: var(--rx-space-2) var(--rx-space-3);
+    gap: var(--rx-space-2);
     min-inline-size: 0;
     padding-block: var(--rx-space-3);
     padding-inline: var(--rx-space-3);
-    border: var(--rx-stroke-width) dashed var(--rx-control-border);
+    border: var(--rx-stroke-width) dashed var(--rx-file-input-edge);
     border-radius: var(--rx-radius-field);
-    background: var(--rx-gray-20);
+    background: var(--rx-surface);
     font-size: var(--rx-label);
     line-height: calc(10 / 7);
 
@@ -31,6 +39,10 @@
       border-color: color-mix(in srgb, var(--rx-danger) 60%, var(--rx-surface));
       background: var(--rx-danger-soft);
     }
+    /* 淡い赤の面の上では#757575が4.5:1に届かないので、案内を一段濃い灰色にする。 */
+    &:has(> .rx-input[data-invalid="true"]) > .hint {
+      color: var(--rx-muted);
+    }
     /* 使えない時は、Buttonと同じく形と面をそのままにし、文字とアイコンだけを灰色にする。 */
     &:has(> .rx-input:disabled) {
       color: var(--rx-disabled-text);
@@ -42,15 +54,15 @@
     &:has(> .rx-input:disabled) > .hint {
       visibility: hidden;
     }
-    /* アイコン。面は塗らず、灰色の線のアイコンだけを置く。エラーの時は危険の色にする。 */
+    /* アイコン。面は塗らず、灰色のクリップのアイコンだけを置く（手本は約16px）。エラーの時は危険の色にする。 */
     & > .symbol {
       display: grid;
       grid-column: 1;
       place-items: center;
-      inline-size: 2rem;
-      block-size: 2rem;
-      color: var(--rx-muted);
-      font-size: 1.375rem;
+      inline-size: 1rem;
+      block-size: 1rem;
+      color: var(--rx-file-input-symbol);
+      font-size: 1rem;
     }
     &:has(> .rx-input[data-invalid="true"]) > .symbol {
       color: var(--rx-danger);
@@ -59,7 +71,7 @@
       grid-column: 2;
       min-inline-size: 0;
       margin: 0;
-      color: var(--rx-text);
+      color: var(--rx-file-input-hint);
       font-weight: 400;
       overflow-wrap: anywhere;
       /* 日本語は文節の切れ目で折り返し、行末に一、二文字だけを残さない。 */
@@ -73,9 +85,11 @@
       JavaScriptが有効なら標準入力を画面上は隠し、ラベルを共通Buttonとして見せる。
       入力はフォーカスとキーボード操作のため残し、フォーカスの輪はラベルに出す。
     */
+    /* 選ぶ操作は案内のすぐ後ろに置き、文字の操作の左右の余白を打ち消して案内との間を8pxにする。 */
     & > .choose {
       grid-column: 3;
-      justify-self: end;
+      justify-self: start;
+      margin-inline-start: calc(-4em / 7);
       cursor: pointer;
     }
     /* 案内が隠れている時（JavaScriptの読み込み前・タッチの画面）は、選ぶ操作をアイコンの隣へ寄せる。 */

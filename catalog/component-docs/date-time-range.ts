@@ -10,17 +10,17 @@ export default {
     "時刻の要らない単日・期間は `DatePicker`、日付か時刻の一つだけなら `Field` で包んだ `DateField`・`TimeField` を使います。",
   ],
   usage: [
-    "`legend` と、送信する名前の接頭辞 `name` を渡します。`start`・`end` には初めの `date`（`YYYY-MM-DD`）と `time`（`HH:MM`）を渡します。開始と終了を一つの枠（淡い灰色 #f9f9f9 の面、1px #dedede の枠、角丸8px）に並べて灰色の矢印でつなぎ、それぞれ灰色の小さな太字（11px）の名前の下に日付と時刻の欄を縦に並べます。欄は標準の日付・時刻入力（`DateField`・`TimeField`）です。",
+    "`legend` と、送信する名前の接頭辞 `name` を渡します。`start`・`end` には初めの `date`（`YYYY-MM-DD`）と `time`（`HH:MM`）を渡します。Basecamp 2の予定のパネルの「Starts: / Ends:」と同じく、枠も面も持たずに開始と終了を縦に積み、それぞれ先頭側の列に欄の側へ寄せた黒い名前（12px）を置き、その後ろに日付の欄と時刻の欄を一行に並べます。名前の列の幅は開始と終了でそろえます。欄は標準の日付・時刻入力（`DateField`・`TimeField`）です。",
     '送信する値：`name="event"` なら、各欄の値を `event[start_date]`・`event[start_time]`・`event[end_date]`・`event[end_time]` で送ります。終日のSwitchはオンの時だけ `event[all_day]` に `1` を送り、オフの時は送りません。',
     "`allDay` で終日のSwitchをオンにしておきます。終日の間は時刻の欄を隠しますが、欄に残っている値は送信されます。終日の時に時刻をどう扱うかはサーバー側で決めます。",
     "`timezone` を渡すと、枠の下に地球のアイコンとタイムゾーンを添えます。表示だけで、送信はしません。",
-    "枠の幅が26rem未満の狭い場所では、開始と終了を縦に並べ、矢印を下に向けます。",
+    "置き場所の幅が26rem未満の狭い場所では、時刻の欄を日付の欄の下に回し、欄を名前の後ろの幅いっぱいに広げます。",
     "開始と終了の前後関係や、未入力の検証は行いません。利用側とサーバー側で検証します。各欄の変更は `DateField`・`TimeField` のcontrollerが発火する `date-field:change`・`time-field:change` で受け取れます。",
     "JavaScriptが無い時も、標準の日付・時刻入力とチェックボックスとして同じ名前で送信できます。",
   ],
   accessibility: [
     "枠は `fieldset` で、`legend` がまとまりの名前です。日付と時刻の欄は「開始の日付」「終了の時刻」のように、`startLabel`・`endLabel` を先頭に付けた名前を持ちます。",
-    'つなぎの矢印は読み上げません。終日のSwitchは `role="switch"` のcheckboxです。',
+    '終日のSwitchは `role="switch"` のcheckboxです。',
   ],
   events: [
     [

@@ -1,4 +1,10 @@
 @layer components {
+  /*
+    画像の切り抜き。手本に同じ部品は無い（推測）。BC2・Highriseに写真の切り抜きの画面は見つからず、近いのはClassicの
+    写真のアップロード（screenshots/37signals-others/classic-my-info-photo-upload-2010.png。1倍。枠の無い#f0f0f0の箱に
+    標準のファイル選択、その下に枠の無い48pxの写真）だけだった。そこで既にある語彙から組む。
+    画像を置く台はBC2の背後に重ねた親のシートの面、題名はまとまりの見出し、ハンドルは控えめなボタンの白と下の1pxの影。
+  */
   .rx-image-cropper {
     --rx-cropper-aspect: 1;
     --image-cropper-x: 25;

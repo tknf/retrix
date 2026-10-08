@@ -2,7 +2,9 @@
   /*
     関連する操作の一組。並ぶのは押すと実行する操作なので、BC2の切り替えの丸薬形ではなく、
     控えめなボタン（実測: controls.md 1。平らな白、1px #ccc、下に 1px #ddd の影、角丸 5px）を隙間なくつなげた形にする。
-    隣の枠を1px重ねて間を1本の線にし、角を丸めるのは外側の端だけ。主操作（緑）の▾の前には白く透かした区切りを入れる。
+    つなげた形はBC2の書式ツールの一組「Bold / Italic / Bullets / Numbers / QUOTE」（実測:
+    screenshots/basecamp2-official/bc2-features-drag-and-drop-drag-zone.jpg (103, 298, 226, 15)。約0.73倍に縮小）と同じで、
+    隣の枠を1px重ねて間を1本の線にし、角を丸めるのは外側の端だけ。主操作（緑）の▾の前には白く透かした区切りを入れる（推測）。
   */
   .rx-button-group {
     display: inline-flex;

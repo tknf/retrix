@@ -32,7 +32,7 @@ export type DateTimeRangeProps = ElementProps<"fieldset"> & {
 };
 
 /**
- * 開始と終了の日付と時刻を矢印でつないで一つの枠に並べる。
+ * 開始と終了を縦に積み、それぞれ名前の後ろに日付と時刻の欄を一行に並べる。
  * 終日にすると時刻の欄を隠す。日付と時刻の欄は共通のDateField・TimeField。
  */
 export const DateTimeRange = ({

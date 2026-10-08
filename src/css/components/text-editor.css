@@ -2,8 +2,12 @@
   /*
     書式ツールを並べた入力エリア。枠はBC2のコメント欄（controls.md 7a）と同じ1px #c1c1c1・角丸5pxで、内側の影も外の影も持たない。
     本文は16pxの文字で、左の余白14px、プレースホルダーは#999（同じ実測）。
-    ツールバーは淡い灰色の帯にして、罫線で入力エリアと分ける（帯は推測）。書式ツールは控えめなButtonと同じ見た目の小さなボタンにし、
-    まとまりの間は間隔だけで分ける。今の書式のツールは、選んでいる状態のButtonと同じ平らな青緑の塗りにする。
+    書式ツールはBC2の本文の上の「Bold / Italic / Bullets / Numbers / QUOTE」（実測:
+    screenshots/basecamp2-official/bc2-features-drag-and-drop-drag-zone.jpg (103, 298, 226, 15)。約0.73倍に縮小。
+    同じ形: bc2-whats-new-drag-drop.jpg (145, 83, 200, 13)）に合わせる。帯も罫線も敷かず、本文と同じ白の上に直接置き、
+    控えめなボタン（平らな白・1px #ccc・下に1px #dddの影）を隙間なくつなげて間を1本の線にした一組にする。
+    角を丸めるのは一組の外側の端だけ。手本は一組だけなので、まとまりを分けた時は8pxの間隔で分ける（推測）。
+    ツールの左端は本文の書き始め（左14px）にそろえる。今の書式のツールは、選んでいる状態の共通の見た目にする。
     フォーカスは他の欄と同じく、青い縁の外に淡い青の輪を広げる。
   */
   .rx-text-editor {
@@ -24,17 +28,27 @@
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: var(--rx-space-1) var(--rx-space-3);
+      gap: var(--rx-space-2);
       min-inline-size: 0;
-      padding-block: var(--rx-space-1);
-      padding-inline: var(--rx-space-1);
-      border-block-end: var(--rx-stroke-width) solid var(--rx-border);
-      background: var(--rx-gray-20);
+      /* 上は本文の上の余白（10px）と同じにし、下は本文の側の余白に任せる。 */
+      padding-block: 0.625rem 0;
+      padding-inline: 0.875rem;
       & > .group {
         display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: var(--rx-space-1);
+        align-items: stretch;
+        & > .rx-button:not(:last-child) {
+          border-start-end-radius: 0;
+          border-end-end-radius: 0;
+        }
+        & > .rx-button:not(:first-child) {
+          margin-inline-start: calc(var(--rx-stroke-width) * -1);
+          border-start-start-radius: 0;
+          border-end-start-radius: 0;
+        }
+        /* 枠の色が変わるツール（ホバー・フォーカス・今の書式）を手前に置き、重ねた線がその色で見えるようにする。 */
+        & > .rx-button:is(:hover, :focus-visible, [data-active="true"]) {
+          z-index: 1;
+        }
         /*
           書式ツールは文字だけの操作（link）として渡されるので、ここで控えめなButtonと同じ平らな白・1px #ccc・下に1px #dddの影を付け直す。
           文字の指定と高さは共通のButtonのまま変えない。
@@ -106,13 +120,12 @@
         cursor: not-allowed;
       }
     }
-    /* bottomの配置では、ツールバーを入力エリアの下に置く。 */
+    /* bottomの配置では、ツールバーを入力エリアの下に置く。余白は上下を入れ替え、下を本文の上の余白と同じにする。 */
     &[data-placement="bottom"] {
       grid-template-rows: minmax(0, 1fr) auto;
       & > .toolbar {
         grid-row: 2;
-        border-block-end: 0;
-        border-block-start: var(--rx-stroke-width) solid var(--rx-border);
+        padding-block: 0 0.625rem;
       }
     }
   }
