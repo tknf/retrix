@@ -56,11 +56,15 @@
       inline-size: 0.75rem;
     }
 
-    /* オンは、選ぶ操作の共通の見た目（チェックボックスの選んだ状態と同じ淡い青の塗りと紺の縁）。 */
+    /*
+      オンは、選ぶ操作の共通の見た目（チェックボックスの選んだ状態と同じ青の塗りと紺の縁）。
+      溝は14pxと細く、白いつまみが半分を覆うので、同じ塗りでは選んだ日のセル（24px）より淡く見える。
+      溝だけ同じ色合いで一段濃い塗りにし、選んだ日と同じくらいの濃さに見せる（ユーザーの指定）。
+    */
     & > input:checked::before {
       border-color: var(--rx-selected-edge);
       border-block-end-color: var(--rx-selected-edge-end);
-      background: var(--rx-selected-fill);
+      background: linear-gradient(#a9d3f9, #86bdf3 50%, #6eaeee);
     }
 
     & > input:checked::after {
