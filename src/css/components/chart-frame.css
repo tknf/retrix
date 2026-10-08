@@ -1,8 +1,12 @@
 @layer components {
   /*
-    図の枠。手本は無い（推測）。BC2のFilesの格子と同じ1pxの淡い罫線（#e9e9e9に近い--rx-border）で囲んだ白い面に図を置く。
-    系列の色は平らな塗りにする（BC2の部品は影もグラデーションも持たない）。
-    題名は黒い太字、説明と出典は灰色の小さな文字。数値の表は罫線で区切ったDisclosureに収める。
+    図と数値の表。HighriseのStatisticsのグラフに合わせる
+    （実測: highrise/highrise-statistics-notes-chart-2016.png。2倍。2016年の画面だが、37signalsのグラフの手本はこれだけ）。
+    - 図は枠も面も持たず、シートの上に直接描く。題名「Notes: Created」は黒い太字（約16px → 本文の13px）。
+    - 図の中の線は利用側が描く。手本の値は、目盛りの横線1px #e6e6e6、0の線1px #c0c0c0、系列は平らな #018eec の2pxの線。
+      目盛りの文字は #cccccc だが白地で4.5:1に届かないので、見本では抜粋と同じ #666666 にする。
+    - 手本は題名の下に1px #cccccc の線を引くが、Retrixは見出しから線を伸ばさない（docs/principles.md「まとまりの見出し」）ので引かない。
+    系列の色は平らな塗りにする（グラデーションを使わない）。説明と出典は灰色の小さな文字。数値の表はDisclosureに収める。
   */
   .rx-chart-frame {
     display: grid;
@@ -31,19 +35,14 @@
     }
   }
 
+  /* 図は枠を持たずシートの上に置く。はみ出す図は、この中で横にスクロールする。 */
   .rx-chart-frame > .graphic {
     min-inline-size: 0;
-    padding-block: var(--rx-space-4);
-    padding-inline: var(--rx-space-5);
     overflow: auto;
-    border: var(--rx-stroke-width) solid var(--rx-border);
-    border-radius: var(--rx-radius-surface);
-    background: var(--rx-surface);
     & > svg {
       display: block;
       max-inline-size: 100%;
       block-size: auto;
-      margin-inline: auto;
     }
   }
 
@@ -80,7 +79,7 @@
     }
   }
 
-  /* 開閉の見た目はDisclosureが持つ。図は輪郭を持つ紙に載っているので、罫線を足さず余白だけで区切る。 */
+  /* 開閉の見た目はDisclosureが持つ。罫線を足さず余白だけで区切る。 */
   .rx-chart-frame > .data {
     min-inline-size: 0;
   }

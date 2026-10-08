@@ -1,13 +1,16 @@
 @layer components {
   /*
-    添付したファイルの一件。実測: lists.md「BC2 Files のグリッド」「BC2 黄色のテキスト文書のカード」。
-    - ファイル名は13px前後の黒い太字。メタ「Added by … · 216 KB」は12px前後の #999（白地で4.5:1に届かないので、
-      同じ無彩色で明るさを下げた #757575。BC2の「Saved by …」の #777 とほぼ同じ）。
-    - アイコンの紙は、テキスト文書のカードと同じく1px #e0e0e0 の枠と外へ1pxの淡い影。サムネイルは1px #ccc の枠。
-    一覧の行の形（アイコンと名前を横に並べる）は、2012年版のFilesの縦の一覧に合わせる。
+    添付したファイルの一件。一覧の行の形は、BC2のFilesの一覧（実測: basecamp2-official/bc2-help-files-07.png の
+    (80, 94, 540, 94)。1倍）に合わせる。
+    - 縮小は1px #dddddd の枠の内側に2pxの白い余白を取り、外へ2pxほどの淡い影（#ededed → #fafafa）を付ける。角は丸めない。
+    - ファイル名は黒い太字（手本は約17px。和文の段に下げて一覧の題名と同じ13px）。
+    - メタ「Project: The Leto Laptop」は #666666（約14px → 12px）。
+    - 縮小の右から名前までは約10px（4pxの段に丸めて12px）。名前と説明は縮小の上下の中央にそろえる。
+    縮小の無いファイルのアイコンの紙も、縮小と同じ枠と影にする。
   */
   .rx-file-item {
-    --rx-file-item-meta: #757575;
+    --rx-file-item-edge: #dddddd;
+    --rx-file-item-shadow: 0 0 0.125rem rgb(0 0 0 / 10%);
     container: rx-file-item / inline-size;
     display: grid;
     /* アイコンの背景とサムネイルは同じ40pxの正方形の列に置き、混ぜても名前の書き始めをそろえる。 */
@@ -27,22 +30,25 @@
       justify-self: center;
       inline-size: 2rem;
       block-size: 2.5rem;
-      border: var(--rx-stroke-width) solid var(--rx-note-edge);
+      border: var(--rx-stroke-width) solid var(--rx-file-item-edge);
       background: var(--rx-surface);
-      box-shadow: 0 0 var(--rx-stroke-width) rgb(0 0 0 / 12%);
+      box-shadow: var(--rx-file-item-shadow);
       color: var(--rx-teal);
     }
     /*
-      サムネイルは角丸を付けず紙の輪郭だけで囲み、アイコンと同じ高さの正方形に切り抜く。
-      送信待ちはサムネイルを薄くする。
+      縮小は角丸を付けず、1px #dddddd の枠と2pxの白い余白で囲み、アイコンと同じ高さの正方形に切り抜く。
+      送信待ちは縮小を薄くする。
     */
     & > .preview {
       grid-column: 1;
       inline-size: 2.5rem;
       block-size: 2.5rem;
       overflow: hidden;
-      border: var(--rx-stroke-width) solid var(--rx-control-border);
-      background: var(--rx-gray-20);
+      padding-block: 0.125rem;
+      padding-inline: 0.125rem;
+      border: var(--rx-stroke-width) solid var(--rx-file-item-edge);
+      background: var(--rx-surface);
+      box-shadow: var(--rx-file-item-shadow);
       & > :is(img, svg:not(.rx-icon)) {
         display: block;
         inline-size: 100%;
@@ -66,12 +72,12 @@
       grid-column: 2;
       min-inline-size: 0;
       overflow-wrap: anywhere;
-      /* ファイル名は黒い太字。リンクのファイル名はホバーした時だけ赤茶の文字と下線にする（ホバーは推測）。 */
+      /* ファイル名は黒い太字。リンクのファイル名はホバーした時だけ赤い文字と下線にする（ホバーは推測）。 */
       & > .title {
         color: var(--rx-ink);
-        font-size: var(--rx-label);
+        font-size: var(--rx-body);
         font-weight: 700;
-        line-height: var(--rx-label-leading);
+        line-height: var(--rx-leading);
         & > strong {
           font-weight: inherit;
         }
@@ -86,9 +92,9 @@
       }
       & > .description {
         margin-block-start: 0.125rem;
-        color: var(--rx-file-item-meta);
-        font-size: var(--rx-small);
-        line-height: var(--rx-small-leading);
+        color: var(--rx-muted);
+        font-size: var(--rx-label);
+        line-height: var(--rx-label-leading);
       }
     }
     & > .actions {

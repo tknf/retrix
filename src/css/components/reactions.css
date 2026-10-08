@@ -1,10 +1,13 @@
 @layer components {
   /*
     リアクション。同じ絵文字や言葉を一つの小さなリアクションにまとめ、付けた人数を灰色の太字で添える。
-    リアクションそのものはBasecamp 2・Highriseの画面に手本が無い（推測）。
-    リアクションは入力欄と同じ淡い灰色の枠（実測: controls.md 6a。1px #dedede）の、平らな白い小さな四角（角丸5px）にする。
-    自分も付けているリアクションは、メニューで選んでいる項目と同じ淡い青（--rx-option-active）の面にする。
-    押せるリアクションはホバーすると淡い灰色の面、押すと内側へへこむ（ボタンと同じ手触り。推測）。
+    リアクションそのものはBasecamp 2・Highriseの画面に手本が無い（推測。bc2-tour-2014-14-celebrate.jpg にも applause は写っていない）。
+    語彙は手本で測った部品から借りる。
+    - 押せるリアクション（button）は控えめなボタン（controls.md 1章）と同じ、平らな白、1px #ccc、下に1px #ddd の影、角丸5px。
+      ホバーは控えめなボタンと同じ #fafafa、押すと内側へへこむ。
+    - 読むだけのリアクション（span）は押せると見せないよう、入力欄と同じ淡い枠（controls.md 6a。1px #dedede）だけにして影を付けない。
+    - 自分も付けているリアクション（押した状態）は、オンの状態と同じ淡い青の縦の塗りに紺の縁と紺の文字（--rx-selected-*）。
+    - 高さは24px。ピルにはしない。
     追加の操作はリアクションの終わりに置くPopoverで、開く操作は枠も影もない青緑のアイコン（Buttonのlink）にTooltipで名前を出す。
     中は短い言葉でリアクションする欄（開いた時に移る）とEmojiPicker。文字の指定はこのファイルが持つ（専用の操作）。
   */
@@ -62,27 +65,29 @@
           font-variant-numeric: tabular-nums;
         }
         &[data-mine="true"] {
-          border-color: var(--rx-option-active);
-          background: var(--rx-option-active);
-          color: var(--rx-option-active-text);
+          border-color: var(--rx-selected-edge);
+          border-block-end-color: var(--rx-selected-edge-end);
+          background: var(--rx-selected-fill);
+          color: var(--rx-selected-text);
           & > .count {
-            color: var(--rx-option-active-text);
+            color: var(--rx-selected-text);
           }
         }
       }
       & > li > button.reaction {
+        border-color: var(--rx-control-border);
+        box-shadow: var(--rx-shadow-control);
         cursor: pointer;
         &:hover {
-          border-color: var(--rx-control-border);
-          background: var(--rx-gray-20);
+          background: var(--rx-fill-control-hover);
+          box-shadow: var(--rx-shadow-control-hover);
+        }
+        &[data-mine="true"] {
+          border-color: var(--rx-selected-edge);
+          border-block-end-color: var(--rx-selected-edge-end);
         }
         &[data-mine="true"]:hover {
-          border-color: color-mix(
-            in srgb,
-            var(--rx-option-active-text) 25%,
-            var(--rx-option-active)
-          );
-          background: var(--rx-option-active);
+          background: var(--rx-selected-fill-hover);
         }
         &:active {
           box-shadow: var(--rx-shadow-control-pressed);

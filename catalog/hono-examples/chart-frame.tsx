@@ -7,20 +7,9 @@ export default () => (
     tableLabel="月別売上の数値"
     graphic={
       <svg viewBox="0 0 420 142" width="420" height="142">
-        {/* 棒は青から紫寄りへの塗り。 */}
-        <defs>
-          <linearGradient id="chart-frame-bar" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="var(--rx-link)" />
-            <stop
-              offset="100%"
-              stop-color="color-mix(in srgb, var(--rx-link) 70%, var(--rx-plum))"
-            />
-          </linearGradient>
-        </defs>
-        <path
-          d="M40 20H410M40 65H410M40 110H410"
-          stroke="color-mix(in srgb, var(--rx-ink) 10%, transparent)"
-        />
+        {/* Highriseの統計のグラフと同じく、目盛りの横線は淡い灰色、0の線は一段濃い灰色、系列は平らな塗り。 */}
+        <path d="M40 20H410M40 65H410" stroke="#e6e6e6" />
+        <path d="M40 110H410" stroke="#c0c0c0" />
         <text x="4" y="24" fill="var(--rx-muted)" font-size="11">
           80
         </text>
@@ -30,9 +19,9 @@ export default () => (
         <text x="11" y="114" fill="var(--rx-muted)" font-size="11">
           0
         </text>
-        <rect x="78" y="59" width="58" height="51" rx="6" fill="url(#chart-frame-bar)" />
-        <rect x="202" y="42" width="58" height="68" rx="6" fill="url(#chart-frame-bar)" />
-        <rect x="326" y="25" width="58" height="85" rx="6" fill="url(#chart-frame-bar)" />
+        <rect x="78" y="59" width="58" height="51" fill="var(--rx-link)" />
+        <rect x="202" y="42" width="58" height="68" fill="var(--rx-link)" />
+        <rect x="326" y="25" width="58" height="85" fill="var(--rx-link)" />
         <text x="90" y="133" fill="var(--rx-muted)" font-size="12">
           4月
         </text>
