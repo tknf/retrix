@@ -1,5 +1,16 @@
 @layer components {
+  /*
+    添付したファイルの一件。一覧の行の形は、BC2のFilesの一覧（実測: basecamp2-official/bc2-help-files-07.png の
+    (80, 94, 540, 94)。1倍）に合わせる。
+    - 縮小は1px #dddddd の枠の内側に2pxの白い余白を取り、外へ2pxほどの淡い影（#ededed → #fafafa）を付ける。角は丸めない。
+    - ファイル名は黒い太字（手本は約17px。和文の段に下げて一覧の題名と同じ13px）。
+    - メタ「Project: The Leto Laptop」は #666666（約14px → 12px）。
+    - 縮小の右から名前までは約10px（4pxの段に丸めて12px）。名前と説明は縮小の上下の中央にそろえる。
+    縮小の無いファイルのアイコンの紙も、縮小と同じ枠と影にする。
+  */
   .rx-file-item {
+    --rx-file-item-edge: #dddddd;
+    --rx-file-item-shadow: 0 0 0.125rem rgb(0 0 0 / 10%);
     container: rx-file-item / inline-size;
     display: grid;
     /* アイコンの背景とサムネイルは同じ40pxの正方形の列に置き、混ぜても名前の書き始めをそろえる。 */
@@ -11,27 +22,33 @@
     color: var(--rx-text);
     font-size: var(--rx-label);
     line-height: var(--rx-label-leading);
-    /* ファイルのアイコンは枠で囲まず、淡く塗った背景に置く。 */
+    /* ファイルのアイコンは、縦長の白い紙に置く。 */
     & > .icon {
       display: grid;
       place-items: center;
       grid-column: 1;
+      justify-self: center;
+      inline-size: 2rem;
       block-size: 2.5rem;
-      border-radius: var(--rx-radius-control);
-      background: var(--rx-info-soft);
-      color: var(--rx-link);
+      border: var(--rx-stroke-width) solid var(--rx-file-item-edge);
+      background: var(--rx-surface);
+      box-shadow: var(--rx-file-item-shadow);
+      color: var(--rx-teal);
     }
     /*
-      サムネイルは角丸を付けず淡い縁だけで囲み、アイコンと同じ高さの正方形に切り抜く。
-      送信待ちはサムネイルを薄くする。
+      縮小は角丸を付けず、1px #dddddd の枠と2pxの白い余白で囲み、アイコンと同じ高さの正方形に切り抜く。
+      送信待ちは縮小を薄くする。
     */
     & > .preview {
       grid-column: 1;
       inline-size: 2.5rem;
       block-size: 2.5rem;
       overflow: hidden;
-      border: var(--rx-stroke-width) solid color-mix(in srgb, var(--rx-ink) 15%, transparent);
-      background: var(--rx-background);
+      padding-block: 0.125rem;
+      padding-inline: 0.125rem;
+      border: var(--rx-stroke-width) solid var(--rx-file-item-edge);
+      background: var(--rx-surface);
+      box-shadow: var(--rx-file-item-shadow);
       & > :is(img, svg:not(.rx-icon)) {
         display: block;
         inline-size: 100%;
@@ -44,7 +61,7 @@
     }
     /* 送信待ちはアイコンを控えめな色にし、状態は説明の文言で伝える。 */
     &[data-state="pending"] > .icon {
-      background: var(--rx-background);
+      background: var(--rx-gray-20);
       color: var(--rx-muted);
     }
     &[data-state="error"] > .icon {
@@ -55,27 +72,29 @@
       grid-column: 2;
       min-inline-size: 0;
       overflow-wrap: anywhere;
+      /* ファイル名は黒い太字。リンクのファイル名はホバーした時だけ赤い文字と下線にする（ホバーは推測）。 */
       & > .title {
-        font-size: var(--rx-label);
-        font-weight: 600;
-        line-height: var(--rx-label-leading);
+        color: var(--rx-ink);
+        font-size: var(--rx-body);
+        font-weight: 700;
+        line-height: var(--rx-leading);
         & > strong {
           font-weight: inherit;
         }
         & > a {
-          color: var(--rx-text);
-          text-decoration: none;
+          color: inherit;
+          text-decoration-line: none;
           &:hover {
-            color: var(--rx-link);
-            text-decoration: none;
+            color: var(--rx-link-hover);
+            text-decoration-line: underline;
           }
         }
       }
       & > .description {
-        margin-block-start: var(--rx-space-1);
+        margin-block-start: 0.125rem;
         color: var(--rx-muted);
-        font-size: var(--rx-small);
-        line-height: var(--rx-small-leading);
+        font-size: var(--rx-label);
+        line-height: var(--rx-label-leading);
       }
     }
     & > .actions {

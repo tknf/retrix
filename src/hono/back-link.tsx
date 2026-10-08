@@ -9,11 +9,11 @@ export type BackLinkProps = Omit<ElementProps<"a">, "children"> & {
   label: string;
   /** 表示用のショートカットキー（「Esc」など）。登録は利用側で行う。 */
   shortcut?: string;
-  /** filledは淡い青のピル（既定）、plainは面を持たない太字の文字。 */
+  /** filledは下線付きの青緑の文字（既定）、plainは下線の無い灰色の文字。どちらも面を持たない。 */
   tone?: "filled" | "plain";
 };
 
-/** 一つ上の場所へ戻るだけのピル。パンくずより軽く、画面の先頭側の角に置く。 */
+/** 一つ上の場所へ戻るだけのリンク。パンくずより軽く、画面の先頭側の角に置く。 */
 export const BackLink = ({
   href,
   label,

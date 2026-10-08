@@ -1,11 +1,15 @@
 import { expect, test } from "@playwright/test";
 
-test("独自のチェックとラジオをラベル・キーボードで操作できる", async ({ page }) => {
+test("手本の形で描いたチェックとラジオをラベル・キーボードで操作できる", async ({ page }) => {
   await page.goto("/components/field");
   const check = page.getByLabel("条件を確認しました", { exact: true });
+  // 手本の2012年前後のMacの標準の部品を測って描く（今のブラウザの標準の部品にしない）。枠は1px #9c9c9c。
   await expect(check).toHaveCSS("appearance", "none");
+  await expect(check).toHaveCSS("border-inline-start-color", "rgb(156, 156, 156)");
   await page.getByText("条件を確認しました", { exact: true }).click();
   await expect(check).toBeChecked();
+  // チェックすると、選ぶ操作の共通の見た目（紺の縁 #5e64b3）になる。
+  await expect(check).toHaveCSS("border-inline-start-color", "rgb(94, 100, 179)");
   await page.keyboard.press("Tab");
   await page.keyboard.press("Shift+Tab");
   await page.keyboard.press("Space");
@@ -20,7 +24,6 @@ test("独自のチェックとラジオをラベル・キーボードで操作�
   await expect(page.getByRole("radio", { name: /^静かな部屋/ })).toBeChecked();
   await expect(radio).not.toBeChecked();
   await page.emulateMedia({ forcedColors: "active" });
-  await expect(check).toHaveCSS("appearance", "auto");
   await check.check();
   await expect(check).toBeChecked();
 });

@@ -1,4 +1,12 @@
 @layer components {
+  /*
+    シートの見出し。実測: structure.md「シートの中の見出し（BC2 のプロジェクト画面）」
+    （basecamp2-official/bc2-tour-2014-05-project-view.jpg (384, 360, 790, 34)。2倍）。
+    - 題名は太字の黒。手本は24pxだが、ユーザーの指定で--rx-title（18px）に下げてある。大きくしない。
+    - 題名の下に1px #dedede の罫線を内側の幅いっぱいに引く。手本は題名のベースラインから罫線まで31px。
+    - 補足の行は、2012年版の題名の下のカーキの説明（「Print and online marketing strategy…」）に合わせ、
+      日付・補足の茶色（--rx-meta。実測#a89c80を4.5:1に届くよう濃くした色）にする。
+  */
   .rx-page-header {
     container: rx-page-header / inline-size;
     display: flex;
@@ -6,16 +14,22 @@
     align-items: center;
     gap: var(--rx-space-3);
     min-inline-size: 0;
+    /* 見出しの下に罫線を引き、ここからシートの中身が始まることを示す。題名の大きさを下げた分、罫線までの間も24pxに詰める。 */
+    padding-block-end: var(--rx-space-6);
+    border-block-end: var(--rx-stroke-width) solid var(--rx-gray-200);
+    /* アイコンはHighriseの写真と同じく、白い縁取りと四方への浅い影の四角に収める。 */
     & > .icon {
       display: grid;
       place-items: center;
       flex: 0 0 auto;
       inline-size: 3rem;
       block-size: 3rem;
-      border-radius: var(--rx-radius-field);
-      background: var(--rx-cover);
-      color: var(--rx-link);
-      font-size: 1.75rem;
+      border: 0.1875rem solid var(--rx-surface);
+      border-radius: var(--rx-radius-mark);
+      background: var(--rx-gray-20);
+      box-shadow: var(--rx-shadow-paper);
+      color: var(--rx-muted);
+      font-size: 1.5rem;
     }
     /* 補足文があると見出し部分が縦に長くなるため、アイコンと操作は見出しの1行目の上端に揃える。 */
     &:not([data-align="center"]):has(> .heading > p) > :is(.icon, .actions) {
@@ -42,8 +56,8 @@
     }
     & > .heading > p {
       max-inline-size: var(--rx-measure);
-      margin-block-start: var(--rx-space-2);
-      color: var(--rx-muted);
+      margin-block-start: var(--rx-space-1);
+      color: var(--rx-meta);
       font-size: var(--rx-label);
       line-height: var(--rx-label-leading);
     }
@@ -54,37 +68,18 @@
       gap: var(--rx-space-2);
       min-inline-size: 0;
     }
-    /* 中央揃えは作業面の主題。見出しの左右から線を伸ばし、ここからまとまりが始まることを示す。 */
+    /*
+      中央揃えは作業面の主題。BC2のCatch upの見出し（lists.md「BC2 Catch up」、bc2-features-progress-catch-up.jpg。1倍）と同じく、
+      太字の黒の見出しを中央に置くだけにし、下の罫線も見出しの左右の線も引かない（見出しから線は伸ばさない）。
+    */
     &[data-align="center"] {
       flex-direction: column;
+      padding-block-end: 0;
+      border-block-end: 0;
       text-align: center;
       & > .heading {
         flex-basis: auto;
         align-self: stretch;
-      }
-      & > .heading > h1 {
-        display: flex;
-        align-items: center;
-        gap: var(--rx-space-4);
-        &::before,
-        &::after {
-          content: "";
-          flex: 1 1 1.5rem;
-          min-inline-size: 1.5rem;
-          block-size: var(--rx-stroke-width);
-          background: linear-gradient(
-            to right,
-            transparent,
-            color-mix(in srgb, var(--rx-link) 55%, var(--rx-surface))
-          );
-        }
-        &::after {
-          background: linear-gradient(
-            to left,
-            transparent,
-            color-mix(in srgb, var(--rx-link) 55%, var(--rx-surface))
-          );
-        }
       }
       & > .heading > p {
         margin-inline: auto;

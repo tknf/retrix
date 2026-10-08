@@ -10,7 +10,7 @@ export default () => (
     </div>
     <DisclosureGroup label="置き場所の違い">
       <Disclosure summary="カードの縁にまたがせる（置く側で位置を決める）" open>
-        <div style="position: relative; max-inline-size: 24rem; padding-inline-end: 1.5rem">
+        <div style="position: relative; max-inline-size: 24rem; padding-block-end: 1.25rem; padding-inline-end: 1.5rem">
           <Card title="会場を予約する">
             <p>第二会議室を18時から21時まで。</p>
           </Card>

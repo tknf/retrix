@@ -115,7 +115,7 @@ export default () => (
     <Disclosure summary="長文・本文スクロール・広いダイアログ">
       <Dialog id="dialog-long" title="公開前の確認事項" trigger="長文の例を開く" size="wide">
         {Array.from({ length: 12 }, (_, index) => (
-          <section class="rx-stack" data-space="small">
+          <section>
             <h3>確認事項 {index + 1}</h3>
             <p>
               本文が長い場合は、この領域をスクロールして確認します。見出しの閉じる操作から戻れます。

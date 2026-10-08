@@ -1,23 +1,5 @@
 @layer tokens {
-  /*
-    浮かぶ要素の出入りの設定（overlay.cssの共通の定義が読む）。支点から現れる時と消える時の大きさと、滑らせる時間。
-    コンポーネントが自分の上でだけ変えられるよう継承させない。下に付くDialogの中で開いたメニューが膨らみを失わない。
-  */
-  @property --rx-motion-scale-in {
-    syntax: "<number>";
-    inherits: false;
-    initial-value: 0.85;
-  }
-  @property --rx-motion-scale-out {
-    syntax: "<number>";
-    inherits: false;
-    initial-value: 0.94;
-  }
-  @property --rx-motion-slide {
-    syntax: "<time>";
-    inherits: false;
-    initial-value: 0s;
-  }
+  /* Retrixはアニメーションとトランジションを持たない。2012年前後の画面と同じく、状態はその場で切り替える。 */
   /* 同じローカル書体の行メトリクスを揃える。字形や字幅、コンポーネントごとの余白は変えない。 */
   @font-face {
     font-family: "Retrix UI Latin";
@@ -69,99 +51,106 @@
     line-gap-override: 0%;
   }
   :root {
-    --rx-gray-0: #ffffff;
-    --rx-gray-20: #f3f6f8;
-    --rx-gray-100: #d4dfe5;
-    --rx-gray-500: #758591;
-    --rx-gray-650: #435563;
-    --rx-gray-900: #243946;
-    --rx-black: #243946;
-    --rx-brand: #0b65c2;
-    --rx-cover: #e5f2fb;
-    --rx-mark: #ffe28a;
-    --rx-shadow-control:
-      inset 0 0.0625rem 0 rgb(255 255 255 / 78%), inset 0 -0.0625rem 0 rgb(36 57 70 / 3%),
-      0 0.03125rem 0.0625rem rgb(36 57 70 / 8%), 0 0.09375rem 0.1875rem rgb(36 57 70 / 6%),
-      0 0.1875rem 0.375rem rgb(36 57 70 / 4%), 0 0.375rem 0.75rem rgb(36 57 70 / 2%);
-    --rx-shadow-control-hover:
-      inset 0 0.0625rem 0 rgb(255 255 255 / 82%), inset 0 -0.0625rem 0 rgb(36 57 70 / 3%),
-      0 0.0625rem 0.125rem rgb(36 57 70 / 8%), 0 0.125rem 0.25rem rgb(36 57 70 / 6%),
-      0 0.25rem 0.5rem rgb(36 57 70 / 4%), 0 0.5rem 1rem rgb(36 57 70 / 2%);
     /*
-      色で塗ったボタン（主操作・危険・オン）の影。外側の影は白いボタン（--rx-shadow-control）と同じにし、
-      上端の光だけを色の上で強すぎない濃さにする。ホバーすると影が広がり、押すと影が内側へ移る流れも白と同じ。
+      基本色。Basecamp 2の画面の色を手本にする。
+      補足の灰色（--rx-gray-650）と日付の茶色（--rx-tan）は、説明文に求める7:1を白地で満たすよう、手本より少し濃くする。
+      - 机の地はクリーム色、その上に白いシート（作業面）を置く。
+      - 罫線と枠は黄みを帯びた灰色にし、青みの灰色を使わない。
     */
-    --rx-shadow-control-primary:
-      inset 0 0.0625rem 0 rgb(255 255 255 / 20%), inset 0 -0.0625rem 0 rgb(0 0 0 / 8%),
-      0 0.03125rem 0.0625rem rgb(36 57 70 / 8%), 0 0.09375rem 0.1875rem rgb(36 57 70 / 6%),
-      0 0.1875rem 0.375rem rgb(36 57 70 / 4%), 0 0.375rem 0.75rem rgb(36 57 70 / 2%);
-    --rx-shadow-control-primary-hover:
-      inset 0 0.0625rem 0 rgb(255 255 255 / 24%), inset 0 -0.0625rem 0 rgb(0 0 0 / 8%),
-      0 0.0625rem 0.125rem rgb(36 57 70 / 8%), 0 0.125rem 0.25rem rgb(36 57 70 / 6%),
-      0 0.25rem 0.5rem rgb(36 57 70 / 4%), 0 0.5rem 1rem rgb(36 57 70 / 2%);
-    --rx-shadow-control-pressed:
-      inset 0 0.0625rem 0.1875rem rgb(36 57 70 / 14%),
-      inset 0 0.1875rem 0.375rem rgb(36 57 70 / 4%), 0 0.03125rem 0.0625rem rgb(36 57 70 / 2%);
-    /* 色の地は白より暗いため、同じ沈み方に見えるよう内側の影を濃くする。 */
-    --rx-shadow-control-primary-pressed:
-      inset 0 0.0625rem 0.1875rem rgb(0 0 0 / 28%), inset 0 0.1875rem 0.375rem rgb(0 0 0 / 8%),
-      0 0.03125rem 0.0625rem rgb(36 57 70 / 2%);
-    --rx-shadow-surface:
-      inset 0 0.0625rem 0 rgb(255 255 255 / 72%), inset 0 -0.0625rem 0 rgb(36 57 70 / 2%),
-      0 0.0625rem 0.125rem rgb(36 57 70 / 6%), 0 0.125rem 0.25rem rgb(36 57 70 / 4%),
-      0 0.25rem 0.5rem rgb(36 57 70 / 3%), 0 0.5rem 1rem rgb(36 57 70 / 2%);
-    --rx-shadow-chip:
-      inset 0 0.0625rem 0 rgb(255 255 255 / 76%), inset 0 -0.0625rem 0 rgb(36 57 70 / 2%),
-      0 0.03125rem 0.0625rem rgb(36 57 70 / 6%), 0 0.09375rem 0.1875rem rgb(36 57 70 / 4%),
-      0 0.1875rem 0.375rem rgb(36 57 70 / 2%), 0 0.375rem 0.75rem rgb(36 57 70 / 2%);
-    --rx-shadow-hardware:
-      inset 0 0.0625rem 0 rgb(255 255 255 / 22%), inset 0 -0.0625rem 0 rgb(36 57 70 / 3%),
-      0 0.03125rem 0.0625rem rgb(36 57 70 / 8%), 0 0.09375rem 0.1875rem rgb(36 57 70 / 6%),
-      0 0.1875rem 0.375rem rgb(36 57 70 / 4%), 0 0.375rem 0.75rem rgb(36 57 70 / 2%);
-    --rx-shadow-input:
-      inset 0 0.0625rem 0.125rem rgb(36 57 70 / 7%), inset 0 0.1875rem 0.375rem rgb(36 57 70 / 2%);
-    --rx-blue: #0b65c2;
-    --rx-blue-dark: #085194;
-    --rx-green: #1c6a47;
-    --rx-amber: #7a4e00;
-    --rx-red: #a8231b;
-    --rx-coral: #b54d36;
-    --rx-coral-dark: #9f4a38;
-    --rx-cream: #f8f5ed;
-    --rx-ice: #edf4fb;
-    --rx-mint: #edf5ef;
-    --rx-butter: #faedbf;
-    --rx-lilac: #eee6f5;
-    --rx-plum: #71508e;
+    --rx-gray-0: #ffffff;
+    --rx-gray-20: #f9f9f9;
+    --rx-gray-50: #f2f2f2;
+    --rx-gray-100: #ececec;
+    --rx-gray-200: #dedede;
+    --rx-gray-300: #cccccc;
+    --rx-gray-500: #a9a8a4;
+    --rx-gray-650: #666666;
+    --rx-gray-900: #000000;
+    --rx-black: #000000;
+    --rx-desk-cream: #f6f2e8;
+    --rx-teal: #1c5c77;
+    --rx-teal-dark: #143f51;
+    --rx-teal-soft: #e6eff3;
+    --rx-blue: #2272b0;
+    --rx-blue-dark: #185383;
+    --rx-green: #008250;
+    --rx-green-dark: #016c43;
+    --rx-amber: #8a5a00;
+    --rx-red: #990000;
+    --rx-red-dark: #7a0f00;
+    --rx-coral: #b0472f;
+    --rx-coral-dark: #923a26;
+    --rx-tan: #7b6f54;
+    --rx-plum: #6d4c8a;
     --rx-gold: #8a631a;
-    --rx-soft: var(--rx-cream);
+    --rx-cream: #faf7ef;
+    --rx-ice: #e1e8f8;
+    --rx-mint: #e9f3e3;
+    --rx-butter: #ffffcc;
+    --rx-cover: var(--rx-teal-soft);
+    /* 「今日」と選んだ行・更新した行の黄色。37signalsの黄色のハイライトに合わせる。 */
+    --rx-mark: var(--rx-butter);
+    /* テキスト文書やメモを置く黄色の紙。 */
+    --rx-note: #ffffcd;
+    --rx-note-edge: #e0e0e0;
+    /*
+      BC2のピル（件数・担当者・期日）。高さ18px・角丸9px・12pxの平らな塗り（lists.md）。
+      件数は淡い青に青緑の文字、担当者と期日は灰色の地に灰色の文字（実測 #777 は4.5:1に届かないので #6b6b6b）。
+    */
+    --rx-pill-count: var(--rx-ice);
+    --rx-pill-count-text: var(--rx-teal);
+    --rx-pill-meta: #eeeeee;
+    --rx-pill-meta-text: #6b6b6b;
+    /*
+      選んでいる項目・候補。BC2のジャンプの候補（overlays.md「1f」）と同じ、角の無い淡い青に黒い文字。
+      メニュー・候補の一覧・切り替え・Dialなど、選んでいる状態は全てこの一つの見た目にする（ピルで囲わない）。
+    */
+    --rx-option-active: #ddeefe;
+    --rx-option-active-text: var(--rx-ink);
+    /*
+      選んだ状態・オン。手本のMacの標準のチェックボックスとラジオの選んだ状態（controls.md 9・10章）と同じ、
+      淡い青の縦の塗り、紺の縁（下だけ一段濃い）、濃い紺の文字。切り替え・選んだボタン・選んだ日・Switchのオンなど、
+      選ぶ操作の「選んでいる」はどれもこの見た目にそろえる。ホバーの一段濃い塗りは手本が無い（推測）。
+    */
+    --rx-selected-fill: linear-gradient(#e4faff, #bcddfa 50%, #a1cff9);
+    --rx-selected-fill-hover: linear-gradient(#d4f2ff, #aad3f8 50%, #8fc4f6);
+    --rx-selected-edge: #5e64b3;
+    --rx-selected-edge-end: #545773;
+    --rx-selected-text: #001831;
+    /* カレンダー・Progressの暖かい灰色の罫線（lists.md）。 */
+    --rx-calendar-rule: #dcd9d2;
+    /* ヘッダーの名前の濃い灰色と、名前と移動先の間の縦の線（BC2の実測）。 */
+    --rx-logo: #3d3c37;
+    --rx-header-rule: #ded7c7;
+    /* 浮かぶパネル（BC2のポップオーバー。overlays.md「1」）。1px #bbb の枠・角丸5px・外へ約8pxの柔らかい影。 */
+    --rx-popover-edge: #bbbbbb;
+    --rx-popover-radius: 0.3125rem;
+    --rx-popover-shadow: 0 var(--rx-stroke-width) 0.5rem rgb(0 0 0 / 18%);
+    /* 背後に重ねた親のシートの枠。 */
+    --rx-sheet-behind-edge: #e5e5e5;
+    /* シートの背後に重ねる親のシート。 */
+    --rx-sheet-behind: var(--rx-gray-20);
+    /* 控えめなボタンの影。BC2の実測どおり、ぼかしの無い1px #ddd を下に付ける（controls.md 1章）。押すと内側へ沈む。 */
+    --rx-shadow-control: 0 var(--rx-stroke-width) 0 #dddddd;
+    --rx-shadow-control-hover: 0 var(--rx-stroke-width) 0 #cfcfcf;
+    --rx-shadow-control-pressed: inset 0 var(--rx-stroke-width) 0.125rem rgb(0 0 0 / 12%);
+    --rx-shadow-control-primary-pressed: inset 0 var(--rx-stroke-width) 0.125rem rgb(0 0 0 / 25%);
+    /* 小さな札の輪郭と浅い影。 */
+    --rx-shadow-chip:
+      0 0 0 var(--rx-stroke-width) rgb(38 38 36 / 16%), 0 0.0625rem 0.0625rem rgb(38 38 36 / 5%);
+    --rx-shadow-input: none;
     --rx-info-soft: var(--rx-ice);
     --rx-success-soft: var(--rx-mint);
-    --rx-warning-soft: #fff6dc;
-    --rx-danger-soft: #fff0ed;
-    /*
-      カードの影。縁取り（1pxの輪郭や縁の光の線）を持たず、やわらかく広がる影だけで浮かせる。
-      近くの濃い影で置いた位置を、遠くの薄い影で厚みを見せる。持ち上げたカード（ドラッグ中・ホバー中のカード）はlift。
-    */
-    --rx-shadow-paper:
-      0 0.0625rem 0.1875rem rgb(36 57 70 / 7%), 0 0.25rem 0.75rem rgb(36 57 70 / 6%),
-      0 0.75rem 2rem rgb(36 57 70 / 6%);
-    /* 面に沈んだ溝（Progress）。上の縁から内側へ影が落ち、下の縁に光が乗る。 */
-    --rx-shadow-sunken:
-      inset 0 0.125rem 0.25rem rgb(36 57 70 / 8%),
-      inset 0 0 0 var(--rx-stroke-width) rgb(36 57 70 / 5%),
-      0 var(--rx-stroke-width) 0 rgb(255 255 255 / 80%);
-    --rx-shadow-paper-lift:
-      0 0.125rem 0.375rem rgb(36 57 70 / 8%), 0 0.5rem 1.25rem rgb(36 57 70 / 8%),
-      0 1.5rem 3rem rgb(36 57 70 / 7%);
-    /*
-      作業面（sheet）の影。白い地の上で四方へ淡くぼかし、黒で下へわずかに寄せて置いた紙に見せる。
-    */
-    --rx-shadow-sheet: 0 0 2rem rgb(36 57 70 / 6%), 0 0.5rem 2.5rem rgb(36 57 70 / 5%);
-    /* 浮かぶ要素（メニュー・ダイアログ・Toast）。縁取りを持たず、カードより遠くまで影を落とす。 */
+    --rx-warning-soft: #fff6d6;
+    --rx-danger-soft: #fbece8;
+    /* カード（BC2のプロジェクトのカード）。枠なしで四方へ4〜5pxのぼかし。持ち上げたカード（ドラッグ中）はlift。 */
+    --rx-shadow-paper: 0 0 0.3125rem rgb(0 0 0 / 22%);
+    --rx-shadow-paper-lift: 0 0 0.5rem rgb(0 0 0 / 30%);
+    /* シート。BC2の実測どおり、枠なしで四方へ同じ量のぼかし（約6px、ずらし無し）（structure.md「シート」）。 */
+    --rx-shadow-sheet: 0 0 0.375rem rgb(0 0 0 / 28%);
+    /* 浮かぶ要素の輪郭と影。ポップオーバー（overlays.md）は overlay.css の --rx-popover-* で1pxの枠を描く。 */
     --rx-shadow-menu:
-      0 0.0625rem 0.25rem rgb(36 57 70 / 8%), 0 0.5rem 1.5rem rgb(36 57 70 / 10%),
-      0 1.5rem 3.5rem rgb(36 57 70 / 10%);
+      0 0 0 var(--rx-stroke-width) rgb(38 38 36 / 18%), 0 0.25rem 0.875rem rgb(38 38 36 / 20%);
     --rx-space-1: 0.25rem;
     --rx-space-2: 0.5rem;
     --rx-space-3: 0.75rem;
@@ -171,183 +160,123 @@
     --rx-space-8: 2rem;
     --rx-space-12: 3rem;
     --rx-space-18: 4.5rem;
-    --rx-background: var(--rx-gray-20);
+    --rx-background: var(--rx-desk-cream);
     --rx-surface: var(--rx-gray-0);
     --rx-text: var(--rx-gray-900);
     --rx-muted: var(--rx-gray-650);
+    /* 日付・投稿者などの補足に使う茶色。 */
+    --rx-meta: var(--rx-tan);
     --rx-border: var(--rx-gray-100);
+    /* 入力欄とボタンの枠。罫線（--rx-border）より濃くし、操作できる所だと分かるようにする。 */
+    --rx-control-border: var(--rx-gray-300);
+    /* 一行の入力欄の枠（BC2の日付の欄）。ボタンの枠より淡い。 */
+    --rx-input-border: var(--rx-gray-200);
+    /* 複数行の入力欄（BC2のコメント欄）の枠。 */
+    --rx-textarea-border: #c1c1c1;
+    /* 入力欄の中のプレースホルダー。 */
+    --rx-placeholder: #aaaaaa;
+    /* 使えない操作の文字（Highriseの「First」）。形と塗りはそのままにする。 */
+    --rx-disabled-text: #9a9a9a;
+    /* ヘッダーの移動先・フッターなど、机の上の小さな灰色の文字。 */
+    --rx-quiet: #6e6e67;
     --rx-stroke-width: 0.0625rem;
     --rx-ink: var(--rx-black);
+    /* まとまりの見出し（Section・Boardの列など）の赤茶。 */
+    --rx-heading: var(--rx-red);
     /*
-      グラデーションは二つの用途だけに使う。
-      - ボタンの手触り（--rx-fill-control）：分かるか分からないかくらいの縦の陰影。Button、選択肢、ハンドルなど。
-      - 「ここを見て」の面（--rx-emphasis-*、主操作の--rx-fill-primary）：役割の色からその淡い対への135度。
-      一覧・本文・情報の面は平らな--rx-surfaceにする。
+      塗り。BC2の部品は平らな色で、グラデーションを使わない（controls.md）。
+      グラデーションは手本で確かめられた所（Highrise・Classicのピルやページ送り）だけで、各コンポーネントのCSSに書く。
     */
-    /*
-      カードの面の陰影。ごく浅くし、厚みは--rx-shadow-paperの内側の影で出す。
-      カードの地の色を隠さないよう、透明から黒をわずかに重ねる層にする。
-    */
-    --rx-fill-paper: linear-gradient(
-      176deg,
-      transparent 0%,
-      color-mix(in srgb, var(--rx-ink) 1.5%, transparent) 100%
-    );
-    --rx-fill-control: linear-gradient(
-      176deg,
-      var(--rx-surface) 0%,
-      color-mix(in srgb, var(--rx-surface) 99%, var(--rx-ink)) 48%,
-      color-mix(in srgb, var(--rx-surface) 96%, var(--rx-ink)) 100%
-    );
-    /* 明るい側は、白い文字との対比が4.5:1を下回らない割合（90%）にとどめる。 */
-    --rx-fill-primary: linear-gradient(
-      135deg,
-      color-mix(in srgb, var(--rx-link) 90%, white) 0%,
-      var(--rx-link) 100%
-    );
-    /*
-      操作のメニューの面。白いパネルではなく色の面に白い文字で出す。
-      Retrixの青から、わずかに紫へ寄せた深い青への135度。
-    */
-    --rx-fill-menu: linear-gradient(
-      135deg,
-      color-mix(in srgb, var(--rx-link) 92%, white) 0%,
-      color-mix(in srgb, var(--rx-link) 70%, var(--rx-plum)) 100%
-    );
-    --rx-fill-success: linear-gradient(
-      135deg,
-      color-mix(in srgb, var(--rx-success) 84%, white) 0%,
-      var(--rx-success) 100%
-    );
-    --rx-fill-warning: linear-gradient(
-      135deg,
-      color-mix(in srgb, var(--rx-warning) 84%, white) 0%,
-      var(--rx-warning) 100%
-    );
-    --rx-fill-danger: linear-gradient(
-      135deg,
-      color-mix(in srgb, var(--rx-danger) 84%, white) 0%,
-      var(--rx-danger) 100%
-    );
-    --rx-emphasis-neutral: linear-gradient(
-      135deg,
-      var(--rx-surface) 0%,
-      color-mix(in srgb, var(--rx-background) 70%, var(--rx-surface)) 100%
-    );
-    --rx-emphasis-info: linear-gradient(
-      135deg,
-      var(--rx-info-soft) 0%,
-      color-mix(in srgb, var(--rx-info-soft) 35%, var(--rx-surface)) 100%
-    );
-    --rx-emphasis-success: linear-gradient(
-      135deg,
-      var(--rx-success-soft) 0%,
-      color-mix(in srgb, var(--rx-success-soft) 35%, var(--rx-surface)) 100%
-    );
-    --rx-emphasis-warning: linear-gradient(
-      135deg,
-      var(--rx-warning-soft) 0%,
-      color-mix(in srgb, var(--rx-warning-soft) 35%, var(--rx-surface)) 100%
-    );
-    --rx-emphasis-danger: linear-gradient(
-      135deg,
-      var(--rx-danger-soft) 0%,
-      color-mix(in srgb, var(--rx-danger-soft) 35%, var(--rx-surface)) 100%
-    );
-    --rx-link: var(--rx-brand);
+    --rx-fill-paper: linear-gradient(transparent, transparent);
+    --rx-fill-control: linear-gradient(var(--rx-surface), var(--rx-surface));
+    /* ホバーと押した時の控えめな操作の面（手本に無いので推測）。 */
+    --rx-fill-control-hover: linear-gradient(#fafafa, #fafafa);
+    --rx-fill-control-pressed: linear-gradient(#f2f2f2, #f2f2f2);
+    --rx-fill-success: linear-gradient(var(--rx-green), var(--rx-green));
+    /* 操作のメニューの面。白いパネルに枠と影を付ける。選んでいる行は角の無い淡い青（--rx-menu-active）にする。 */
+    --rx-fill-menu: linear-gradient(var(--rx-surface), var(--rx-surface));
+    --rx-menu-active: var(--rx-option-active);
+    /* 机の紙の質感。BC2の実測どおり、明るさだけの細かいノイズを重ねる（structure.md「机」）。 */
+    --rx-desk-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.45 0 0 0 0 0.38 0 0 0 0 0.25 0 0 0 0.07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    --rx-link: var(--rx-teal);
+    --rx-link-hover: var(--rx-red);
     --rx-info: var(--rx-blue-dark);
     --rx-success: var(--rx-green);
     --rx-warning: var(--rx-amber);
     --rx-danger: var(--rx-red);
+    --rx-focus-ring: color-mix(in srgb, var(--rx-blue) 38%, var(--rx-surface));
     /*
-      入力・選択の欄のフォーカスの輪。青い縁の外に淡い青を広げる。
+      入力欄とボタンのフォーカス。Highriseの入力欄（Safari）の実測どおり、青い縁と外側の淡い青の輪（controls.md 11章）。
       forced-colorsでは影が消えるため、欄は透明なoutlineを併せて持つ。
     */
-    --rx-focus-ring: color-mix(in srgb, var(--rx-link) 36%, var(--rx-surface));
+    --rx-focus-border: #7cb0e2;
+    --rx-focus-glow: 0 0 0 0.1875rem rgb(124 176 226 / 55%);
     --rx-font: "Hiragino Sans", "Hiragino Kaku Gothic ProN", system-ui, sans-serif;
     --rx-control-font-family:
       "Retrix UI Latin", "Retrix UI Japanese", "Helvetica Neue", Arial, var(--rx-font);
     /*
-      文字の段。320pxから1280pxの画面幅で、下限から上限へ連続して追従する。
-      - 補足・日時 --rx-small：12.5〜13px
-      - 操作・ラベル --rx-label：13.5〜14px
-      - 本文・一覧の題名 --rx-body：15〜16px
-      - 小見出し --rx-section-title：20〜22px
-      - 画面の見出し --rx-title：28〜36px
-      係数は割り切れない値を分数のまま書く。小数へ丸めると1280pxで上限にわずかに届かず（14pxが13.99999px）、
-      emで決める操作の高さが端数になって文字の縦位置がずれる。
+      文字の段。ベースの本文を13pxにし、ほかの段をそこから決める（ユーザーの指定）。
+      手本（BC2）は英字で本文15px・ボタン12pxだが、和文は字面が大きく見えるので全体を一段下げ、段の比は手本に近づける。
+      - 補足・日時・ピル --rx-small：11px
+      - ボタン・入力欄・表・ラベル --rx-label：12px
+      - 本文・一覧の題名 --rx-body：13px（ベース）
+      - 続けて読む文章 --rx-reading：14px
+      - まとまりの見出し --rx-section-title：15px
+      - シートの見出し --rx-title：18px
+      操作の高さはemで文字に追従するため、文字の大きさを整数pxに保ち、縦位置の端数を作らない。
     */
-    --rx-body: clamp(0.9375rem, calc(0.9rem + 0.15625vw), 1rem);
-    --rx-label: clamp(0.84375rem, calc(5rem / 6 + 5vw / 96), 0.875rem);
-    --rx-small: clamp(0.78125rem, calc(37rem / 48 + 5vw / 96), 0.8125rem);
-    --rx-title: clamp(1.75rem, calc(19rem / 12 + 5vw / 6), 2.25rem);
-    --rx-section-title: clamp(1.25rem, calc(29rem / 24 + 5vw / 24), 1.375rem);
-    --rx-leading: 1.625;
-    --rx-label-leading: calc(10 / 7);
-    --rx-small-leading: calc(20 / 13);
+    --rx-body: 0.8125rem;
+    --rx-label: 0.75rem;
+    --rx-small: 0.6875rem;
+    --rx-title: 1.125rem;
+    --rx-section-title: 0.9375rem;
+    /* 続けて読む文章（コメントの本文・カードの説明・文書）。手本では一覧（15px）より一段大きい16px。 */
+    --rx-reading: 0.875rem;
+    --rx-leading: calc(18 / 13);
+    --rx-label-leading: calc(17 / 12);
+    --rx-small-leading: calc(15 / 11);
     /*
-      角丸は役割で決める。ボタンはピル、カードやパネル（作業面・Card・Boardの項目・メニュー・ダイアログ）は--rx-radius-surface、
-      欄と作業面の中の枠は--rx-radius-field、その内側の行は同心の--rx-radius-control、
-      小さな要素（チェック・キー・予定）は--rx-radius-mark。
+      角丸（BC2の実測）。控えめなボタンと複数行の入力欄は5px、主ボタンは4px、シート・カード・パネルは3px、
+      一行の入力欄と小さな要素は2px。件数やメタ情報のピルだけを丸くする。
     */
-    --rx-radius-mark: 0.25rem;
-    --rx-radius-control: 0.5rem;
-    --rx-radius-field: 0.75rem;
-    --rx-radius-surface: 1rem;
-    /* 作業面（sheet）だけの大きな角丸。 */
-    --rx-radius-sheet: 1.875rem;
+    --rx-radius-mark: 0.125rem;
+    --rx-radius-control: 0.3125rem;
+    --rx-radius-primary: 0.25rem;
+    --rx-radius-field: 0.1875rem;
+    --rx-radius-surface: 0.1875rem;
+    --rx-radius-sheet: 0.1875rem;
     --rx-radius-pill: 999rem;
     /*
       状態を示す線と模様。破線は「ここに置ける」ドロップ先と「これから」のStepsやTimeline、
       斜線は使えない枠、太枠は今・編集中を示す。寸法をここで一つにし、各コンポーネントで描き直さない。
     */
-    --rx-dash: 0.375rem;
-    --rx-dash-gap: 0.25rem;
+    --rx-dash: 0.25rem;
+    --rx-dash-gap: 0.1875rem;
     --rx-perforation: color-mix(in srgb, var(--rx-muted) 55%, var(--rx-surface));
     /*
-      斜線は地を塗らず、面の上に一色の線だけを引く。
-      線の横の間隔（--rx-hatch-step）を整数pxにし、全ての線を同じ画素の位置と濃さで描く。
-      45度の線の周期は横の間隔×cos45度。間隔が端数だと線ごとに濃さが変わり、2色に見える。
+      使えない枠や欄の面。Retrixは斜線を使わず、淡い灰色の平らな面にする（名前はPlyから引き継いでいる）。
     */
+    /* 使えない枠の淡い灰色の面（Retrixは斜線を使わない。名前はPlyから引き継いでいる）。 */
+    --rx-hatch: linear-gradient(var(--rx-gray-50), var(--rx-gray-50));
+    /* 読み込み中の帯などで、模様を流す時の一周の幅。 */
     --rx-hatch-step: 0.5rem;
-    --rx-hatch: repeating-linear-gradient(
-      135deg,
-      color-mix(in srgb, var(--rx-muted) 11%, var(--rx-surface)) 0 var(--rx-stroke-width),
-      transparent var(--rx-stroke-width) calc(var(--rx-hatch-step) * 0.7071068)
-    );
     --rx-frame-width: 0.125rem;
-    --rx-frame-color: color-mix(in srgb, var(--rx-text) 32%, var(--rx-surface));
     /* 何を入れるか・何の値かを示す項目名の太さ。選択肢や値そのものは通常の太さのまま。 */
     --rx-label-weight: 600;
-    --rx-duration: 150ms;
-    /*
-      浮かぶ要素の出入り（定義はoverlay.cssの一か所）。支点から小さく現れて一瞬膨らんでから収まり、
-      閉じる時は同じ支点へ少し縮みながら速く消える。目で追える最短の速さにする。
-    */
-    --rx-duration-pop: calc(var(--rx-duration) * 1.1);
-    --rx-duration-fade: calc(var(--rx-duration) * 0.6);
-    --rx-duration-out: calc(var(--rx-duration) * 0.7);
-    --rx-ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
-    /* 画面の端から出てくる要素（下に付くDialog・Toast）は、行き過ぎずに速く止まる。 */
-    --rx-ease-slide: cubic-bezier(0.2, 0.8, 0.2, 1);
     --rx-measure: 40rem;
-    /* 作業面の幅。 */
-    --rx-page: 68rem;
-    --rx-control-size: 2.25rem;
-    --rx-control-compact: 2.25rem;
+    /* シートの幅。BC2の実測どおり960px（structure.md「シート」）。 */
+    --rx-page: 60rem;
+    --rx-control-size: 1.5rem;
+    --rx-control-compact: 1.375rem;
     --rx-control-font: var(--rx-label);
-    --rx-control-leading: 1.5;
-    --rx-control-weight: 400;
+    --rx-control-leading: calc(17 / 12);
     --rx-button-font: var(--rx-label);
-    /* Buttonは14pxの文字で高さ36px、largeは16pxの文字で40px。 */
-    --rx-button-size: calc(18em / 7);
-    --rx-button-large: 2.5em;
+    /*
+      控えめなButtonはBC2の実測どおり12pxの文字で高さ22px、largeは14pxの文字で高さ32px（一行のInputは24px、field.css）。
+      枠を除いた内側の高さと文字の大きさの差を偶数にし、文字の上下の余りを整数pxに保つ（22 − 2 − 12 = 8、32 − 2 − 14 = 16）。
+    */
+    --rx-button-size: calc(22em / 12);
+    --rx-button-large: calc(32em / 14);
     --rx-z-menu: 20;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    :root {
-      --rx-duration: 0ms;
-    }
   }
 }

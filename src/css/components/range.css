@@ -11,16 +11,30 @@
     initial-value: 0;
   }
 
+  /*
+    スライダー。Basecamp 2・Highriseに手本は無い（推測）。当時の画面が置かれたMac（OS X 10.7〜10.8）の標準のスライダーに
+    近い形を、手本のMacの部品の測った値（実測: controls.md 8〜10。枠 #9c9c9c、上 #a6a6a6、中ほどで段の付く縦の塗り）で組む。
+    - 溝: 高さ6px、1px #9c9c9c の枠、両端を丸めた細い溝。まだ進んでいない側は、へこんだ溝として上が暗い淡い灰色の縦の塗り（推測）。
+    - 進んだ側（範囲指定では下限から上限まで）: チェックボックスの選んだ状態と同じ淡い青の縦の塗り（--rx-selected-fill）。
+    - つまみ: ラジオボタン（controls.md 10）と同じ枠と縦の塗りの丸。フォーカスは欄と同じ青い縁と淡い青の輪。
+    溝は入力の後ろに置く要素の疑似要素に描き、入力そのものは透明にする（枠と角丸を背景だけでは描けないため）。
+  */
   .rx-range {
     --slider-value: 0;
     --slider-range-start: 0;
     --slider-range-span: 0;
     --rx-range-fill-start: 0;
     --rx-range-fill-end: var(--slider-value);
-    --rx-range-direction: to right;
     --rx-range-sign: 1;
+    --rx-range-start-edge: left;
+    --rx-range-end-edge: right;
     --rx-range-thumb-offset: calc(var(--rx-range-fill-end) - var(--slider-value));
-    --rx-range-color: var(--rx-link);
+    --rx-range-groove: 0.375rem;
+    --rx-range-edge: #9c9c9c;
+    --rx-range-rest: linear-gradient(#dcdcdc, #f2f2f2);
+    --rx-range-fill: var(--rx-selected-fill);
+    /* 範囲指定の時だけ、下限より手前のまだ進んでいない側を隠す幅。 */
+    --rx-range-lead: 0%;
     container: rx-range / inline-size;
     display: grid;
     min-inline-size: 0;
@@ -30,47 +44,57 @@
     line-height: calc(10 / 7);
 
     &:dir(rtl) {
-      --rx-range-direction: to left;
       --rx-range-sign: -1;
+      --rx-range-start-edge: right;
+      --rx-range-end-edge: left;
     }
 
-    &[data-motion] {
-      transition:
-        --rx-range-fill-start var(--rx-duration) ease-out,
-        --rx-range-fill-end var(--rx-duration) ease-out;
-    }
-
+    /* 使えない範囲は、Buttonと同じく溝・つまみ・塗りをそのままにし、文字だけを灰色にする。 */
     &:has(> .controls > .native > .input:disabled) {
-      --rx-range-color: var(--rx-border);
-      color: var(--rx-muted);
+      color: var(--rx-disabled-text);
     }
 
     & > .controls {
+      position: relative;
       margin-block-start: var(--rx-space-2);
+    }
+
+    /*
+      溝。進んだ側の塗りを全体に敷き、まだ進んでいない側をその上に重ねて隠す。
+      つまみの中心は両端からつまみの半分だけ内側を動くので、境目の位置もそれに合わせる。
+    */
+    & > .controls::before,
+    &:not([data-mode="interval"][data-state]) > .controls > .native::before {
+      content: "";
+      position: absolute;
+      inset-inline: 0;
+      inset-block-end: calc((12em / 7 - var(--rx-range-groove)) / 2);
+      block-size: var(--rx-range-groove);
+      border: var(--rx-stroke-width) solid var(--rx-range-edge);
+      border-radius: calc(var(--rx-range-groove) / 2);
+      background:
+        var(--rx-range-rest) var(--rx-range-start-edge) center / var(--rx-range-lead) 100% no-repeat,
+        var(--rx-range-rest) var(--rx-range-end-edge) center /
+          calc((1 - var(--rx-range-fill-end)) * (100% - 9em / 7) + 9em / 14) 100% no-repeat,
+        var(--rx-range-fill);
+      pointer-events: none;
+    }
+
+    /* 一つの値と、JavaScriptが無い時の範囲指定の二本は、それぞれの入力の後ろに溝を置く。 */
+    &:not([data-mode="interval"][data-state]) > .controls {
+      &::before {
+        display: none;
+      }
+
+      & > .native {
+        position: relative;
+      }
     }
 
     &[data-mode="interval"][data-state] {
       --rx-range-fill-start: var(--slider-range-start);
       --rx-range-fill-end: calc(var(--slider-range-start) + var(--slider-range-span));
-
-      & > .controls {
-        position: relative;
-      }
-
-      & > .controls::before {
-        content: "";
-        position: absolute;
-        inset-inline: calc(9em / 14);
-        inset-block: calc(5em / 7);
-        border-radius: var(--rx-radius-pill);
-        background: linear-gradient(
-          var(--rx-range-direction),
-          var(--rx-border) 0 calc(var(--rx-range-fill-start) * 100%),
-          var(--rx-range-color) 0 calc(var(--rx-range-fill-end) * 100%),
-          var(--rx-border) 0
-        );
-        pointer-events: none;
-      }
+      --rx-range-lead: calc(var(--rx-range-fill-start) * (100% - 9em / 7) + 9em / 14);
 
       & > .controls > .native {
         grid-area: 1 / 1;
@@ -91,7 +115,6 @@
       }
 
       & > .controls > .native > .input {
-        background: none;
         pointer-events: none;
       }
     }
@@ -137,13 +160,7 @@
     padding: 0;
     border: 0;
     outline: none;
-    background: linear-gradient(
-        var(--rx-range-direction),
-        var(--rx-range-color) 0 calc(var(--rx-range-fill-end) * 100%),
-        var(--rx-border) 0
-      )
-      center / calc(100% - 9em / 7) calc(2em / 7) no-repeat;
-    accent-color: var(--rx-range-color);
+    background: none;
     cursor: pointer;
 
     &::-webkit-slider-runnable-track {
@@ -160,10 +177,11 @@
       box-sizing: border-box;
       inline-size: calc(9em / 7);
       block-size: calc(9em / 7);
-      border: 0.125rem solid var(--rx-range-color);
+      border: var(--rx-stroke-width) solid #939393;
+      border-block-start-color: #9c9c9c;
       border-radius: 50%;
-      background: linear-gradient(var(--rx-surface), var(--rx-background));
-      box-shadow: var(--rx-shadow-hardware);
+      background: linear-gradient(#fdfdfd, #f5f5f5 49%, #ececec 50%, #e8e8e8);
+      box-shadow: 0 var(--rx-stroke-width) 0 #f1f1f1;
       pointer-events: auto;
       cursor: grab;
       /* ネイティブの位置を、バーと共通の補間位置へ寄せる。 */
@@ -174,10 +192,11 @@
       box-sizing: border-box;
       inline-size: calc(9em / 7);
       block-size: calc(9em / 7);
-      border: 0.125rem solid var(--rx-range-color);
+      border: var(--rx-stroke-width) solid #939393;
+      border-block-start-color: #9c9c9c;
       border-radius: 50%;
-      background: linear-gradient(var(--rx-surface), var(--rx-background));
-      box-shadow: var(--rx-shadow-hardware);
+      background: linear-gradient(#fdfdfd, #f5f5f5 49%, #ececec 50%, #e8e8e8);
+      box-shadow: 0 var(--rx-stroke-width) 0 #f1f1f1;
       pointer-events: auto;
       cursor: grab;
       translate: calc(var(--rx-range-thumb-offset) * (100cqi - 9em / 7) * var(--rx-range-sign));
@@ -200,27 +219,27 @@
     }
 
     &:focus-visible::-webkit-slider-thumb {
-      outline: 0.125rem solid var(--rx-link);
-      outline-offset: 0.1875rem;
+      outline: 0.125rem solid transparent;
+      border-color: var(--rx-focus-border);
+      box-shadow: var(--rx-focus-glow);
     }
 
     &:focus-visible::-moz-range-thumb {
-      outline: 0.125rem solid var(--rx-link);
-      outline-offset: 0.1875rem;
+      outline: 0.125rem solid transparent;
+      border-color: var(--rx-focus-border);
+      box-shadow: var(--rx-focus-glow);
     }
 
     &:disabled {
-      cursor: not-allowed;
+      cursor: default;
     }
 
     &:disabled::-webkit-slider-thumb {
-      background: var(--rx-background);
-      cursor: not-allowed;
+      cursor: default;
     }
 
     &:disabled::-moz-range-thumb {
-      background: var(--rx-background);
-      cursor: not-allowed;
+      cursor: default;
     }
   }
 
@@ -230,6 +249,10 @@
     color: var(--rx-muted);
     font-size: var(--rx-small);
     line-height: var(--rx-small-leading);
+  }
+
+  .rx-range:has(> .controls > .native > .input:disabled) > .limits {
+    color: var(--rx-disabled-text);
   }
 
   .rx-range > .values {
@@ -248,16 +271,29 @@
 
   @media (forced-colors: active) {
     .rx-range {
-      --rx-border: GrayText;
-      --rx-range-color: Highlight;
-      --rx-link: Highlight;
-      --rx-surface: Canvas;
-      --rx-background: Canvas;
+      --rx-range-edge: CanvasText;
+      --rx-range-rest: linear-gradient(Canvas, Canvas);
+      --rx-range-fill: linear-gradient(Highlight, Highlight);
     }
 
     .rx-range > .controls,
     .rx-range > .controls > .native > .input {
       forced-color-adjust: none;
+    }
+
+    .rx-range > .controls::before,
+    .rx-range > .controls > .native::before {
+      border-color: CanvasText;
+    }
+
+    .rx-range > .controls > .native > .input::-webkit-slider-thumb {
+      border-color: CanvasText;
+      background: Canvas;
+    }
+
+    .rx-range > .controls > .native > .input::-moz-range-thumb {
+      border-color: CanvasText;
+      background: Canvas;
     }
   }
 }

@@ -7,14 +7,14 @@ export default {
   api: ["Avatar", "AvatarGroup"],
   guidance: [
     "担当者や参加者など、人やチームを名前と一緒に示す時に使います。",
-    "複数の人をまとめて示す時は `AvatarGroup` で重ねて並べます。",
+    "複数の人をまとめて示す時は `AvatarGroup` で並べます。",
     "一人を大きなアバターと名前で見出しにする時は `ProfileHeader` を使います。",
   ],
   usage: [
-    "`name` と `initials` を渡します。アバターには略称を書き、`tone` で塗りを変えます。色だけで人を見分けさせず、隣に名前を書きます。",
-    "`src` を渡すと画像を重ねます。`AvatarController` を `avatar` として登録すると、画像を読み込めた時だけ表示し、読み込み中と失敗した時は略称を残します。JavaScriptがない時は略称だけを表示します。",
-    "`size` は `inline`（20px、文の中）・`small`（28px、一覧の行）・`default`（36px）・`large`（48px）です。",
-    "`AvatarGroup` の中に `Avatar` を並べると、アバターを6pxずつ重ね、後のアバターを手前にして作業面の色の輪で切り分けます。並べきれない人数は `more` で「+n」の表示にします。`size` は中のAvatarと同じ大きさを渡します。",
+    "`name` と `initials` を渡します。アバターは枠の無い円で、写真が無い時は塗った円に白い太字の略称を置きます。`tone` が既定の `blue` の時は灰色で塗ります。`green`・`amber`・`coral` を渡した時だけ緑・金茶・赤茶で塗ります。色だけで人を見分けさせず、隣に名前を書きます。",
+    "`src` を渡すと写真を円の中に重ねます。縁の線は引きません。`AvatarController` を `avatar` として登録すると、画像を読み込めた時だけ表示し、読み込み中と失敗した時は略称を残します。JavaScriptがない時は略称だけを表示します。",
+    "`size` は `inline`（20px、文の中）・`small`（22px、詰めた一覧）・`default`（30px、一覧の行）・`large`（48px）です。略称の文字は `default` で11px、`inline`・`small` で10px、`large` で16pxです。",
+    "`AvatarGroup` の中に `Avatar` を並べると、アバターを重ねずに2pxずつ空けて並べ、入らない時は折り返します。並べきれない人数は `more` で「+n」の表示にし、アバターの大きさにかかわらず高さ18pxの担当者のピル（平らな `#eeeeee` に灰色の11pxの文字、通常の太さ）に書いて、アバターの中央にそろえます。`size` は中のAvatarと同じ大きさを渡します。",
   ],
   accessibility: [
     '`Avatar` は `role="img"` で、`name` を名前にします。画像の `alt` は空にし、名前はアバターが持ちます。',

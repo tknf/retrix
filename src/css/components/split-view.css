@@ -1,10 +1,15 @@
 @layer components {
   /*
-    二つの面は一枚のカードに並べ、境目には細い罫線を一本だけ引く。
+    二つの面はBC2のプロジェクトのカードと同じ一枚の白いカード（枠なし、四方へ4〜5pxのぼかし影）に並べ、境目には細い罫線を一本だけ引く。
+    実測: highrise/highrise-case-page-redesign-2011.jpg（1倍）の本文の列と右の列。
+    - 境目は縦の線 1px #eeeeee（x=849）。右の列の地は本文と同じ白。
+    - 右の列の幅は862pxのシートの245px（約28%）。16rem（256px）を最小にする。
+    - 手本は両方の列とも上下左右に約30pxの余白を持つ。カードの中なので、Cardと同じ上下左右16pxにそろえる。
     狭い幅では上下に積み、罫線は横になる。
   */
   .rx-split-view {
     --splitter-value: 50;
+    --rx-split-view-rule: #eeeeee;
     container: rx-split-view / inline-size;
     min-inline-size: 0;
     & > .panes {
@@ -17,20 +22,12 @@
       box-shadow: var(--rx-shadow-paper);
       & > :is(.primary, .secondary) {
         min-inline-size: 0;
-        padding-block: var(--rx-space-6);
-        padding-inline: var(--rx-space-8);
+        padding-block: var(--rx-space-4);
+        padding-inline: var(--rx-space-4);
         overflow-wrap: anywhere;
       }
-      /* 縦に積んだ時の境目はハンドルを持たないので、枠線の色の半分ほどの淡さにする。 */
       & > .secondary {
-        border-block-start: var(--rx-stroke-width) solid
-          color-mix(in srgb, var(--rx-border) 55%, var(--rx-surface));
-      }
-    }
-    @container rx-split-view (inline-size < 32rem) {
-      & > .panes > :is(.primary, .secondary) {
-        padding-block: var(--rx-space-5);
-        padding-inline: var(--rx-space-4);
+        border-block-start: var(--rx-stroke-width) solid var(--rx-split-view-rule);
       }
     }
     @container rx-split-view (inline-size >= 52rem) {
@@ -38,15 +35,11 @@
         grid-template-columns: minmax(0, 1fr) minmax(16rem, 0.5fr);
         & > .secondary {
           border-block-start: 0;
-          border-inline-start: var(--rx-stroke-width) solid var(--rx-border);
+          border-inline-start: var(--rx-stroke-width) solid var(--rx-split-view-rule);
         }
       }
       &[data-layout="reader"] > .panes {
         grid-template-columns: minmax(18rem, 0.6fr) minmax(0, 1fr);
-      }
-      /* 幅を変えない時の境目は、ハンドルの目印にならないので、縦に積んだ時と同じ淡い色にする。 */
-      &:not([data-resizable="true"][data-state]) > .panes > .secondary {
-        border-inline-start-color: color-mix(in srgb, var(--rx-border) 55%, var(--rx-surface));
       }
       /* 幅を変えられる時は、境目の罫線の上にハンドルを重ねる。 */
       &[data-resizable="true"][data-state] > .panes {
@@ -60,7 +53,7 @@
       }
     }
     /*
-      ハンドルは、境目の罫線の中ほどに置いた控えめなつまみ。
+      ハンドルは、境目の罫線の中ほどに置いた、ボタンと同じ平らな白・1px #ccc・下に1px #ddd の影の細いつまみ（推測。手本に無い）。
       境目全体をつかめるように、ハンドルは面の上下いっぱいに重ねる。
     */
     & > .panes > .handle {
@@ -82,7 +75,6 @@
         inset-inline-start: calc(50% - var(--rx-stroke-width) / 2);
         inline-size: var(--rx-stroke-width);
         background: transparent;
-        transition: background-color var(--rx-duration) ease;
       }
       & > .grip {
         position: absolute;
@@ -90,10 +82,10 @@
         inset-inline-start: calc(50% - 0.25rem);
         inline-size: 0.5rem;
         block-size: 2.5rem;
-        border-radius: var(--rx-radius-pill);
+        border: var(--rx-stroke-width) solid var(--rx-control-border);
+        border-radius: var(--rx-radius-mark);
         background: var(--rx-surface) var(--rx-fill-control);
         box-shadow: var(--rx-shadow-control);
-        transition: box-shadow var(--rx-duration) ease;
       }
       &:hover > .grip {
         box-shadow: var(--rx-shadow-control-hover);

@@ -2,52 +2,86 @@
 
 # AppShell
 
-上部中央のコマンドメニューと中央の作業面を持つ、アプリの基本の画面構成です。
+机の上に白いシートを置く、アプリの基本の画面構成です。ヘッダーと作業面を画面の中央に揃えます。
 
 ## 使いどころ
 
-- アプリの各画面に共通する画面構成として、上部中央のコマンドメニューと中央の作業面を置く時に使います。
-- 画面の端に固定するサイドバーは持ちません。画面全体の移動は`commands`の`CommandMenu`、作業面に付属する補助パネルは`wings`（`Wing`）で扱います。
+- アプリの各画面に共通する画面構成として、ヘッダー（アプリの名前・主な移動先・検索）と中央のシート（作業面）を置く時に使います。
+- 画面の幅いっぱいには広げず、ヘッダー・先頭側の列・作業面を同じ幅の中に収めて中央に揃えます。画面の端に固定するサイドバーは持ちません。
+- 上の階層は`trail`の背後に重ねたシートで、分類ごとの移動先や最近見た項目は`aside`の列で示します。作業面に付属する開閉式の補助パネルは`wings`（`Wing`）で扱います。
 - `AppShell`を使わない画面で作業面だけを置く時は`Surface`を使います。
 
 ## 使い方
 
-`commands`に`CommandMenu`を一つ渡し、`home`・`account`を上部のバーの左右に置きます。バーは画面の上端に留まり、左右の内容の幅に関わらず`commands`を画面の中央に置きます。`home`・`account`を省略すると、その枠を出しません。
+`home`にアプリの名前やロゴのリンク、`navigation`に主な移動先、`commands`に検索や`CommandMenu`を渡します。ヘッダーは背景を持たず、机の地の上にそのまま並びます。アプリの名前は20pxの太字の濃い灰色で、名前と移動先の間に1pxの縦の線を引きます。移動先は13pxの灰色の文字で、`navigation`の今いる項目は`current`にすると、面や下線を付けずに黒い太字で示し、`aria-current="page"`を付けます。
 
-`children`は中央の作業面に置きます。作業面は白い面で、幅の上限は`size`で選びます。`default`は`--rx-page`（68rem）、`compact`は本文の行の長さ（`--rx-measure`）に左右の余白を足した46rem、`wide`は112remです。設定画面など入力が中心の画面は`compact`、`Board`や年の予定など横に広い画面は`wide`にします。ほかの幅が必要な時は、ルートの`style`で`--rx-page`を上書きします。作業面の列は作業面の幅に収まるので、広い表などは中身の側で横にスクロールさせます。`Board`・`Table`・`Grid`・`Calendar`は、作業面の左右の余白の分だけ外側に広がり、作業面の端までスクロールします。段組み（`SplitView`など）や、`Card`・`LayerCard`・`Notice`・`ChartFrame`の中では広げません。
+`account`はヘッダーの上の行の末尾側に、11pxの灰色の文字で置きます。利用者の名前・アカウントの設定・ログアウトへのリンクなどを並べます。
 
-`AppShell`の幅が45rem未満では作業面の外側と内側の余白を詰め、28rem未満では`commands`を一段目、`home`・`account`を二段目の左右に置きます。
+`children`は中央のシートに置きます。シートの幅の上限は`size`で選びます。`default`は`--rx-page`（60rem、960px）、`compact`は本文の行の長さ（`--rx-measure`）に左右の余白を足した46rem、`wide`は90remです。ほかの幅が必要な時は、ルートの`style`で`--rx-page`を上書きします。`Board`・`Table`・`Grid`・`Calendar`は、シートの左右の余白の分だけ外側に広がり、シートの端までスクロールします。
 
-`wings`に`start`・`end`を渡すと、作業面を`Wing`で包み、左右に開閉できる補助パネルを付けます。開閉の状態を保存する時は`storageKey`・`savedState`も渡し、`WingController`を`wing`として登録します（詳しくは`Wing`のページ）。
+`trail`に上の階層を上から順に渡すと、シートの背後に淡い灰色（`#f9f9f9`、1px `#e5e5e5` の枠、影なし）のシートを重ねます。背後のシートは手前のシートと同じ幅で、一段ごとに先頭側（左）と上へずれ（先頭側へは21pxずつ）、手前のシートの後ろを下端まで続きます。上の帯に18pxの太字の見出しを、2pxの下線を引いた上の階層へのリンクとして置き、先頭側（左）には細い帯が見えます。今のページのシートは、段の数だけの帯を空けて一番手前に置きます。
+
+`aside`を渡すと、シートの先頭側に14.5rem（232px）の列を置きます。Highriseの左の列と同じく、列はシートの外の机の上に間を空けずに置き、列とシートを合わせて中央に揃えます。列の文字は13pxで、シートの縁から20px離します。列に置いた`Navigation`の行の面だけは、シートの縁まで伸ばします。幅が52rem未満ではシートの上へ移ります。
+
+`footer`はシートの下に20px空けて、11pxの灰色の文字で置きます。中のリンクも同じ灰色で、下線を引きます。
+
+`AppShell`の幅が45rem未満では、ヘッダーを「名前と検索」「主な移動先」の二段にし、シートの外側と内側の余白を詰めます。
+
+`wings`に`start`・`end`を渡すと、シートを`Wing`で包み、左右に開閉できる補助パネルを付けます。開閉の状態を保存する時は`storageKey`・`savedState`も渡し、`WingController`を`wing`として登録します（詳しくは`Wing`のページ）。
 
 `AppShell`自身はcontrollerを使わず、JavaScriptなしでも同じ配置で表示します。
 
 ## アクセシビリティ
 
-- 上部のバーは`header`で、`commands`は`aria-label="共通コマンド"`の`nav`に置きます。
-- 作業面は`div`で、`main`を持ちません。画面の本文は`children`の中で利用側が`main`で包みます。
-- `home`・`account`に文字のないリンクや操作を置く時は、読み上げ名を利用側で付けます。
+- ヘッダーは`header`で、`navigation`は`aria-label`を付けた`nav`に置きます。読み上げ名は`navigationLabel`で変えられ、省略すると「アプリの移動」です。
+- `trail`は`aria-label="上の階層"`の`nav`の中の`ol`です。
+- シートは`div`で、`main`を持ちません。画面の本文は`children`の中で利用側が`main`で包みます。
+- `home`・`account`・`commands`に文字のないリンクや操作を置く時は、読み上げ名を利用側で付けます。
 
 ## API
 
 ### AppShell
 
-上部中央の共通コマンドと、中央の作業面を構成する。wingsは作業面の左右に開閉できる補助メニューを付ける。
+机の上に白いシートを置く画面構成。ヘッダーにアプリの名前・主な移動先・検索を並べ、その下の中央に作業面を置く。 trailは上の階層を作業面の背後に重ねたシートで示し、asideは作業面の先頭側に移動先の列を置く。
 
-| 名前               | 型                                                                  | 既定値      | 説明                                                                                                                                                                                                                  |
-| ------------------ | ------------------------------------------------------------------- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `commands`（必須） | `Child`                                                             |             | 上部のバーの中央に置く共通コマンド。通常はCommandMenuを一つ渡す。                                                                                                                                                     |
-| `home`             | `Child`                                                             |             | 上部のバーの先頭側に置く、ホームへのリンクなど。省略すると枠ごと出さない。                                                                                                                                            |
-| `account`          | `Child`                                                             |             | 上部のバーの末尾側に置く、利用者のAvatarやアカウントへのリンクなど。省略すると枠ごと出さない。                                                                                                                        |
-| `wings`            | `Pick<WingProps, "start" \| "end" \| "storageKey" \| "savedState">` |             | 作業面の左右に付ける補助パネル。Wingのstart・end・storageKey・savedStateと同じ値を渡す。省略するとWingを使わず、作業面だけを置く。                                                                                    |
-| `size`             | `"compact" \| "default" \| "wide"`                                  | `"default"` | 作業面の幅の上限。compactは46rem（本文の行の長さ--rx-measureに左右の余白を足した幅）、defaultは68rem（--rx-page）、wideは112rem。設定画面など入力が中心の画面はcompact、Boardや年の予定など横に広い画面はwideにする。 |
-| `children`         | `Child`                                                             |             | 中央の作業面に置く、画面の中身。                                                                                                                                                                                      |
+| 名前              | 型                                                                  | 既定値           | 説明                                                                                                                                                                                                                 |
+| ----------------- | ------------------------------------------------------------------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `home`            | `Child`                                                             |                  | ヘッダーの先頭側に置く、アプリの名前やロゴとホームへのリンク。省略すると枠ごと出さない。                                                                                                                             |
+| `navigation`      | `readonly NavigationItem[]`                                         |                  | ヘッダーで`home`の後に並べる、アプリの主な移動先。今いる項目は`current`にする。                                                                                                                                      |
+| `navigationLabel` | `string`                                                            | `"アプリの移動"` | `navigation`のnavの読み上げ名。省略すると「アプリの移動」。                                                                                                                                                          |
+| `commands`        | `Child`                                                             |                  | ヘッダーの末尾側に置く、検索やCommandMenu。省略すると枠ごと出さない。                                                                                                                                                |
+| `account`         | `Child`                                                             |                  | ヘッダーの上の行の末尾側に小さく置く、アカウントやログアウトへのリンク。省略すると行ごと出さない。                                                                                                                   |
+| `aside`           | `Child`                                                             |                  | 作業面の先頭側に置く列。Highriseのように、分類ごとの移動先や最近見た項目を置く。作業面の外に置き、列と作業面を合わせて画面の中央に揃える。狭い画面では作業面の上へ移る。                                             |
+| `trail`           | `readonly AppShellTrailItem[]`                                      |                  | 作業面の背後に重ねるシート。上の階層から順に並べる。各シートの見出しは上の階層へのリンクになり、今のページの作業面はその手前に置く。                                                                                 |
+| `footer`          | `Child`                                                             |                  | 作業面の下に置く、小さな補足のリンクなど。省略すると出さない。                                                                                                                                                       |
+| `wings`           | `Pick<WingProps, "start" \| "end" \| "storageKey" \| "savedState">` |                  | 作業面の左右に付ける補助パネル。Wingのstart・end・storageKey・savedStateと同じ値を渡す。省略するとWingを使わず、作業面だけを置く。                                                                                   |
+| `size`            | `"compact" \| "default" \| "wide"`                                  | `"default"`      | 作業面の幅の上限。compactは46rem（本文の行の長さ--rx-measureに左右の余白を足した幅）、defaultは60rem（--rx-page）、wideは90rem。設定画面など入力が中心の画面はcompact、Boardや年の予定など横に広い画面はwideにする。 |
+| `children`        | `Child`                                                             |                  | 中央のシートに置く、画面の中身。                                                                                                                                                                                     |
 
 ほかに、`<div>`へ標準のHTML属性を渡せます。
 
 登録するcontroller：`wing`（`WingController`）
 
 読み込むCSS：`layers.css`、`reset.css`、`tokens.css`、`base.css`、`layout.css`、`components/app-shell.css`、`components/wing.css`、`components/button.css`、`components/overlay.css`、`components/icon.css`
+
+#### `NavigationItem`
+
+| 名前            | 型        | 既定値 | 説明                                                                |
+| --------------- | --------- | ------ | ------------------------------------------------------------------- |
+| `label`（必須） | `string`  |        | 項目の名前。                                                        |
+| `href`（必須）  | `string`  |        | 移動先のURL。現在地の項目もリンクのまま出す。                       |
+| `current`       | `boolean` |        | 今いる項目。aria-current="page"を付け、見た目でも現在地として示す。 |
+| `count`         | `number`  |        | 名前の後に出す件数。0も表示し、省略すると出さない。                 |
+| `icon`          | `Child`   |        | 名前の前のアイコン（Iconなど）。                                    |
+
+#### `AppShellTrailItem`
+
+作業面の背後に重ねる、上の階層のページ。
+
+| 名前            | 型       | 既定値 | 説明                                                     |
+| --------------- | -------- | ------ | -------------------------------------------------------- |
+| `label`（必須） | `string` |        | 上の階層のページの名前。背後のシートの見出しとして出す。 |
+| `href`（必須）  | `string` |        | 上の階層のページのURL。                                  |
 
 #### `WingProps`
 
@@ -58,7 +92,6 @@
 ```tsx
 import {
   AppShell,
-  ActionLink,
   Avatar,
   Board,
   Button,
@@ -66,77 +99,105 @@ import {
   Field,
   Icon,
   Input,
+  Navigation,
   PageHeader,
+  Section,
   Switch,
   Table,
 } from "@tknf/retrix/hono";
 
-/** 見本ごとにidを変えるため、共通コマンドは関数で作る。 */
+/** 見本ごとにidを変えるため、検索のCommandMenuは関数で作る。 */
 const commands = (id: string) => (
   <CommandMenu
     id={id}
-    label="つむぐチーム"
+    label="取引先・案件・担当者を探す"
+    icon="search"
     shortcuts={[
-      { label: "プロジェクト", href: "/apps/project", icon: "layers", accent: "green" },
-      { label: "受信トレイ", href: "/apps/inbox", icon: "mail", accent: "blue" },
-      { label: "資料", href: "/apps/files", icon: "file", accent: "amber" },
-      { label: "売上", href: "/apps/sales", icon: "chart", accent: "coral" },
+      { label: "取引先", href: "/apps/people", icon: "user", accent: "green" },
+      { label: "案件", href: "/apps/sales", icon: "chart", accent: "coral" },
     ]}
     groups={[
       {
         label: "移動",
         items: [
-          { label: "プロジェクト", href: "/apps/project", icon: "layers" },
-          { label: "受信トレイ", href: "/apps/inbox", icon: "mail" },
+          { label: "取引先", href: "/apps/people", icon: "user" },
+          { label: "案件", href: "/apps/sales", icon: "chart" },
         ],
       },
     ]}
   />
 );
 
-const home = (
-  <ActionLink href="/apps/project" variant="link">
-    ホーム
-  </ActionLink>
+const home = <a href="/apps/project">つむぐ商会</a>;
+
+const navigation = [
+  { label: "ホーム", href: "/apps/project" },
+  { label: "取引先", href: "/apps/people", current: true },
+  { label: "案件", href: "/apps/sales" },
+  { label: "予定", href: "/apps/schedule" },
+  { label: "設定", href: "/apps/settings" },
+];
+
+const account = (
+  <>
+    <Avatar name="田中 遥" initials="遥" size="small" tone="coral" />
+    <a href="/apps/settings">田中 遥</a>
+    <a href="/">ログアウト</a>
+  </>
 );
 
-const account = <Avatar name="田中 遥" initials="遥" size="small" tone="coral" />;
-
-const records = [
+const customers = [
   {
-    title: "ヘルプセンターの目次を見直す",
+    code: "C-0012",
+    name: "株式会社みなと製作所",
     owner: "田中 遥",
-    reviewer: "佐藤 健",
-    updated: "2026年9月25日 10:00",
-    due: "2026年9月30日",
-    status: "確認待ち",
-    place: "ヘルプセンター（日本語）",
-    priority: "高",
-    comments: "3件",
+    deals: 3,
+    updated: "9月25日",
   },
   {
-    title: "料金とキャンセル条件を更新する",
+    code: "C-0031",
+    name: "ひかり書房",
     owner: "佐藤 健",
-    reviewer: "森 美咲",
-    updated: "2026年9月24日 15:30",
-    due: "2026年10月3日",
-    status: "進行中",
-    place: "料金ページ",
-    priority: "中",
-    comments: "1件",
+    deals: 1,
+    updated: "9月24日",
   },
   {
-    title: "よくある質問を集める",
+    code: "C-0047",
+    name: "合同会社あおば農園",
     owner: "森 美咲",
-    reviewer: "田中 遥",
-    updated: "2026年9月22日 9:00",
-    due: "2026年10月10日",
-    status: "これから",
-    place: "ヘルプセンター（英語）",
-    priority: "低",
-    comments: "0件",
+    deals: 0,
+    updated: "9月22日",
   },
 ];
+
+const CustomerTable = () => (
+  <Table caption="取引先の一覧">
+    <thead>
+      <tr>
+        <th scope="col">コード</th>
+        <th scope="col">取引先</th>
+        <th scope="col">担当</th>
+        <th scope="col" data-cell="numeric">
+          進行中の案件
+        </th>
+        <th scope="col">更新日</th>
+      </tr>
+    </thead>
+    <tbody>
+      {customers.map((customer) => (
+        <tr>
+          <td data-cell="short">{customer.code}</td>
+          <th scope="row" data-cell="text">
+            <a href="/apps/people">{customer.name}</a>
+          </th>
+          <td data-cell="short">{customer.owner}</td>
+          <td data-cell="numeric">{customer.deals}</td>
+          <td data-cell="short">{customer.updated}</td>
+        </tr>
+      ))}
+    </tbody>
+  </Table>
+);
 
 const job = (id: string, code: string, title: string) => ({
   id,
@@ -145,79 +206,92 @@ const job = (id: string, code: string, title: string) => ({
   content: <h4>{title}</h4>,
 });
 
-/*
-  見本のAppShellは高さを決めた枠の中でスクロールさせ、上端に留まるバーを見せる。
-  isolationで、見本のバーがカタログ自身のバーに重ならないようにする。
-*/
-const frame = "block-size: 32rem; overflow: auto; isolation: isolate";
+/* 見本のAppShellは高さを決めた枠の中でスクロールさせる。 */
+const frame = "block-size: 34rem; overflow: auto; isolation: isolate";
 
 export default () => (
   <div class="rx-stack">
     <section class="rx-stack" data-space="small">
       <h3>既定の幅（default）</h3>
       <div style={frame}>
-        <AppShell home={home} commands={commands("shell-default")} account={account}>
+        <AppShell
+          home={home}
+          navigation={navigation}
+          commands={commands("shell-default")}
+          account={account}
+          footer={<span>つむぐ商会 · 顧客管理</span>}
+        >
           <PageHeader
-            title="今日の仕事"
-            description="上部中央のコマンドメニューから移動し、中央の作業面で仕事を進めます。横に広い表は作業面の端までスクロールします。"
-            icon={<Icon name="layers" />}
-            actions={<Button variant="primary">仕事を追加</Button>}
+            title="取引先"
+            description="取引のある会社と、担当者・進行中の案件を管理します。"
+            actions={<Button variant="primary">取引先を追加</Button>}
           />
-          <Table caption="担当している仕事">
-            <thead>
-              <tr>
-                <th scope="col">仕事</th>
-                <th scope="col">担当</th>
-                <th scope="col">確認者</th>
-                <th scope="col">更新日時</th>
-                <th scope="col">期限</th>
-                <th scope="col">状態</th>
-                <th scope="col">公開先</th>
-                <th scope="col">優先度</th>
-                <th scope="col" data-cell="numeric">
-                  コメント
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {records.map((record) => (
-                <tr>
-                  <th scope="row" data-cell="text">
-                    {record.title}
-                  </th>
-                  <td data-cell="short">{record.owner}</td>
-                  <td data-cell="short">{record.reviewer}</td>
-                  <td data-cell="short">{record.updated}</td>
-                  <td data-cell="short">{record.due}</td>
-                  <td data-cell="short">{record.status}</td>
-                  <td data-cell="short">{record.place}</td>
-                  <td data-cell="short">{record.priority}</td>
-                  <td data-cell="numeric">{record.comments}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
+          <CustomerTable />
+        </AppShell>
+      </div>
+    </section>
+    <section class="rx-stack" data-space="small">
+      <h3>上の階層を背後に重ねる（trail）</h3>
+      <div style={frame}>
+        <AppShell
+          home={home}
+          navigation={navigation}
+          commands={commands("shell-trail")}
+          account={account}
+          trail={[{ label: "株式会社みなと製作所", href: "/apps/people" }]}
+        >
+          <PageHeader
+            title="展示会の什器の見積もり"
+            description="案件 · 担当 田中 遥 · 9月30日まで"
+            actions={<Button>編集</Button>}
+          />
+          <Section
+            title="やること"
+            count={2}
+            actions={<Button size="compact">追加</Button>}
+          >
+            <p>見積書の数量を確かめ、来週の打ち合わせまでに送ります。</p>
+          </Section>
+        </AppShell>
+      </div>
+    </section>
+    <section class="rx-stack" data-space="small">
+      <h3>先頭側の列を置く（aside）</h3>
+      <div style={frame}>
+        <AppShell
+          home={home}
+          commands={commands("shell-aside")}
+          account={account}
+          aside={
+            <Navigation
+              label="取引先の分類"
+              items={[
+                {
+                  label: "すべての取引先",
+                  href: "/apps/people",
+                  current: true,
+                  count: 128,
+                },
+                { label: "見込み", href: "/apps/people", count: 24 },
+                { label: "取引中", href: "/apps/people", count: 87 },
+                { label: "休眠", href: "/apps/people", count: 17 },
+              ]}
+            />
+          }
+        >
+          <PageHeader title="すべての取引先" description="128件の取引先" />
+          <CustomerTable />
         </AppShell>
       </div>
     </section>
     <section class="rx-stack" data-space="small">
       <h3>入力が中心の画面（compact）</h3>
       <div style={frame}>
-        <AppShell
-          size="compact"
-          home={home}
-          commands={commands("shell-compact")}
-          account={account}
-        >
-          <PageHeader
-            title="設定"
-            description="ワークスペースの名前と通知を変えます。"
-          />
-          <form class="rx-stack" aria-label="ワークスペースの設定">
-            <Field id="shell-workspace-name" label="ワークスペースの名前">
-              {(attributes) => (
-                <Input {...attributes} name="name" value="小さな仕事場" />
-              )}
+        <AppShell size="compact" home={home} navigation={navigation} account={account}>
+          <PageHeader title="設定" description="会社の名前と通知を変えます。" />
+          <form class="rx-stack" aria-label="会社の設定">
+            <Field id="shell-workspace-name" label="会社の名前">
+              {(attributes) => <Input {...attributes} name="name" value="つむぐ商会" />}
             </Field>
             <Switch
               id="shell-digest"
@@ -238,42 +312,28 @@ export default () => (
     <section class="rx-stack" data-space="small">
       <h3>横に広い画面（wide）</h3>
       <div style={frame}>
-        <AppShell
-          size="wide"
-          home={home}
-          commands={commands("shell-wide")}
-          account={account}
-        >
-          <PageHeader
-            title="ヘルプセンターのリニューアル"
-            icon={<Icon name="grid" />}
-          />
+        <AppShell size="wide" home={home} navigation={navigation} account={account}>
+          <PageHeader title="案件の進み具合" icon={<Icon name="grid" />} />
           <Board
-            label="ヘルプセンターの仕事"
+            label="案件"
             columns={[
               {
-                id: "todo",
-                title: "これから",
-                items: [job("faq", "No. 21", "よくある質問を集める")],
+                id: "lead",
+                title: "見込み",
+                items: [job("fair", "No. 21", "展示会の什器の見積もり")],
               },
               {
-                id: "doing",
-                title: "進めている",
+                id: "proposal",
+                title: "提案中",
                 tone: "info",
-                items: [job("guide", "No. 18", "はじめての方向けガイド")],
+                items: [job("catalog", "No. 18", "秋のカタログの印刷")],
               },
               {
-                id: "review",
-                title: "確認待ち",
-                tone: "warning",
-                items: [job("export", "No. 16", "データの書き出しの記事")],
-              },
-              {
-                id: "done",
-                title: "できた！",
+                id: "won",
+                title: "受注",
                 tone: "success",
                 collapsible: true,
-                items: [job("goal", "No. 11", "チームでゴールを揃える")],
+                items: [job("sign", "No. 11", "店舗の看板の交換")],
               },
             ]}
           />
@@ -291,19 +351,29 @@ export default () => (
 <div class="rx-stack">
   <section class="rx-stack" data-space="small">
     <h3>既定の幅（default）</h3>
-    <div style="block-size: 32rem; overflow: auto; isolation: isolate">
+    <div style="block-size: 34rem; overflow: auto; isolation: isolate">
       <div class="rx-app-shell" data-size="default">
         <header class="bar">
-          <div class="start">
-            <a
-              href="/apps/project"
-              class="rx-button"
-              data-variant="link"
-              data-size="default"
-              >ホーム</a
-            >
+          <div class="account">
+            <span
+              class="rx-avatar"
+              data-size="small"
+              data-tone="coral"
+              role="img"
+              aria-label="田中 遥"
+              ><span class="initials">遥</span></span
+            ><a href="/apps/settings">田中 遥</a><a href="/">ログアウト</a>
           </div>
-          <nav class="commands" aria-label="共通コマンド">
+          <div class="start"><a href="/apps/project">つむぐ商会</a></div>
+          <nav class="navigation" aria-label="アプリの移動">
+            <a href="/apps/project"><span>ホーム</span></a
+            ><a href="/apps/people" aria-current="page" data-current="true"
+              ><span>取引先</span></a
+            ><a href="/apps/sales"><span>案件</span></a
+            ><a href="/apps/schedule"><span>予定</span></a
+            ><a href="/apps/settings"><span>設定</span></a>
+          </nav>
+          <div class="commands">
             <div class="rx-command-menu" data-controller="command-menu">
               <button
                 popovertarget="shell-default"
@@ -323,8 +393,8 @@ export default () => (
                   aria-hidden="true"
                   focusable="false"
                 >
-                  <use href="/assets/rx-icons.svg#rx-layers-fill"></use></svg
-                >つむぐチーム<svg
+                  <use href="/assets/rx-icons.svg#rx-search-fill"></use></svg
+                >取引先・案件・担当者を探す<svg
                   class="rx-icon"
                   viewBox="0 0 256 256"
                   fill="currentColor"
@@ -339,11 +409,11 @@ export default () => (
                 popover="auto"
                 role="dialog"
                 id="shell-default"
-                aria-label="つむぐチームのコマンド"
+                aria-label="取引先・案件・担当者を探すのコマンド"
                 data-command-menu-target="panel"
               >
                 <header class="heading">
-                  <span class="name">つむぐチーム</span
+                  <span class="name">取引先・案件・担当者を探す</span
                   ><button
                     aria-label="コマンドを閉じる"
                     popovertarget="shell-default"
@@ -363,7 +433,7 @@ export default () => (
                       tabindex="0"
                       class="rx-action-tile"
                       data-accent="green"
-                      href="/apps/project"
+                      href="/apps/people"
                       ><span class="icon"
                         ><svg
                           class="rx-icon"
@@ -373,49 +443,9 @@ export default () => (
                           focusable="false"
                         >
                           <use
-                            href="/assets/rx-icons.svg#rx-layers-fill"
+                            href="/assets/rx-icons.svg#rx-user-fill"
                           ></use></svg></span
-                      ><span class="name">プロジェクト</span></a
-                    >
-                  </div>
-                  <div class="shortcut">
-                    <a
-                      tabindex="0"
-                      class="rx-action-tile"
-                      data-accent="blue"
-                      href="/apps/inbox"
-                      ><span class="icon"
-                        ><svg
-                          class="rx-icon"
-                          viewBox="0 0 256 256"
-                          fill="currentColor"
-                          aria-hidden="true"
-                          focusable="false"
-                        >
-                          <use
-                            href="/assets/rx-icons.svg#rx-mail-fill"
-                          ></use></svg></span
-                      ><span class="name">受信トレイ</span></a
-                    >
-                  </div>
-                  <div class="shortcut">
-                    <a
-                      tabindex="0"
-                      class="rx-action-tile"
-                      data-accent="amber"
-                      href="/apps/files"
-                      ><span class="icon"
-                        ><svg
-                          class="rx-icon"
-                          viewBox="0 0 256 256"
-                          fill="currentColor"
-                          aria-hidden="true"
-                          focusable="false"
-                        >
-                          <use
-                            href="/assets/rx-icons.svg#rx-file-fill"
-                          ></use></svg></span
-                      ><span class="name">資料</span></a
+                      ><span class="name">取引先</span></a
                     >
                   </div>
                   <div class="shortcut">
@@ -435,7 +465,7 @@ export default () => (
                           <use
                             href="/assets/rx-icons.svg#rx-chart-fill"
                           ></use></svg></span
-                      ><span class="name">売上</span></a
+                      ><span class="name">案件</span></a
                     >
                   </div>
                 </nav>
@@ -491,9 +521,9 @@ export default () => (
                         id="shell-default-entry-0-0"
                         aria-selected="false"
                         data-command-menu-target="entry"
-                        data-search="プロジェクト"
+                        data-search="取引先"
                       >
-                        <a class="link" href="/apps/project" tabindex="0"
+                        <a class="link" href="/apps/people" tabindex="0"
                           ><span class="icon"
                             ><svg
                               class="rx-icon"
@@ -503,9 +533,9 @@ export default () => (
                               focusable="false"
                             >
                               <use
-                                href="/assets/rx-icons.svg#rx-layers-fill"
+                                href="/assets/rx-icons.svg#rx-user-fill"
                               ></use></svg></span
-                          ><span class="name">プロジェクト</span></a
+                          ><span class="name">取引先</span></a
                         >
                       </li>
                       <li
@@ -514,9 +544,9 @@ export default () => (
                         id="shell-default-entry-0-1"
                         aria-selected="false"
                         data-command-menu-target="entry"
-                        data-search="受信トレイ"
+                        data-search="案件"
                       >
-                        <a class="link" href="/apps/inbox" tabindex="0"
+                        <a class="link" href="/apps/sales" tabindex="0"
                           ><span class="icon"
                             ><svg
                               class="rx-icon"
@@ -526,9 +556,9 @@ export default () => (
                               focusable="false"
                             >
                               <use
-                                href="/assets/rx-icons.svg#rx-mail-fill"
+                                href="/assets/rx-icons.svg#rx-chart-fill"
                               ></use></svg></span
-                          ><span class="name">受信トレイ</span></a
+                          ><span class="name">案件</span></a
                         >
                       </li>
                     </ul>
@@ -556,8 +586,91 @@ export default () => (
                 ></span>
               </div>
             </div>
-          </nav>
-          <div class="end">
+          </div>
+        </header>
+        <div class="body">
+          <div class="main">
+            <div class="workspace">
+              <header class="rx-page-header" data-align="start">
+                <hgroup class="heading">
+                  <h1>取引先</h1>
+                  <p>取引のある会社と、担当者・進行中の案件を管理します。</p>
+                </hgroup>
+                <div class="actions">
+                  <button
+                    class="rx-button"
+                    type="button"
+                    data-variant="primary"
+                    data-size="default"
+                  >
+                    取引先を追加
+                  </button>
+                </div>
+              </header>
+              <div
+                class="rx-table"
+                role="region"
+                aria-label="取引先の一覧"
+                tabindex="0"
+                data-state="ready"
+              >
+                <table data-controller="" data-density="compact" class="table">
+                  <caption>
+                    取引先の一覧
+                  </caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">コード</th>
+                      <th scope="col">取引先</th>
+                      <th scope="col">担当</th>
+                      <th scope="col" data-cell="numeric">進行中の案件</th>
+                      <th scope="col">更新日</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td data-cell="short">C-0012</td>
+                      <th scope="row" data-cell="text">
+                        <a href="/apps/people">株式会社みなと製作所</a>
+                      </th>
+                      <td data-cell="short">田中 遥</td>
+                      <td data-cell="numeric">3</td>
+                      <td data-cell="short">9月25日</td>
+                    </tr>
+                    <tr>
+                      <td data-cell="short">C-0031</td>
+                      <th scope="row" data-cell="text">
+                        <a href="/apps/people">ひかり書房</a>
+                      </th>
+                      <td data-cell="short">佐藤 健</td>
+                      <td data-cell="numeric">1</td>
+                      <td data-cell="short">9月24日</td>
+                    </tr>
+                    <tr>
+                      <td data-cell="short">C-0047</td>
+                      <th scope="row" data-cell="text">
+                        <a href="/apps/people">合同会社あおば農園</a>
+                      </th>
+                      <td data-cell="short">森 美咲</td>
+                      <td data-cell="numeric">0</td>
+                      <td data-cell="short">9月22日</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <footer class="footer"><span>つむぐ商会 · 顧客管理</span></footer>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="rx-stack" data-space="small">
+    <h3>上の階層を背後に重ねる（trail）</h3>
+    <div style="block-size: 34rem; overflow: auto; isolation: isolate">
+      <div class="rx-app-shell" data-size="default">
+        <header class="bar">
+          <div class="account">
             <span
               class="rx-avatar"
               data-size="small"
@@ -565,98 +678,582 @@ export default () => (
               role="img"
               aria-label="田中 遥"
               ><span class="initials">遥</span></span
-            >
+            ><a href="/apps/settings">田中 遥</a><a href="/">ログアウト</a>
           </div>
-        </header>
-        <div class="workspace">
-          <header class="rx-page-header" data-align="start">
-            <span class="icon"
-              ><svg
-                class="rx-icon"
-                viewBox="0 0 256 256"
-                fill="currentColor"
-                aria-hidden="true"
-                focusable="false"
-              >
-                <use href="/assets/rx-icons.svg#rx-layers"></use></svg
-            ></span>
-            <hgroup class="heading">
-              <h1>今日の仕事</h1>
-              <p>
-                上部中央のコマンドメニューから移動し、中央の作業面で仕事を進めます。横に広い表は作業面の端までスクロールします。
-              </p>
-            </hgroup>
-            <div class="actions">
+          <div class="start"><a href="/apps/project">つむぐ商会</a></div>
+          <nav class="navigation" aria-label="アプリの移動">
+            <a href="/apps/project"><span>ホーム</span></a
+            ><a href="/apps/people" aria-current="page" data-current="true"
+              ><span>取引先</span></a
+            ><a href="/apps/sales"><span>案件</span></a
+            ><a href="/apps/schedule"><span>予定</span></a
+            ><a href="/apps/settings"><span>設定</span></a>
+          </nav>
+          <div class="commands">
+            <div class="rx-command-menu" data-controller="command-menu">
               <button
+                popovertarget="shell-trail"
+                data-command-menu-target="trigger"
+                aria-haspopup="dialog"
+                aria-controls="shell-trail"
+                aria-expanded="false"
                 class="rx-button"
                 type="button"
-                data-variant="primary"
-                data-size="default"
+                data-variant="secondary"
+                data-size="large"
               >
-                仕事を追加
+                <svg
+                  class="rx-icon"
+                  viewBox="0 0 256 256"
+                  fill="currentColor"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <use href="/assets/rx-icons.svg#rx-search-fill"></use></svg
+                >取引先・案件・担当者を探す<svg
+                  class="rx-icon"
+                  viewBox="0 0 256 256"
+                  fill="currentColor"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <use href="/assets/rx-icons.svg#rx-caret"></use>
+                </svg>
               </button>
+              <div
+                class="panel"
+                popover="auto"
+                role="dialog"
+                id="shell-trail"
+                aria-label="取引先・案件・担当者を探すのコマンド"
+                data-command-menu-target="panel"
+              >
+                <header class="heading">
+                  <span class="name">取引先・案件・担当者を探す</span
+                  ><button
+                    aria-label="コマンドを閉じる"
+                    popovertarget="shell-trail"
+                    popovertargetaction="hide"
+                    data-command-menu-target="close"
+                    class="rx-button"
+                    type="button"
+                    data-variant="secondary"
+                    data-size="compact"
+                  >
+                    閉じる
+                  </button>
+                </header>
+                <nav class="shortcuts" aria-label="よく使う場所" data-columns="4">
+                  <div class="shortcut">
+                    <a
+                      tabindex="0"
+                      class="rx-action-tile"
+                      data-accent="green"
+                      href="/apps/people"
+                      ><span class="icon"
+                        ><svg
+                          class="rx-icon"
+                          viewBox="0 0 256 256"
+                          fill="currentColor"
+                          aria-hidden="true"
+                          focusable="false"
+                        >
+                          <use
+                            href="/assets/rx-icons.svg#rx-user-fill"
+                          ></use></svg></span
+                      ><span class="name">取引先</span></a
+                    >
+                  </div>
+                  <div class="shortcut">
+                    <a
+                      tabindex="0"
+                      class="rx-action-tile"
+                      data-accent="coral"
+                      href="/apps/sales"
+                      ><span class="icon"
+                        ><svg
+                          class="rx-icon"
+                          viewBox="0 0 256 256"
+                          fill="currentColor"
+                          aria-hidden="true"
+                          focusable="false"
+                        >
+                          <use
+                            href="/assets/rx-icons.svg#rx-chart-fill"
+                          ></use></svg></span
+                      ><span class="name">案件</span></a
+                    >
+                  </div>
+                </nav>
+                <div class="search">
+                  <div class="rx-input-group">
+                    <div class="control" data-size="large">
+                      <span class="affix" id="shell-trail-search-prefix"
+                        ><svg
+                          class="rx-icon"
+                          viewBox="0 0 256 256"
+                          fill="currentColor"
+                          aria-hidden="true"
+                          focusable="false"
+                        >
+                          <use href="/assets/rx-icons.svg#rx-search"></use></svg></span
+                      ><input
+                        type="search"
+                        role="combobox"
+                        aria-label="仕事・人・ページを探す"
+                        aria-haspopup="tree"
+                        aria-autocomplete="list"
+                        aria-controls="shell-trail-results"
+                        aria-expanded="false"
+                        autocomplete="off"
+                        autofocus=""
+                        placeholder="仕事・人・ページを探す…"
+                        data-command-menu-target="search"
+                        id="shell-trail-search"
+                        data-size="large"
+                        aria-describedby="shell-trail-search-prefix"
+                        class="rx-input"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="results"
+                  id="shell-trail-results"
+                  role="tree"
+                  aria-label="移動先・操作"
+                >
+                  <section
+                    class="group"
+                    role="group"
+                    aria-labelledby="shell-trail-group-0"
+                    data-command-menu-target="group"
+                  >
+                    <h2 id="shell-trail-group-0">移動</h2>
+                    <ul class="list" role="none">
+                      <li
+                        class="entry"
+                        role="treeitem"
+                        id="shell-trail-entry-0-0"
+                        aria-selected="false"
+                        data-command-menu-target="entry"
+                        data-search="取引先"
+                      >
+                        <a class="link" href="/apps/people" tabindex="0"
+                          ><span class="icon"
+                            ><svg
+                              class="rx-icon"
+                              viewBox="0 0 256 256"
+                              fill="currentColor"
+                              aria-hidden="true"
+                              focusable="false"
+                            >
+                              <use
+                                href="/assets/rx-icons.svg#rx-user-fill"
+                              ></use></svg></span
+                          ><span class="name">取引先</span></a
+                        >
+                      </li>
+                      <li
+                        class="entry"
+                        role="treeitem"
+                        id="shell-trail-entry-0-1"
+                        aria-selected="false"
+                        data-command-menu-target="entry"
+                        data-search="案件"
+                      >
+                        <a class="link" href="/apps/sales" tabindex="0"
+                          ><span class="icon"
+                            ><svg
+                              class="rx-icon"
+                              viewBox="0 0 256 256"
+                              fill="currentColor"
+                              aria-hidden="true"
+                              focusable="false"
+                            >
+                              <use
+                                href="/assets/rx-icons.svg#rx-chart-fill"
+                              ></use></svg></span
+                          ><span class="name">案件</span></a
+                        >
+                      </li>
+                    </ul>
+                  </section>
+                  <p class="empty" data-command-menu-target="empty" hidden="">
+                    見つかりませんでした。別の言葉で探してみてください。
+                  </p>
+                </div>
+                <footer class="help" aria-label="キーボード操作">
+                  <span class="hint"
+                    ><span class="rx-keycap"><kbd>↑</kbd><kbd>↓</kbd></span
+                    >選択</span
+                  ><span class="hint"
+                    ><span class="rx-keycap"><kbd>Enter</kbd></span
+                    >実行</span
+                  ><span class="hint"
+                    ><span class="rx-keycap"><kbd>Esc</kbd></span
+                    >閉じる</span
+                  >
+                </footer>
+                <span
+                  class="rx-visually-hidden"
+                  role="status"
+                  data-command-menu-target="status"
+                ></span>
+              </div>
             </div>
-          </header>
-          <div
-            class="rx-table"
-            role="region"
-            aria-label="担当している仕事"
-            tabindex="0"
-            data-state="ready"
-          >
-            <table data-controller="" data-density="compact" class="table">
-              <caption>
-                担当している仕事
-              </caption>
-              <thead>
-                <tr>
-                  <th scope="col">仕事</th>
-                  <th scope="col">担当</th>
-                  <th scope="col">確認者</th>
-                  <th scope="col">更新日時</th>
-                  <th scope="col">期限</th>
-                  <th scope="col">状態</th>
-                  <th scope="col">公開先</th>
-                  <th scope="col">優先度</th>
-                  <th scope="col" data-cell="numeric">コメント</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row" data-cell="text">ヘルプセンターの目次を見直す</th>
-                  <td data-cell="short">田中 遥</td>
-                  <td data-cell="short">佐藤 健</td>
-                  <td data-cell="short">2026年9月25日 10:00</td>
-                  <td data-cell="short">2026年9月30日</td>
-                  <td data-cell="short">確認待ち</td>
-                  <td data-cell="short">ヘルプセンター（日本語）</td>
-                  <td data-cell="short">高</td>
-                  <td data-cell="numeric">3件</td>
-                </tr>
-                <tr>
-                  <th scope="row" data-cell="text">料金とキャンセル条件を更新する</th>
-                  <td data-cell="short">佐藤 健</td>
-                  <td data-cell="short">森 美咲</td>
-                  <td data-cell="short">2026年9月24日 15:30</td>
-                  <td data-cell="short">2026年10月3日</td>
-                  <td data-cell="short">進行中</td>
-                  <td data-cell="short">料金ページ</td>
-                  <td data-cell="short">中</td>
-                  <td data-cell="numeric">1件</td>
-                </tr>
-                <tr>
-                  <th scope="row" data-cell="text">よくある質問を集める</th>
-                  <td data-cell="short">森 美咲</td>
-                  <td data-cell="short">田中 遥</td>
-                  <td data-cell="short">2026年9月22日 9:00</td>
-                  <td data-cell="short">2026年10月10日</td>
-                  <td data-cell="short">これから</td>
-                  <td data-cell="short">ヘルプセンター（英語）</td>
-                  <td data-cell="short">低</td>
-                  <td data-cell="numeric">0件</td>
-                </tr>
-              </tbody>
-            </table>
+          </div>
+        </header>
+        <div class="body">
+          <div class="main" style="--rx-trail-count: 1">
+            <nav class="trail" aria-label="上の階層">
+              <ol>
+                <li style="--rx-trail-depth: 1">
+                  <a href="/apps/people">株式会社みなと製作所</a>
+                </li>
+              </ol>
+            </nav>
+            <div class="workspace">
+              <header class="rx-page-header" data-align="start">
+                <hgroup class="heading">
+                  <h1>展示会の什器の見積もり</h1>
+                  <p>案件 · 担当 田中 遥 · 9月30日まで</p>
+                </hgroup>
+                <div class="actions">
+                  <button
+                    class="rx-button"
+                    type="button"
+                    data-variant="secondary"
+                    data-size="default"
+                  >
+                    編集
+                  </button>
+                </div>
+              </header>
+              <section class="rx-section" data-tone="neutral">
+                <header class="heading">
+                  <h2>やること</h2>
+                  <span class="count">2</span>
+                  <div class="actions">
+                    <button
+                      class="rx-button"
+                      type="button"
+                      data-variant="secondary"
+                      data-size="compact"
+                    >
+                      追加
+                    </button>
+                  </div>
+                </header>
+                <p>見積書の数量を確かめ、来週の打ち合わせまでに送ります。</p>
+              </section>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="rx-stack" data-space="small">
+    <h3>先頭側の列を置く（aside）</h3>
+    <div style="block-size: 34rem; overflow: auto; isolation: isolate">
+      <div class="rx-app-shell" data-size="default">
+        <header class="bar">
+          <div class="account">
+            <span
+              class="rx-avatar"
+              data-size="small"
+              data-tone="coral"
+              role="img"
+              aria-label="田中 遥"
+              ><span class="initials">遥</span></span
+            ><a href="/apps/settings">田中 遥</a><a href="/">ログアウト</a>
+          </div>
+          <div class="start"><a href="/apps/project">つむぐ商会</a></div>
+          <div class="commands">
+            <div class="rx-command-menu" data-controller="command-menu">
+              <button
+                popovertarget="shell-aside"
+                data-command-menu-target="trigger"
+                aria-haspopup="dialog"
+                aria-controls="shell-aside"
+                aria-expanded="false"
+                class="rx-button"
+                type="button"
+                data-variant="secondary"
+                data-size="large"
+              >
+                <svg
+                  class="rx-icon"
+                  viewBox="0 0 256 256"
+                  fill="currentColor"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <use href="/assets/rx-icons.svg#rx-search-fill"></use></svg
+                >取引先・案件・担当者を探す<svg
+                  class="rx-icon"
+                  viewBox="0 0 256 256"
+                  fill="currentColor"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <use href="/assets/rx-icons.svg#rx-caret"></use>
+                </svg>
+              </button>
+              <div
+                class="panel"
+                popover="auto"
+                role="dialog"
+                id="shell-aside"
+                aria-label="取引先・案件・担当者を探すのコマンド"
+                data-command-menu-target="panel"
+              >
+                <header class="heading">
+                  <span class="name">取引先・案件・担当者を探す</span
+                  ><button
+                    aria-label="コマンドを閉じる"
+                    popovertarget="shell-aside"
+                    popovertargetaction="hide"
+                    data-command-menu-target="close"
+                    class="rx-button"
+                    type="button"
+                    data-variant="secondary"
+                    data-size="compact"
+                  >
+                    閉じる
+                  </button>
+                </header>
+                <nav class="shortcuts" aria-label="よく使う場所" data-columns="4">
+                  <div class="shortcut">
+                    <a
+                      tabindex="0"
+                      class="rx-action-tile"
+                      data-accent="green"
+                      href="/apps/people"
+                      ><span class="icon"
+                        ><svg
+                          class="rx-icon"
+                          viewBox="0 0 256 256"
+                          fill="currentColor"
+                          aria-hidden="true"
+                          focusable="false"
+                        >
+                          <use
+                            href="/assets/rx-icons.svg#rx-user-fill"
+                          ></use></svg></span
+                      ><span class="name">取引先</span></a
+                    >
+                  </div>
+                  <div class="shortcut">
+                    <a
+                      tabindex="0"
+                      class="rx-action-tile"
+                      data-accent="coral"
+                      href="/apps/sales"
+                      ><span class="icon"
+                        ><svg
+                          class="rx-icon"
+                          viewBox="0 0 256 256"
+                          fill="currentColor"
+                          aria-hidden="true"
+                          focusable="false"
+                        >
+                          <use
+                            href="/assets/rx-icons.svg#rx-chart-fill"
+                          ></use></svg></span
+                      ><span class="name">案件</span></a
+                    >
+                  </div>
+                </nav>
+                <div class="search">
+                  <div class="rx-input-group">
+                    <div class="control" data-size="large">
+                      <span class="affix" id="shell-aside-search-prefix"
+                        ><svg
+                          class="rx-icon"
+                          viewBox="0 0 256 256"
+                          fill="currentColor"
+                          aria-hidden="true"
+                          focusable="false"
+                        >
+                          <use href="/assets/rx-icons.svg#rx-search"></use></svg></span
+                      ><input
+                        type="search"
+                        role="combobox"
+                        aria-label="仕事・人・ページを探す"
+                        aria-haspopup="tree"
+                        aria-autocomplete="list"
+                        aria-controls="shell-aside-results"
+                        aria-expanded="false"
+                        autocomplete="off"
+                        autofocus=""
+                        placeholder="仕事・人・ページを探す…"
+                        data-command-menu-target="search"
+                        id="shell-aside-search"
+                        data-size="large"
+                        aria-describedby="shell-aside-search-prefix"
+                        class="rx-input"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="results"
+                  id="shell-aside-results"
+                  role="tree"
+                  aria-label="移動先・操作"
+                >
+                  <section
+                    class="group"
+                    role="group"
+                    aria-labelledby="shell-aside-group-0"
+                    data-command-menu-target="group"
+                  >
+                    <h2 id="shell-aside-group-0">移動</h2>
+                    <ul class="list" role="none">
+                      <li
+                        class="entry"
+                        role="treeitem"
+                        id="shell-aside-entry-0-0"
+                        aria-selected="false"
+                        data-command-menu-target="entry"
+                        data-search="取引先"
+                      >
+                        <a class="link" href="/apps/people" tabindex="0"
+                          ><span class="icon"
+                            ><svg
+                              class="rx-icon"
+                              viewBox="0 0 256 256"
+                              fill="currentColor"
+                              aria-hidden="true"
+                              focusable="false"
+                            >
+                              <use
+                                href="/assets/rx-icons.svg#rx-user-fill"
+                              ></use></svg></span
+                          ><span class="name">取引先</span></a
+                        >
+                      </li>
+                      <li
+                        class="entry"
+                        role="treeitem"
+                        id="shell-aside-entry-0-1"
+                        aria-selected="false"
+                        data-command-menu-target="entry"
+                        data-search="案件"
+                      >
+                        <a class="link" href="/apps/sales" tabindex="0"
+                          ><span class="icon"
+                            ><svg
+                              class="rx-icon"
+                              viewBox="0 0 256 256"
+                              fill="currentColor"
+                              aria-hidden="true"
+                              focusable="false"
+                            >
+                              <use
+                                href="/assets/rx-icons.svg#rx-chart-fill"
+                              ></use></svg></span
+                          ><span class="name">案件</span></a
+                        >
+                      </li>
+                    </ul>
+                  </section>
+                  <p class="empty" data-command-menu-target="empty" hidden="">
+                    見つかりませんでした。別の言葉で探してみてください。
+                  </p>
+                </div>
+                <footer class="help" aria-label="キーボード操作">
+                  <span class="hint"
+                    ><span class="rx-keycap"><kbd>↑</kbd><kbd>↓</kbd></span
+                    >選択</span
+                  ><span class="hint"
+                    ><span class="rx-keycap"><kbd>Enter</kbd></span
+                    >実行</span
+                  ><span class="hint"
+                    ><span class="rx-keycap"><kbd>Esc</kbd></span
+                    >閉じる</span
+                  >
+                </footer>
+                <span
+                  class="rx-visually-hidden"
+                  role="status"
+                  data-command-menu-target="status"
+                ></span>
+              </div>
+            </div>
+          </div>
+        </header>
+        <div class="body" data-aside="true">
+          <div class="aside">
+            <nav class="rx-navigation" aria-label="取引先の分類">
+              <a href="/apps/people" aria-current="page" data-current="true"
+                ><span>すべての取引先</span><small>128</small></a
+              ><a href="/apps/people"><span>見込み</span><small>24</small></a
+              ><a href="/apps/people"><span>取引中</span><small>87</small></a
+              ><a href="/apps/people"><span>休眠</span><small>17</small></a>
+            </nav>
+          </div>
+          <div class="main">
+            <div class="workspace">
+              <header class="rx-page-header" data-align="start">
+                <hgroup class="heading">
+                  <h1>すべての取引先</h1>
+                  <p>128件の取引先</p>
+                </hgroup>
+              </header>
+              <div
+                class="rx-table"
+                role="region"
+                aria-label="取引先の一覧"
+                tabindex="0"
+                data-state="ready"
+              >
+                <table data-controller="" data-density="compact" class="table">
+                  <caption>
+                    取引先の一覧
+                  </caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">コード</th>
+                      <th scope="col">取引先</th>
+                      <th scope="col">担当</th>
+                      <th scope="col" data-cell="numeric">進行中の案件</th>
+                      <th scope="col">更新日</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td data-cell="short">C-0012</td>
+                      <th scope="row" data-cell="text">
+                        <a href="/apps/people">株式会社みなと製作所</a>
+                      </th>
+                      <td data-cell="short">田中 遥</td>
+                      <td data-cell="numeric">3</td>
+                      <td data-cell="short">9月25日</td>
+                    </tr>
+                    <tr>
+                      <td data-cell="short">C-0031</td>
+                      <th scope="row" data-cell="text">
+                        <a href="/apps/people">ひかり書房</a>
+                      </th>
+                      <td data-cell="short">佐藤 健</td>
+                      <td data-cell="numeric">1</td>
+                      <td data-cell="short">9月24日</td>
+                    </tr>
+                    <tr>
+                      <td data-cell="short">C-0047</td>
+                      <th scope="row" data-cell="text">
+                        <a href="/apps/people">合同会社あおば農園</a>
+                      </th>
+                      <td data-cell="short">森 美咲</td>
+                      <td data-cell="numeric">0</td>
+                      <td data-cell="short">9月22日</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -664,273 +1261,10 @@ export default () => (
   </section>
   <section class="rx-stack" data-space="small">
     <h3>入力が中心の画面（compact）</h3>
-    <div style="block-size: 32rem; overflow: auto; isolation: isolate">
+    <div style="block-size: 34rem; overflow: auto; isolation: isolate">
       <div class="rx-app-shell" data-size="compact">
         <header class="bar">
-          <div class="start">
-            <a
-              href="/apps/project"
-              class="rx-button"
-              data-variant="link"
-              data-size="default"
-              >ホーム</a
-            >
-          </div>
-          <nav class="commands" aria-label="共通コマンド">
-            <div class="rx-command-menu" data-controller="command-menu">
-              <button
-                popovertarget="shell-compact"
-                data-command-menu-target="trigger"
-                aria-haspopup="dialog"
-                aria-controls="shell-compact"
-                aria-expanded="false"
-                class="rx-button"
-                type="button"
-                data-variant="secondary"
-                data-size="large"
-              >
-                <svg
-                  class="rx-icon"
-                  viewBox="0 0 256 256"
-                  fill="currentColor"
-                  aria-hidden="true"
-                  focusable="false"
-                >
-                  <use href="/assets/rx-icons.svg#rx-layers-fill"></use></svg
-                >つむぐチーム<svg
-                  class="rx-icon"
-                  viewBox="0 0 256 256"
-                  fill="currentColor"
-                  aria-hidden="true"
-                  focusable="false"
-                >
-                  <use href="/assets/rx-icons.svg#rx-caret"></use>
-                </svg>
-              </button>
-              <div
-                class="panel"
-                popover="auto"
-                role="dialog"
-                id="shell-compact"
-                aria-label="つむぐチームのコマンド"
-                data-command-menu-target="panel"
-              >
-                <header class="heading">
-                  <span class="name">つむぐチーム</span
-                  ><button
-                    aria-label="コマンドを閉じる"
-                    popovertarget="shell-compact"
-                    popovertargetaction="hide"
-                    data-command-menu-target="close"
-                    class="rx-button"
-                    type="button"
-                    data-variant="secondary"
-                    data-size="compact"
-                  >
-                    閉じる
-                  </button>
-                </header>
-                <nav class="shortcuts" aria-label="よく使う場所" data-columns="4">
-                  <div class="shortcut">
-                    <a
-                      tabindex="0"
-                      class="rx-action-tile"
-                      data-accent="green"
-                      href="/apps/project"
-                      ><span class="icon"
-                        ><svg
-                          class="rx-icon"
-                          viewBox="0 0 256 256"
-                          fill="currentColor"
-                          aria-hidden="true"
-                          focusable="false"
-                        >
-                          <use
-                            href="/assets/rx-icons.svg#rx-layers-fill"
-                          ></use></svg></span
-                      ><span class="name">プロジェクト</span></a
-                    >
-                  </div>
-                  <div class="shortcut">
-                    <a
-                      tabindex="0"
-                      class="rx-action-tile"
-                      data-accent="blue"
-                      href="/apps/inbox"
-                      ><span class="icon"
-                        ><svg
-                          class="rx-icon"
-                          viewBox="0 0 256 256"
-                          fill="currentColor"
-                          aria-hidden="true"
-                          focusable="false"
-                        >
-                          <use
-                            href="/assets/rx-icons.svg#rx-mail-fill"
-                          ></use></svg></span
-                      ><span class="name">受信トレイ</span></a
-                    >
-                  </div>
-                  <div class="shortcut">
-                    <a
-                      tabindex="0"
-                      class="rx-action-tile"
-                      data-accent="amber"
-                      href="/apps/files"
-                      ><span class="icon"
-                        ><svg
-                          class="rx-icon"
-                          viewBox="0 0 256 256"
-                          fill="currentColor"
-                          aria-hidden="true"
-                          focusable="false"
-                        >
-                          <use
-                            href="/assets/rx-icons.svg#rx-file-fill"
-                          ></use></svg></span
-                      ><span class="name">資料</span></a
-                    >
-                  </div>
-                  <div class="shortcut">
-                    <a
-                      tabindex="0"
-                      class="rx-action-tile"
-                      data-accent="coral"
-                      href="/apps/sales"
-                      ><span class="icon"
-                        ><svg
-                          class="rx-icon"
-                          viewBox="0 0 256 256"
-                          fill="currentColor"
-                          aria-hidden="true"
-                          focusable="false"
-                        >
-                          <use
-                            href="/assets/rx-icons.svg#rx-chart-fill"
-                          ></use></svg></span
-                      ><span class="name">売上</span></a
-                    >
-                  </div>
-                </nav>
-                <div class="search">
-                  <div class="rx-input-group">
-                    <div class="control" data-size="large">
-                      <span class="affix" id="shell-compact-search-prefix"
-                        ><svg
-                          class="rx-icon"
-                          viewBox="0 0 256 256"
-                          fill="currentColor"
-                          aria-hidden="true"
-                          focusable="false"
-                        >
-                          <use href="/assets/rx-icons.svg#rx-search"></use></svg></span
-                      ><input
-                        type="search"
-                        role="combobox"
-                        aria-label="仕事・人・ページを探す"
-                        aria-haspopup="tree"
-                        aria-autocomplete="list"
-                        aria-controls="shell-compact-results"
-                        aria-expanded="false"
-                        autocomplete="off"
-                        autofocus=""
-                        placeholder="仕事・人・ページを探す…"
-                        data-command-menu-target="search"
-                        id="shell-compact-search"
-                        data-size="large"
-                        aria-describedby="shell-compact-search-prefix"
-                        class="rx-input"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="results"
-                  id="shell-compact-results"
-                  role="tree"
-                  aria-label="移動先・操作"
-                >
-                  <section
-                    class="group"
-                    role="group"
-                    aria-labelledby="shell-compact-group-0"
-                    data-command-menu-target="group"
-                  >
-                    <h2 id="shell-compact-group-0">移動</h2>
-                    <ul class="list" role="none">
-                      <li
-                        class="entry"
-                        role="treeitem"
-                        id="shell-compact-entry-0-0"
-                        aria-selected="false"
-                        data-command-menu-target="entry"
-                        data-search="プロジェクト"
-                      >
-                        <a class="link" href="/apps/project" tabindex="0"
-                          ><span class="icon"
-                            ><svg
-                              class="rx-icon"
-                              viewBox="0 0 256 256"
-                              fill="currentColor"
-                              aria-hidden="true"
-                              focusable="false"
-                            >
-                              <use
-                                href="/assets/rx-icons.svg#rx-layers-fill"
-                              ></use></svg></span
-                          ><span class="name">プロジェクト</span></a
-                        >
-                      </li>
-                      <li
-                        class="entry"
-                        role="treeitem"
-                        id="shell-compact-entry-0-1"
-                        aria-selected="false"
-                        data-command-menu-target="entry"
-                        data-search="受信トレイ"
-                      >
-                        <a class="link" href="/apps/inbox" tabindex="0"
-                          ><span class="icon"
-                            ><svg
-                              class="rx-icon"
-                              viewBox="0 0 256 256"
-                              fill="currentColor"
-                              aria-hidden="true"
-                              focusable="false"
-                            >
-                              <use
-                                href="/assets/rx-icons.svg#rx-mail-fill"
-                              ></use></svg></span
-                          ><span class="name">受信トレイ</span></a
-                        >
-                      </li>
-                    </ul>
-                  </section>
-                  <p class="empty" data-command-menu-target="empty" hidden="">
-                    見つかりませんでした。別の言葉で探してみてください。
-                  </p>
-                </div>
-                <footer class="help" aria-label="キーボード操作">
-                  <span class="hint"
-                    ><span class="rx-keycap"><kbd>↑</kbd><kbd>↓</kbd></span
-                    >選択</span
-                  ><span class="hint"
-                    ><span class="rx-keycap"><kbd>Enter</kbd></span
-                    >実行</span
-                  ><span class="hint"
-                    ><span class="rx-keycap"><kbd>Esc</kbd></span
-                    >閉じる</span
-                  >
-                </footer>
-                <span
-                  class="rx-visually-hidden"
-                  role="status"
-                  data-command-menu-target="status"
-                ></span>
-              </div>
-            </div>
-          </nav>
-          <div class="end">
+          <div class="account">
             <span
               class="rx-avatar"
               data-size="small"
@@ -938,325 +1272,75 @@ export default () => (
               role="img"
               aria-label="田中 遥"
               ><span class="initials">遥</span></span
-            >
+            ><a href="/apps/settings">田中 遥</a><a href="/">ログアウト</a>
           </div>
+          <div class="start"><a href="/apps/project">つむぐ商会</a></div>
+          <nav class="navigation" aria-label="アプリの移動">
+            <a href="/apps/project"><span>ホーム</span></a
+            ><a href="/apps/people" aria-current="page" data-current="true"
+              ><span>取引先</span></a
+            ><a href="/apps/sales"><span>案件</span></a
+            ><a href="/apps/schedule"><span>予定</span></a
+            ><a href="/apps/settings"><span>設定</span></a>
+          </nav>
         </header>
-        <div class="workspace">
-          <header class="rx-page-header" data-align="start">
-            <hgroup class="heading">
-              <h1>設定</h1>
-              <p>ワークスペースの名前と通知を変えます。</p>
-            </hgroup>
-          </header>
-          <form class="rx-stack" aria-label="ワークスペースの設定">
-            <div class="rx-field">
-              <div class="heading">
-                <label for="shell-workspace-name">ワークスペースの名前</label>
-              </div>
-              <input
-                id="shell-workspace-name"
-                name="name"
-                value="小さな仕事場"
-                class="rx-input"
-              />
+        <div class="body">
+          <div class="main">
+            <div class="workspace">
+              <header class="rx-page-header" data-align="start">
+                <hgroup class="heading">
+                  <h1>設定</h1>
+                  <p>会社の名前と通知を変えます。</p>
+                </hgroup>
+              </header>
+              <form class="rx-stack" aria-label="会社の設定">
+                <div class="rx-field">
+                  <div class="heading">
+                    <label for="shell-workspace-name">会社の名前</label>
+                  </div>
+                  <input
+                    id="shell-workspace-name"
+                    name="name"
+                    value="つむぐ商会"
+                    class="rx-input"
+                  />
+                </div>
+                <label class="rx-switch" for="shell-digest"
+                  ><input
+                    name="digest"
+                    value="weekly"
+                    checked=""
+                    id="shell-digest"
+                    type="checkbox"
+                    role="switch"
+                    aria-labelledby="shell-digest-label"
+                  /><span
+                    ><span id="shell-digest-label">週次のまとめを受け取る</span></span
+                  ></label
+                >
+                <div>
+                  <button
+                    class="rx-button"
+                    type="submit"
+                    data-variant="primary"
+                    data-size="default"
+                  >
+                    保存
+                  </button>
+                </div>
+              </form>
             </div>
-            <label class="rx-switch" for="shell-digest"
-              ><input
-                name="digest"
-                value="weekly"
-                checked=""
-                id="shell-digest"
-                type="checkbox"
-                role="switch"
-                aria-labelledby="shell-digest-label"
-              /><span
-                ><span id="shell-digest-label">週次のまとめを受け取る</span></span
-              ></label
-            >
-            <div>
-              <button
-                class="rx-button"
-                type="submit"
-                data-variant="primary"
-                data-size="default"
-              >
-                保存
-              </button>
-            </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>
   </section>
   <section class="rx-stack" data-space="small">
     <h3>横に広い画面（wide）</h3>
-    <div style="block-size: 32rem; overflow: auto; isolation: isolate">
+    <div style="block-size: 34rem; overflow: auto; isolation: isolate">
       <div class="rx-app-shell" data-size="wide">
         <header class="bar">
-          <div class="start">
-            <a
-              href="/apps/project"
-              class="rx-button"
-              data-variant="link"
-              data-size="default"
-              >ホーム</a
-            >
-          </div>
-          <nav class="commands" aria-label="共通コマンド">
-            <div class="rx-command-menu" data-controller="command-menu">
-              <button
-                popovertarget="shell-wide"
-                data-command-menu-target="trigger"
-                aria-haspopup="dialog"
-                aria-controls="shell-wide"
-                aria-expanded="false"
-                class="rx-button"
-                type="button"
-                data-variant="secondary"
-                data-size="large"
-              >
-                <svg
-                  class="rx-icon"
-                  viewBox="0 0 256 256"
-                  fill="currentColor"
-                  aria-hidden="true"
-                  focusable="false"
-                >
-                  <use href="/assets/rx-icons.svg#rx-layers-fill"></use></svg
-                >つむぐチーム<svg
-                  class="rx-icon"
-                  viewBox="0 0 256 256"
-                  fill="currentColor"
-                  aria-hidden="true"
-                  focusable="false"
-                >
-                  <use href="/assets/rx-icons.svg#rx-caret"></use>
-                </svg>
-              </button>
-              <div
-                class="panel"
-                popover="auto"
-                role="dialog"
-                id="shell-wide"
-                aria-label="つむぐチームのコマンド"
-                data-command-menu-target="panel"
-              >
-                <header class="heading">
-                  <span class="name">つむぐチーム</span
-                  ><button
-                    aria-label="コマンドを閉じる"
-                    popovertarget="shell-wide"
-                    popovertargetaction="hide"
-                    data-command-menu-target="close"
-                    class="rx-button"
-                    type="button"
-                    data-variant="secondary"
-                    data-size="compact"
-                  >
-                    閉じる
-                  </button>
-                </header>
-                <nav class="shortcuts" aria-label="よく使う場所" data-columns="4">
-                  <div class="shortcut">
-                    <a
-                      tabindex="0"
-                      class="rx-action-tile"
-                      data-accent="green"
-                      href="/apps/project"
-                      ><span class="icon"
-                        ><svg
-                          class="rx-icon"
-                          viewBox="0 0 256 256"
-                          fill="currentColor"
-                          aria-hidden="true"
-                          focusable="false"
-                        >
-                          <use
-                            href="/assets/rx-icons.svg#rx-layers-fill"
-                          ></use></svg></span
-                      ><span class="name">プロジェクト</span></a
-                    >
-                  </div>
-                  <div class="shortcut">
-                    <a
-                      tabindex="0"
-                      class="rx-action-tile"
-                      data-accent="blue"
-                      href="/apps/inbox"
-                      ><span class="icon"
-                        ><svg
-                          class="rx-icon"
-                          viewBox="0 0 256 256"
-                          fill="currentColor"
-                          aria-hidden="true"
-                          focusable="false"
-                        >
-                          <use
-                            href="/assets/rx-icons.svg#rx-mail-fill"
-                          ></use></svg></span
-                      ><span class="name">受信トレイ</span></a
-                    >
-                  </div>
-                  <div class="shortcut">
-                    <a
-                      tabindex="0"
-                      class="rx-action-tile"
-                      data-accent="amber"
-                      href="/apps/files"
-                      ><span class="icon"
-                        ><svg
-                          class="rx-icon"
-                          viewBox="0 0 256 256"
-                          fill="currentColor"
-                          aria-hidden="true"
-                          focusable="false"
-                        >
-                          <use
-                            href="/assets/rx-icons.svg#rx-file-fill"
-                          ></use></svg></span
-                      ><span class="name">資料</span></a
-                    >
-                  </div>
-                  <div class="shortcut">
-                    <a
-                      tabindex="0"
-                      class="rx-action-tile"
-                      data-accent="coral"
-                      href="/apps/sales"
-                      ><span class="icon"
-                        ><svg
-                          class="rx-icon"
-                          viewBox="0 0 256 256"
-                          fill="currentColor"
-                          aria-hidden="true"
-                          focusable="false"
-                        >
-                          <use
-                            href="/assets/rx-icons.svg#rx-chart-fill"
-                          ></use></svg></span
-                      ><span class="name">売上</span></a
-                    >
-                  </div>
-                </nav>
-                <div class="search">
-                  <div class="rx-input-group">
-                    <div class="control" data-size="large">
-                      <span class="affix" id="shell-wide-search-prefix"
-                        ><svg
-                          class="rx-icon"
-                          viewBox="0 0 256 256"
-                          fill="currentColor"
-                          aria-hidden="true"
-                          focusable="false"
-                        >
-                          <use href="/assets/rx-icons.svg#rx-search"></use></svg></span
-                      ><input
-                        type="search"
-                        role="combobox"
-                        aria-label="仕事・人・ページを探す"
-                        aria-haspopup="tree"
-                        aria-autocomplete="list"
-                        aria-controls="shell-wide-results"
-                        aria-expanded="false"
-                        autocomplete="off"
-                        autofocus=""
-                        placeholder="仕事・人・ページを探す…"
-                        data-command-menu-target="search"
-                        id="shell-wide-search"
-                        data-size="large"
-                        aria-describedby="shell-wide-search-prefix"
-                        class="rx-input"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="results"
-                  id="shell-wide-results"
-                  role="tree"
-                  aria-label="移動先・操作"
-                >
-                  <section
-                    class="group"
-                    role="group"
-                    aria-labelledby="shell-wide-group-0"
-                    data-command-menu-target="group"
-                  >
-                    <h2 id="shell-wide-group-0">移動</h2>
-                    <ul class="list" role="none">
-                      <li
-                        class="entry"
-                        role="treeitem"
-                        id="shell-wide-entry-0-0"
-                        aria-selected="false"
-                        data-command-menu-target="entry"
-                        data-search="プロジェクト"
-                      >
-                        <a class="link" href="/apps/project" tabindex="0"
-                          ><span class="icon"
-                            ><svg
-                              class="rx-icon"
-                              viewBox="0 0 256 256"
-                              fill="currentColor"
-                              aria-hidden="true"
-                              focusable="false"
-                            >
-                              <use
-                                href="/assets/rx-icons.svg#rx-layers-fill"
-                              ></use></svg></span
-                          ><span class="name">プロジェクト</span></a
-                        >
-                      </li>
-                      <li
-                        class="entry"
-                        role="treeitem"
-                        id="shell-wide-entry-0-1"
-                        aria-selected="false"
-                        data-command-menu-target="entry"
-                        data-search="受信トレイ"
-                      >
-                        <a class="link" href="/apps/inbox" tabindex="0"
-                          ><span class="icon"
-                            ><svg
-                              class="rx-icon"
-                              viewBox="0 0 256 256"
-                              fill="currentColor"
-                              aria-hidden="true"
-                              focusable="false"
-                            >
-                              <use
-                                href="/assets/rx-icons.svg#rx-mail-fill"
-                              ></use></svg></span
-                          ><span class="name">受信トレイ</span></a
-                        >
-                      </li>
-                    </ul>
-                  </section>
-                  <p class="empty" data-command-menu-target="empty" hidden="">
-                    見つかりませんでした。別の言葉で探してみてください。
-                  </p>
-                </div>
-                <footer class="help" aria-label="キーボード操作">
-                  <span class="hint"
-                    ><span class="rx-keycap"><kbd>↑</kbd><kbd>↓</kbd></span
-                    >選択</span
-                  ><span class="hint"
-                    ><span class="rx-keycap"><kbd>Enter</kbd></span
-                    >実行</span
-                  ><span class="hint"
-                    ><span class="rx-keycap"><kbd>Esc</kbd></span
-                    >閉じる</span
-                  >
-                </footer>
-                <span
-                  class="rx-visually-hidden"
-                  role="status"
-                  data-command-menu-target="status"
-                ></span>
-              </div>
-            </div>
-          </nav>
-          <div class="end">
+          <div class="account">
             <span
               class="rx-avatar"
               data-size="small"
@@ -1264,129 +1348,129 @@ export default () => (
               role="img"
               aria-label="田中 遥"
               ><span class="initials">遥</span></span
-            >
+            ><a href="/apps/settings">田中 遥</a><a href="/">ログアウト</a>
           </div>
+          <div class="start"><a href="/apps/project">つむぐ商会</a></div>
+          <nav class="navigation" aria-label="アプリの移動">
+            <a href="/apps/project"><span>ホーム</span></a
+            ><a href="/apps/people" aria-current="page" data-current="true"
+              ><span>取引先</span></a
+            ><a href="/apps/sales"><span>案件</span></a
+            ><a href="/apps/schedule"><span>予定</span></a
+            ><a href="/apps/settings"><span>設定</span></a>
+          </nav>
         </header>
-        <div class="workspace">
-          <header class="rx-page-header" data-align="start">
-            <span class="icon"
-              ><svg
-                class="rx-icon"
-                viewBox="0 0 256 256"
-                fill="currentColor"
-                aria-hidden="true"
-                focusable="false"
-              >
-                <use href="/assets/rx-icons.svg#rx-grid"></use></svg
-            ></span>
-            <hgroup class="heading"><h1>ヘルプセンターのリニューアル</h1></hgroup>
-          </header>
-          <div
-            id="board-:r1:"
-            class="rx-board"
-            style="
-              --rx-board-tracks: minmax(auto, 1fr) minmax(auto, 1fr) minmax(auto, 1fr)
-                minmax(auto, 1fr);
-            "
-            role="region"
-            aria-label="ヘルプセンターの仕事"
-            tabindex="0"
-            data-controller="board"
-          >
-            <section data-column-id="todo" data-tone="neutral">
-              <h3 class="title"><span class="label">これから</span><small>1</small></h3>
-              <div class="items" role="list" aria-label="これから">
-                <article
-                  class="rx-board-item"
-                  role="listitem"
-                  data-board-id="faq"
-                  data-board-label="よくある質問を集める"
-                >
-                  <span class="code">No. 21</span>
-                  <div class="body"><h4>よくある質問を集める</h4></div>
-                </article>
-              </div>
-              <div class="empty">項目はありません</div>
-            </section>
-            <section data-column-id="doing" data-tone="info">
-              <h3 class="title">
-                <span class="label">進めている</span><small>1</small>
-              </h3>
-              <div class="items" role="list" aria-label="進めている">
-                <article
-                  class="rx-board-item"
-                  role="listitem"
-                  data-board-id="guide"
-                  data-board-label="はじめての方向けガイド"
-                >
-                  <span class="code">No. 18</span>
-                  <div class="body"><h4>はじめての方向けガイド</h4></div>
-                </article>
-              </div>
-              <div class="empty">項目はありません</div>
-            </section>
-            <section data-column-id="review" data-tone="warning">
-              <h3 class="title"><span class="label">確認待ち</span><small>1</small></h3>
-              <div class="items" role="list" aria-label="確認待ち">
-                <article
-                  class="rx-board-item"
-                  role="listitem"
-                  data-board-id="export"
-                  data-board-label="データの書き出しの記事"
-                >
-                  <span class="code">No. 16</span>
-                  <div class="body"><h4>データの書き出しの記事</h4></div>
-                </article>
-              </div>
-              <div class="empty">項目はありません</div>
-            </section>
-            <section data-column-id="done" data-tone="success">
-              <h3 class="title">
-                <span class="label">できた！</span><small>1</small
-                ><button
-                  data-icon-only="true"
-                  data-action="board#toggle"
-                  data-board-toggle="true"
-                  hidden=""
-                  aria-expanded="true"
-                  aria-label="「できた！」の列を開閉"
-                  class="rx-button toggle"
-                  type="button"
-                  data-variant="link"
-                  data-size="default"
-                >
-                  <svg
-                    class="rx-icon expand"
-                    viewBox="0 0 256 256"
-                    fill="currentColor"
-                    aria-hidden="true"
-                    focusable="false"
-                  >
-                    <use href="/assets/rx-icons.svg#rx-expand"></use></svg
+        <div class="body">
+          <div class="main">
+            <div class="workspace">
+              <header class="rx-page-header" data-align="start">
+                <span class="icon"
                   ><svg
-                    class="rx-icon collapse"
+                    class="rx-icon"
                     viewBox="0 0 256 256"
                     fill="currentColor"
                     aria-hidden="true"
                     focusable="false"
                   >
-                    <use href="/assets/rx-icons.svg#rx-collapse"></use>
-                  </svg>
-                </button>
-              </h3>
-              <div class="items" role="list" aria-label="できた！">
-                <article
-                  class="rx-board-item"
-                  role="listitem"
-                  data-board-id="goal"
-                  data-board-label="チームでゴールを揃える"
-                >
-                  <span class="code">No. 11</span>
-                  <div class="body"><h4>チームでゴールを揃える</h4></div>
-                </article>
+                    <use href="/assets/rx-icons.svg#rx-grid"></use></svg
+                ></span>
+                <hgroup class="heading"><h1>案件の進み具合</h1></hgroup>
+              </header>
+              <div
+                id="board-:r1:"
+                class="rx-board"
+                style="
+                  --rx-board-tracks: minmax(auto, 1fr) minmax(auto, 1fr)
+                    minmax(auto, 1fr);
+                "
+                role="region"
+                aria-label="案件"
+                tabindex="0"
+                data-controller="board"
+              >
+                <section data-column-id="lead" data-tone="neutral">
+                  <h3 class="title">
+                    <span class="label">見込み</span><small>1</small>
+                  </h3>
+                  <div class="items" role="list" aria-label="見込み">
+                    <article
+                      class="rx-board-item"
+                      role="listitem"
+                      data-board-id="fair"
+                      data-board-label="展示会の什器の見積もり"
+                    >
+                      <span class="code">No. 21</span>
+                      <div class="body"><h4>展示会の什器の見積もり</h4></div>
+                    </article>
+                  </div>
+                  <div class="empty">項目はありません</div>
+                </section>
+                <section data-column-id="proposal" data-tone="info">
+                  <h3 class="title">
+                    <span class="label">提案中</span><small>1</small>
+                  </h3>
+                  <div class="items" role="list" aria-label="提案中">
+                    <article
+                      class="rx-board-item"
+                      role="listitem"
+                      data-board-id="catalog"
+                      data-board-label="秋のカタログの印刷"
+                    >
+                      <span class="code">No. 18</span>
+                      <div class="body"><h4>秋のカタログの印刷</h4></div>
+                    </article>
+                  </div>
+                  <div class="empty">項目はありません</div>
+                </section>
+                <section data-column-id="won" data-tone="success">
+                  <h3 class="title">
+                    <span class="label">受注</span><small>1</small
+                    ><button
+                      data-icon-only="true"
+                      data-action="board#toggle"
+                      data-board-toggle="true"
+                      hidden=""
+                      aria-expanded="true"
+                      aria-label="「受注」の列を開閉"
+                      class="rx-button toggle"
+                      type="button"
+                      data-variant="link"
+                      data-size="default"
+                    >
+                      <svg
+                        class="rx-icon expand"
+                        viewBox="0 0 256 256"
+                        fill="currentColor"
+                        aria-hidden="true"
+                        focusable="false"
+                      >
+                        <use href="/assets/rx-icons.svg#rx-expand"></use></svg
+                      ><svg
+                        class="rx-icon collapse"
+                        viewBox="0 0 256 256"
+                        fill="currentColor"
+                        aria-hidden="true"
+                        focusable="false"
+                      >
+                        <use href="/assets/rx-icons.svg#rx-collapse"></use>
+                      </svg>
+                    </button>
+                  </h3>
+                  <div class="items" role="list" aria-label="受注">
+                    <article
+                      class="rx-board-item"
+                      role="listitem"
+                      data-board-id="sign"
+                      data-board-label="店舗の看板の交換"
+                    >
+                      <span class="code">No. 11</span>
+                      <div class="body"><h4>店舗の看板の交換</h4></div>
+                    </article>
+                  </div>
+                  <div class="empty">項目はありません</div>
+                </section>
               </div>
-              <div class="empty">項目はありません</div>
-            </section>
+            </div>
           </div>
         </div>
       </div>

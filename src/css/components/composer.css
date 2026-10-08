@@ -1,38 +1,27 @@
 @layer components {
   /*
-    入力エリアは一枚のカード。カードそのものを入力欄にし、本文の欄は枠で囲まない。
-    入力中はカード全体にフォーカスリングを出す。
+    構成はHighriseのノート欄（controls.md 7b・14）と同じく、太字の見出しの下に白い本文の欄を置き、その下に添付と小さなボタンを並べる。
+    本文の欄の見た目はBC2のコメント欄（controls.md 7a）: 1px #c1c1c1・角丸5px・内側と外の影なし・左の余白14px・
+    16pxの文字・プレースホルダー#999。Composerそのものは面も影も持たない。
+    添付はFileInput（BC2のファイルの追加の欄。file-input.css）を本文の欄の下に置く。BC2のコメントの欄
+    （bc2-whats-new-drag-drop.jpg）は送信の緑のボタンを欄の下の先頭側に置くが、Retrixは送信ボタンを末尾側に置く
+    （propsの説明どおり。DOMの順を変えずに先頭側へ移すとフォーカスの順と見た目の順がずれるため）。
   */
   .rx-composer {
+    --rx-composer-placeholder: #999999;
     container: rx-composer / inline-size;
     display: grid;
-    /* 欄・添付・操作の段の間は、カードの余白よりはっきり狭くする。 */
-    gap: var(--rx-space-3);
+    /* 欄・添付・操作の段の間。 */
+    gap: var(--rx-space-2);
     min-inline-size: 0;
-    padding-block: var(--rx-space-5);
-    padding-inline: var(--rx-space-6);
-    border-radius: var(--rx-radius-surface);
-    background: var(--rx-surface) var(--rx-fill-paper);
-    box-shadow: var(--rx-shadow-paper);
-    transition: box-shadow var(--rx-duration) ease;
-    &:has(> .rx-field > .rx-input:focus-visible, > .rx-field > .editor:focus-within) {
-      box-shadow:
-        0 0 0 var(--rx-frame-width) var(--rx-link),
-        var(--rx-shadow-paper);
-    }
-    &:has(> .rx-field > :is(.rx-input, .editor)[data-invalid="true"]) {
-      box-shadow:
-        0 0 0 var(--rx-stroke-width) var(--rx-danger),
-        var(--rx-shadow-paper);
-    }
   }
 
-  /* 名前の行は本文の見出し。行の余りと合わせてカードの余白よりはっきり狭く見える間にし、本文に寄せる。 */
+  /* 見出しの行は本文の欄に寄せる。 */
   .rx-composer > .rx-field {
     gap: var(--rx-space-1);
   }
 
-  /* 名前・宛先・状態を一行に並べる。名前は本文と同じ大きさの太字、宛先と状態は補足の文字。 */
+  /* 名前・宛先・状態を一行に並べる。名前は本文と同じ大きさの太字、宛先は灰色、状態は茶色の補足の文字。 */
   .rx-composer > .rx-field > .heading {
     display: flex;
     flex-wrap: wrap;
@@ -54,33 +43,56 @@
     }
     & > .status {
       margin-inline-start: auto;
-      color: var(--rx-muted);
+      color: var(--rx-meta);
       font-size: var(--rx-small);
     }
   }
 
-  /* 本文は本文の大きさと行間で書く。field-sizingに対応するブラウザでは、入力した分だけカードが伸びる。 */
+  /*
+    本文の欄はBC2のコメントの本文と同じ16pxの文字と21pxの行高。上下10px・左右14pxの余白で、一行の時に高さ43px（実測の閉じた高さ）になる。
+    BC2のように閉じた欄を開く仕組みは無いので、最小の高さはHighriseのノート欄（68px）に近い3行にする。
+    field-sizingに対応するブラウザでは、入力した分だけ欄が伸びる。
+  */
   .rx-composer > .rx-field > :is(.rx-input, .editor) {
-    min-block-size: 4lh;
-    padding-block: 0;
-    padding-inline: 0;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-    box-shadow: none;
-    font-size: var(--rx-body);
-    line-height: var(--rx-leading);
+    min-block-size: calc(3lh + 2 * 0.625rem + 2 * var(--rx-stroke-width));
+    padding-block: 0.625rem;
+    padding-inline: 0.875rem;
+    font-size: var(--rx-reading);
+    line-height: calc(21 / 16);
+  }
+
+  .rx-composer > .rx-field > .rx-input::placeholder {
+    color: var(--rx-composer-placeholder);
   }
 
   .rx-composer > .rx-field > .rx-input {
     max-block-size: 20lh;
     resize: vertical;
     field-sizing: content;
-    &:focus-visible {
-      outline: none;
+  }
+
+  /* 差し替えたエディターの囲みにも、複数行の入力欄と同じ枠とフォーカスの輪を付ける。 */
+  .rx-composer > .rx-field > .editor {
+    border: var(--rx-stroke-width) solid var(--rx-textarea-border);
+    border-radius: var(--rx-radius-control);
+    background: var(--rx-surface);
+    &:focus-within {
+      border-color: var(--rx-focus-border);
+      box-shadow: var(--rx-focus-glow);
     }
-    &:disabled {
-      background: var(--rx-hatch);
+    &[data-invalid="true"] {
+      border-color: var(--rx-danger);
+    }
+    /* TextEditorを入れた時は、TextEditorが枠とフォーカスの輪を持つので、囲みの枠と余白を外して二重にしない。 */
+    &:has(> .rx-text-editor) {
+      min-block-size: 0;
+      padding-block: 0;
+      padding-inline: 0;
+      border: 0;
+      background: transparent;
+      &:focus-within {
+        box-shadow: none;
+      }
     }
   }
 
@@ -90,7 +102,7 @@
   */
   .rx-composer > .rx-field > .editor {
     & [contenteditable] {
-      min-block-size: 4lh;
+      min-block-size: 3lh;
       outline: none;
       line-height: inherit;
       & :is(p, ul, ol, blockquote, h1, h2, h3, h4, pre) {
@@ -103,7 +115,7 @@
       }
       &:empty::before {
         content: attr(data-placeholder);
-        color: var(--rx-muted);
+        color: var(--rx-composer-placeholder);
       }
     }
   }
@@ -146,10 +158,8 @@
     }
   }
   @media (forced-colors: active) {
-    .rx-composer {
-      border: var(--rx-stroke-width) solid CanvasText;
-      background: Canvas;
-      box-shadow: none;
+    .rx-composer > .rx-field > .editor:focus-within {
+      outline: 0.125rem solid Highlight;
     }
   }
 }

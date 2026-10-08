@@ -20,7 +20,7 @@ export type MenuItem =
       kind?: "action";
       /** 選んだ時に発火する`dropdown-menu:select`の`detail.value`に入る値。 */
       value: string;
-      /** 削除など取り返しのつかない操作として、淡い赤の文字で分ける。 */
+      /** 削除など取り返しのつかない操作として、赤い文字で分ける。 */
       danger?: boolean;
       /** 選んだ後に閉じるか。通常の操作は既定で閉じる。falseで開いたままにする。 */
       closeOnSelect?: boolean;

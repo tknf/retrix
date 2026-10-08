@@ -19,7 +19,7 @@ export default () => (
           allDay
         />
       </Disclosure>
-      <Disclosure summary="狭い場所：開始と終了を縦に積む">
+      <Disclosure summary="狭い場所：時刻の欄を日付の欄の下に回す">
         <div style="max-inline-size: 20rem">
           <DateTimeRange
             legend="取材"

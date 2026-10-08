@@ -2,7 +2,7 @@
 
 # SettingList
 
-設定の名前と、行の末尾の操作を点線でつないだ一覧です。
+設定の名前と、行の末尾の操作を罫線で区切って並べた一覧です。
 
 ## 使いどころ
 
@@ -11,15 +11,15 @@
 
 ## 使い方
 
-`items` に `label` と `control` を渡します。名前（太字）と淡い `description` を先頭側に、`control` の操作（`Switch`・チェックマーク・`Button` など）を末尾側に置き、その間を淡い点線でつなぎます。`leading` にアバターやアイコンを渡すと名前の前に置きます。
+`items` に `label` と `control` を渡します。名前（本文と同じ13pxの太字）と灰色の12pxの `description` を先頭側に、`control` の操作（`Switch`・チェックマーク・`Button` など）を末尾側に置きます。名前と操作の間は空けておき、線は引きません。`leading` にアバターやアイコンを渡すと名前の前に置きます。
 
-点線は余った幅いっぱいに引き、狭くても1.5remは残します。点線と操作が入らない時は、操作を次の行の末尾側へ回します。行の間に罫線は引きません。
+BC2の権限の表に合わせ、行の高さは40pxを最小にし、行の間には淡い灰色（#e5e5e5）の1pxの罫線を引いて区切ります。名前と操作が一行に入らない時は、操作を次の行の末尾側へ回します。
 
 SettingListは並べ方だけを持ち、設定の値・送信・保存は `control` に渡したコンポーネントと利用側が持ちます。controllerを持たないので、JavaScriptなしでも渡した操作の振る舞いのまま表示されます。
 
 ## アクセシビリティ
 
-- ルートは `label` を名前に持つ `ul` です。点線は読み上げから外します。
+- ルートは `label` を名前に持つ `ul` です。名前と操作の間を空ける要素は読み上げから外します。
 - `control` の操作には、どの名前の設定か分かる名前を付けてください（例：`Switch` の `label`、アイコンだけの `Button` の `aria-label`）。行の名前は操作に自動では結び付きません。
 - チェックマークのように状態を形だけで示す `control` は読み上げでは伝わらないので、必要なら読み上げ用の文を添えてください。
 
@@ -27,7 +27,7 @@ SettingListは並べ方だけを持ち、設定の値・送信・保存は `cont
 
 ### SettingList
 
-名前と行の末尾の操作を点線でつなぐ設定の行。「Everyone ……… スイッチ」「人の名前 ……… ✓」のように、どの名前にどの操作が付くかを目でたどれるようにする。
+設定の名前と行の末尾の操作を並べ、行の間を罫線で区切る設定の一覧。名前と操作の間は空けておき、線は引かない。
 
 | 名前            | 型                           | 既定値 | 説明                                 |
 | --------------- | ---------------------------- | ------ | ------------------------------------ |
@@ -45,7 +45,7 @@ SettingListは並べ方だけを持ち、設定の値・送信・保存は `cont
 | `label`（必須）   | `string` |        | 設定の名前。太字にする。操作の名前（aria-labelなど）は利用側がcontrolに付ける。 |
 | `description`     | `Child`  |        | 名前の下に添える淡い補足（メールアドレスなど）。                                |
 | `leading`         | `Child`  |        | 名前の前に置くアバターやアイコン。                                              |
-| `control`（必須） | `Child`  |        | 行の末尾に置く操作（Switch・チェック・役割の丸など）。                          |
+| `control`（必須） | `Child`  |        | 行の末尾に置く操作（Switch・チェックマーク・Buttonなど）。                      |
 
 ## コード
 
@@ -93,7 +93,7 @@ export default () => (
               label: "秋の読書会",
               control: (
                 <Button
-                  variant="primary"
+                  data-current="true"
                   data-icon-only="true"
                   aria-label="通知を止める"
                 >
@@ -243,11 +243,12 @@ export default () => (
             ><span class="leader" aria-hidden="true"></span
             ><span class="control"
               ><button
+                data-current="true"
                 data-icon-only="true"
                 aria-label="通知を止める"
                 class="rx-button"
                 type="button"
-                data-variant="primary"
+                data-variant="secondary"
                 data-size="default"
               >
                 <svg

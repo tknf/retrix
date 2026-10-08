@@ -1,7 +1,7 @@
 import { ActionTile, Disclosure, DisclosureGroup } from "../../src/hono";
-// セルは5〜7.5remで、入る数だけ並べる（文字を大きくした狭い画面では一列になる）。
+// セルは4〜5.5remで、入る数だけ並べる（文字を大きくした狭い画面では一列になる）。
 const grid =
-  "display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 5rem), 7.5rem)); gap: 0.75rem";
+  "display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 4rem), 5.5rem)); gap: 0.5rem";
 export default () => (
   <div class="rx-stack">
     <div style={grid}>

@@ -1,0 +1,16 @@
+{
+  /**
+   * カタログ（`vp run build`で`dist/catalog`に書き出す静的なページ）を配信する、カタログ専用のWorkerの設定。
+   * bindingは静的ファイルだけで、サーバーの処理は持たない。各ページは`<パス>/index.html`として書き出してあるので、
+   * `html_handling`で末尾のスラッシュの有無に関わらず同じページを返す。
+   * 確認用のURLは、`vp run catalog:deploy`で`retrix-catalog-preview`という名前のWorkerに公開する。
+   */
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "retrix-catalog",
+  "account_id": "7e33902b7891d1e4c58b9e7be0ef1fe3",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "../dist/catalog",
+    "html_handling": "auto-trailing-slash",
+  },
+}

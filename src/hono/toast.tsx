@@ -6,7 +6,7 @@ import { classes, type ElementProps, type Tone } from "./types";
 export type ToastProps = PropsWithChildren<{
   /** popoverのid。開く操作のpopovertargetや、showPopover()で開く時に指す。画面の中で一意にする。 */
   id: string;
-  /** 通知の下に置く操作（「記事を確認する」「もう一度保存する」など）。 */
+  /** 通知の文の後に置く操作（「記事を確認する」「もう一度保存する」など）。 */
   actions?: Child;
   /** 閉じるボタンの読み上げ名。 */
   closeLabel?: string;
@@ -17,7 +17,7 @@ export type ToastProps = PropsWithChildren<{
   duration?: number;
   /** 読み上げの緊急度。politeはrole="status"、assertiveはrole="alert"にする。失敗の通知はassertiveにする。 */
   live?: "polite" | "assertive";
-  /** 通知の種類。パネルをその役割の色で塗る。 */
+  /** 通知の種類。infoとsuccessは黄色の面のままで、successはアイコンを緑にする。warningとdangerは面と枠をその役割の色にする。 */
   tone?: Exclude<Tone, "neutral">;
 }>;
 /**

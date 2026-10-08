@@ -36,7 +36,7 @@ export type ButtonProps = PropsWithChildren<
      */
     size?: "default" | "compact" | "large" | "tag";
     /**
-     * 処理中にする。役割の色をゆっくり流して示し、押せなくし、aria-busyを付ける。
+     * 処理中にする。押せなくし、aria-busyを付け、ポインターを待ちの形にする（控えめな操作は面を淡い灰色にする）。
      * 内容はbusyLabelに置き換える。アイコンだけの操作（data-icon-only="true"）は形を保つためアイコンのまま残す。
      */
     busy?: boolean;

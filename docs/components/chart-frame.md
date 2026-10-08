@@ -13,11 +13,11 @@
 
 `title` と、図の要点を一文で書いた `description` を渡します。`graphic` に利用側で描いた図、`table` に同じ値の `table` 要素を渡します。描画ライブラリや集計の処理は含みません。
 
-図は淡い背景の上に置きます。SVGは幅に合わせて縮め、はみ出す図は背景の領域の中でスクロールします。
+題名は本文の大きさ（13px）の太字、要点の説明と出典は11pxの灰色の文字で書きます。図はHighriseの統計のグラフと同じく、枠も面も持たずにシートの上へ直接置きます。SVGは幅に合わせて縮め、はみ出す図は図の場所の中で横にスクロールします。図の中の線と系列は平らな塗りで描きます（見本は目盛りの横線1px `#e6e6e6`、0の線1px `#c0c0c0`、灰色の目盛りの文字、角の無い平らな棒）。
 
 `table` は `tableLabel` の見出しで開く `Disclosure` に畳み、`Table` と同じ見た目で書きます。
 
-`legend` に系列の名前と色（`blue`・`green`・`amber`・`coral`）を渡すと、図の下に凡例を並べます。図の系列の色は利用側で凡例に合わせます。`source` は図の最後に「出典：」を付けて書きます。
+`legend` に系列の名前と `tone`（`blue`・`green`・`amber`・`coral`）を渡すと、図の下に凡例を並べます。凡例のマークは10pxの角の小さな平らな四角で、`blue` は青緑、`green` は緑、`amber` は黄土色、`coral` は赤茶です。図の系列の色は利用側で凡例に合わせます。`source` は図の最後に「出典：」を付けて書きます。
 
 幅は `size="measure"` で36remまで、`size="wide"` で置き場所いっぱいに広げます。表の開閉は `details` で動くので、JavaScriptは要りません。
 
@@ -70,20 +70,9 @@ export default () => (
     tableLabel="月別売上の数値"
     graphic={
       <svg viewBox="0 0 420 142" width="420" height="142">
-        {/* 棒は青から紫寄りへの塗り。 */}
-        <defs>
-          <linearGradient id="chart-frame-bar" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="var(--rx-link)" />
-            <stop
-              offset="100%"
-              stop-color="color-mix(in srgb, var(--rx-link) 70%, var(--rx-plum))"
-            />
-          </linearGradient>
-        </defs>
-        <path
-          d="M40 20H410M40 65H410M40 110H410"
-          stroke="color-mix(in srgb, var(--rx-ink) 10%, transparent)"
-        />
+        {/* Highriseの統計のグラフと同じく、目盛りの横線は淡い灰色、0の線は一段濃い灰色、系列は平らな塗り。 */}
+        <path d="M40 20H410M40 65H410" stroke="#e6e6e6" />
+        <path d="M40 110H410" stroke="#c0c0c0" />
         <text x="4" y="24" fill="var(--rx-muted)" font-size="11">
           80
         </text>
@@ -93,30 +82,9 @@ export default () => (
         <text x="11" y="114" fill="var(--rx-muted)" font-size="11">
           0
         </text>
-        <rect
-          x="78"
-          y="59"
-          width="58"
-          height="51"
-          rx="6"
-          fill="url(#chart-frame-bar)"
-        />
-        <rect
-          x="202"
-          y="42"
-          width="58"
-          height="68"
-          rx="6"
-          fill="url(#chart-frame-bar)"
-        />
-        <rect
-          x="326"
-          y="25"
-          width="58"
-          height="85"
-          rx="6"
-          fill="url(#chart-frame-bar)"
-        />
+        <rect x="78" y="59" width="58" height="51" fill="var(--rx-link)" />
+        <rect x="202" y="42" width="58" height="68" fill="var(--rx-link)" />
+        <rect x="326" y="25" width="58" height="85" fill="var(--rx-link)" />
         <text x="90" y="133" fill="var(--rx-muted)" font-size="12">
           4月
         </text>
@@ -167,46 +135,14 @@ export default () => (
   </figcaption>
   <div class="graphic" aria-hidden="true">
     <svg viewBox="0 0 420 142" width="420" height="142">
-      <defs>
-        <linearGradient id="chart-frame-bar" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="var(--rx-link)"></stop>
-          <stop
-            offset="100%"
-            stop-color="color-mix(in srgb, var(--rx-link) 70%, var(--rx-plum))"
-          ></stop>
-        </linearGradient>
-      </defs>
-      <path
-        d="M40 20H410M40 65H410M40 110H410"
-        stroke="color-mix(in srgb, var(--rx-ink) 10%, transparent)"
-      ></path>
+      <path d="M40 20H410M40 65H410" stroke="#e6e6e6"></path>
+      <path d="M40 110H410" stroke="#c0c0c0"></path>
       <text x="4" y="24" fill="var(--rx-muted)" font-size="11">80</text>
       <text x="4" y="69" fill="var(--rx-muted)" font-size="11">40</text>
       <text x="11" y="114" fill="var(--rx-muted)" font-size="11">0</text>
-      <rect
-        x="78"
-        y="59"
-        width="58"
-        height="51"
-        rx="6"
-        fill="url(#chart-frame-bar)"
-      ></rect>
-      <rect
-        x="202"
-        y="42"
-        width="58"
-        height="68"
-        rx="6"
-        fill="url(#chart-frame-bar)"
-      ></rect>
-      <rect
-        x="326"
-        y="25"
-        width="58"
-        height="85"
-        rx="6"
-        fill="url(#chart-frame-bar)"
-      ></rect>
+      <rect x="78" y="59" width="58" height="51" fill="var(--rx-link)"></rect>
+      <rect x="202" y="42" width="58" height="68" fill="var(--rx-link)"></rect>
+      <rect x="326" y="25" width="58" height="85" fill="var(--rx-link)"></rect>
       <text x="90" y="133" fill="var(--rx-muted)" font-size="12">4月</text>
       <text x="214" y="133" fill="var(--rx-muted)" font-size="12">5月</text>
       <text x="338" y="133" fill="var(--rx-muted)" font-size="12">6月</text>

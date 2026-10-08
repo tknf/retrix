@@ -1,14 +1,17 @@
 @layer components {
   /*
     グリッドに並べるリンクや操作のタイル。塗りつぶしのアイコンを上・名前を下に置く。
-    ActionDockの操作と同じく、普段は影を持たない平らな淡い面にし、ホバーするとアイコンの色を淡く敷き、
-    押すと面が内側へへこむ（浮かせてから沈めるのではなく、平らな所から沈める）。
+    形はBC2のファイルを格子に並べた一覧（実測: screenshots/basecamp2-official/bc2-tour-2014-12-me.jpg。2倍。
+    格子の線 (381, 903) から (963, 1391)：1px #e9e9e9、角は立てる、白い面、アイコンを上の中央に置き、その下に黒い太字の名前）
+    に合わせる。手本はセルを罫線で区切った一枚の格子だが、タイルは一つずつ置くので、各タイルが同じ1pxの枠を持つ。
+    ホバーで淡い黄色の面（黄色のハイライト）にし、押すと面が内側へへこむ（ホバーと押した時は手本に無い。推測）。
+    枠の色は面の色から作るので、ActionDockの操作バーのように面を透明にした時は枠も消える。
     文字の指定（書体・大きさ・太さ・行高）はこのファイルが持つ（共通Buttonとは別の専用の操作）。
   */
   .rx-action-tile {
     --rx-action-tile-accent: var(--rx-link);
     /* 通常時の面。ActionDockの操作バーのようにパネルの上に置く時は、置く側が透明にする。 */
-    --rx-action-tile-rest: color-mix(in srgb, var(--rx-ink) 3%, var(--rx-surface));
+    --rx-action-tile-rest: var(--rx-surface);
     appearance: none;
     position: relative;
     display: flex;
@@ -18,26 +21,27 @@
     gap: 0.25rem;
     min-inline-size: 0;
     /* ActionDockの操作と同じ密度。アイコンの上を下より少し広く取り、アイコンと名前を一つのまとまりに見せる。 */
-    min-block-size: 3.75rem;
+    min-block-size: 3.25rem;
     margin: 0;
     padding-block: var(--rx-space-2) var(--rx-space-1);
     padding-inline: var(--rx-space-2);
     border: 0;
-    border-radius: var(--rx-radius-control);
+    border-radius: 0;
     background: var(--rx-action-tile-rest);
+    /* 枠は面の色を一段暗くした色（白の上で手本の#e9e9e9）で内側に描き、面を透明にした時は同じく透明になる。 */
+    box-shadow: inset 0 0 0 var(--rx-stroke-width)
+      oklch(from var(--rx-action-tile-rest) calc(l - 0.07) c h / alpha);
     color: var(--rx-text);
     font-family: inherit;
     font-size: var(--rx-label);
-    font-weight: 500;
+    /* 名前は手本のファイル名と同じ黒い太字。 */
+    font-weight: 600;
     line-height: calc(10 / 7);
     text-align: center;
     text-decoration: none;
     /* 名前を「プロジェク／ト」のように語の途中で折り返さない。 */
     word-break: auto-phrase;
     cursor: pointer;
-    transition:
-      background-color var(--rx-duration) ease,
-      box-shadow var(--rx-duration) ease;
     &[data-accent="green"] {
       --rx-action-tile-accent: var(--rx-green);
     }
@@ -48,19 +52,21 @@
       --rx-action-tile-accent: var(--rx-coral);
     }
     &:is(a, button:enabled):hover {
-      background: color-mix(in srgb, var(--rx-action-tile-accent) 8%, var(--rx-surface));
+      background: color-mix(in srgb, var(--rx-mark) 60%, var(--rx-surface));
     }
     &:is(a, button:enabled):active {
-      background: color-mix(in srgb, var(--rx-action-tile-accent) 11%, var(--rx-surface));
+      background: var(--rx-mark);
       box-shadow: var(--rx-shadow-control-pressed);
     }
     &:focus-visible {
-      outline: 0.125rem solid var(--rx-link);
+      outline: 0.125rem solid var(--rx-focus-border);
       outline-offset: -0.125rem;
     }
+    /* 使えない操作は、形・枠・塗りをそのままにし、文字とアイコンだけを灰色にする（controls.md 13・15章）。 */
     &:is(:disabled, [data-disabled="true"]) {
-      cursor: not-allowed;
-      opacity: 0.5;
+      --rx-action-tile-accent: var(--rx-disabled-text);
+      cursor: default;
+      color: var(--rx-disabled-text);
     }
     & > .icon {
       position: relative;

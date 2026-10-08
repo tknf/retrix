@@ -1,5 +1,20 @@
 @layer components {
+  /*
+    表はBasecamp Classicの二つの表を手本にする。
+    - 列の見出しの帯: classic-permissions-shaded-header-2007.png（1倍）のグループの見出しの帯 (58, 159, 632, 23)。
+      平らな #e9e9e9、高さ23px、黒い太字（lists.md「Basecamp Classic の表」）。
+    - 見出しの下の濃い線・行の罫線・合計の線: classic-tour-time-tracking-2008.png（1倍）の時間の記録の表 (40, 120, 618, 250)。
+      x=570 の縦の列で、見出しの下に1px #acacac、行の間に1px #e7e7e7、合計の行の上に1px #8c8b8b。
+    見出しの帯の下に濃い線を引いて、表の頭をはっきり区切る（表の色を強くしてよいとのユーザーの指定）。
+    グラデーション・縦の区切り線・外枠は持たない。選んだ行は黄色（#ffffcc）。
+  */
   .rx-table {
+    --rx-table-band: #e9e9e9;
+    --rx-table-head-rule: #acacac;
+    --rx-table-rule: #e7e7e7;
+    --rx-table-total-rule: #8c8b8b;
+    /* ホバーした行の面。手本に無い（推測）。BC2のMeの帯の#f5f5f5を使い、選んだ行の黄色と分ける。 */
+    --rx-table-hover: #f5f5f5;
     /* 表の中の絶対配置（読み上げだけの文字など）を、スクロールする囲みの中に収める。 */
     position: relative;
     min-inline-size: 0;
@@ -15,8 +30,8 @@
       position: sticky;
       inset-block-start: 0;
       z-index: 1;
-      background: var(--rx-surface);
-      box-shadow: 0 0.0625rem var(--rx-border);
+      /* 固定すると罫線（border）は見出しと一緒に動かないため、見出しの下の濃い線を影で描く。 */
+      box-shadow: 0 var(--rx-stroke-width) var(--rx-table-head-rule);
     }
     &:not([data-state="ready"]) > table > :is(tbody, tfoot),
     &:not([data-state="ready"]) > .selection-bar:not([popover]) {
@@ -30,7 +45,8 @@
     }
     /*
       選択した行の操作は表の中の行に置かず、画面の下の中央に浮かべる。表は一行も動かない。
-      選択バーはActionDockと同じ操作バー（白いパネル・パネルの角丸・メニューの影・内側4px）にし、先頭に件数、続けて一括操作を横一列に並べる。
+      選択バーはActionDockと同じ操作バー（浮かぶパネルと同じ白・1px #bbb・角丸5px・外への柔らかい影・内側4px）にし、
+      先頭に件数、続けて一括操作を横一列に並べる。
       解除の×（「選択を解除」）はDialogと同じくパネルの末尾側の上の角から少しはみ出させて置く。
     */
     & > .selection-bar {
@@ -38,10 +54,6 @@
       inset-block: auto max(var(--rx-space-4), env(safe-area-inset-bottom));
       inset-inline: 0;
       /* 下から出して置き、閉じる時は同じ向きへ下げながら消す（出入りはoverlay.cssの共通の定義）。 */
-      transform-origin: bottom center;
-      --rx-motion-slide: var(--rx-duration-pop);
-      --rx-motion-scale-in: 1;
-      --rx-motion-scale-out: 1;
       /* 選択バーは中身の幅に合わせ、入らない時は操作の列を横にスクロールする。 */
       inline-size: max-content;
       max-inline-size: calc(100% - 2 * var(--rx-space-4));
@@ -50,17 +62,16 @@
       margin: 0;
       margin-inline: auto;
       padding-block: var(--rx-space-1);
-      /* 末尾側は、角の×が重なる分を空けて、最後の操作を×の下に入れない。 */
-      padding-inline: var(--rx-space-1)
-        calc(var(--rx-overlay-close-size) - var(--rx-overlay-close-offset));
-      border: 0;
-      border-radius: var(--rx-radius-surface);
+      /* 末尾側は、×の分を空けて、最後の操作を×の下に入れない。 */
+      padding-inline: var(--rx-space-1) calc(var(--rx-overlay-close-size) + var(--rx-space-2));
+      border: var(--rx-stroke-width) solid var(--rx-popover-edge);
+      border-radius: var(--rx-popover-radius);
       background: var(--rx-surface);
       color: var(--rx-text);
       font-family: var(--rx-control-font-family);
       font-size: var(--rx-label);
       line-height: 1.5;
-      box-shadow: var(--rx-shadow-menu);
+      box-shadow: var(--rx-popover-shadow);
       &:popover-open {
         display: flex;
         align-items: stretch;
@@ -93,11 +104,16 @@
         display: flex;
         flex: none;
         align-items: center;
-        min-block-size: 3.75rem;
+        min-block-size: 3.25rem;
         padding-inline: var(--rx-space-3) var(--rx-space-2);
         & > .count {
           font-weight: 700;
           white-space: nowrap;
+        }
+        /* ×はパネルと同じく塗らずに、バーの末尾側の内側で上下の中央に置く。 */
+        & > .close {
+          inset-block-start: calc(50% - var(--rx-overlay-close-size) / 2);
+          inset-inline-end: var(--rx-space-1);
         }
       }
       /*
@@ -129,26 +145,32 @@
         padding-block-end: var(--rx-space-3);
         text-align: start;
         font-size: var(--rx-body);
-        font-weight: 600;
+        font-weight: 700;
         line-height: 1.5;
       }
+      /* 行は12pxの文字（行高17px）に上下3pxと罫線1pxで24px。Classicの行の間隔（25px）に4pxの段で近づけた値。 */
       & > :is(thead, tbody, tfoot) > tr > :is(th, td) {
-        padding-block: var(--rx-space-2);
+        padding-block: 0.1875rem;
         padding-inline: var(--rx-space-3);
-        border-block-end: var(--rx-stroke-width) solid var(--rx-border);
+        border-block-end: var(--rx-stroke-width) solid var(--rx-table-rule);
         text-align: start;
         vertical-align: middle;
         font-weight: 400;
       }
+      /*
+        列の見出しは、Classicのグループの見出しの帯と同じ平らな#e9e9e9に、表の本文と同じ12pxの黒い太字。
+        12pxの文字（行高17px）に上下3pxと線1pxで24px。帯の下端には、時間の記録の表と同じ1px #acacacの濃い線を引く。
+      */
       & > thead > tr > th {
-        padding-block: var(--rx-space-1);
-        background: var(--rx-surface);
-        color: var(--rx-muted);
-        font-size: var(--rx-small);
-        font-weight: var(--rx-label-weight);
-        line-height: var(--rx-small-leading);
-        border-block-end-color: var(--rx-border);
+        background: var(--rx-table-band);
+        color: var(--rx-text);
+        font-weight: 700;
+        border-block-end-color: var(--rx-table-head-rule);
         white-space: nowrap;
+      }
+      /* 並べ替えのボタン（高さ22px）を置いた見出しは上下の余白を1pxにし、帯の高さを他の見出しと同じ24pxにする。 */
+      & > thead > tr > th:has(> .sort) {
+        padding-block: var(--rx-stroke-width);
       }
       & > :is(thead, tbody, tfoot) > tr > [data-cell="numeric"] {
         text-align: end;
@@ -162,14 +184,23 @@
         min-inline-size: 14em;
         overflow-wrap: anywhere;
       }
+      /*
+        ホバーした行は淡い灰色。キーボードで操作中の行は、メニューや候補の一覧の矢印キーの位置と同じ角の無い淡い青（--rx-option-active）。
+        選んだ行はHighriseの選んだ行と同じ黄色（下のdata-selected）。
+      */
       & > tbody > tr:hover {
-        background: color-mix(in srgb, var(--rx-background) 65%, var(--rx-surface));
+        background: var(--rx-table-hover);
       }
-      & > tbody > tr:focus-within {
-        background: var(--rx-info-soft);
+      & > tbody > tr:has(:focus-visible) {
+        background: var(--rx-option-active);
       }
+      /* comfortableは上下8pxで35px。説明の多い表で、行の切れ目を広く取る。 */
       &[data-density="comfortable"] > tbody > tr > :is(th, td) {
-        padding-block: var(--rx-space-3);
+        padding-block: var(--rx-space-2);
+      }
+      /* 縞は行が多く横に長い表で、行をたどりやすくする。 */
+      &[data-striped="true"] > tbody > tr:nth-child(even):not(:hover, [data-selected="true"]) {
+        background: var(--rx-gray-20);
       }
       & > thead > tr > th > .sort {
         position: relative;
@@ -193,18 +224,15 @@
         }
         &:hover:enabled {
           color: var(--rx-link);
+          text-decoration-line: underline;
         }
-        &:hover:enabled::before,
         &:focus-visible::before {
-          background: var(--rx-info-soft);
+          background: var(--rx-option-active);
         }
-        &:active:enabled::before {
-          background: var(--rx-cover);
-        }
+        /* 並べ替えられない時は、他の使えない操作と同じく文字だけを灰色にする。 */
         &:disabled {
           background: transparent;
-          color: var(--rx-muted);
-          opacity: 0.6;
+          color: var(--rx-disabled-text);
           box-shadow: none;
         }
         /* 並べ替え中の列以外は、見出しにホバーした時だけアイコンを出して見出しを静かに保つ。 */
@@ -212,7 +240,6 @@
           inline-size: 1rem;
           color: var(--rx-muted);
           opacity: 0;
-          transition: opacity var(--rx-duration) ease;
         }
         &:is(:hover, :focus-visible) > .indicator {
           opacity: 1;
@@ -235,32 +262,83 @@
         display: flex;
       }
       & > tbody > tr[data-selected="true"] {
-        background: var(--rx-info-soft);
+        background: var(--rx-mark);
       }
-      /* 行の題名のリンクは濃い色のMediumの文字にし、ホバー時だけ青くする。 */
+      /* 行の中のリンクは、Classicの時間の記録の表（日付・人の名前）と同じ、通常の太さの青緑の文字と下線。 */
       & > tbody > tr > :is(th, td) > a {
-        color: var(--rx-text);
-        font-weight: 500;
-        text-decoration: none;
+        color: var(--rx-link);
+        font-weight: 400;
       }
       & > tbody > tr > :is(th, td) > a:hover {
-        color: var(--rx-link);
+        color: var(--rx-link-hover);
       }
       & > thead > tr > [data-cell="numeric"] > .sort {
         margin-inline-start: auto;
       }
+      /*
+        列の幅を変えた表は、<col>の幅で列を固定する。長い文は折り返し、短い値は列の幅で切って末尾を省く。
+      */
+      &[data-resized="true"] {
+        table-layout: fixed;
+        & > :is(thead, tbody, tfoot) > tr > :is(th, td) {
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        & > :is(thead, tbody, tfoot) > tr > [data-cell="text"] {
+          min-inline-size: 0;
+        }
+      }
+      /* ドラッグしている間は、表の上のどこでも幅を変えるカーソルにし、文字を選ばない。 */
+      &[data-resizing="true"] {
+        cursor: col-resize;
+        user-select: none;
+      }
+      /*
+        列の幅を変えるハンドル。見出しの末尾側の縁をまたぐ細い帯で、ホバーとフォーカスの時に青緑の線を出す。
+        TableResizeControllerが接続時に置く。
+      */
+      & > thead > tr > th:has(> .resize) {
+        position: relative;
+      }
+      & > thead > tr > th > .resize {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-end: calc(-1 * var(--rx-space-1));
+        z-index: 2;
+        inline-size: var(--rx-space-2);
+        cursor: col-resize;
+        touch-action: none;
+        &::after {
+          content: "";
+          position: absolute;
+          inset-block: var(--rx-space-1);
+          inset-inline-start: calc(50% - var(--rx-stroke-width));
+          inline-size: calc(var(--rx-stroke-width) * 2);
+          border-radius: var(--rx-radius-pill);
+          background: transparent;
+        }
+        &:hover::after,
+        &:focus-visible::after {
+          background: var(--rx-teal);
+        }
+        &:focus-visible {
+          outline: 0;
+        }
+      }
+      &[data-resizing="true"] > thead > tr > th > .resize::after {
+        background: color-mix(in srgb, var(--rx-teal) 40%, transparent);
+      }
+      /* 合計の行は、Classicの時間の記録の表と同じく上に1px #8c8b8bの濃い線を引き、太字にする。 */
+      & > tfoot > tr:first-child > :is(th, td) {
+        border-block-start: var(--rx-stroke-width) solid var(--rx-table-total-rule);
+      }
       & > tfoot > tr > :is(th, td) {
-        font-weight: 600;
+        font-weight: 700;
         border-block-end: 0;
       }
     }
   }
   /* 選択バーは、開き始めを少し下に置いて出す。 */
-  @starting-style {
-    .rx-table > .selection-bar:popover-open {
-      translate: 0 1.5rem;
-    }
-  }
   @media (forced-colors: active) {
     .rx-table > .selection-bar {
       outline: var(--rx-stroke-width) solid CanvasText;

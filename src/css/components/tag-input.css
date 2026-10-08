@@ -1,11 +1,17 @@
 @layer components {
-  /* 名前・欄・選んだ値・補足の間は、Fieldのラベルと欄の間と同じにする。 */
+  /*
+    欄はInput（field.css。実測: controls.md 6a）のまま使い、選んだ値はTag（実測: lists.md のHighriseのタグ）で並べる。
+    手本はHighriseの人の編集のタグの欄（screenshots/highrise/highrise-edit-person-custom-fields-2011.png (78, 85, 180, 32)、1倍）。
+    手本のタグは丸いピルに丸い×だが、ピルの形は件数・担当者・期日だけに使う決まりなので、Tagの四角にする。
+    名前・欄・選んだ値・補足の間は、Fieldのラベルと欄の間と同じにする。
+  */
   .rx-tag-input {
     display: grid;
     gap: 0.375rem;
     min-inline-size: 0;
   }
 
+  /* タグの間はTagGroupと同じ4px。 */
   .rx-tag-input > .chips {
     display: flex;
     flex-wrap: wrap;
@@ -15,7 +21,8 @@
     list-style: none;
   }
 
-  .rx-tag-input > .chips[hidden],
+  /* タグがまだ無い時は並びを畳み、欄とエラー・補足の間に余分な間を空けない。 */
+  .rx-tag-input > .chips:is([hidden], :not(:has(> li))),
   .rx-tag-input > .note[hidden] {
     display: none;
   }

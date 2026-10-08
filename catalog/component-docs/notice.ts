@@ -12,9 +12,9 @@ export default {
     "対象の状態を短い言葉だけで示す時は `Badge` を使います。",
   ],
   usage: [
-    "`label` を題名として、アイコンと一緒に役割の色で塗ったピルに書き、childrenの本文と操作（`ActionLink` など）をその下に置きます。childrenを省くと題名だけの知らせになります。",
-    "`tone` で役割を選びます（`info`・`success`・`warning`・`danger`）。白いカードの上側をその色でうっすら染め、ピルのアイコンは `success` でチェック、`danger` でバツ、他はiにします。",
-    "ピルはカードの上端にまたがるので、Noticeは自分の上にピルの半分の高さの余白を取ります。Noticeの中にNoticeを入れ子にもできます。",
+    "Noticeは1pxの枠で下だけを3pxにした、角丸4pxのカードです。文字は12pxで、一行目にアイコンと `label` の題名を太字で書き、childrenの本文と操作（`ActionLink` など）をその下に置きます。childrenを省くと題名だけの知らせになります。",
+    "`tone` で役割を選びます（`info`・`success`・`warning`・`danger`、既定は `info`）。`info` と `warning` は黄色の面（`#ffffcc`）に黄色の枠（`#eac73b`）で、題名は黒です。`info` のアイコンは青、`warning` のアイコンは黄土色です。`success` は淡い緑の面と枠に緑の題名とアイコン、`danger` は淡い赤の面と枠に赤の題名とアイコンです。アイコンは `success` でチェック、`danger` でバツ、他はiにします。",
+    "Noticeの中にNoticeを入れ子にもできます。",
     "`heading` を渡すと題名を `h2` で書き、ページの節の見出しとして読ませます。",
     "Noticeは描いた時の内容を示すだけで、自動では消えません。動的に出す時の読み上げや、いつ消すかは利用側で扱い、重大なエラーは自動で消しません。JavaScriptは使いません。",
   ],

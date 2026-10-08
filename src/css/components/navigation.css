@@ -1,106 +1,96 @@
 @layer components {
   /*
-    縦並びのナビゲーション。淡い面の一枚のパネルに行を並べ、
-    行の間は名前の書き始めから細い線で区切る。今いる行は面を塗らず、太字と末尾側の青いチェックで示す。
-    名前はMedium、アイコンは塗りつぶしの版（Iconのfill）を文字と同じ濃さで置く。
+    縦並びのナビゲーション。実測: structure.md「Highrise 2011 の構成 / 左の列」
+    （highrise-case-page-redesign-2011.jpg (12, 90, 220, 200)。1倍。今いる行は highrise-contacts-index-redesign-2011.jpg (10, 113, 177, 24)。0.81倍）。
+    背景のパネルを持たず、置いた場所の地（机の地や紙）の上に、淡い灰色のアイコン・名前・灰色の件数を並べる。
+    - 名前: 13px・#51504c。行の間隔 28〜29px。行の間に線は引かない。
+    - アイコン: 18×17px・#c5c5c5の単色。アイコンの左端は面の左端から9px、名前はアイコンの右13px。
+    - 今いる行: 面 #e6e3de、名前は太字の黒、件数は少し濃く（#565553）する。
   */
   .rx-navigation {
+    /* 実測の色。トークンに無いため、ここで名前を付ける。 */
+    --rx-navigation-text: #51504c;
+    --rx-navigation-icon: #c5c5c5;
+    --rx-navigation-current: #e6e3de;
+    --rx-navigation-current-count: #565553;
     display: grid;
     align-content: start;
-    /* 並べた先の高さに引き伸ばさず、中身の高さのパネルにする。 */
+    /* 並べた先の高さに引き伸ばさず、中身の高さにする。 */
     align-self: start;
-    padding-block: var(--rx-space-1);
-    padding-inline: var(--rx-space-1);
-    border-radius: var(--rx-radius-field);
-    background: var(--rx-background);
-    font-size: var(--rx-label);
-    line-height: var(--rx-label-leading);
+    /* 名前は手本と同じ13px（本文の段）。行の高さ18px。 */
+    font-size: var(--rx-body);
+    line-height: var(--rx-leading);
     & > a {
-      position: relative;
       display: flex;
       align-items: center;
-      gap: var(--rx-space-2);
+      gap: 0.8125rem;
       min-inline-size: 0;
-      min-block-size: 2.75rem;
-      padding-block: var(--rx-space-2);
-      padding-inline: var(--rx-space-3);
-      border-radius: var(--rx-radius-control);
-      color: var(--rx-text);
-      font-weight: 500;
+      /* 13pxの文字の行（18px）を上下5pxで挟み、実測の行の間隔28pxにする。 */
+      min-block-size: 1.75rem;
+      padding-block: 0.3125rem;
+      padding-inline: 0.5625rem var(--rx-space-2);
+      /* 手本の今いる行は角丸の無い四角（contacts index の (10, 114) で角まで塗られている）。CommandMenuの行とも同じ形になる。 */
+      border-radius: 0;
+      color: var(--rx-navigation-text);
       text-decoration: none;
-      transition: background-color var(--rx-duration) ease;
-      /* アイコンは先頭の列に揃え、文字と同じ濃さで少し大きく置く。 */
       & > .icon {
         display: flex;
         flex: none;
         justify-content: center;
-        inline-size: 1.25rem;
-        color: var(--rx-text);
+        inline-size: 1.125rem;
+        color: var(--rx-navigation-icon);
         & > .rx-icon {
-          inline-size: 1.125em;
-          block-size: 1.125em;
+          inline-size: 1.125rem;
+          block-size: 1.125rem;
         }
       }
       & > span:not(.icon) {
-        flex: 1;
+        flex: 0 1 auto;
         min-inline-size: 0;
+        overflow-wrap: anywhere;
       }
-      /* 件数はSectionと同じ、淡い面の色の小さなピル。パネルの色と分けるため白地にする。 */
+      /*
+        件数は名前の右に1語分あけて置く、小さな灰色の数字（「~60 people」）。ピルにはしない。
+        実測の#959490は机の上で4.5:1に届かないため、同じ暖かい灰色の--rx-quietに濃くする。
+      */
       & > small {
-        display: inline-grid;
         flex: none;
-        place-items: center;
-        min-inline-size: 1.25rem;
-        block-size: 1.25rem;
-        padding-inline: 0.375rem;
-        border-radius: var(--rx-radius-pill);
-        background: var(--rx-surface);
-        color: var(--rx-text);
+        color: var(--rx-quiet);
         font-size: var(--rx-small);
-        font-weight: 600;
-        line-height: 1;
+        font-weight: 400;
+        line-height: var(--rx-small-leading);
         font-variant-numeric: tabular-nums;
       }
+      /* ホバーの見た目は手本に無い（推測）。名前を黒くし、下線を引く。 */
       &:hover {
-        background: color-mix(in srgb, var(--rx-ink) 6%, var(--rx-background));
+        color: var(--rx-ink);
+        & > span:not(.icon) {
+          text-decoration-line: underline;
+          text-decoration-thickness: var(--rx-stroke-width);
+          text-underline-offset: 0.15em;
+        }
       }
-      /* 今いる行は太字と、末尾側の青いチェック。 */
       &[data-current="true"] {
-        font-weight: 600;
-        &::after {
-          content: "";
-          flex: none;
-          inline-size: 1rem;
-          block-size: 1rem;
-          background: var(--rx-link);
-          mask: url("../assets/check.svg") center / contain no-repeat;
+        background: var(--rx-navigation-current);
+        color: var(--rx-ink);
+        font-weight: 700;
+        & > small {
+          color: var(--rx-navigation-current-count);
+        }
+        & > span:not(.icon) {
+          text-decoration-line: none;
         }
       }
     }
-    /* 行の間の線は、名前の書き始めから終わりまで。ホバーした行の上下では消す。 */
-    & > a + a::before {
-      content: "";
-      position: absolute;
-      inset-block-start: 0;
-      inset-inline: var(--rx-space-3);
-      block-size: var(--rx-stroke-width);
-      background: color-mix(in srgb, var(--rx-ink) 8%, var(--rx-background));
-      transition: opacity var(--rx-duration) ease;
-    }
-    & > a + a:has(> .icon)::before {
-      inset-inline-start: calc(var(--rx-space-3) + 1.25rem + var(--rx-space-2));
-    }
-    & > a:hover::before,
-    & > a:hover + a::before {
-      opacity: 0;
+    @media (pointer: coarse) {
+      & > a {
+        min-block-size: 2.75rem;
+      }
     }
   }
   @media (forced-colors: active) {
-    .rx-navigation {
-      border: var(--rx-stroke-width) solid CanvasText;
-      & > a[data-current="true"]::after {
-        background: LinkText;
-      }
+    .rx-navigation > a[data-current="true"] {
+      outline: var(--rx-stroke-width) solid CanvasText;
     }
   }
 }

@@ -1,33 +1,36 @@
 @layer components {
   /*
-    見出しをカードの中に書かず、淡い地の層に置く。中身は層の上に載せた白いカードにする。
-    層はPageHeader・Table・Calendarと同じ淡い青の面で、Progressの溝と同じ影で内側へ沈めた受け皿にする。
-    カードはその中に置き、カードの影で浮かせる。このコンポーネントだけの色や影は作らない。
-    カードの角丸は層の角丸から層の余白を引いた同心の値（12px）にする。
+    見出しの帯を持つ白いカード。カード全体は枠の無い、四方へのぼかし影の白いカード（--rx-shadow-paper。structure.md「BC2 のプロジェクトのカード」）。
+    見出しの帯は、BC2のカレンダーの予定のパネルの帯と同じ、平らな #f7f7f7 に下の1px #dedede。
+    実測: basecamp2-official/bc2-help-add-and-edit-events-03.png (6, 7, 322, 85)。1倍。x=100 の縦の列で、帯 #f7f7f7（y 8〜90）、
+    下の線 #dedede（y 91）、その下は #ffffff。帯の題名の書き始めはパネルの縁から20px。
+    題名は、カードの中の見出しの決まり（docs/principles.md「文字」）どおり本文と同じ13pxの黒い太字にする。
+    余白はCardと同じ16pxで上下左右をそろえ、帯の題名と中身の書き始めを同じ位置にする（手本の20pxはパネルの値なので使わない）。
+    中身は帯の下の白い面にそのまま書き、内側にもう一枚カードを重ねない。
   */
   .rx-layer-card {
+    --rx-layer-card-band: #f7f7f7;
+    /* 見出しの帯の上下の余白。 */
     --rx-layer-card-gap: var(--rx-space-1);
-    /* カードの内側はCardと同じ余白にする。同じ種類のカードで余白を変えない。 */
-    --rx-layer-card-inline: var(--rx-space-6);
-    /* 見出しの一行の高さ。操作のピルと同じ高さにし、題名の中央をピルの中央にそろえる。 */
+    /* カードの内側はCardと同じ16pxにし、本文の上下の余白ともそろえる。同じ種類のカードで余白を変えない。 */
+    --rx-layer-card-inline: var(--rx-space-4);
+    /* 見出しの一行の高さ。操作のボタンと同じ高さにし、題名の中央をボタンの中央にそろえる。 */
     --rx-layer-card-row: var(--rx-control-size);
     container: rx-layer-card / inline-size;
     display: flex;
     flex-direction: column;
     min-inline-size: 0;
-    padding-block: 0 var(--rx-layer-card-gap);
-    padding-inline: var(--rx-layer-card-gap);
     border-radius: var(--rx-radius-surface);
-    background: var(--rx-cover);
-    box-shadow: var(--rx-shadow-sunken);
+    background: var(--rx-surface);
+    box-shadow: var(--rx-shadow-paper);
     color: var(--rx-text);
     font-size: var(--rx-label);
     line-height: var(--rx-label-leading);
     overflow-wrap: anywhere;
     /*
-      見出しの行は上下に層の余白を持ち、操作のピルと層の上端・カードの間を層の左右の余白と同じにする。
-      題名が折り返しても操作は一行目の終わりに残し、題名の幅が8remを割る時（狭い層や大きな文字）だけ操作を次の行へ送る。
-      題名はカードの中の文字と同じ書き始めに置く。
+      見出しの帯。平らな淡い灰色に、下の罫線。角丸は上の角だけで、罫線は角丸の無い下の辺に引く。
+      題名が折り返しても操作は一行目の終わりに残し、題名の幅が8remを割る時（狭いカードや大きな文字）だけ操作を次の行へ送る。
+      題名は中身の文字と同じ書き始めに置く。
     */
     & > .heading {
       display: flex;
@@ -36,7 +39,11 @@
       gap: var(--rx-space-3);
       padding-block: var(--rx-layer-card-gap);
       padding-inline: var(--rx-layer-card-inline) var(--rx-layer-card-gap);
-      /* 次の行へ送っても入らない時（狭い層や大きな文字）は、ピルの中で文言を折り返す。 */
+      border-block-end: var(--rx-stroke-width) solid var(--rx-gray-200);
+      border-start-start-radius: var(--rx-radius-surface);
+      border-start-end-radius: var(--rx-radius-surface);
+      background: var(--rx-layer-card-band);
+      /* 次の行へ送っても入らない時（狭いカードや大きな文字）は、ボタンの中で文言を折り返す。 */
       & > .actions {
         display: flex;
         flex: 0 1 auto;
@@ -45,38 +52,30 @@
         gap: var(--rx-space-2);
         margin-inline-start: auto;
       }
-      /* 狭い層ではカードの内側と題名の書き始めを一緒に詰める。 */
-      @container rx-layer-card (inline-size < 24rem) {
-        --rx-layer-card-inline: var(--rx-space-4);
-      }
     }
     /*
-      題名は濃い色の太字にする。灰色の小さなラベルにはしない。
-      上下の余白は題名が持ち、一行で操作の高さにそろい、折り返しても層の上端とカードから離れる。
+      題名は本文と同じ13pxの黒い太字。上下の余白は題名が持ち、一行で操作の高さにそろい、折り返しても帯の上下の端から離れる。
     */
     & > .heading > .title {
       flex: 1 1 8rem;
       min-inline-size: 0;
-      padding-block: calc((var(--rx-layer-card-row) - 1em * var(--rx-label-leading)) / 2);
+      padding-block: calc((var(--rx-layer-card-row) - 1em * var(--rx-leading)) / 2);
       color: var(--rx-ink);
-      font-size: var(--rx-label);
+      font-size: var(--rx-body);
       font-weight: 700;
-      line-height: var(--rx-label-leading);
+      line-height: var(--rx-leading);
       word-break: auto-phrase;
     }
     & > .body {
       flex: 1;
       min-inline-size: 0;
-      padding-block: var(--rx-space-5);
+      padding-block: var(--rx-space-4);
       padding-inline: var(--rx-layer-card-inline);
-      border-radius: calc(var(--rx-radius-surface) - var(--rx-layer-card-gap));
-      background: var(--rx-surface) var(--rx-fill-paper);
-      box-shadow: var(--rx-shadow-paper);
       /* 段落の間はCardと同じく、カードの余白よりはっきり狭くする。 */
       & > * + * {
         margin-block-start: var(--rx-space-2);
       }
-      /* カードの端が一覧の始まりと終わりを示すので、カードの端に接する一覧の罫線は重ねない。 */
+      /* 帯の罫線とカードの端が一覧の始まりと終わりを示すので、そこに接する一覧の罫線は重ねない。 */
       /* タイルに並べたActionListはカードの端に接しないので、行の一覧だけを対象にする。 */
       & > :is(.rx-data-list, .rx-action-list:not([data-layout="grid"])) {
         &:first-child > li:first-child {
@@ -86,22 +85,12 @@
           border-block-end-color: transparent;
         }
       }
-      /* 行の一覧を載せたカードは、行の面が余白の代わりになるので、上下の余白を狭める（0にはしない）。 */
-      &:has(> :is(.rx-data-list, .rx-action-list:not([data-layout="grid"])):first-child) {
-        padding-block-start: var(--rx-space-2);
+      /* 一覧で終わる時は、最後の行の下の余白の分だけ本文の下の余白を引き、文字から縁までを上とそろえる。 */
+      &:has(> .rx-data-list:last-child) {
+        padding-block-end: calc(var(--rx-space-4) - 0.5625rem);
       }
-      &:has(> :is(.rx-data-list, .rx-action-list:not([data-layout="grid"])):last-child) {
-        padding-block-end: var(--rx-space-2);
-      }
-      /* 一覧だけを載せたカードは、行の内側の余白を引いて、行の題名を層の見出しと同じ書き始めにそろえる。 */
-      &:has(> .rx-data-list:only-child) {
-        padding-inline: calc(var(--rx-layer-card-inline) - var(--rx-space-4));
-      }
-      &:has(> .rx-action-list:not([data-layout="grid"]):only-child) {
-        padding-inline: calc(var(--rx-layer-card-inline) - var(--rx-space-2));
-      }
-      @container rx-layer-card (inline-size < 24rem) {
-        --rx-layer-card-inline: var(--rx-space-4);
+      &:has(> .rx-action-list:not([data-layout="grid"]):last-child) {
+        padding-block-end: calc(var(--rx-space-4) - 0.3125rem);
       }
     }
   }
@@ -115,10 +104,7 @@
     .rx-layer-card {
       border: var(--rx-stroke-width) solid CanvasText;
       background: Canvas;
-      & > .body {
-        border: var(--rx-stroke-width) solid CanvasText;
-        box-shadow: none;
-      }
+      box-shadow: none;
     }
   }
 }

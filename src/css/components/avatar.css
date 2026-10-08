@@ -1,33 +1,35 @@
 @layer components {
   /*
-    アバターは、中間の濃さで塗った丸に濃いインクの太いイニシャルを置く。
-    淡い背景に色の文字では、一覧の中でアバターが目立たない。
+    アバターはBasecamp 2と同じ枠の無い丸い写真（実測: lists.md「BC2 議論の一覧」30pxの円、「BC2 Catch up」22pxの円、
+    「BC2 の見出しの赤と Me のページ」枠なし）。標準は一覧の30px、smallはCatch upの22px。
+    写真がない時は、灰色で塗った丸に白い太字のイニシャルを置く（実測: lists.md「Highrise 連絡先一覧（2015〜2016）」。
+    実測の #868684 は白い文字と4.5:1に届かないので、明るさを下げた --rx-gray-650 にする）。
+    色の指定（tone）は利用側が明示した時だけ使い、どれも白い文字との対比を4.5:1以上に保つ。
   */
   .rx-avatar {
-    --rx-avatar-fill: color-mix(in srgb, var(--rx-blue) 42%, var(--rx-surface));
+    --rx-avatar-fill: var(--rx-gray-650);
     position: relative;
     display: inline-grid;
     place-items: center;
-    inline-size: 2.25rem;
-    block-size: 2.25rem;
+    inline-size: 1.875rem;
+    block-size: 1.875rem;
     flex: none;
     overflow: hidden;
-    /* 縁取りを持たず、塗りの円だけにする。 */
     border-radius: 50%;
     background: var(--rx-avatar-fill);
-    color: var(--rx-ink);
+    color: var(--rx-surface);
     font-family: var(--rx-control-font-family);
     font-size: var(--rx-small);
     font-weight: 700;
     line-height: 1;
     &[data-tone="green"] {
-      --rx-avatar-fill: color-mix(in srgb, var(--rx-green) 42%, var(--rx-surface));
+      --rx-avatar-fill: var(--rx-green);
     }
     &[data-tone="amber"] {
-      --rx-avatar-fill: color-mix(in srgb, var(--rx-gold) 48%, var(--rx-surface));
+      --rx-avatar-fill: var(--rx-gold);
     }
     &[data-tone="coral"] {
-      --rx-avatar-fill: color-mix(in srgb, var(--rx-coral) 42%, var(--rx-surface));
+      --rx-avatar-fill: var(--rx-coral);
     }
     & > .initials {
       max-inline-size: 100%;
@@ -61,15 +63,19 @@
       font-size: 1rem;
     }
     &[data-size="small"] {
-      inline-size: 1.75rem;
-      block-size: 1.75rem;
-      font-size: 0.75rem;
+      inline-size: 1.375rem;
+      block-size: 1.375rem;
+      font-size: 0.625rem;
+      & > .initials {
+        padding-inline: 0;
+      }
     }
   }
   @media (forced-colors: active) {
     .rx-avatar {
       border: var(--rx-stroke-width) solid CanvasText;
       background: Canvas;
+      color: CanvasText;
       box-shadow: none;
     }
   }

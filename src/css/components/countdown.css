@@ -1,21 +1,23 @@
 @layer components {
   /*
-    期限や残りを示す丸いマーク。白い丸に大きな太字の数字を置き、上下に小さな文言を添える。
-    役割の色の細い輪で縁取り、カードの影で浮かせる。既定は注意の色（期限が近いことを示す）。
+    期限や残りを示す丸いマーク。実測: basecamp2-official/bc2-features-progress-timeline.png (195, 70, 112, 112)。1倍。
+    - BC2のProgressの日付の丸。外径約112px、輪7px #dcd9d2（--rx-calendar-rule）、中は白、影なし。
+    - 主の文字「Feb 15」は #497a99 の太字15px前後、その下の「Wednesday」は #bbbabc の通常の太さ11px前後。
+    丸は上下の文言（「閉じるまで」の5文字）が輪に触れない88pxにし、輪の太さは手本の比（外径の1/16）を丸めた5px。数字は役割の色の太字で、Retrixの段の --rx-title（18px）に当てる（推測）。
+    上下の文言は手本の曜日と同じ通常の太さの11px（--rx-small）。#bbbabc は4.5:1に届かないので --rx-muted（#666666）。
+    既定は注意の色（期限が近いことを示す）。
   */
   .rx-countdown {
     --rx-countdown-ink: var(--rx-warning);
     display: inline-grid;
     place-content: center;
     justify-items: center;
-    inline-size: 4.25rem;
-    block-size: 4.25rem;
+    inline-size: 5.5rem;
+    block-size: 5.5rem;
     border-radius: 50%;
     background: var(--rx-surface);
-    box-shadow:
-      inset 0 0 0 0.125rem color-mix(in srgb, var(--rx-countdown-ink) 55%, var(--rx-surface)),
-      var(--rx-shadow-paper);
-    color: var(--rx-countdown-ink);
+    box-shadow: inset 0 0 0 0.3125rem var(--rx-calendar-rule);
+    color: var(--rx-muted);
     font-family: var(--rx-control-font-family);
     line-height: 1;
     text-align: center;
@@ -32,17 +34,18 @@
       --rx-countdown-ink: var(--rx-muted);
     }
     & > .value {
-      color: var(--rx-text);
-      font-size: 1.375rem;
-      font-weight: 800;
+      color: var(--rx-countdown-ink);
+      font-size: var(--rx-title);
+      font-weight: 700;
+      line-height: var(--rx-label-leading);
       font-variant-numeric: tabular-nums;
     }
-    /* 上下の文言は丸の内側に収め、長い時は丸の幅の7割で折り返す。 */
+    /* 上下の文言は丸の内側に収め、長い時は輪の内側の幅の8割ほどで折り返す。 */
     & > :is(.before, .after) {
-      max-inline-size: 3rem;
-      font-size: 0.5625rem;
-      font-weight: 700;
-      line-height: 1.2;
+      max-inline-size: 3.5rem;
+      font-size: var(--rx-small);
+      font-weight: 400;
+      line-height: var(--rx-small-leading);
     }
   }
   @media (forced-colors: active) {

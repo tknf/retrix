@@ -64,10 +64,11 @@ test("入れ子の局所クラスへ外側の見出しと状態の指定が漏�
 });
 
 test("文章・数値・操作の文字寸法を親からの継承で変えない", async ({ page }) => {
-  for (const [id, selector] of [
-    ["table", '[data-example="hono"] tbody td'],
-    ["card", '[data-example="hono"] .rx-card > .body > p'],
-    ["notice", '[data-example="hono"] .rx-notice > .body > p'],
+  // 表と案内はラベルの段（12px・行高17px）、カードの説明は続けて読む文章の段（14px・行高20px）。
+  for (const [id, selector, font, line] of [
+    ["table", '[data-example="hono"] tbody td', 12, 17],
+    ["card", '[data-example="hono"] .rx-card > .body > p', 14, 20],
+    ["notice", '[data-example="hono"] .rx-notice > .body > p', 12, 17],
   ] as const) {
     await page.goto(`/components/${id}`);
     const element = page.locator(selector).first();
@@ -75,9 +76,8 @@ test("文章・数値・操作の文字寸法を親からの継承で変えな�
       font: Number.parseFloat(getComputedStyle(node).fontSize),
       line: Number.parseFloat(getComputedStyle(node).lineHeight),
     }));
-    // FirefoxとWebKitは画面幅に合わせた文字の大きさ（clamp）を13.98pxのように丸めるので、0.05pxまでの差を許す。
-    expect(Math.abs(style.font - 14), selector).toBeLessThan(0.05);
-    expect(Math.abs(style.line - 20), selector).toBeLessThan(0.05);
+    expect(Math.abs(style.font - font), selector).toBeLessThan(0.05);
+    expect(Math.abs(style.line - line), selector).toBeLessThan(0.05);
   }
   await page.goto("/components/icon");
   const button = page.locator('[data-example="hono"] .rx-button').first();
@@ -92,10 +92,11 @@ test("文章・数値・操作の文字寸法を親からの継承で変えな�
       paddingEnd: style.paddingBlockEnd,
     };
   });
+  // 控えめなButtonはBC2の実測どおり12pxの文字で高さ22px。
   expect(dimensions).toEqual({
-    font: 14,
-    line: 20,
-    block: 36,
+    font: 12,
+    line: 17,
+    block: 22,
     paddingStart: "0px",
     paddingEnd: "0px",
   });

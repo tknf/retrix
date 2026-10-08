@@ -54,6 +54,7 @@
     "test": "vp test run",
     "build": "vp run check:css && node scripts/clean.mjs && vp run icons:build && vp pack && node scripts/copy-css.mjs && vp build && vp build --mode client && node scripts/build-catalog.mjs",
     "preview": "vp preview --outDir dist/catalog",
+    "catalog:deploy": "vp run build && wrangler deploy -c catalog/wrangler.jsonc --name retrix-catalog-preview",
     "test:visual": "playwright test --grep-invert @sweep",
     "test:visual:full": "playwright test",
     "browsers:install": "playwright install chromium firefox webkit",
@@ -78,7 +79,8 @@
     "shiki": "^4.4.3",
     "typescript": "^5.9.3",
     "vite": "npm:@voidzero-dev/vite-plus-core@0.3.0",
-    "vite-plus": "^0.3.0"
+    "vite-plus": "^0.3.0",
+    "wrangler": "^4.147.0"
   },
   "peerDependencies": {
     "@hotwired/stimulus": "^3.2.2",

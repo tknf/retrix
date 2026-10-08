@@ -131,14 +131,14 @@
 
 @layer layout {
   /*
-    作業面（sheet）の見た目。SurfaceとAppShellの作業面は同じ一枚の白い面で、ここだけで定義する。
-    白い地の上で、縁取りを持たずやわらかな影で浮かせる。詳細度を持たせず、各コンポーネントの指定を妨げない。
+    作業面（シート）の見た目。SurfaceとAppShellの作業面は同じ一枚の白い紙で、ここだけで定義する。
+    机のクリーム色の地の上に置き、1pxの輪郭と浅い影で浮かせる。詳細度を持たせず、各コンポーネントの指定を妨げない。
     どのコンポーネントのCSSでも読み込むlayout.cssに置き、AppShellだけを使う画面でも欠けないようにする。
   */
   :where(
     .rx-surface,
-    .rx-app-shell > .workspace,
-    .rx-app-shell > .rx-wing > .layout > .main > .workspace
+    .rx-app-shell > .body > .main > .workspace,
+    .rx-app-shell > .body > .main > .rx-wing > .layout > .main > .workspace
   ) {
     border-radius: var(--rx-radius-sheet);
     background: var(--rx-surface);

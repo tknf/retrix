@@ -1,8 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("Buttonは画面幅で文字サイズが緩やかに変わり文字拡大に寸法が追従する", async ({
-  page,
-}, testInfo) => {
+test("Buttonは画面幅で文字サイズを変えず、文字拡大に寸法が追従する", async ({ page }, testInfo) => {
   const sizes: number[] = [];
   for (const width of [375, 960, 1440]) {
     await page.setViewportSize({ width, height: 1000 });
@@ -59,13 +57,13 @@ test("Buttonは画面幅で文字サイズが緩やかに変わり文字拡大�
   const [small, medium, large] = sizes;
   if (small === undefined || medium === undefined || large === undefined)
     throw new Error("各幅の測定値がありません");
-  expect(small).toBeGreaterThanOrEqual(13.5);
-  expect(small).toBeLessThan(medium);
-  expect(medium).toBeLessThan(large);
-  expect(large).toBeCloseTo(14, 2);
+  // BC2の実測どおり、ボタンの文字は画面幅によらず12pxにする。
+  expect(small).toBeCloseTo(12, 2);
+  expect(medium).toBeCloseTo(12, 2);
+  expect(large).toBeCloseTo(12, 2);
 });
 
-test("ボタンは浮かせず、ホバーすると面が濃くなり、押すと内側へへこみ、focusで輪郭が見える", async ({
+test("ボタンは置いた厚みの影を持ち、ホバーすると面が濃くなり、押すと内側へへこみ、focusで輪郭が見える", async ({
   page,
 }) => {
   // 変化の途中ではなく、確定したスタイル同士を比較する。
@@ -85,22 +83,21 @@ test("ボタンは浮かせず、ホバーすると面が濃くなり、押す�
       });
     await page.mouse.move(0, 0);
     const before = await look();
-    // 普段は影を持たない（浮かせない）。
-    expect(before.shadow).toBe("none");
+    const variant = await button.getAttribute("data-variant");
     await button.hover();
     const hovered = await look();
-    // ホバーすると面だけが変わり、文字と縁の色は変えない。影は付けない。
-    expect({ color: hovered.color, border: hovered.border }).toEqual({
-      color: before.color,
-      border: before.border,
-    });
-    expect(hovered.surface).not.toBe(before.surface);
-    expect(hovered.shadow).toBe("none");
-    const variant = await button.getAttribute("data-variant");
     if (variant === "link") {
-      // 文字だけの操作は下線を引かず、ホバーすると淡い青のピルの面が現れる。
+      // 文字だけの操作は面と影を持たず、ホバーすると文字の色だけが変わる。
       expect(before.surface.startsWith("rgba(0, 0, 0, 0)")).toBe(true);
+      expect(before.shadow).toBe("none");
+      expect(hovered.surface).toBe(before.surface);
+      expect(hovered.color).not.toBe(before.color);
     } else {
+      // 普段から、上端の光と下へ落ちる浅い影で机に置いた厚みを見せる。
+      expect(before.shadow).not.toBe("none");
+      // ホバーすると面が濃くなり、文字の色は変えない。
+      expect(hovered.color).toBe(before.color);
+      expect(hovered.surface).not.toBe(before.surface);
       await page.mouse.down();
       const pressed = await look();
       expect(pressed.shadow.split("),")[0]).toContain("inset");

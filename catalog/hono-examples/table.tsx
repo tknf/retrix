@@ -60,6 +60,8 @@ export default () => (
       <Table
         caption="記事の公開状況"
         sort="local"
+        resizable
+        storageKey="catalog-articles"
         selectable
         stickyHeader
         selectionActions={

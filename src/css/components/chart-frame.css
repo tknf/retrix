@@ -1,7 +1,12 @@
 @layer components {
   /*
-    図の枠。図は淡い面の上に置き、青の系列はDropdownMenuと同じ青から紫の塗りにする。
-    題名は太字、説明と出典は淡い文字。数値の表は罫線で区切ったDisclosureに収める。
+    図と数値の表。HighriseのStatisticsのグラフに合わせる
+    （実測: highrise/highrise-statistics-notes-chart-2016.png。2倍。2016年の画面だが、37signalsのグラフの手本はこれだけ）。
+    - 図は枠も面も持たず、シートの上に直接描く。題名「Notes: Created」は黒い太字（約16px → 本文の13px）。
+    - 図の中の線は利用側が描く。手本の値は、目盛りの横線1px #e6e6e6、0の線1px #c0c0c0、系列は平らな #018eec の2pxの線。
+      目盛りの文字は #cccccc だが白地で4.5:1に届かないので、見本では抜粋と同じ #666666 にする。
+    - 手本は題名の下に1px #cccccc の線を引くが、Retrixは見出しから線を伸ばさない（docs/principles.md「まとまりの見出し」）ので引かない。
+    系列の色は平らな塗りにする（グラデーションを使わない）。説明と出典は灰色の小さな文字。数値の表はDisclosureに収める。
   */
   .rx-chart-frame {
     display: grid;
@@ -21,7 +26,7 @@
     & > strong {
       font-size: var(--rx-body);
       line-height: var(--rx-label-leading);
-      font-weight: 700;
+      font-weight: 600;
     }
     & > span {
       color: var(--rx-muted);
@@ -30,19 +35,14 @@
     }
   }
 
+  /* 図は枠を持たずシートの上に置く。はみ出す図は、この中で横にスクロールする。 */
   .rx-chart-frame > .graphic {
     min-inline-size: 0;
-    padding-block: var(--rx-space-5);
-    padding-inline: var(--rx-space-5);
     overflow: auto;
-    border: 0;
-    border-radius: var(--rx-radius-field);
-    background: var(--rx-background);
     & > svg {
       display: block;
       max-inline-size: 100%;
       block-size: auto;
-      margin-inline: auto;
     }
   }
 
@@ -61,28 +61,25 @@
       align-items: center;
       gap: var(--rx-space-1);
     }
-    /* 凡例のマークは棒と同じ塗りの小さな円にする。 */
+    /* 凡例のマークは系列と同じ色の、平らな小さな四角にする。 */
     & > li > .mark {
       inline-size: 0.625rem;
       block-size: 0.625rem;
-      border-radius: 50%;
+      border-radius: var(--rx-radius-mark);
       background: var(--rx-link);
-      background-image: var(--rx-fill-menu);
     }
     & > li[data-tone="green"] > .mark {
       background: var(--rx-success);
-      background-image: var(--rx-fill-success);
     }
     & > li[data-tone="amber"] > .mark {
       background: var(--rx-warning);
-      background-image: var(--rx-fill-warning);
     }
     & > li[data-tone="coral"] > .mark {
       background: var(--rx-coral);
     }
   }
 
-  /* 開閉の見た目はDisclosureが持つ。図は淡い面に載っているので、罫線を引かず余白だけで区切る。 */
+  /* 開閉の見た目はDisclosureが持つ。罫線を足さず余白だけで区切る。 */
   .rx-chart-frame > .data {
     min-inline-size: 0;
   }

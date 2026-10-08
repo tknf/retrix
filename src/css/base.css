@@ -10,8 +10,8 @@
   }
 
   body {
-    /* 背景は白。作業面は縁取りではなく影で浮かせる。 */
-    background: var(--rx-surface);
+    /* 地は机のクリーム色。作業面（シート）は白い紙として、その上に置く。 */
+    background: var(--rx-desk-texture), var(--rx-background);
     color: var(--rx-text);
     font-family: var(--rx-control-font-family);
     font-size: var(--rx-body);
@@ -21,38 +21,117 @@
   }
 
   /*
-    リンクは下線を引かず、青い文字にする。
-    文章（段落・引用・図の説明）の中に混ざるリンクだけは、色だけに頼らないよう細く淡い下線を残す。
-    コンポーネントが持つリンク（クラスを持つもの）は、それぞれのコンポーネントが見た目を決める。
+    リンクは青緑の文字に下線を引く。Basecamp 2と同じく、押せる文字であることを下線で示す。
+    ホバーすると赤茶に変わる。コンポーネントが持つリンク（クラスを持つもの）は、それぞれのコンポーネントが見た目を決める。
   */
   a {
     color: var(--rx-link);
-    text-decoration: none;
-    transition: color var(--rx-duration) ease;
-    &:hover {
-      color: var(--rx-blue-dark);
-    }
-  }
-  :where(p, blockquote, figcaption) a:not([class]) {
     text-decoration-line: underline;
-    text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
     text-decoration-thickness: var(--rx-stroke-width);
-    text-underline-offset: 0.2em;
+    text-underline-offset: 0.15em;
     &:hover {
-      text-decoration-color: currentColor;
+      color: var(--rx-link-hover);
     }
   }
 
   :focus-visible {
-    outline: 0.125rem solid var(--rx-ink);
-    outline-offset: 0.1875rem;
+    outline: 0.125rem solid var(--rx-blue);
+    outline-offset: 0.125rem;
   }
 
-  /* 検索の一致箇所・ハイライトは平らな淡い黄色の背景。行をまたいでも各行に同じ背景を敷く。 */
+  /*
+    チェックボックスとラジオ。手本はBasecamp 2・Highriseが使っていた2012年前後のMacの標準の部品
+    （実測: controls.md 9・10章）。今のブラウザの標準の部品は形も色も違うので、測った枠と塗りで描く。
+    塗りは手本で確かめた、中ほどで段の付く縦の塗り（平らな塗りの原則の例外）。
+    - 選んでいない時: 14px、1px #9c9c9c（上だけ #a6a6a6）の枠、#ffffff → #f5f5f5 → 中ほどで #ececec → #f2f2f2、下に1px #f0f0f0
+    - チェックした時: 淡い青の塗り（#e4faff → #bcddfa → #a1cff9）、縁 #5e64b3（下 #545773）、印は濃い紺 #001831
+    - ラジオ: 同じ作りの円。選んだ時は #d9edf8 → #addeff の塗り、縁 #63679c（下 #5e6179）、中に直径約4pxの #001831 の点
+    使えない時は、形と塗りをそのままにして印だけを使えない操作の灰色にする。
+    Switchは同じcheckboxで溝とつまみを自分で描くので、ここから外す。
+  */
+  :where(input[type="checkbox"]:not(.rx-switch > input), input[type="radio"]) {
+    appearance: none;
+    display: inline-grid;
+    place-content: center;
+    flex: none;
+    inline-size: 0.875rem;
+    block-size: 0.875rem;
+    margin: 0;
+    border: var(--rx-stroke-width) solid #9c9c9c;
+    border-block-start-color: #a6a6a6;
+    border-radius: 0.125rem;
+    background: linear-gradient(#ffffff, #fdfdfd 20%, #f5f5f5 49%, #ececec 50%, #f2f2f2);
+    box-shadow: 0 var(--rx-stroke-width) 0 #f0f0f0;
+    color: var(--rx-selected-text);
+    vertical-align: middle;
+    cursor: pointer;
+    &::before {
+      content: "";
+      inline-size: 0.625rem;
+      block-size: 0.625rem;
+      background: currentColor;
+      mask: url("./assets/check-bold.svg") center / contain no-repeat;
+      visibility: hidden;
+    }
+    &:is(:checked, :indeterminate) {
+      border-color: var(--rx-selected-edge);
+      border-block-end-color: var(--rx-selected-edge-end);
+      background: var(--rx-selected-fill);
+      &::before {
+        visibility: visible;
+      }
+    }
+    &:disabled {
+      color: var(--rx-disabled-text);
+      cursor: default;
+    }
+    &:focus-visible {
+      outline: 0.125rem solid var(--rx-focus-border);
+      outline-offset: var(--rx-stroke-width);
+    }
+  }
+  /* チェックの印は手本と同じく太く大きくし、箱の右上へ少しはみ出させる。 */
+  :where(input[type="checkbox"]:not(.rx-switch > input):checked:not(:indeterminate))::before {
+    inline-size: 0.8125rem;
+    block-size: 0.8125rem;
+    translate: 0.0625rem -0.0625rem;
+  }
+  :where(input[type="checkbox"]:not(.rx-switch > input):indeterminate)::before {
+    mask-image: url("./assets/minus-bold.svg");
+  }
+  :where(input[type="radio"]) {
+    border-color: #939393;
+    border-block-start-color: #9c9c9c;
+    border-radius: 50%;
+    background: linear-gradient(#fdfdfd, #f5f5f5 49%, #ececec 50%, #e8e8e8);
+    box-shadow: 0 var(--rx-stroke-width) 0 #f1f1f1;
+    &::before {
+      inline-size: 0.25rem;
+      block-size: 0.25rem;
+      border-radius: 50%;
+      mask: none;
+    }
+    &:checked {
+      border-color: #63679c;
+      border-block-end-color: #5e6179;
+      background: linear-gradient(#d9edf8, #addeff);
+    }
+  }
+  @media (forced-colors: active) {
+    :where(input[type="checkbox"]:not(.rx-switch > input), input[type="radio"]) {
+      border-color: CanvasText;
+      background: Canvas;
+      &::before {
+        background: CanvasText;
+      }
+    }
+  }
+
+  /* 検索の一致箇所・ハイライトは平らな黄色の背景。行をまたいでも各行に同じ背景を敷く。 */
   mark {
     padding-inline: 0.15em;
-    border-radius: 0.2em;
-    background: color-mix(in srgb, var(--rx-mark) 55%, transparent);
+    border-radius: var(--rx-radius-mark);
+    background: var(--rx-mark);
     color: inherit;
     box-decoration-break: clone;
   }

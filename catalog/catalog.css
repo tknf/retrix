@@ -2,6 +2,10 @@
   カタログだけが使う指定。カタログの画面そのものはコンポーネントだけで組み、ここには見本の中の細かな配置だけを置く。
 */
 @layer layout {
+  /* 個別の見本は、カタログ外枠のAppShellの左右の余白を継承せず、それぞれの幅で表示する。 */
+  [data-example="hono"] {
+    --rx-workspace-gutter: 0rem;
+  }
   .catalog-person {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);

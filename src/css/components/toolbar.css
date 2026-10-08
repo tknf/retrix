@@ -1,4 +1,9 @@
 @layer components {
+  /*
+    操作の並び。Buttonは共通の形のまま、間を4pxにして並べ、狭い場所では折り返す。
+    間はHighriseの上部の帯の「Add Contact」「New Task」（実測: screenshots/highrise/highrise-top-bar-jump-search-2011.png
+    (17, 26, 200, 30)。1倍。枠の外側から次の枠の外側まで3px）を段の4pxに丸めた値。
+  */
   .rx-toolbar {
     display: flex;
     align-items: start;
@@ -16,10 +21,6 @@
     & > * {
       min-inline-size: 0;
       max-inline-size: 100%;
-    }
-    & > .rx-button,
-    & > :is(.start, .end) > .rx-button {
-      border-radius: var(--rx-radius-pill);
     }
   }
 }

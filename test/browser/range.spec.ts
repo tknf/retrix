@@ -1,4 +1,4 @@
-import { expect, test, type Locator } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 test("現在値・境界・小数を表示し上流の変更キャンセルを反映する", async ({ page }) => {
   await page.goto("/components/range");
@@ -109,82 +109,15 @@ test("トラックのクリックと両方のつまみのドラッグで値を�
   }
 });
 
-test("つまみとバーを補間し動きを減らす設定では即座に反映する", async ({ page }, testInfo) => {
-  const pauseMotion = async (range: Locator, property: string) =>
-    range.evaluate(async (element, name) => {
-      const transition = element
-        .getAnimations()
-        .find(
-          (animation) =>
-            animation instanceof CSSTransition && animation.transitionProperty === name,
-        );
-      if (!transition) throw new Error("移動のtransitionがありません");
-      const duration = transition.effect?.getTiming().duration;
-      if (typeof duration !== "number") throw new Error("移動時間を取得できません");
-      transition.pause();
-      await transition.ready;
-      transition.currentTime = duration / 2;
-      const value = Number(getComputedStyle(element).getPropertyValue(name));
-      for (const input of element.querySelectorAll(".input")) {
-        const inherited = Number(getComputedStyle(input).getPropertyValue(name));
-        if (Math.abs(inherited - value) > 0.001)
-          throw new Error(`移動位置が継承されていません: ${value} / ${inherited}`);
-      }
-      // 撮影時のスタイル再計算でも、実際に補間された途中の位置を保つ。
-      element.style.transition = "none";
-      element.style.setProperty(name, String(value));
-      return value;
-    }, property);
-  const finishMotion = async (range: Locator) =>
-    range.evaluate((element) => {
-      element.style.removeProperty("--rx-range-fill-start");
-      element.style.removeProperty("--rx-range-fill-end");
-      element.style.removeProperty("transition");
-      for (const animation of element.getAnimations()) animation.finish();
-    });
-
-  await page.emulateMedia({ reducedMotion: "no-preference" });
+test("つまみとバーは動かさず、値を変えるとその場で反映する", async ({ page }) => {
   await page.goto("/components/range");
   const input = page.locator("#hono-range-zoom");
   const root = page.locator(".rx-range").filter({ has: input });
-  expect(await root.evaluate((element) => element.getAnimations().length)).toBe(0);
   await input.press("End");
-  const middle = await pauseMotion(root, "--rx-range-fill-end");
-  expect(middle).toBeGreaterThan(1 / 3);
-  expect(middle).toBeLessThan(1);
   await expect(input).toHaveValue("200");
-  await root.screenshot({ path: testInfo.outputPath("range-motion-single.png") });
-  await expect(root).toHaveCSS("--rx-range-fill-end", String(middle));
-  const stop = await input.evaluate(
-    (element) => getComputedStyle(element).backgroundImage.match(/([\d.]+)%/)?.[1],
-  );
-  expect(Number(stop) / 100).toBeCloseTo(middle, 4);
-  await finishMotion(root);
-
-  const group = page.getByRole("group", { name: "予算（円）", exact: true });
-  const number = group.getByRole("spinbutton", { name: "予算（円） 上限", exact: true });
-  await number.fill("8000");
-  await number.press("Tab");
-  const end = await pauseMotion(group, "--rx-range-fill-end");
-  expect(end).toBeGreaterThan(0.5);
-  expect(end).toBeLessThan(0.8);
-  await group.screenshot({ path: testInfo.outputPath("range-motion-interval.png") });
-  await finishMotion(group);
-
-  await group.evaluate((element) => element.setAttribute("dir", "rtl"));
-  const start = group.getByRole("slider", { name: "予算（円） 下限", exact: true });
-  await start.press("End");
-  const lower = await pauseMotion(group, "--rx-range-fill-start");
-  expect(lower).toBeGreaterThan(0.1);
-  expect(lower).toBeLessThan(0.8);
-  await group.screenshot({ path: testInfo.outputPath("range-motion-rtl.png") });
-  await finishMotion(group);
-
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await start.press("Home");
-  await expect(start).toHaveValue("0");
-  await expect(group).toHaveCSS("--rx-range-fill-start", "0");
-  expect(await group.evaluate((element) => element.getAnimations().length)).toBe(0);
+  // Retrixはトランジションを持たないので、値を変えた直後から塗りの位置が最後の値になる。
+  expect(await root.evaluate((element) => element.getAnimations().length)).toBe(0);
+  await expect(root).toHaveCSS("--rx-range-fill-end", "1");
 });
 
 test("狭い画面でも数値欄のタップで両端を指定できる", async ({ browser }) => {

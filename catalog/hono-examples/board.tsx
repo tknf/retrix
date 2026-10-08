@@ -11,8 +11,9 @@ import {
   ValueList,
 } from "../../src/hono";
 
-const card = (id: string, title: string, body?: string) => ({
+const card = (id: string, title: string, body?: string, code?: string) => ({
   id,
+  code,
   label: title,
   content: (
     <>
@@ -134,7 +135,7 @@ export default () => (
           ]}
         />
       </Disclosure>
-      <Disclosure summary="完了の列：移動すると置いた列の色に変わる">
+      <Disclosure summary="完了の列：移動すると番号が置いた列の色に変わる">
         <Board
           label="原稿の承認"
           movable
@@ -142,19 +143,22 @@ export default () => (
             {
               id: "draft",
               title: "下書き",
-              items: [card("d1", "10月の利用案内"), card("d2", "年末年始の営業")],
+              items: [
+                card("d1", "10月の利用案内", undefined, "No. 31"),
+                card("d2", "年末年始の営業", undefined, "No. 32"),
+              ],
             },
             {
               id: "approved",
               title: "承認済み",
               tone: "success",
-              items: [card("d3", "9月の利用案内", "森 美咲が承認しました。")],
+              items: [card("d3", "9月の利用案内", "森 美咲が承認しました。", "No. 28")],
             },
             {
               id: "rejected",
               title: "見送り",
               tone: "danger",
-              items: [card("d4", "夏の特別料金")],
+              items: [card("d4", "夏の特別料金", undefined, "No. 24")],
             },
           ]}
         />

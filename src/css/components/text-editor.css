@@ -1,54 +1,85 @@
 @layer components {
   /*
-    書式ツールを並べた入力エリア。欄と同じ1pxの枠と内側の浅い影で沈め、ツールバーは細い線で入力エリアと分ける。
-    書式ツールは淡い黒のアイコンだけのButtonにし、ホバー時だけ淡い面を出す。ツールの間の区切りは細い縦線（狭い幅では間隔だけ）。
+    書式ツールを並べた入力エリア。枠はBC2のコメント欄（controls.md 7a）と同じ1px #c1c1c1・角丸5pxで、内側の影も外の影も持たない。
+    本文は16pxの文字で、左の余白14px、プレースホルダーは#999（同じ実測）。
+    書式ツールはBC2の本文の上の「Bold / Italic / Bullets / Numbers / QUOTE」（実測:
+    screenshots/basecamp2-official/bc2-features-drag-and-drop-drag-zone.jpg (103, 298, 226, 15)。約0.73倍に縮小。
+    同じ形: bc2-whats-new-drag-drop.jpg (145, 83, 200, 13)）に合わせる。帯も罫線も敷かず、本文と同じ白の上に直接置き、
+    控えめなボタン（平らな白・1px #ccc・下に1px #dddの影）を隙間なくつなげて間を1本の線にした一組にする。
+    角を丸めるのは一組の外側の端だけ。手本は一組だけなので、まとまりを分けた時は8pxの間隔で分ける（推測）。
+    ツールの左端は本文の書き始め（左14px）にそろえる。今の書式のツールは、選んでいる状態の共通の見た目にする。
     フォーカスは他の欄と同じく、青い縁の外に淡い青の輪を広げる。
   */
   .rx-text-editor {
+    --rx-text-editor-placeholder: #999999;
     container-type: inline-size;
     display: grid;
     grid-template-rows: auto minmax(0, 1fr);
     min-inline-size: 0;
-    border: var(--rx-stroke-width) solid var(--rx-border);
-    border-radius: var(--rx-radius-field);
+    overflow: hidden;
+    border: var(--rx-stroke-width) solid var(--rx-textarea-border);
+    border-radius: var(--rx-radius-control);
     background: var(--rx-surface);
-    box-shadow: var(--rx-shadow-input);
-    transition:
-      border-color var(--rx-duration) ease,
-      box-shadow var(--rx-duration) ease;
     &:focus-within {
-      border-color: var(--rx-link);
-      box-shadow:
-        0 0 0 0.125rem var(--rx-focus-ring),
-        var(--rx-shadow-input);
+      border-color: var(--rx-focus-border);
+      box-shadow: var(--rx-focus-glow);
     }
     & > .toolbar {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: var(--rx-space-1);
+      gap: var(--rx-space-2);
       min-inline-size: 0;
-      padding-block: var(--rx-space-1);
-      padding-inline: var(--rx-space-2);
-      border-block-end: var(--rx-stroke-width) solid var(--rx-border);
+      /* 上は本文の上の余白（10px）と同じにし、下は本文の側の余白に任せる。 */
+      padding-block: 0.625rem 0;
+      padding-inline: 0.875rem;
       & > .group {
         display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 0.125rem;
-        & + .group {
-          padding-inline-start: var(--rx-space-1);
-          border-inline-start: var(--rx-stroke-width) solid var(--rx-border);
+        align-items: stretch;
+        & > .rx-button:not(:last-child) {
+          border-start-end-radius: 0;
+          border-end-end-radius: 0;
         }
+        & > .rx-button:not(:first-child) {
+          margin-inline-start: calc(var(--rx-stroke-width) * -1);
+          border-start-start-radius: 0;
+          border-end-start-radius: 0;
+        }
+        /* 枠の色が変わるツール（ホバー・フォーカス・今の書式）を手前に置き、重ねた線がその色で見えるようにする。 */
+        & > .rx-button:is(:hover, :focus-visible, [data-active="true"]) {
+          z-index: 1;
+        }
+        /*
+          書式ツールは文字だけの操作（link）として渡されるので、ここで控えめなButtonと同じ平らな白・1px #ccc・下に1px #dddの影を付け直す。
+          文字の指定と高さは共通のButtonのまま変えない。
+        */
         & > .rx-button {
-          color: var(--rx-muted);
-          &:hover:not(:disabled) {
+          border-color: var(--rx-control-border);
+          background: var(--rx-surface);
+          background-image: var(--rx-fill-control);
+          color: var(--rx-text);
+          box-shadow: var(--rx-shadow-control);
+          &:hover:not(:disabled, [data-active="true"]) {
+            border-color: color-mix(in srgb, var(--rx-control-border) 75%, var(--rx-ink));
+            background-image: var(--rx-fill-control-hover);
             color: var(--rx-text);
+            box-shadow: var(--rx-shadow-control-hover);
+          }
+          &:active:not(:disabled, [data-active="true"]) {
+            background-color: var(--rx-gray-50);
+            background-image: var(--rx-fill-control-pressed);
+            box-shadow: var(--rx-shadow-control-pressed);
           }
           /* 現在の書式の表示。接続したエディターが、選択範囲の書式ツールにdata-active="true"を付ける。 */
           &[data-active="true"] {
-            background: var(--rx-cover);
-            color: var(--rx-link);
+            border-color: var(--rx-selected-edge);
+            border-block-end-color: var(--rx-selected-edge-end);
+            background: var(--rx-selected-fill);
+            color: var(--rx-selected-text);
+          }
+          /* 使えない書式ツールは、形・枠・塗りをそのままにして文字だけを灰色にする。 */
+          &:disabled {
+            color: var(--rx-disabled-text);
           }
         }
       }
@@ -58,55 +89,43 @@
         gap: var(--rx-space-2);
         margin-inline-start: auto;
       }
-      /*
-        既定の書式ツールと操作が一行に収まらない幅（36rem未満）ではツールが折り返し、区切りの縦線が行の始まりに来てしまう。
-        行の始まりはCSSで見分けられないので、この幅では縦線を引かず、まとまりの間を広げて分ける。
-      */
-      @container (inline-size < 36rem) {
-        column-gap: var(--rx-space-3);
-        & > .group + .group {
-          padding-inline-start: 0;
-          border-inline-start: 0;
-        }
-      }
     }
     & > .area {
       min-inline-size: 0;
+      /* 本文はBC2のコメントの本文と同じ16pxの文字と21pxの行高。左右の余白はコメント欄の14px。 */
       & > :is(.input, [contenteditable]) {
         display: block;
         inline-size: 100%;
         min-block-size: 8rem;
-        padding-block: var(--rx-space-3);
-        padding-inline: var(--rx-space-4);
+        padding-block: 0.625rem;
+        padding-inline: 0.875rem;
         border: 0;
         background: transparent;
         color: var(--rx-text);
         font-family: var(--rx-font);
-        font-size: var(--rx-body);
-        line-height: 1.6;
+        font-size: var(--rx-reading);
+        line-height: calc(21 / 16);
         outline: 0;
         resize: vertical;
         &::placeholder {
-          color: var(--rx-muted);
+          color: var(--rx-text-editor-placeholder);
+          opacity: 1;
         }
       }
     }
-    /* 使えない時は、他の使えない欄と同じ斜線を入力エリアに敷く（書式ツールも押せない）。 */
+    /* 使えない時は、他の使えない欄と同じく面と枠をそのままにして、文字だけを灰色にする（書式ツールも押せない）。 */
     &:has(> .area > .input:disabled) {
-      background: var(--rx-hatch), var(--rx-surface);
-      box-shadow: none;
       & > .area > .input {
-        color: var(--rx-muted);
+        color: var(--rx-disabled-text);
         cursor: not-allowed;
       }
     }
-    /* bottomの配置では、ツールバーを入力エリアの下に置く。 */
+    /* bottomの配置では、ツールバーを入力エリアの下に置く。余白は上下を入れ替え、下を本文の上の余白と同じにする。 */
     &[data-placement="bottom"] {
       grid-template-rows: minmax(0, 1fr) auto;
       & > .toolbar {
         grid-row: 2;
-        border-block-end: 0;
-        border-block-start: var(--rx-stroke-width) solid var(--rx-border);
+        padding-block: 0 0.625rem;
       }
     }
   }

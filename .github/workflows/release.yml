@@ -55,7 +55,7 @@ jobs:
         id: published
         run: |
           version="$(node -p "require('./package.json').version")"
-          status="$(curl -s -o /dev/null -w "%{http_code}" "https://registry.npmjs.org/@tknf%2Fply/${version}")"
+          status="$(curl -s -o /dev/null -w "%{http_code}" "https://registry.npmjs.org/@tknf%2Fretrix/${version}")"
           if [ "${status}" = "200" ]; then echo "exists=true" >> "${GITHUB_OUTPUT}"; else echo "exists=false" >> "${GITHUB_OUTPUT}"; fi
 
       # pnpmはOIDCで認証し、公開リポジトリからの公開にはprovenanceを自動で付ける。

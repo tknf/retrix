@@ -1,6 +1,5 @@
 import {
   AppShell,
-  ActionLink,
   Avatar,
   Board,
   Button,
@@ -8,77 +7,87 @@ import {
   Field,
   Icon,
   Input,
+  Navigation,
   PageHeader,
+  Section,
   Switch,
   Table,
 } from "../../src/hono";
 
-/** 見本ごとにidを変えるため、共通コマンドは関数で作る。 */
+/** 見本ごとにidを変えるため、検索のCommandMenuは関数で作る。 */
 const commands = (id: string) => (
   <CommandMenu
     id={id}
-    label="つむぐチーム"
+    label="取引先・案件・担当者を探す"
+    icon="search"
     shortcuts={[
-      { label: "プロジェクト", href: "/apps/project", icon: "layers", accent: "green" },
-      { label: "受信トレイ", href: "/apps/inbox", icon: "mail", accent: "blue" },
-      { label: "資料", href: "/apps/files", icon: "file", accent: "amber" },
-      { label: "売上", href: "/apps/sales", icon: "chart", accent: "coral" },
+      { label: "取引先", href: "/apps/people", icon: "user", accent: "green" },
+      { label: "案件", href: "/apps/sales", icon: "chart", accent: "coral" },
     ]}
     groups={[
       {
         label: "移動",
         items: [
-          { label: "プロジェクト", href: "/apps/project", icon: "layers" },
-          { label: "受信トレイ", href: "/apps/inbox", icon: "mail" },
+          { label: "取引先", href: "/apps/people", icon: "user" },
+          { label: "案件", href: "/apps/sales", icon: "chart" },
         ],
       },
     ]}
   />
 );
 
-const home = (
-  <ActionLink href="/apps/project" variant="link">
-    ホーム
-  </ActionLink>
+const home = <a href="/apps/project">つむぐ商会</a>;
+
+const navigation = [
+  { label: "ホーム", href: "/apps/project" },
+  { label: "取引先", href: "/apps/people", current: true },
+  { label: "案件", href: "/apps/sales" },
+  { label: "予定", href: "/apps/schedule" },
+  { label: "設定", href: "/apps/settings" },
+];
+
+const account = (
+  <>
+    <Avatar name="田中 遥" initials="遥" size="small" tone="coral" />
+    <a href="/apps/settings">田中 遥</a>
+    <a href="/">ログアウト</a>
+  </>
 );
 
-const account = <Avatar name="田中 遥" initials="遥" size="small" tone="coral" />;
-
-const records = [
-  {
-    title: "ヘルプセンターの目次を見直す",
-    owner: "田中 遥",
-    reviewer: "佐藤 健",
-    updated: "2026年9月25日 10:00",
-    due: "2026年9月30日",
-    status: "確認待ち",
-    place: "ヘルプセンター（日本語）",
-    priority: "高",
-    comments: "3件",
-  },
-  {
-    title: "料金とキャンセル条件を更新する",
-    owner: "佐藤 健",
-    reviewer: "森 美咲",
-    updated: "2026年9月24日 15:30",
-    due: "2026年10月3日",
-    status: "進行中",
-    place: "料金ページ",
-    priority: "中",
-    comments: "1件",
-  },
-  {
-    title: "よくある質問を集める",
-    owner: "森 美咲",
-    reviewer: "田中 遥",
-    updated: "2026年9月22日 9:00",
-    due: "2026年10月10日",
-    status: "これから",
-    place: "ヘルプセンター（英語）",
-    priority: "低",
-    comments: "0件",
-  },
+const customers = [
+  { code: "C-0012", name: "株式会社みなと製作所", owner: "田中 遥", deals: 3, updated: "9月25日" },
+  { code: "C-0031", name: "ひかり書房", owner: "佐藤 健", deals: 1, updated: "9月24日" },
+  { code: "C-0047", name: "合同会社あおば農園", owner: "森 美咲", deals: 0, updated: "9月22日" },
 ];
+
+const CustomerTable = () => (
+  <Table caption="取引先の一覧">
+    <thead>
+      <tr>
+        <th scope="col">コード</th>
+        <th scope="col">取引先</th>
+        <th scope="col">担当</th>
+        <th scope="col" data-cell="numeric">
+          進行中の案件
+        </th>
+        <th scope="col">更新日</th>
+      </tr>
+    </thead>
+    <tbody>
+      {customers.map((customer) => (
+        <tr>
+          <td data-cell="short">{customer.code}</td>
+          <th scope="row" data-cell="text">
+            <a href="/apps/people">{customer.name}</a>
+          </th>
+          <td data-cell="short">{customer.owner}</td>
+          <td data-cell="numeric">{customer.deals}</td>
+          <td data-cell="short">{customer.updated}</td>
+        </tr>
+      ))}
+    </tbody>
+  </Table>
+);
 
 const job = (id: string, code: string, title: string) => ({
   id,
@@ -87,69 +96,83 @@ const job = (id: string, code: string, title: string) => ({
   content: <h4>{title}</h4>,
 });
 
-/*
-  見本のAppShellは高さを決めた枠の中でスクロールさせ、上端に留まるバーを見せる。
-  isolationで、見本のバーがカタログ自身のバーに重ならないようにする。
-*/
-const frame = "block-size: 32rem; overflow: auto; isolation: isolate";
+/* 見本のAppShellは高さを決めた枠の中でスクロールさせる。 */
+const frame = "block-size: 34rem; overflow: auto; isolation: isolate";
 
 export default () => (
   <div class="rx-stack">
     <section class="rx-stack" data-space="small">
       <h3>既定の幅（default）</h3>
       <div style={frame}>
-        <AppShell home={home} commands={commands("shell-default")} account={account}>
+        <AppShell
+          home={home}
+          navigation={navigation}
+          commands={commands("shell-default")}
+          account={account}
+          footer={<span>つむぐ商会 · 顧客管理</span>}
+        >
           <PageHeader
-            title="今日の仕事"
-            description="上部中央のコマンドメニューから移動し、中央の作業面で仕事を進めます。横に広い表は作業面の端までスクロールします。"
-            icon={<Icon name="layers" />}
-            actions={<Button variant="primary">仕事を追加</Button>}
+            title="取引先"
+            description="取引のある会社と、担当者・進行中の案件を管理します。"
+            actions={<Button variant="primary">取引先を追加</Button>}
           />
-          <Table caption="担当している仕事">
-            <thead>
-              <tr>
-                <th scope="col">仕事</th>
-                <th scope="col">担当</th>
-                <th scope="col">確認者</th>
-                <th scope="col">更新日時</th>
-                <th scope="col">期限</th>
-                <th scope="col">状態</th>
-                <th scope="col">公開先</th>
-                <th scope="col">優先度</th>
-                <th scope="col" data-cell="numeric">
-                  コメント
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {records.map((record) => (
-                <tr>
-                  <th scope="row" data-cell="text">
-                    {record.title}
-                  </th>
-                  <td data-cell="short">{record.owner}</td>
-                  <td data-cell="short">{record.reviewer}</td>
-                  <td data-cell="short">{record.updated}</td>
-                  <td data-cell="short">{record.due}</td>
-                  <td data-cell="short">{record.status}</td>
-                  <td data-cell="short">{record.place}</td>
-                  <td data-cell="short">{record.priority}</td>
-                  <td data-cell="numeric">{record.comments}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
+          <CustomerTable />
+        </AppShell>
+      </div>
+    </section>
+    <section class="rx-stack" data-space="small">
+      <h3>上の階層を背後に重ねる（trail）</h3>
+      <div style={frame}>
+        <AppShell
+          home={home}
+          navigation={navigation}
+          commands={commands("shell-trail")}
+          account={account}
+          trail={[{ label: "株式会社みなと製作所", href: "/apps/people" }]}
+        >
+          <PageHeader
+            title="展示会の什器の見積もり"
+            description="案件 · 担当 田中 遥 · 9月30日まで"
+            actions={<Button>編集</Button>}
+          />
+          <Section title="やること" count={2} actions={<Button size="compact">追加</Button>}>
+            <p>見積書の数量を確かめ、来週の打ち合わせまでに送ります。</p>
+          </Section>
+        </AppShell>
+      </div>
+    </section>
+    <section class="rx-stack" data-space="small">
+      <h3>先頭側の列を置く（aside）</h3>
+      <div style={frame}>
+        <AppShell
+          home={home}
+          commands={commands("shell-aside")}
+          account={account}
+          aside={
+            <Navigation
+              label="取引先の分類"
+              items={[
+                { label: "すべての取引先", href: "/apps/people", current: true, count: 128 },
+                { label: "見込み", href: "/apps/people", count: 24 },
+                { label: "取引中", href: "/apps/people", count: 87 },
+                { label: "休眠", href: "/apps/people", count: 17 },
+              ]}
+            />
+          }
+        >
+          <PageHeader title="すべての取引先" description="128件の取引先" />
+          <CustomerTable />
         </AppShell>
       </div>
     </section>
     <section class="rx-stack" data-space="small">
       <h3>入力が中心の画面（compact）</h3>
       <div style={frame}>
-        <AppShell size="compact" home={home} commands={commands("shell-compact")} account={account}>
-          <PageHeader title="設定" description="ワークスペースの名前と通知を変えます。" />
-          <form class="rx-stack" aria-label="ワークスペースの設定">
-            <Field id="shell-workspace-name" label="ワークスペースの名前">
-              {(attributes) => <Input {...attributes} name="name" value="小さな仕事場" />}
+        <AppShell size="compact" home={home} navigation={navigation} account={account}>
+          <PageHeader title="設定" description="会社の名前と通知を変えます。" />
+          <form class="rx-stack" aria-label="会社の設定">
+            <Field id="shell-workspace-name" label="会社の名前">
+              {(attributes) => <Input {...attributes} name="name" value="つむぐ商会" />}
             </Field>
             <Switch
               id="shell-digest"
@@ -170,34 +193,28 @@ export default () => (
     <section class="rx-stack" data-space="small">
       <h3>横に広い画面（wide）</h3>
       <div style={frame}>
-        <AppShell size="wide" home={home} commands={commands("shell-wide")} account={account}>
-          <PageHeader title="ヘルプセンターのリニューアル" icon={<Icon name="grid" />} />
+        <AppShell size="wide" home={home} navigation={navigation} account={account}>
+          <PageHeader title="案件の進み具合" icon={<Icon name="grid" />} />
           <Board
-            label="ヘルプセンターの仕事"
+            label="案件"
             columns={[
               {
-                id: "todo",
-                title: "これから",
-                items: [job("faq", "No. 21", "よくある質問を集める")],
+                id: "lead",
+                title: "見込み",
+                items: [job("fair", "No. 21", "展示会の什器の見積もり")],
               },
               {
-                id: "doing",
-                title: "進めている",
+                id: "proposal",
+                title: "提案中",
                 tone: "info",
-                items: [job("guide", "No. 18", "はじめての方向けガイド")],
+                items: [job("catalog", "No. 18", "秋のカタログの印刷")],
               },
               {
-                id: "review",
-                title: "確認待ち",
-                tone: "warning",
-                items: [job("export", "No. 16", "データの書き出しの記事")],
-              },
-              {
-                id: "done",
-                title: "できた！",
+                id: "won",
+                title: "受注",
                 tone: "success",
                 collapsible: true,
-                items: [job("goal", "No. 11", "チームでゴールを揃える")],
+                items: [job("sign", "No. 11", "店舗の看板の交換")],
               },
             ]}
           />

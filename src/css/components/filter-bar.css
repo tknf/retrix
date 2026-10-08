@@ -1,5 +1,16 @@
 @layer components {
+  /*
+    絞り込みの条件。BC2の絞り込みのメニュー（実測: overlays.md 1c「All matches / Comments / Messages」。
+    screenshots/basecamp2-official/bc2-help-searching-in-03.png (24, 95, 129, 137)。1倍）の項目を横に並べた形にし、
+    Highriseの「Find contacts by name title city …」（highrise/highrise-contact-filters-chips-2011.png。1倍）と同じく、
+    条件を枠も面も無い文字のまま一行に並べる。
+    条件は黒い文字で、選んでいる条件だけをメニューの選んでいる項目と同じ角の無い淡い青（--rx-option-active）にする。
+    手本の選んだ項目は淡い青のピル（#dde4f5 に #244960 の太字）だが、Retrixは選んだ状態をピルで囲まない（ユーザーの指定）。
+    件数は条件名の後ろに淡い青の数字で添える（実測 #7f9dd2 は白地で4.5:1に届かないので、色合いを保って #5574b0）。
+    リンクの文字と高さは共通Button（button.css）のまま使う。
+  */
   .rx-filter-bar {
+    --rx-filter-bar-count: #5574b0;
     /* 各リンクの自然幅で折り返すためFlex。 */
     display: flex;
     flex-wrap: wrap;
@@ -9,12 +20,6 @@
 
     & > a {
       min-inline-size: 0;
-      border-radius: var(--rx-radius-pill);
-
-      &:not([data-current="true"]) {
-        border-color: var(--rx-border);
-        color: var(--rx-text);
-      }
       & > span {
         min-inline-size: 0;
       }
@@ -24,30 +29,92 @@
         font-variant-numeric: tabular-nums;
       }
     }
-    /* 表示の切り替えはButtonGroupと同じく、両端だけピルに丸め、隣の枠線を1px重ねて一組に見せる。 */
+    &:not([data-appearance="segmented"]) > a {
+      border-color: transparent;
+      border-radius: 0;
+      background: transparent;
+      color: var(--rx-text);
+      box-shadow: none;
+      & > small {
+        color: var(--rx-filter-bar-count);
+      }
+      /* ホバーは手本が無い（推測）。BC2のリンクと同じく下線を引く。 */
+      &:hover {
+        border-color: transparent;
+        background: transparent;
+        box-shadow: none;
+        text-decoration-line: underline;
+        text-decoration-thickness: var(--rx-stroke-width);
+        text-underline-offset: 0.15em;
+      }
+      &:active {
+        background: transparent;
+        box-shadow: none;
+      }
+      &:focus-visible {
+        border-color: var(--rx-focus-border);
+        box-shadow: var(--rx-focus-glow);
+      }
+      &[data-current="true"] {
+        border-color: var(--rx-option-active);
+        background: var(--rx-option-active);
+        color: var(--rx-option-active-text);
+        & > small {
+          color: var(--rx-option-active-text);
+        }
+        /* Buttonの選んでいる状態のホバー（button.css）より強くし、ホバーしても淡い青のままにする。 */
+        &:is(:hover, :active):not(:disabled) {
+          border-color: var(--rx-option-active);
+          background: var(--rx-option-active);
+          box-shadow: none;
+          text-decoration-line: none;
+        }
+        &:focus-visible {
+          border-color: var(--rx-focus-border);
+          box-shadow: var(--rx-focus-glow);
+        }
+      }
+    }
+    /*
+      表示の切り替えはToggleGroupと同じく、控えめなボタン（実測: controls.md 1）を隙間なくつなげて間を1本の線にし、
+      外側の角だけを丸める（BC2の書式ツールの一組と同じつなぎ方。text-editor.css）。隣の枠線を1px重ねる。
+      選んでいる条件は、選ぶ操作の共通の見た目（--rx-selected-*）にする。BC2の切り替えの黒い丸薬形は使わない。
+    */
     &[data-appearance="segmented"] {
       display: inline-flex;
       flex-wrap: nowrap;
       gap: 0;
       max-inline-size: 100%;
-      /* 一行に並べ続けるので、丸いのは両端だけ。間の項目は左右を1emに抑える。 */
-      & > a {
-        padding-inline: 1em;
-        border-radius: 0;
+      & > a:not([data-current="true"]) > small {
+        color: var(--rx-muted);
       }
-      & > a:first-child {
-        border-start-start-radius: var(--rx-radius-pill);
-        border-end-start-radius: var(--rx-radius-pill);
-      }
-      & > a:last-child {
-        border-start-end-radius: var(--rx-radius-pill);
-        border-end-end-radius: var(--rx-radius-pill);
+      & > a:not(:last-child) {
+        border-start-end-radius: 0;
+        border-end-end-radius: 0;
       }
       & > a:not(:first-child) {
         margin-inline-start: calc(var(--rx-stroke-width) * -1);
+        border-start-start-radius: 0;
+        border-end-start-radius: 0;
       }
-      & > a:is([data-current="true"], :focus-visible) {
+      & > a:is([data-current="true"], :hover, :focus-visible) {
         z-index: 1;
+      }
+      /* 今の表示は、チェックボックスの選んだ状態と同じ淡い青の塗りに紺の縁と文字（--rx-selected-*）。 */
+      & > a[data-current="true"] {
+        border-color: var(--rx-selected-edge);
+        border-block-end-color: var(--rx-selected-edge-end);
+        background: var(--rx-selected-fill);
+        color: var(--rx-selected-text);
+        &:is(:hover, :active) {
+          border-color: var(--rx-selected-edge);
+          border-block-end-color: var(--rx-selected-edge-end);
+          background: var(--rx-selected-fill-hover);
+          color: var(--rx-selected-text);
+        }
+        &:focus-visible {
+          box-shadow: var(--rx-focus-glow);
+        }
       }
     }
   }

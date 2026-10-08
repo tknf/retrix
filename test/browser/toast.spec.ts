@@ -135,7 +135,7 @@ test("長い通知と操作が狭幅に収まる", async ({ page }) => {
   expect(closeBox.x + closeBox.width).toBeLessThanOrEqual(375);
 });
 
-test("Toastの閉じる操作はパネルの右上の角からはみ出し、本文と操作行へ混ざらない", async ({
+test("Toastの閉じる操作はパネルの右上の角の内側に置き、本文と操作行へ混ざらない", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 375, height: 850 });
@@ -152,7 +152,7 @@ test("Toastの閉じる操作はパネルの右上の角からはみ出し、本
   const actions = await toast.locator(".actions").boundingBox();
   if (!close || !message || !paper || !actions) throw new Error("通知がありません");
   expect(close.x).toBeGreaterThanOrEqual(message.x + message.width);
-  expect(close.y).toBeLessThan(paper.y);
-  expect(close.x + close.width).toBeGreaterThan(paper.x + paper.width);
+  expect(close.y).toBeGreaterThanOrEqual(paper.y);
+  expect(close.x + close.width).toBeLessThanOrEqual(paper.x + paper.width);
   expect(close.y + close.height).toBeLessThan(actions.y);
 });

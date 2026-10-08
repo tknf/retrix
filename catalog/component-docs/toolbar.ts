@@ -7,7 +7,7 @@ export default {
   api: ["Toolbar"],
   guidance: [
     "一つの対象やフォームに対する複数の操作（送信・リセット・移動）を、一続きの並びにまとめる時に使います。",
-    '現在の絞り込み条件を示す並びは `FilterBar`（`nav`）を使います。`Toolbar` は実行する操作の並び（`role="toolbar"`）です。両方の操作は同じピル形です。',
+    '現在の絞り込み条件を示す並びは `FilterBar`（`nav`）を使います。`Toolbar` は実行する操作の並び（`role="toolbar"`）です。どちらの操作も、共通の角の小さな `Button` の形です。',
     "関連する二つ三つの操作を一つにつなげて見せる時は `ButtonGroup`、画面の下に浮かべる操作バーは `ActionDock` を使います。",
   ],
   usage: [

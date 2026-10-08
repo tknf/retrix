@@ -1,7 +1,11 @@
 @layer components {
   /*
-    絵文字パネル。上に検索欄（InputGroup）、下に種類の淡い見出しと絵文字のグリッドを並べる。
-    絵文字は枠も影もない平らなセルに置き、ホバーすると淡い面、押すと内側へへこむ。
+    絵文字パネル。手本に同じ部品は無い（推測）。BC2のジャンプの候補（実測: overlays.md「1f」。
+    screenshots/basecamp2-official/bc2-help-searching-in-07.png (42, 25, 320, 146)。1倍）の語彙で組む。
+    上に検索欄（InputGroup）、下に種類の見出しと絵文字のグリッドを並べる。種類の見出しは、1fの分類名（「People」。#888の太字、約12px）
+    と同じ灰色の太字にする（#888は白地で4.5:1に届かないので--rx-muted）。
+    絵文字は枠も影もない平らなセルに置き、ホバーすると1fの選んだ候補と同じ角の無い淡い青（--rx-option-active、#ddeefe）の面、
+    押すと内側へへこむ（押した時は手本に無い。推測）。
     格子はセルの大きさを保って入る数だけ並べ、狭い場所では列を減らす。文字の指定はこのファイルが持つ（専用の操作）。
   */
   .rx-emoji-picker {
@@ -28,9 +32,9 @@
           padding-block: var(--rx-space-1);
           padding-inline: var(--rx-space-1);
           color: var(--rx-muted);
-          font-size: var(--rx-small);
-          font-weight: 700;
-          line-height: var(--rx-small-leading);
+          font-size: var(--rx-label);
+          font-weight: 600;
+          line-height: var(--rx-label-leading);
         }
         & > .grid {
           display: grid;
@@ -45,7 +49,7 @@
             margin: 0;
             padding: 0;
             border: 0;
-            border-radius: var(--rx-radius-control);
+            border-radius: 0;
             background: transparent;
             color: var(--rx-text);
             font-family: inherit;
@@ -53,17 +57,18 @@
             font-weight: 400;
             line-height: 1;
             cursor: pointer;
-            transition:
-              background-color var(--rx-duration) ease,
-              box-shadow var(--rx-duration) ease;
             &[hidden] {
               display: none;
             }
             &:hover {
-              background: color-mix(in srgb, var(--rx-ink) 5%, transparent);
+              background: var(--rx-option-active);
             }
             &:active {
-              background: color-mix(in srgb, var(--rx-ink) 7%, transparent);
+              background: color-mix(
+                in srgb,
+                var(--rx-option-active) 85%,
+                var(--rx-option-active-text)
+              );
               box-shadow: var(--rx-shadow-control-pressed);
             }
             &:focus-visible {

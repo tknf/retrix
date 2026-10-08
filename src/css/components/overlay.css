@@ -1,29 +1,43 @@
 @layer components {
   /*
-    閉じる操作は青いアイコンだけのButtonにし、パネルの末尾側の上の角から少しはみ出させて置く。
-    Wingのハンドルと同じく、パネルの外から操作できる目印にする。見出しの行は操作の幅を取らない。
+    閉じる操作の寸法。Tableの選択バーは、角から--rx-overlay-close-offsetだけはみ出させて置く。
+    浮かぶパネル（.rx-overlay）は、角の内側に--rx-overlay-close-insetだけ入れて置く。
   */
   :is(.rx-overlay, .rx-table > .selection-bar) {
     --rx-overlay-close-size: 1.75rem;
     --rx-overlay-close-offset: 0.25rem;
   }
+  /*
+    閉じる操作は、末尾側の上の角の内側に置く小さな×。枠も塗りも持たず、灰色の×だけを見せる（BC2のポップオーバーには×が無い。推測）。
+    見出しの行は、×が余白より内側へ入る分だけ行末を空ける。
+  */
   .rx-overlay {
     --rx-overlay-title-line: calc(var(--rx-label) * 10 / 7);
+    /*
+      余白の決め方。パネルの内側は上下左右とも同じ（inset）。中の塊の間は、見出しと本文の間（heading-gap）と、
+      本文と操作の行の間（actions-gap）だけで作り、一番下の塊の下には内側の余白を一度だけ取る。
+    */
     --rx-overlay-inset-inline: 1.25rem;
-    border: 0;
-    border-radius: var(--rx-radius-surface);
+    --rx-overlay-inset-block: var(--rx-overlay-inset-inline);
+    --rx-overlay-heading-gap: var(--rx-space-3);
+    --rx-overlay-actions-gap: var(--rx-space-4);
+    --rx-overlay-close-inset: 0.375rem;
+    /* 見出しの上の余白。×は題名の一行目の上下の中央にそろえる。 */
+    --rx-overlay-heading-start: var(--rx-overlay-inset-block);
+    border: var(--rx-stroke-width) solid var(--rx-popover-edge);
+    border-radius: var(--rx-popover-radius);
     background: var(--rx-surface);
     color: var(--rx-text);
     font-family: var(--rx-control-font-family);
     font-size: var(--rx-label);
     line-height: var(--rx-label-leading);
-    box-shadow: var(--rx-shadow-menu);
+    box-shadow: var(--rx-popover-shadow);
     overflow-wrap: anywhere;
     & > .heading {
       display: grid;
       gap: var(--rx-space-1);
       min-inline-size: 0;
-      padding-block-start: var(--rx-space-4);
+      padding-block: var(--rx-overlay-heading-start) 0;
       padding-inline: var(--rx-overlay-inset-inline);
       & > .heading-row {
         display: grid;
@@ -34,7 +48,7 @@
         padding-inline-end: max(
           0rem,
           calc(
-            var(--rx-overlay-close-size) - var(--rx-overlay-close-offset) -
+            var(--rx-overlay-close-size) + var(--rx-overlay-close-inset) -
               var(--rx-overlay-inset-inline)
           )
         );
@@ -42,6 +56,7 @@
           display: block;
           min-inline-size: 0;
         }
+        /* 見出しは黒の太字（1a「Assign this to-do to:」）。 */
         & > :is(h2, h3, strong) {
           font-size: var(--rx-label);
           font-weight: 600;
@@ -55,18 +70,39 @@
     & > .body {
       display: grid;
       align-content: start;
-      gap: var(--rx-space-2);
+      /* 本文の段の間は12px。見出しと本文の間（heading-gap）と同じか狭くし、段の中の間はさらに狭くする。 */
+      gap: var(--rx-space-3);
       min-inline-size: 0;
-      padding-block: var(--rx-space-1) 0.875rem;
+      padding-block: var(--rx-overlay-heading-gap) var(--rx-overlay-inset-block);
       padding-inline: var(--rx-overlay-inset-inline);
       overflow-wrap: anywhere;
       &:empty {
         display: none;
       }
+      &:first-child {
+        padding-block-start: var(--rx-overlay-inset-block);
+      }
+      /* 続く操作の行が間を持つので、本文の下には余白を取らない。 */
+      &:has(~ .actions) {
+        padding-block-end: 0;
+      }
     }
-    &:has(> .body:empty) > .heading,
-    &:not(:has(> .body)) > .heading {
-      padding-block-end: var(--rx-space-2);
+    /*
+      題名を読み上げだけにした（見える見出しが無い）パネルは、見出しの余白を取らず、本文をパネルの上の余白から始める。
+      角の×と本文の一行目が重ならないよう、本文の行末を×の分だけ空ける。
+    */
+    & > .heading:not(:has(> p)):has(> .heading-row > .rx-visually-hidden:first-child) {
+      padding-block-start: 0;
+      & + .body {
+        padding-block-start: var(--rx-overlay-inset-block);
+        padding-inline-end: calc(
+          var(--rx-overlay-close-size) + var(--rx-overlay-close-inset) + var(--rx-space-2)
+        );
+      }
+    }
+    /* 見出しだけのパネルは、見出しの下に内側の余白を取る。 */
+    &:not(:has(> .body:not(:empty), > .actions)) > .heading {
+      padding-block-end: var(--rx-overlay-inset-block);
     }
     & > .actions {
       display: flex;
@@ -74,7 +110,7 @@
       justify-content: end;
       gap: var(--rx-space-2);
       min-inline-size: 0;
-      padding-block: var(--rx-space-1) 0.875rem;
+      padding-block: var(--rx-overlay-actions-gap) var(--rx-overlay-inset-block);
       padding-inline: var(--rx-overlay-inset-inline);
     }
   }
@@ -89,55 +125,41 @@
       --rx-button-size: var(--rx-overlay-close-size);
     }
   }
-  /*
-    浮かぶ要素の出入り。Dialog・Popover・HoverCard・Tooltip・Toast・DropdownMenu・CommandMenu・DatePicker・Tableの選択バーの全てで、
-    ここだけに書く。支点から小さく現れて一瞬膨らんでから収まり、閉じる時は同じ支点へ縮みながら速く消える。
-    各コンポーネントは支点（transform-origin）だけを決める。画面の端から出てくる要素（Toast・下に付くDialog）は、
-    --rx-motion-slideで滑らせる時間を、--rx-motion-scale-in・-outで膨らみを1にし、閉じた形と開き始めのtranslateを決める。
-    位置を決めるスクリプトは変形前の寸法（layoutRect）で測るため、大きさを変えても配置は狂わない。
-  */
-  :is(
-    .rx-overlay,
-    .rx-menu,
-    .rx-command-menu > .panel,
-    .rx-date-picker > .panel,
-    .rx-table > .selection-bar
-  ):is([popover], dialog) {
-    transition:
-      opacity var(--rx-duration-fade) ease-out,
-      scale var(--rx-duration-pop) var(--rx-ease-pop),
-      translate var(--rx-motion-slide) var(--rx-ease-slide),
-      display var(--rx-duration-pop) allow-discrete,
-      overlay var(--rx-duration-pop) allow-discrete;
-    &:is([popover]:not(:popover-open), dialog:not([open])) {
-      opacity: 0;
-      scale: var(--rx-motion-scale-out);
-      transition-duration: var(--rx-duration-out);
-      transition-timing-function: ease-in;
+  .rx-overlay > .heading > .heading-row > .close {
+    inset-inline-end: var(--rx-overlay-close-inset);
+    inset-block-start: calc(
+      var(--rx-overlay-heading-start) +
+        (var(--rx-overlay-title-line) - var(--rx-overlay-close-size)) / 2
+    );
+  }
+  /* パネルと選択バーの×は塗らない。ホバーすると淡い面を敷き、×を濃くする。 */
+  :is(.rx-overlay > .heading > .heading-row, .rx-table > .selection-bar > .heading)
+    > .close
+    > .rx-button {
+    border-color: transparent;
+    background: transparent;
+    color: var(--rx-muted);
+    box-shadow: none;
+    &:hover:not(:disabled) {
+      border-color: transparent;
+      background: color-mix(in srgb, var(--rx-ink) 6%, transparent);
+      color: var(--rx-ink);
+      box-shadow: none;
+    }
+    &:active:not(:disabled) {
+      background: color-mix(in srgb, var(--rx-ink) 10%, transparent);
+      box-shadow: none;
     }
   }
-  @starting-style {
-    :is(
+  /* 閉じている浮かぶ要素は見せない。開閉は動かさず、その場で切り替える。 */
+  :is(
       .rx-overlay,
       .rx-menu,
       .rx-command-menu > .panel,
       .rx-date-picker > .panel,
       .rx-table > .selection-bar
-    ):is([popover]:popover-open, dialog[open]) {
-      opacity: 0;
-      scale: var(--rx-motion-scale-in);
-    }
-  }
-  /* アンカーに付くパネル（Popover・HoverCard）は、開いた操作の側の上の角を支点にする。 */
-  .rx-overlay[popover] {
-    transform-origin: top left;
-    &:dir(rtl),
-    &[data-align="end"]:dir(ltr) {
-      transform-origin: top right;
-    }
-    &[data-align="end"]:dir(rtl) {
-      transform-origin: top left;
-    }
+    ):is([popover], dialog):is([popover]:not(:popover-open), dialog:not([open])) {
+    opacity: 0;
   }
   .rx-overlay[data-placement="anchor"] {
     --rx-overlay-anchor: auto;

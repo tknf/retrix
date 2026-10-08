@@ -11,7 +11,7 @@ export type KeycapProps = ElementProps<"span"> & {
   label?: string;
   /** smallはタイルの角やメニューの行の末尾に添える小さな表示。 */
   size?: "default" | "small";
-  /** 青のメニューや塗った背景の上に置く時。背景を塗らず、文字と同じ色の淡い縁にする。 */
+  /** 色で塗った面の上に置く時。背景を塗らず、文字と同じ色の淡い縁にする。 */
   inverse?: boolean;
 };
 export const Keycap = ({

@@ -1,4 +1,10 @@
 @layer components {
+  /*
+    ホバーで開くパネルは、ほかの浮かぶパネルと同じ共通の枠（overlay.css。実測: overlays.md「1. BC2 のポップオーバー」。
+    白、1px #bbb、角丸5px、外への柔らかい影）を使い、ここでは操作とプレビューのボタンの並びだけを持つ。
+    BC2・Highriseに人や項目にホバーして開く小さなパネルは見つからなかった（highrise-contact-zoom-card-2011.png は
+    押して開く黒い大きなカードで、BC2のパネルの語彙と合わないので使わない）。
+  */
   .rx-hover-card {
     display: inline-flex;
     align-items: start;

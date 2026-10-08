@@ -1,7 +1,9 @@
 @layer components {
   /*
-    ダイヤル。ボタンと同じ縦の陰影の金属のつまみを置き、周りに目盛りの値を並べる。
-    値は左下から時計回りに右下まで、270度の弧に等しく並べる（3〜8個）。選んだ値は青い太字にし、つまみの針がその値へ回る。
+    ダイヤル。Basecamp 2・Highriseに手本は無い（推測）。つまみは控えめなボタン（実測: controls.md 1。平らな白、
+    1px #ccc、下に 1px #ddd の影）と同じ作りの丸にし、周りに目盛りの値を並べる。
+    値は左下から時計回りに右下まで、270度の弧に等しく並べる（3〜8個）。選んだ値は丸やピルで囲まず、
+    黒い太字にし（ユーザーの指定）、つまみの針がその値へ回る。
     実体はラジオボタンのグループで、ボタンそのものは非表示にして値の文字を押せる範囲にする。
   */
   .rx-dial {
@@ -29,13 +31,18 @@
       padding-block-end: var(--rx-space-2);
       font-weight: var(--rx-label-weight);
     }
-    /* 目盛りとつまみの位置は円の上の角度で決まり、書字方向に関係しないので、面の中は左から右に固定する。 */
+    /*
+      目盛りとつまみの位置は円の上の角度で決まり、書字方向に関係しないので、面の中は左から右に固定する。
+      弧は真上から左下・右下の45度までなので、面の高さは真上の目盛り（半径）と下端の目盛り（半径×cos45°）に、
+      目盛りの文字の高さの半分ずつを足した分にする。上下に余る空きをそろえ、見出し・単位との間を詰める。
+    */
     & > .face {
+      --rx-dial-center: calc(var(--rx-dial-radius) + 0.75rem);
       position: relative;
       direction: ltr;
       max-inline-size: 100%;
       inline-size: calc(var(--rx-dial-radius) * 2 + 3rem);
-      block-size: calc(var(--rx-dial-radius) * 2 + 1.5rem);
+      block-size: calc(var(--rx-dial-radius) * 1.7071 + 1.5rem);
       &:has(> .stop:nth-of-type(1) > input:checked) {
         --rx-dial-at: 0;
       }
@@ -69,18 +76,16 @@
         --rx-dial-i: 0;
         --rx-dial-angle: calc(-135deg + var(--rx-dial-i) * var(--rx-dial-step));
         position: absolute;
-        inset-block-start: 50%;
+        inset-block-start: var(--rx-dial-center);
         inset-inline-start: 50%;
         translate: calc(-50% + sin(var(--rx-dial-angle)) * var(--rx-dial-radius))
           calc(-50% - cos(var(--rx-dial-angle)) * var(--rx-dial-radius));
         padding-block: 0.125rem;
         padding-inline: 0.375rem;
-        border-radius: var(--rx-radius-pill);
         color: var(--rx-muted);
         font-variant-numeric: tabular-nums;
         white-space: nowrap;
         cursor: pointer;
-        transition: color var(--rx-duration) ease;
         & > input {
           position: absolute;
           inline-size: 0.0625rem;
@@ -92,34 +97,28 @@
         &:hover {
           color: var(--rx-text);
         }
+        /* 選んだ値は、ヘッダーの今いる項目と同じく黒い太字で示し、面で囲わない。 */
         &:has(> input:checked) {
-          color: var(--rx-link);
+          color: var(--rx-ink);
           font-weight: 700;
         }
         &:has(> input:focus-visible) {
-          outline: 0.125rem solid var(--rx-link);
+          outline: 0.125rem solid var(--rx-focus-border);
           outline-offset: 0.0625rem;
         }
       }
-      /* つまみ。ボタンと同じ縦の陰影に、金属の光を上に一筋だけ乗せ、カードの影で浮かせる。 */
+      /* つまみ。控えめなボタンと同じ平らな白、1px #ccc の枠、下に 1px #ddd の影。光沢は付けない。 */
       & > .knob {
         position: absolute;
-        inset-block-start: 50%;
+        inset-block-start: var(--rx-dial-center);
         inset-inline-start: 50%;
         inline-size: var(--rx-dial-size);
         block-size: var(--rx-dial-size);
         translate: -50% -50%;
+        border: var(--rx-stroke-width) solid var(--rx-control-border);
         border-radius: 50%;
-        background:
-          radial-gradient(circle at 50% 22%, rgb(255 255 255 / 85%), transparent 55%),
-          linear-gradient(
-            176deg,
-            var(--rx-surface),
-            color-mix(in srgb, var(--rx-ink) 16%, var(--rx-surface))
-          );
-        box-shadow:
-          inset 0 -0.125rem 0.25rem rgb(36 57 70 / 14%),
-          var(--rx-shadow-paper-lift);
+        background: var(--rx-surface);
+        box-shadow: var(--rx-shadow-control);
         /* 目盛りの刻み。つまみの縁の外に、値と同じ角度で短い線を引く。 */
         & > .tick {
           --rx-dial-i: 0;
@@ -146,7 +145,6 @@
           transform-origin: 50% 0;
           rotate: calc(-135deg + var(--rx-dial-at) * var(--rx-dial-step) + 180deg);
           translate: -50% 0;
-          transition: rotate calc(var(--rx-duration) * 2) cubic-bezier(0.3, 1.4, 0.5, 1);
         }
       }
     }
@@ -156,16 +154,19 @@
       font-weight: 700;
       line-height: var(--rx-small-leading);
     }
+    /* 使えないダイヤルは、Buttonと同じく形と塗りをそのままにし、文字だけを灰色にする。 */
     &:disabled {
-      opacity: 0.5;
+      color: var(--rx-disabled-text);
       & > .face > .stop {
-        cursor: not-allowed;
+        color: var(--rx-disabled-text);
+        cursor: default;
       }
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .rx-dial > .face > .knob > .pointer {
-      transition: none;
+      & > .face > .stop:has(> input:checked) {
+        color: var(--rx-disabled-text);
+      }
+      & > .unit {
+        color: var(--rx-disabled-text);
+      }
     }
   }
   @media (forced-colors: active) {

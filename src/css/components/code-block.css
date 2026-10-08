@@ -1,9 +1,15 @@
 @layer components {
   /*
     コードは名前とコピーをLayerCardの層の見出しに置き、層の上のカードに書く（層とカードの見た目はLayerCardが持つ）。
-    ここではコードの書き方だけを決める。ハイライト行は平らな淡い黄色の背景にし、行番号は余白に小さく書いてコピーには含めない。
+    ここではコードの書き方だけを決める。コードはCampfireの貼り付け（実測: 37signals-others/campfire-internal-chat-coding-paste-2007.png
+    (92, 114, 360, 50)。1倍）と同じく、灰色で塗らずに白い面へ等幅の11pxの文字で書く（手本は文字 #333333、行の間隔14px。
+    手本は上下に1px #666666 の点線を引くが、ここではLayerCardの見出しの帯とカードの縁が区切りになるので引かない）。
+    コードの書き始めは、層の見出しの題名の書き始め（LayerCardの左右の余白 --rx-layer-card-inline）にそろえる。上下の余白は16px。
+    ハイライト行は37signalsの黄色のハイライト（#ffffcc。lists.md「黄色のハイライトの正確な色」）で塗り、
+    行番号は余白に小さく書いてコピーには含めない。
   */
   .rx-code-block {
+    --rx-code-block-paper: var(--rx-surface);
     min-inline-size: 0;
     margin: 0;
     color: var(--rx-text);
@@ -20,9 +26,10 @@
       overflow: auto;
       margin: 0;
       padding-block: var(--rx-space-4);
-      padding-inline: var(--rx-space-5);
+      padding-inline: var(--rx-layer-card-inline);
       /* カードの角丸の中でスクロールさせ、ハイライト行の背景を角からはみ出させない。 */
       border-radius: inherit;
+      background: var(--rx-code-block-paper);
       font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
       font-size: var(--rx-small);
       line-height: var(--rx-leading);
@@ -43,7 +50,7 @@
         & > .line {
           display: block;
           &[data-highlighted="true"] {
-            background: color-mix(in srgb, var(--rx-mark) 45%, var(--rx-surface));
+            background: var(--rx-mark);
           }
         }
       }
@@ -58,7 +65,7 @@
       min-inline-size: 3ch;
       margin-inline-end: var(--rx-space-4);
       padding-inline-end: var(--rx-space-2);
-      background: var(--rx-surface);
+      background: var(--rx-code-block-paper);
       color: var(--rx-muted);
       text-align: end;
       user-select: none;
@@ -69,7 +76,7 @@
       > pre
       > code
       > .line[data-highlighted="true"]::before {
-      background: color-mix(in srgb, var(--rx-mark) 45%, var(--rx-surface));
+      background: var(--rx-mark);
     }
   }
   @media (forced-colors: active) {

@@ -73,7 +73,7 @@ const highlight = (text: string, query?: string): Child => {
 };
 
 /**
- * 題名・抜粋・補足を並べ、一致した語を淡い黄の背景で強調する。
+ * 題名・抜粋・補足を並べ、一致した語を黄色のハイライトで強調する。
  * 条件を追加する列はOptionalFieldsのstackで、ページの側に置く。
  */
 export const SearchResults = ({

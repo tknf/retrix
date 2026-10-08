@@ -1,4 +1,4 @@
-/* 進み具合の円を、割合の変化に合わせて滑らかに塗り足すため、数値として登録する。 */
+/* 進み具合の円の割合。未指定でも0として塗れるよう、数値として登録する。 */
 @property --rx-task-progress {
   syntax: "<number>";
   inherits: true;
@@ -6,9 +6,15 @@
 }
 @layer components {
   /*
-    やることの一覧。外側の見出しに開閉・名前と、塗りつぶしの円と「終えた数/全体」を置き、
-    その下の行を罫線で区切る。行の始まりにチェックを置き、終えたことはペンで引く線で消す。
-    最後の行は、項目を追加する欄。
+    やることの一覧。実測: lists.md「BC2 To-do（一覧の中の行）」。
+    - 行の間隔25px、罫線なし。チェックボックスはOSの標準の部品のまま。題名は15pxの黒、太さ400。チェックとの間7px。
+    - 担当者と期日（detail）は題名の後ろに続ける灰色のピル（高さ18px・角丸9px・12px）。
+    - 「Add a to-do」は青緑の15pxの文字で、題名の書き始めにそろえる。
+    外側の見出しの進み具合の円は手本に無い（推測）。
+    終えた項目: 実測 basecamp2-thirdparty/bc2-archived-project-todolist-getapp-2014.png (110, 240, 780, 570)。1倍。
+    - 一覧の中で終えた項目は、未完了の行（約15px）より一段小さい文字（約12px）で、題名も補足も #999999。取り消し線は引かない。
+    - 補足「(Completed by … on 17 Nov)」はピルにせず、題名に続けて同じ灰色の文字で書く。
+    - 実測 #999999 → #737373（白地とホバーの淡い黄色の上で4.5:1に届かないため、色合いを保って暗くした）。Retrixの段では --rx-label（12px）に当てる。
   */
   .rx-task-list {
     --rx-task-progress: 0;
@@ -40,7 +46,6 @@
         display: grid;
         place-items: center;
         color: var(--rx-muted);
-        transition: rotate var(--rx-duration) ease;
         & > .rx-icon {
           font-size: 0.75rem;
         }
@@ -59,7 +64,6 @@
           var(--rx-success) calc(var(--rx-task-progress) * 1turn),
           color-mix(in srgb, var(--rx-success) 16%, var(--rx-surface)) 0
         );
-        transition: --rx-task-progress var(--rx-duration) ease;
       }
       & > .count {
         margin-inline-start: calc(var(--rx-space-1) * -1);
@@ -76,7 +80,6 @@
         block-size: 0.625rem;
         background: var(--rx-surface);
         mask: url("../assets/check-bold.svg") center / contain no-repeat;
-        animation: rx-check-arrive calc(var(--rx-duration) * 1.5) ease-out;
       }
       & > .count {
         color: var(--rx-success);
@@ -88,25 +91,24 @@
     &:not([open]):dir(rtl) > summary > .marker {
       rotate: 90deg;
     }
-    /* 行の一覧。枠で囲まず、行の間と一覧の終わりに罫線を引く。 */
+    /* 行の一覧。枠で囲まず、罫線も引かずに行を詰めて並べる。 */
     & > .sheet {
       min-inline-size: 0;
       margin: 0;
       padding: 0;
-      border-block-end: var(--rx-stroke-width) solid var(--rx-border);
       list-style: none;
       & > li {
+        /* 末尾の内容（件数のピル・担当者など）は、BC2のピルと同じく題名のすぐ後ろ（6〜7px右）に置く。 */
         display: grid;
-        grid-template-columns: minmax(0, 1fr) fit-content(40%);
+        grid-template-columns: minmax(0, max-content) auto;
+        justify-content: start;
         align-items: center;
-        gap: var(--rx-space-4);
+        column-gap: 0.375rem;
         min-inline-size: 0;
-        border-block-start: var(--rx-stroke-width) solid var(--rx-border);
-        /* この一覧の名前は、最初の罫線の上に書く。 */
+        /* この一覧の名前は、最初の行の上に15pxの太字で書く（BC2のリスト名の大きさ。リンクではないので黒にする）。 */
         &.heading {
           display: block;
-          padding-block: 0 var(--rx-space-3);
-          border-block-start: 0;
+          padding-block: 0 var(--rx-space-1);
           & > .title {
             margin: 0;
             font-size: var(--rx-body);
@@ -114,48 +116,49 @@
             line-height: var(--rx-label-leading);
           }
         }
-        /* 行にホバーすると、DataListと同じ淡い青の面を行の幅いっぱいに出す。行のどこを押してもチェックが変わる。 */
+        /* 行にホバーすると、DataListと同じ淡い黄色の面を行の幅いっぱいに出す。行のどこを押してもチェックが変わる。 */
         &:not(.heading, .add):has(> .rx-choice > input:enabled):hover {
-          background: color-mix(in srgb, var(--rx-link) 4%, var(--rx-surface));
+          background: color-mix(in srgb, var(--rx-mark) 50%, var(--rx-surface));
         }
-        /* 追加する欄は、チェックの列に追加のアイコンを置き、題名と同じ位置から書く。入力中はアイコンを青い丸にする。 */
+        /*
+          追加する欄は、Basecamp 2の「Add a to-do」のように青緑の文字で書き、チェックの列に追加のアイコンを置く。
+          手本の下線はプレースホルダーに引けない（::placeholderはtext-decorationを描かない）ので付けない。
+          入力中はアイコンを青緑の丸にし、行を淡い青緑の面にする。
+        */
         &.add {
-          grid-template-columns: calc(var(--rx-body) * 9 / 7) minmax(0, 1fr);
-          column-gap: calc(var(--rx-body) / 2);
-          padding-block: var(--rx-space-2);
-          color: var(--rx-muted);
+          grid-template-columns: calc(10em / 7) minmax(0, 1fr);
+          column-gap: 0.5em;
+          padding-block: 0;
+          color: var(--rx-link);
           font-size: var(--rx-body);
           & > .plus {
             display: grid;
             place-items: center;
             justify-self: center;
-            inline-size: calc(var(--rx-body) * 9 / 7);
-            block-size: calc(var(--rx-body) * 9 / 7);
+            inline-size: calc(10em / 7);
+            block-size: calc(10em / 7);
             border-radius: 50%;
-            transition:
-              background-color var(--rx-duration) ease,
-              color var(--rx-duration) ease;
           }
           &:focus-within {
-            background: color-mix(in srgb, var(--rx-link) 6%, var(--rx-surface));
+            background: var(--rx-cover);
           }
           &:focus-within > .plus {
-            background: var(--rx-fill-menu);
+            background: var(--rx-teal);
             color: var(--rx-surface);
           }
           & > .entry {
             min-inline-size: 0;
-            min-block-size: 2.25rem;
+            min-block-size: calc(25em / 15);
             padding: 0;
             border: 0;
             background: transparent;
             color: var(--rx-text);
             font: inherit;
             &::placeholder {
-              color: var(--rx-muted);
+              color: var(--rx-link);
               opacity: 1;
             }
-            /* 入力中は、欄を四角で囲まず、青い丸のアイコンと行の淡い青の面で示す。 */
+            /* 入力中は、欄を四角で囲まず、青緑の丸のアイコンと行の淡い青緑の面で示す。 */
             &:focus-visible {
               outline: 0;
             }
@@ -165,50 +168,49 @@
           display: flex;
           flex-wrap: wrap;
           align-items: center;
-          gap: var(--rx-space-2);
+          gap: 0.25rem;
           color: var(--rx-muted);
           font-size: var(--rx-small);
         }
-        /* 項目の題名は一覧の題名の大きさにする。チェックの四角も文字に合わせて大きくなる。 */
+        /* 項目の題名は15px。行の高さ21.4pxに上下2pxずつ足して、行の間隔を25pxにする。 */
         & > .rx-choice {
-          padding-block: var(--rx-space-3);
+          padding-block: 0.125rem;
           font-size: var(--rx-body);
-          /* 完了のマークは、見出しの進み具合の円と同じ緑で塗る。 */
-          & > input:checked {
-            border-color: var(--rx-success);
-            background: var(--rx-fill-success);
-          }
-          & > input:checked::before {
-            animation: rx-check-arrive calc(var(--rx-duration) * 1.5) ease-out;
-          }
           & > span {
             min-inline-size: 0;
             overflow-wrap: anywhere;
           }
-          /*
-            終えたことは、ペンで引く線で消す。線は書き始めの側から伸ばし、折り返した題名は一行目から順に引く。
-            （背景は折り返した行をつないだ一本の帯として描かれるので、幅を伸ばすと行の順に引ける。）
-          */
+          /* 題名は通常の太さの黒。 */
           & > span > strong {
-            /* 線を文字の長さで止めるため、題名だけインラインにする（説明はブロックなので次の行に置かれる）。 */
             display: inline;
-            background: linear-gradient(
-                color-mix(in srgb, var(--rx-ink) 70%, transparent),
-                color-mix(in srgb, var(--rx-ink) 70%, transparent)
-              )
-              0 55% / 0 calc(var(--rx-stroke-width) * 1.5) no-repeat;
-            /* 項目の題名は、他の一覧の題名と同じ太さにする。 */
-            font-weight: 600;
-            transition:
-              background-size calc(var(--rx-duration) * 2.5) ease-out,
-              color var(--rx-duration) ease;
-            &:dir(rtl) {
-              background-position: 100% 55%;
-            }
+            color: var(--rx-ink);
+            font-weight: 400;
           }
-          & > input:checked + span > strong {
-            background-size: 100% calc(var(--rx-stroke-width) * 1.5);
-            color: var(--rx-muted);
+          /* 担当者と期日は、題名の後ろに続ける灰色のピル（#eeeeee の地に灰色の12px。実測の文字 #777 は4.5:1に届かないので --rx-pill-meta-text）。 */
+          & > span > small {
+            display: inline-block;
+            margin-block-start: 0;
+            margin-inline-start: 0.375rem;
+            padding-inline: 0.5625rem;
+            border-radius: var(--rx-radius-pill);
+            background: var(--rx-pill-meta);
+            color: var(--rx-pill-meta-text);
+            font-size: var(--rx-small);
+            line-height: 1.125rem;
+            vertical-align: 0.0625rem;
+          }
+          /* 終えた項目は一段小さい灰色の文字にし、補足もピルを外して同じ灰色で続ける。 */
+          & > input:checked + span {
+            --rx-task-done: #737373;
+            font-size: var(--rx-label);
+            & > strong {
+              color: var(--rx-task-done);
+            }
+            & > small {
+              padding-inline: 0;
+              background: none;
+              color: var(--rx-task-done);
+            }
           }
         }
       }
@@ -219,8 +221,8 @@
       grid-template-columns: minmax(0, 1fr);
       gap: 0;
       & > .end {
-        padding-inline-start: calc(var(--rx-body) * 9 / 7 + var(--rx-body) / 2);
-        padding-block-end: var(--rx-space-3);
+        padding-inline-start: calc(var(--rx-body) * 10 / 7 + var(--rx-body) / 2);
+        padding-block-end: var(--rx-space-1);
       }
     }
   }
@@ -229,37 +231,16 @@
       min-block-size: 2.75rem;
     }
   }
-  @media (prefers-reduced-motion: reduce) {
-    .rx-task-list > .sheet > li > .rx-choice > input:checked::before,
-    .rx-task-list[data-complete="true"] > summary > .pie::before {
-      animation: none;
-    }
-    .rx-task-list > .sheet > li > .rx-choice > span > strong {
-      transition: none;
-    }
-  }
-  /* 強制カラーでは背景の線が消えるため、終えた題名は取り消し線で示す。 */
   @media (forced-colors: active) {
     .rx-task-list > .sheet > li.add:focus-within {
       outline: 0.125rem solid Highlight;
       outline-offset: -0.125rem;
     }
-    .rx-task-list > .sheet > li > .rx-choice > input:checked + span > strong {
-      text-decoration: line-through;
+    .rx-task-list > .sheet > li > .rx-choice > span > small {
+      border: var(--rx-stroke-width) solid CanvasText;
     }
     .rx-task-list > summary > .pie {
       border: var(--rx-stroke-width) solid CanvasText;
-    }
-  }
-  @keyframes rx-check-arrive {
-    0% {
-      transform: scale(0.6);
-    }
-    65% {
-      transform: scale(1.15);
-    }
-    100% {
-      transform: scale(1);
     }
   }
 }

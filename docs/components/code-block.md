@@ -11,11 +11,11 @@
 
 ## 使い方
 
-`code` と `label` を渡します。名前とコピーの操作は `LayerCard` の層の見出しの行に、コードは層の上のカードに置きます。
+`code` と `label` を渡します。名前とコピーの操作は `LayerCard` の層の見出しの行に、コードは層の上のカードの中の白い面に、見出しの題名と同じ書き始めで、等幅の11pxの文字で書きます。
 
 `tokens` に色分けした区切りを渡すと着色します。改行も含めて、全ての `content` をつないだ文字列を `code` と一致させます。一致しない時は着色せずに元の `code` を書きます。ライブラリは整形器やハイライターを持たないので、`tokens` は利用側で作ります（見本はサーバー側でShikiの `codeToTokens` を使います）。`tokens` もHTMLも、文字としてエスケープして書きます。
 
-`lineNumbers` で行の頭に番号を振り、`highlight` に1から数えた行の番号を渡すと、その行を淡い黄色の背景で強調します。行番号はコピーする内容に含めません。
+`lineNumbers` で行の頭に番号を振り、`highlight` に1から数えた行の番号を渡すと、その行を黄色のハイライト（`#ffffcc`）で強調します。行番号はコピーする内容に含めません。
 
 長い行は横に、高さが28remを超えるコードは縦に、コード領域の中でスクロールします。右から左に読むページでも、コードは左から右に書きます。
 
@@ -57,13 +57,13 @@ JavaScriptがない時はコピーの操作を出さず、コードは読めま�
 | `tokens`        | `readonly CodeToken[]` |         | 着色した区切りの並び。全てのcontentをつないだ文字列がcodeと一致する時だけ使い、一致しなければ着色せずにcodeを書く。ハイライトは利用側で行う（Shikiの結果などを渡す）。                                                                             |
 | `copy`          | `boolean`              | `false` | 見出しの行にコピーの操作を置く。クリップボードに書き込める環境でだけ表示し、結果をToastで知らせる。成功はrole="status"の成功の色、失敗はrole="alert"の危険の色で知らせる。 ClipboardController・CodeBlockController・ToastControllerの登録が要る。 |
 | `lineNumbers`   | `boolean`              | `false` | 行の先頭に番号を振る。番号はコピーする内容に含めない。                                                                                                                                                                                             |
-| `highlight`     | `readonly number[]`    |         | 淡い黄色の地で目印にする行（1から数える）。                                                                                                                                                                                                        |
+| `highlight`     | `readonly number[]`    |         | 黄色のハイライトで目印にする行（1から数える）。                                                                                                                                                                                                    |
 
 ほかに、`<figure>`へ標準のHTML属性を渡せます。
 
 登録するcontroller：`clipboard`（`ClipboardController`）、`code-block`（`CodeBlockController`）、`toast`（`ToastController`）
 
-読み込むCSS：`layers.css`、`reset.css`、`tokens.css`、`base.css`、`layout.css`、`components/button.css`、`components/overlay.css`、`components/icon.css`、`components/layer-card.css`、`components/toast.css`、`components/code-block.css`
+読み込むCSS：`layers.css`、`reset.css`、`tokens.css`、`base.css`、`layout.css`、`components/section.css`、`components/button.css`、`components/overlay.css`、`components/icon.css`、`components/layer-card.css`、`components/toast.css`、`components/code-block.css`
 
 #### `CodeToken`
 

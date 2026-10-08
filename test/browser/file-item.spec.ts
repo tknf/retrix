@@ -1,6 +1,8 @@
 import { expect, test } from "@playwright/test";
 
-test("FileItemは広い幅でもアイコンとサムネイルを同じ40pxの正方形の列に収める", async ({ page }) => {
+test("FileItemは広い幅でもアイコンとサムネイルの高さを40pxにそろえ、本文の書き始めをそろえる", async ({
+  page,
+}) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto("/components/file-item");
   const items = page.locator('[data-example="hono"] .rx-file-item');
@@ -15,6 +17,7 @@ test("FileItemは広い幅でもアイコンとサムネイルを同じ40pxの�
         rootFontSize = Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
       return {
         wide: element.getBoundingClientRect().width >= 26 * rootFontSize,
+        preview: mark.classList.contains("preview"),
         width: m.width,
         height: m.height,
         gap: b.left - m.right,
@@ -24,7 +27,8 @@ test("FileItemは広い幅でもアイコンとサムネイルを同じ40pxの�
   );
   expect(boxes.some((box) => box.wide)).toBe(true);
   for (const box of boxes) {
-    expect(box.width).toBeCloseTo(40, 0);
+    // サムネイルは40pxの正方形、ファイルのアイコンは書類の形の縦長（32×40px）。
+    expect(box.width).toBeCloseTo(box.preview ? 40 : 32, 0);
     expect(box.height).toBeCloseTo(40, 0);
     expect(box.gap).toBeGreaterThan(0);
   }

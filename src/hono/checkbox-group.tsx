@@ -6,7 +6,7 @@ export type CheckboxGroupOption = {
   value: string;
   /** 選択肢の名前。 */
   label: string;
-  /** 名前の下に添える淡い説明。 */
+  /** 名前の下に添える灰色の小さな説明。 */
   description?: string;
   /** 使えなくする。全て選択でも切り替えない。 */
   disabled?: boolean;

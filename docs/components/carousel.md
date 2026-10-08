@@ -11,13 +11,13 @@
 
 ## 使い方
 
-`slides` に一枚ずつ `title` と `content` を渡します。各スライドは `Card` として描き、`preview`・`eyebrow`・`footer`・`href` はCardの同じ名前の欄に渡ります。見出しの上には「1 / 3」のように位置を書きます。
+`slides` に一枚ずつ `title` と `content` を渡します。各スライドは `Card` として描き、`preview`・`eyebrow`・`footer`・`href` はCardの同じ名前の欄に渡ります。見出しの上には「1 / 3」のように位置を茶色の小さな文字で書きます。
 
 スライドが2件以上ある時だけ前後の操作を置きます。`CarouselController` を `carousel` として登録すると前後へ移れ、最後と最初はつながります。1件では操作を置かず、0件では「表示する項目はありません」の空状態を示します。
 
 `interval` に正のミリ秒を渡すと「自動再生」の操作を置きます。自動送りは利用者がこの操作を押した時だけ始まり、「一時停止」を押すか、中へフォーカスが入ると止まります。
 
-スライドは同じ場所に重ね、枠の高さを一番高いスライドにそろえるので、切り替えても下の内容は動きません。新しいスライドは少し横から滑りながら現れます。前後の丸いボタンはカードの左右の端をまたいで重なり、配置先の幅が27rem未満ではカードの下に並びます。
+スライドは同じ場所に重ね、枠の高さを一番高いスライドにそろえるので、切り替えても下の内容は動きません。切り替えは動きを付けずにその場で入れ替えます。前後の操作はアイコンだけの控えめな`Button`（22pxの正方形、角丸5px）で、カードに重ねずにカードの下の一列の先頭側に8px空けて並べ、「自動再生」は同じ列の末尾側に置きます。
 
 JavaScriptがない時は `initialIndex` のスライドだけを表示し、前後の操作は働きません。
 
@@ -59,7 +59,7 @@ JavaScriptがない時は `initialIndex` のスライドだけを表示し、前
 
 登録するcontroller：`carousel`（`CarouselController`）
 
-読み込むCSS：`layers.css`、`reset.css`、`tokens.css`、`base.css`、`layout.css`、`components/button.css`、`components/empty-state.css`、`components/carousel.css`、`components/icon.css`、`components/card.css`
+読み込むCSS：`layers.css`、`reset.css`、`tokens.css`、`base.css`、`layout.css`、`components/section.css`、`components/button.css`、`components/empty-state.css`、`components/carousel.css`、`components/icon.css`、`components/card.css`
 
 #### `CarouselSlide`
 

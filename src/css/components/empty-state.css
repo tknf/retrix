@@ -1,18 +1,25 @@
 @layer components {
   /*
-    まだ何もない場所。中央に破線の枠を置き、太字の題名と説明を書く。
-    破線は「ここに入る・置ける」ことを表すので、これから内容が入る場所を示す。枠と文字は場面の色にする
-    （検索で0件は灰、初回は青、完了時は緑）。操作は枠の下に置く。
+    まだ何もない場所。実測: overlays.md「4f. 空の状態の案内」のHighrise 2007（Contactsの空の一覧）。
+    一覧の場所に黄色の帯（#feffcd 前後 ≒ #ffffcc）を細い枠で敷き、中央に大きな太字の題名「Build your contacts: Add a person」と、
+    その下に小さな黒い説明を書く。角は四角。
+    実測: highrise/highrise-contacts-empty-state-2007-genbeta.webp (13, 82, 270, 28)。縮小したJPEG相当の画像なので概略。
+    帯の塗り #feffcd 前後、上の縁 #e9ead6（黄色みのある淡い灰色）。題名の大きさと余白は推測。
+    BC2には空の状態の部品が見つからなかった。
+    アイコンを渡した時だけ、場面の色（検索で0件は灰、初回は青緑、完了時は緑）の小さな丸に置く（推測）。操作は文の下に置く。
   */
   .rx-empty-state {
     --rx-empty-color: var(--rx-muted);
+    --rx-empty-edge: #e9ead6;
     display: grid;
     justify-items: center;
-    gap: var(--rx-space-5);
+    gap: var(--rx-space-3);
     min-inline-size: 0;
     inline-size: 100%;
-    padding-block: var(--rx-space-8);
+    padding-block: var(--rx-space-4);
     padding-inline: var(--rx-space-4);
+    border: var(--rx-stroke-width) solid var(--rx-empty-edge);
+    background: var(--rx-mark);
     color: var(--rx-text);
     font-size: var(--rx-label);
     line-height: var(--rx-label-leading);
@@ -26,18 +33,12 @@
     &[data-kind="complete"] {
       --rx-empty-color: var(--rx-success);
     }
-    /* 枠。場面の色の2pxの破線と、ごく淡い同じ色の面。 */
+    /* 文のまとまり。読みやすい幅に収める。 */
     & > .slip {
       display: grid;
       justify-items: center;
       min-inline-size: 0;
       max-inline-size: min(100%, 28rem);
-      padding-block: var(--rx-space-5);
-      padding-inline: var(--rx-space-6);
-      border: var(--rx-frame-width) dashed
-        color-mix(in srgb, var(--rx-empty-color) 35%, var(--rx-surface));
-      border-radius: var(--rx-radius-field);
-      background: color-mix(in srgb, var(--rx-empty-color) 5%, var(--rx-surface));
       & > .symbol {
         display: grid;
         place-items: center;
@@ -52,16 +53,16 @@
       }
       & > .title {
         margin: 0;
-        color: color-mix(in srgb, var(--rx-empty-color) 70%, var(--rx-text));
-        font-size: var(--rx-body);
+        color: var(--rx-text);
+        font-size: var(--rx-section-title);
         font-weight: 700;
-        line-height: 1.5;
+        line-height: 1.3;
         text-wrap: balance;
       }
       & > .body {
         min-inline-size: 0;
         margin-block-start: var(--rx-space-1);
-        color: var(--rx-muted);
+        color: var(--rx-text);
         text-wrap: balance;
         & > * + * {
           margin-block-start: var(--rx-space-1);
@@ -75,39 +76,20 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: var(--rx-space-3);
+      gap: var(--rx-space-2);
     }
-    /* 渡されたアイコンは、場面の色で塗った丸の上に白で置く。完了時は完了の色で、ペンでチェックを描く。 */
+    /* 渡されたアイコンは、場面の色で塗った丸の上に白で置く。完了時は完了の色で塗る。 */
     &:not([data-kind="complete"]) > .slip > .symbol {
       background: var(--rx-empty-color);
     }
     &[data-kind="complete"] > .slip > .symbol {
-      --rx-empty-state-pen-start: inset(0 100% 0 0);
       background: var(--rx-fill-success);
-      &:dir(rtl) {
-        --rx-empty-state-pen-start: inset(0 0 0 100%);
-      }
-      & > .rx-icon {
-        animation: rx-empty-state-write 0.6s ease-out 0.2s both;
-      }
-    }
-  }
-  @keyframes rx-empty-state-write {
-    from {
-      clip-path: var(--rx-empty-state-pen-start);
-    }
-    to {
-      clip-path: inset(0);
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .rx-empty-state[data-kind="complete"] > .slip > .symbol > .rx-icon {
-      animation: none;
     }
   }
   @media (forced-colors: active) {
-    .rx-empty-state > .slip {
+    .rx-empty-state {
       border-color: CanvasText;
+      background: Canvas;
     }
     .rx-empty-state > .slip > .symbol {
       outline: var(--rx-stroke-width) solid CanvasText;

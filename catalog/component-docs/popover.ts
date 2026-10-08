@@ -12,9 +12,9 @@ export default {
     "補助の操作を並べるだけなら `DropdownMenu` を使います。",
   ],
   usage: [
-    '標準のPopover API（`popover="auto"`）で開閉する、モーダルでない白いパネルです。開く操作とパネルはCSSのアンカーで結び、開く操作の下に揃えて置きます。`id` は画面内で一意にします。',
+    '標準のPopover API（`popover="auto"`）で開閉する、モーダルでない白いパネル（1px `#bbbbbb` の枠、角丸5px、外へ約8pxの柔らかい影）です。開く操作とパネルはCSSのアンカーで結び、開く操作の下に揃えて置きます。`id` は画面内で一意にします。',
     "`PopoverController` を `popover` として登録すると、CSSのアンカーに対応しない環境や、パネルが画面に収まらない時に位置を補い、画面の端から8pxの内側に収めます。スクロールと画面の大きさの変化にも追従します。",
-    "パネルは見出し・本文・操作欄に分けます。`title` を省略すると `label` を見出しにし、`titleHidden` で見出しを読み上げだけに残せます。`description` は見出しの下の説明、`actions` は下の操作欄です。`size` はパネルの幅の上限で、`compact` は16rem、`default` は20rem、`wide` は28remです。",
+    "パネルは見出し・本文・操作欄に分けます。`title` を省略すると `label` を見出しにし、`titleHidden` で見出しを読み上げだけに残せます。見出しは12pxの黒い太字、`description` は見出しの下の灰色の説明、`actions` は下の操作欄です。見出しの行の末尾の角には、枠も面も持たない灰色の×を閉じる操作として置きます。`size` はパネルの幅の上限で、`compact` は16rem、`default` は20rem、`wide` は28remです。",
     '`align` の `end` は、行の末尾側に置いた開く操作に揃えます。`dir="rtl"` では始端と末端が入れ替わります。',
     "開く操作は `icon`・`iconOnly`・`disabled`・`triggerVariant` で変えられます。`iconOnly` の開く操作には `tooltip` で名前を出せます。",
     "開くと見出しへフォーカスを移します。`initialFocus` を `content` にすると、本文の `autofocus` の欄へ移ります。パネルの外側を押す・Escape・閉じる操作で閉じます。パネルの中に別の `Popover` を開いても、元のパネルは開いたままです。",

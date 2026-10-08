@@ -1,8 +1,13 @@
 @layer components {
   /*
-    開始と終了の日時。二つを淡い面の一つの枠に並べ、間を矢印でつなぐ。
-    どちらも上に淡い小さな名前、その下に日付と時刻の欄を積む。終日にすると時刻の欄を隠す。
-    狭い場所では開始と終了を縦に積み、矢印を下向きにする。
+    開始と終了の日時。BC2のカレンダーの予定のパネルの「Starts: / Ends:」（実測:
+    screenshots/basecamp2-official/bc2-help-add-and-edit-events-02.png (34, 139, 280, 48)。1倍）に合わせる。
+    枠も面も持たず、先頭側に右寄せの黒い名前（「Starts:」は黒の通常の太さ、約13px）を置き、その後ろに日付の欄、
+    続けて時刻の欄を一行に並べる（日付と時刻を一行に並べる形: bc2-svn-3148-radio-buttons.png (150, 127, 260, 24)。
+    日付の欄は幅180px、時刻の欄は「any time」の64px、間に約4px）。開始と終了は縦に積み、名前の列の幅をそろえる。
+    名前から欄までは手本の約11pxを段の8pxに、行の間は手本の約5pxを8pxに丸める（段の中の間と本文の段の間を同じにする）。
+    欄そのものはInput（field.css。実測: controls.md 6a）のまま。終日にすると時刻の欄を隠す。
+    つなぎの矢印は、縦に積む並びでは要らないので出さない。狭い場所では時刻の欄を日付の欄の下へ回す。
   */
   .rx-date-time-range {
     container: rx-date-time-range / inline-size;
@@ -22,22 +27,24 @@
     }
     & > .range {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-      align-items: center;
-      gap: var(--rx-space-3);
-      padding-block: var(--rx-space-4);
-      padding-inline: var(--rx-space-4);
-      border-radius: var(--rx-radius-field);
-      background: var(--rx-background);
+      grid-template-columns: auto minmax(0, 12rem) minmax(0, 9rem);
+      /* 列を内容の幅のまま先頭側に寄せ、余った幅を名前の列へ配らない。 */
+      justify-content: start;
+      gap: var(--rx-space-2);
+      min-inline-size: 0;
       & > .point {
         display: grid;
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+        align-items: center;
         gap: var(--rx-space-2);
         min-inline-size: 0;
         & > .caption {
-          color: var(--rx-muted);
-          font-size: var(--rx-small);
-          font-weight: 600;
-          line-height: var(--rx-small-leading);
+          color: var(--rx-text);
+          font-size: var(--rx-label);
+          font-weight: 400;
+          line-height: var(--rx-label-leading);
+          text-align: end;
         }
         & > .time {
           display: block;
@@ -45,21 +52,13 @@
         }
       }
       & > .arrow {
-        display: grid;
-        place-items: center;
-        color: var(--rx-muted);
-        font-size: 1.25rem;
-        /* 詳細度を上げず、狭い幅の下向き（後のコンテナクエリ）が右から左でも勝つようにする。 */
-        &:where(:dir(rtl)) {
-          rotate: 180deg;
-        }
+        display: none;
       }
     }
     & > .options {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      justify-content: space-between;
       gap: var(--rx-space-2) var(--rx-space-4);
       & > .timezone {
         display: inline-flex;
@@ -73,12 +72,16 @@
       display: none;
     }
   }
+  /*
+    狭い場所では、時刻の欄を日付の欄の下に回し、欄を名前の後ろの幅いっぱいにする。
+    開始と終了の間は、一つの日時の中の日付と時刻の間（8px）より広い12pxにする。
+  */
   @container rx-date-time-range (inline-size < 26rem) {
     .rx-date-time-range > .range {
-      grid-template-columns: minmax(0, 1fr);
-      & > .arrow {
-        rotate: 90deg;
-        justify-self: start;
+      grid-template-columns: auto minmax(0, 1fr);
+      row-gap: var(--rx-space-3);
+      & > .point > .time {
+        grid-column: 2;
       }
     }
   }

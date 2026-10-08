@@ -1,7 +1,9 @@
 @layer components {
   /*
-    一つ上の場所へ戻るだけのピル。淡い青の面に左向きのアイコンと太字の名前を置く（filled）。
-    ESCのショートカットキーの表示を添えられ、面を持たない太字の文字だけにもできる（plain）。
+    一つ上の場所へ戻るだけのリンク。戻る向きのアイコンに、下線付きの青緑の名前を続ける（filled）。ホバーで赤茶。
+    リンクの色と1pxの下線は structure.md「文字 / 下線」の実測（#1c5c77）。大きさはパンくずの地の文と同じ13px（overlays.md「5b」）。
+    控えめな形（plain）は灰色の文字で下線を引かず、ホバーした時だけ赤茶の下線を出す（推測。手本に無い）。
+    ショートカットキーの表示を添えられる。
   */
   .rx-back-link {
     display: inline-flex;
@@ -9,23 +11,16 @@
     gap: var(--rx-space-1);
     inline-size: fit-content;
     max-inline-size: 100%;
-    min-block-size: 2rem;
-    padding-block: 0.25rem;
-    padding-inline: 0.5rem 0.875rem;
-    border-radius: var(--rx-radius-pill);
-    background: var(--rx-cover);
-    color: var(--rx-text);
+    min-block-size: var(--rx-control-compact);
+    color: var(--rx-link);
     font-family: var(--rx-control-font-family);
     font-size: var(--rx-label);
-    font-weight: 700;
+    font-weight: 400;
     line-height: var(--rx-label-leading);
     text-decoration: none;
-    transition:
-      background-color var(--rx-duration) ease,
-      color var(--rx-duration) ease;
     & > .rx-icon {
       flex: none;
-      font-size: 1rem;
+      font-size: 0.875rem;
     }
     &:dir(rtl) > .rx-icon {
       rotate: 180deg;
@@ -35,29 +30,31 @@
       overflow-wrap: anywhere;
       /* 日本語は文節の切れ目で折り返し、行末に一、二文字だけを残さない。 */
       word-break: auto-phrase;
+      text-decoration-line: underline;
+      text-decoration-thickness: var(--rx-stroke-width);
+      text-underline-offset: 0.15em;
     }
     & > .rx-keycap {
       margin-inline-start: var(--rx-space-1);
     }
     &:hover {
-      background: color-mix(in srgb, var(--rx-link) 16%, var(--rx-surface));
+      color: var(--rx-link-hover);
     }
     &:focus-visible {
-      outline: 0.125rem solid var(--rx-link);
+      outline: 0.125rem solid var(--rx-blue);
       outline-offset: 0.125rem;
     }
     &[data-tone="plain"] {
-      padding-inline: 0.25rem;
-      background: transparent;
-      &:hover {
-        background: transparent;
-        color: var(--rx-link);
+      color: var(--rx-muted);
+      & > .label {
+        text-decoration-line: none;
       }
-    }
-  }
-  @media (forced-colors: active) {
-    .rx-back-link {
-      border: var(--rx-stroke-width) solid CanvasText;
+      &:hover {
+        color: var(--rx-link-hover);
+        & > .label {
+          text-decoration-line: underline;
+        }
+      }
     }
   }
 }

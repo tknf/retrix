@@ -10,15 +10,15 @@
     }
   }
 
+  /*
+    候補の一覧と選んでいる候補の見た目は、Pickerと同じComboboxの共通の指定（field.css）を使う。
+    手本はBC2のラベルの候補（screenshots/basecamp2-official/bc2-help-file-labels-02.png、1倍）とジャンプの候補（overlays.md 1f）。
+    開閉の操作が使えない時は、他の使えない操作と同じく形をそのままにし、▾だけを使えない操作の灰色にする。
+  */
   .rx-suggestion {
-    & > .options > li:hover:not([data-state="active"]) {
-      background: var(--rx-info-soft);
-      color: var(--rx-link);
-    }
-
     & > .toggle:disabled {
-      color: var(--rx-muted);
-      cursor: not-allowed;
+      color: var(--rx-disabled-text);
+      cursor: default;
     }
   }
 

@@ -101,6 +101,14 @@ vp run preview
 
 `dist/hono`・`dist/controllers`・`dist/css`・`dist/icons.svg`がライブラリ、`dist/catalog`が静的なカタログです。配布するCSSとカタログは同じファイルを使います。
 
+### カタログを確認用のURLに公開する
+
+```sh
+vp run catalog:deploy
+```
+
+`vp run build`でカタログを書き出し、カタログ専用のWorker（`catalog/wrangler.jsonc`）として、tknfのアカウントの`retrix-catalog-preview`に公開します（https://retrix-catalog-preview.tknf.workers.dev）。静的ファイルだけを配信し、サーバーの処理は持ちません。公開には`wrangler login`でtknfのアカウントに入っている必要があります。
+
 アイコンを追加する場合は`src/internal/icon-manifest.json`に加え、`vp run icons:build`でスプライト・CSS用のSVG・`IconName`型を生成し直します。
 
 ## 操作コンポーネントの文字位置
@@ -124,7 +132,7 @@ CSSの行ボックスが枠の中央にあっても、字形の見た目の中�
 - 太さ400と600〜900を別のローカル書体へ対応付けます。InputとInputGroupは太さ400を持ち、親の太字を継承しません。
 - フォントのダウンロードは行いません。該当する書体が無い環境はシステムフォントへフォールバックします。
 - 本文用の`--rx-font`はHiragino優先のままです。
-- Buttonの文字は通常14px・largeは16pxです。largeの文字を大きくすると中心が1px下へずれるため、この大きさを保ちます。
+- Buttonの文字は通常12px（`--rx-button-font`）・行高17pxで高さ22px、largeは14px・行高20pxで高さ32pxです。枠を除いた内側の高さと文字の大きさの差を偶数にし、文字の上下の余りを整数pxに保っています（22 − 2 − 12 = 8、32 − 2 − 14 = 16）。どちらかを変える時は、この差が偶数のままになるようにします。
 
 ### 検査
 

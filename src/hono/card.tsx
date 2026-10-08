@@ -7,7 +7,7 @@ export type CardProps = PropsWithChildren<
     title: string;
     /** 見出しをリンクにする移動先。リンクは見出しだけに付け、カード全体や本文の操作には広げない。 */
     href?: string;
-    /** 本文の下に添えるメタ情報（担当者・日付など）や操作。footerとして描き、並べた子は縦の罫線で区切る。`class="end"`の子は末尾側へ寄せる。 */
+    /** 本文の下に添えるメタ情報（担当者・日付など）や操作。footerとして描き、並べた子の間は点（·）で区切る。`class="end"`の子は末尾側へ寄せる。 */
     footer?: Child;
     /** 見出しの上に置く画像や図。角を丸めて切り取り、imgとsvgは幅いっぱいに広げる。 */
     preview?: Child;

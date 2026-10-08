@@ -6,7 +6,8 @@ const requiredButton = new Map([
   ["font-family", "var(--rx-control-font-family)"],
   ["font-size", "var(--rx-button-font)"],
   ["font-weight", "400"],
-  ["line-height", "calc(10 / 7)"],
+  // 12pxの文字で行高17px。行の高さを整数pxにし、並べた時のボタンの位置に端数を作らない。
+  ["line-height", "calc(17 / 12)"],
   ["min-block-size", "var(--rx-button-size)"],
   ["padding-block", "0"],
   ["align-items", "center"],
@@ -162,9 +163,18 @@ export const controlTextErrors = (root, path) => {
         const large = selector.includes('[data-size="large"]');
         if (
           large &&
-          ((prop === "font-size" && value === "calc(var(--rx-button-font) * 8 / 7)") ||
-            (prop === "line-height" && value === "var(--rx-control-leading)") ||
+          // largeは12pxの文字を14pxにする。高さ32pxの内側（30px）との差を偶数にし、文字の上下の余りを整数pxに保つ。
+          ((prop === "font-size" && value === "calc(var(--rx-button-font) * 7 / 6)") ||
+            // largeは14pxの文字で行高20px（高さ32pxの内側30pxとの差が偶数）。
+            (prop === "line-height" && value === "calc(10 / 7)") ||
             (prop === "min-block-size" && value === "var(--rx-button-large)"))
+        )
+          continue;
+        // 主操作はBasecamp 2の実測（「Start the project」）と同じく太字にする。太さは字形の上下の位置を変えない。
+        if (
+          selector.includes('[data-variant="primary"]') &&
+          prop === "font-weight" &&
+          value === "700"
         )
           continue;
       }

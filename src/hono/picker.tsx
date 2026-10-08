@@ -29,7 +29,7 @@ export type PickerProps = {
   required?: boolean;
   /** 標準selectと検索欄を使えなくする。 */
   disabled?: boolean;
-  /** 欄の下に出す淡い補足。説明として読み上げる。 */
+  /** 欄の下に出す灰色の小さな補足。説明として読み上げる。 */
   help?: string;
   /** 直す所を書くエラー文。欄をaria-invalidにし、説明として読み上げる。 */
   error?: string;

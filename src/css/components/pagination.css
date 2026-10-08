@@ -1,53 +1,73 @@
 @layer components {
+  /*
+    ページ送り。実測: overlays.md「5a. ページ送り（Highrise「First / Page 1 / Next →」）」。
+    highrise-contacts-index-redesign-2011.jpg (212, 913, 143, 25)。1倍。
+    - 押せる送りは丸薬形（両端が完全に丸い）、高さ約24px（「Next →」は y 913〜936）。
+    - 枠は上 #dddddd・横 #cecece・下 #b8b8b8（下ほど濃い）。下に1pxの淡い影（y 937 の #dfdfdf〜#e1e1e1）。
+    - 塗りは上の約35%が白で、そこから下の枠の手前の #e5e5e5〜#e7e7e7 へ明るさだけが下がる縦のグラデーション（x 345 の縦の列）。
+    - 文字は黒の太字。送りの文字の左右は枠から約13px。
+    - 送りと「Page 1」の文字の間は4〜7px。
+    - 使えない送り（「First」）は形・枠・塗りをそのままにし、文字だけを灰色にする（--rx-disabled-text）。
+    - 今のページ（「Page 1」）は丸薬形にせず、送りの間に置く黒の太字。
+    文字は手本の約11pxを日本語が読める12pxにし、枠を除いた内側の高さとの差を偶数に保つ（24 − 2 − 12 = 10）。
+  */
   .rx-pagination {
+    --rx-pagination-edge-top: #dddddd;
+    --rx-pagination-edge-side: #cecece;
+    --rx-pagination-edge-bottom: #b8b8b8;
+    --rx-pagination-fill: linear-gradient(var(--rx-surface) 35%, #e7e7e7);
+    /* ホバーと押した時の塗りは手本に無い（推測）。ホバーは一段灰色に寄せ、押すと上下を反転する。 */
+    --rx-pagination-fill-hover: linear-gradient(#fafafa 35%, #dddddd);
+    --rx-pagination-fill-pressed: linear-gradient(#e2e2e2, #f4f4f4);
+    --rx-pagination-shadow: 0 var(--rx-stroke-width) 0 #dfdfdf;
     font-family: var(--rx-control-font-family);
-    font-size: var(--rx-label);
-    line-height: var(--rx-label-leading);
+    font-size: var(--rx-small);
+    font-weight: 700;
+    line-height: calc(4 / 3);
     & > ul {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: var(--rx-space-1);
+      gap: var(--rx-space-2);
       padding: 0;
       list-style: none;
     }
-    /* 番号のピルはButtonと同じ高さ36px。 */
     & > ul > li > :is(a, span) {
       display: inline-grid;
       place-items: center;
-      min-inline-size: var(--rx-control-size);
-      min-block-size: var(--rx-control-size);
-      padding-block: var(--rx-space-1);
+      min-inline-size: 1.5rem;
+      min-block-size: 1.5rem;
+      padding-block: 0;
       padding-inline: var(--rx-space-3);
       border: var(--rx-stroke-width) solid transparent;
-      border-radius: var(--rx-radius-pill);
-      color: var(--rx-muted);
+      /* Highriseのページ送りは丸薬形だが、ピルを使わない方針（ユーザーの指定）で、控えめなボタンと同じ5pxの角丸にする。 */
+      border-radius: var(--rx-radius-control);
+      color: var(--rx-text);
+      font-variant-numeric: tabular-nums;
       text-decoration: none;
     }
+    & > ul > li > :is(a, [data-disabled="true"]) {
+      border-color: var(--rx-pagination-edge-top) var(--rx-pagination-edge-side)
+        var(--rx-pagination-edge-bottom);
+      background: var(--rx-surface) var(--rx-pagination-fill);
+      box-shadow: var(--rx-pagination-shadow);
+    }
     & > ul > li > a {
-      border-color: var(--rx-border);
-      background: var(--rx-surface) var(--rx-fill-control);
-      color: var(--rx-text);
-      /* Buttonと同じく浮かせず、ホバーすると縁を青くし、押すと内側へへこむ。 */
-      box-shadow: none;
       &:hover {
-        border-color: var(--rx-link);
+        background-image: var(--rx-pagination-fill-hover);
       }
       &:active {
-        box-shadow: var(--rx-shadow-control-pressed);
+        background-image: var(--rx-pagination-fill-pressed);
+        box-shadow: none;
       }
     }
-    /* 押せない前後の送りは、ほかの無効なボタンと同じ斜線のピル。 */
     & > ul > li > [data-disabled="true"] {
-      border-color: var(--rx-border);
-      background: var(--rx-hatch), var(--rx-surface);
-      color: var(--rx-muted);
+      color: var(--rx-disabled-text);
     }
-    & > ul > li > [data-current="true"] {
-      color: var(--rx-surface);
-      background: var(--rx-fill-primary);
-      border-color: var(--rx-link);
-      box-shadow: none;
+    /* 今のページと省略記号は面を持たず、送りの間に文字だけを置く。文字と送りの間は並びの間隔（8px）だけにする。 */
+    & > ul > li > span:not([data-disabled="true"]) {
+      min-inline-size: 0;
+      padding-inline: 0;
     }
     @media (pointer: coarse) {
       & > ul > li > :is(a, span) {
@@ -57,10 +77,17 @@
     }
   }
   @media (forced-colors: active) {
-    .rx-pagination > ul > li > :is(a, [data-current="true"]) {
+    .rx-pagination > ul > li > :is(a, [data-disabled="true"]) {
+      border-color: CanvasText;
       background: Canvas;
       color: CanvasText;
       box-shadow: none;
+    }
+    .rx-pagination > ul > li > [data-disabled="true"] {
+      color: GrayText;
+    }
+    .rx-pagination > ul > li > [data-current="true"] {
+      text-decoration-line: underline;
     }
   }
 }

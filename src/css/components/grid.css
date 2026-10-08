@@ -1,10 +1,17 @@
 @layer components {
   /*
-    日と時間の格子。外枠を持たず、列の間は淡い縦線、行の間は細い線だけで区切る。
-    日付の見出しは濃い色の太字、時刻は淡い小さな数字にする。今日の列は見出しに蛍光ペンの黄のピルを敷く。
-    選んだ枠は濃い色の2pxの角丸の枠で示し、埋まっている枠は斜線にする。
+    日と時間の格子。Tableと同じくBasecamp Classicの表を手本にする（値の根拠はtable.cssの冒頭）。
+    列の見出しは平らな灰色の帯（#e9e9e9、classic-permissions-shaded-header-2007.png）に黒い太字の12px、
+    帯の下に1px #acacac、行と列の間は1px #e7e7e7（classic-tour-time-tracking-2008.png の x=570 の縦の列）。
+    列の間の縦の線は、Backpackの表（backpack-new-page-permissions-table-2009.png）と同じく行の罫線と同じ淡さにし、外周には引かない。
+    時刻の列は灰色の小さな数字（BC2のカレンダーの日付の数字と同じ11pxの#666）にする。今日の列は見出しをCalendarの今日と同じ黄色で塗る。
+    ホバーした枠は淡い灰色、選んだ枠（フォーカス）は濃い色の2pxの枠で示す。埋まっている枠は、使えない操作と同じく文字だけを灰色にする。
   */
   .rx-grid {
+    --rx-grid-band: #e9e9e9;
+    --rx-grid-head-rule: #acacac;
+    --rx-grid-rule: #e7e7e7;
+    --rx-grid-hover: #f5f5f5;
     min-inline-size: 0;
     overflow: auto;
     overscroll-behavior-inline: contain;
@@ -16,74 +23,52 @@
       inline-size: max-content;
       min-inline-size: 100%;
       border: 0;
+      border-collapse: collapse;
       border-spacing: 0;
-      border-radius: 0;
       background: var(--rx-surface);
 
       & > caption {
         padding-block-end: var(--rx-space-3);
         text-align: start;
         font-size: var(--rx-body);
-        font-weight: 600;
+        font-weight: 700;
         line-height: 1.5;
       }
 
       & > :is(thead, tbody) > tr > :is(th, td) {
         min-inline-size: 7.5rem;
-        padding-block: var(--rx-space-3);
+        padding-block: var(--rx-space-2);
         padding-inline: var(--rx-space-3);
-        border-block-end: var(--rx-stroke-width) solid
-          color-mix(in srgb, var(--rx-ink) 12%, transparent);
+        border-block-end: var(--rx-stroke-width) solid var(--rx-grid-rule);
         text-align: start;
         vertical-align: middle;
         overflow-wrap: anywhere;
       }
 
       & > :is(thead, tbody) > tr > :is(th, td) + :is(th, td) {
-        border-inline-start: var(--rx-stroke-width) solid
-          color-mix(in srgb, var(--rx-ink) 8%, transparent);
+        border-inline-start: var(--rx-stroke-width) solid var(--rx-grid-rule);
       }
 
+      /* 列の見出しはTableと同じ、平らな灰色の帯に黒い太字の12px。帯の高さは24pxで、下端に濃い線を引く。 */
       & > thead > tr > th {
-        padding-block: var(--rx-space-2);
-        background: var(--rx-surface);
+        padding-block: 0.1875rem;
+        border-block-end-color: var(--rx-grid-head-rule);
+        background: var(--rx-grid-band);
         color: var(--rx-text);
-        font-size: var(--rx-label);
         font-weight: 700;
-        line-height: var(--rx-label-leading);
         white-space: nowrap;
-        & > .label {
-          display: inline-block;
-          padding-inline: var(--rx-space-2);
-          border-radius: var(--rx-radius-pill);
-        }
-        /* 楕円の内側の余白の分だけ見出しの余白を詰め、日付の文字を下の枠の文字と同じ書き始めにそろえる。 */
-        &:not(:first-child) {
-          padding-inline: calc(var(--rx-space-3) - var(--rx-space-2));
-        }
-        /* 今日の列の見出しは、Calendarの今日と同じ蛍光ペンの黄のピルを敷く。 */
-        &[data-current="true"] > .label {
-          position: relative;
-          isolation: isolate;
+        /* 今日の列の見出しは、Calendarの今日と同じ黄色で塗る。 */
+        &[data-current="true"] {
+          background: var(--rx-mark);
           color: var(--rx-ink);
-          &::before {
-            content: "";
-            position: absolute;
-            inset-block: -0.1875rem;
-            inset-inline: -0.125rem;
-            z-index: -1;
-            background: var(--rx-mark);
-            border-radius: var(--rx-radius-pill);
-          }
         }
       }
 
-      /* 格子の角の見出しと時刻は、日付より控えめな淡い小さな文字にする。 */
+      /* 格子の角の見出しと時刻は、日付より控えめな灰色の文字にする。 */
       & > thead > tr > th:first-child,
       & > tbody > tr > th {
         color: var(--rx-muted);
         font-size: var(--rx-small);
-        font-weight: 500;
         font-variant-numeric: tabular-nums;
       }
 
@@ -93,22 +78,18 @@
         z-index: 1;
         min-inline-size: 5rem;
         background: var(--rx-surface);
+        font-weight: 400;
         white-space: nowrap;
       }
 
-      & > tbody > tr:last-child > :is(th, td) {
-        border-block-end: 0;
-      }
-
+      /* ホバーした枠はTableの行と同じ淡い灰色にする（推測）。 */
       & > tbody > tr > td:not([data-disabled="true"]):hover {
-        background: color-mix(in srgb, var(--rx-link) 5%, var(--rx-surface));
+        background: var(--rx-grid-hover);
       }
 
-      /* 使えない・埋まっている枠は斜線で示す。 */
+      /* 使えない・埋まっている枠は、面をそのままにして文字だけを灰色にする。 */
       & > tbody > tr > td[data-disabled="true"] {
-        background: var(--rx-surface);
-        background-image: var(--rx-hatch);
-        color: var(--rx-muted);
+        color: var(--rx-disabled-text);
       }
 
       & > :is(thead, tbody) > tr > :is(th, td):focus-visible {
@@ -116,7 +97,6 @@
         z-index: 2;
         outline: var(--rx-frame-width) solid var(--rx-ink);
         outline-offset: calc(-1 * var(--rx-frame-width));
-        border-radius: var(--rx-radius-control);
       }
     }
 
@@ -125,8 +105,7 @@
       padding-block: var(--rx-space-3);
       padding-inline: var(--rx-space-4);
       border: 0;
-      border-block: var(--rx-stroke-width) solid color-mix(in srgb, var(--rx-ink) 12%, transparent);
-      border-radius: 0;
+      border-block: var(--rx-stroke-width) solid var(--rx-grid-rule);
       background: var(--rx-surface);
       color: var(--rx-muted);
     }
@@ -137,8 +116,9 @@
       background: Canvas;
       box-shadow: none;
     }
-    .rx-grid > .table > thead > tr > th[data-current="true"] > .label {
-      outline: var(--rx-stroke-width) solid CanvasText;
+    .rx-grid > .table > thead > tr > th[data-current="true"] {
+      outline: var(--rx-frame-width) solid Mark;
+      outline-offset: calc(-1 * var(--rx-frame-width));
     }
   }
 }

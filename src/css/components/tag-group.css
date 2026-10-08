@@ -1,9 +1,14 @@
 @layer components {
+  /*
+    タグはHighriseと同じく、間を4pxに詰めて並べる（実測: lists.md「Highrise 連絡先一覧（2011）」のタグの間 4px。
+    Tagの形の手本の2016年版 highrise/highrise-contacts-list-selected-2016.png（2倍）の「Event A demo All New Customer」
+    (642, 571, 362, 30) では間が3px。4pxの段に合わせて4pxにする）。
+  */
   .rx-tag-group {
     display: flex;
     flex-wrap: wrap;
     align-items: start;
     min-inline-size: 0;
-    gap: var(--rx-space-2);
+    gap: var(--rx-space-1);
   }
 }

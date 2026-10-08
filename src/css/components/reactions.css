@@ -1,9 +1,14 @@
 @layer components {
   /*
-    リアクション。同じ絵文字や言葉を一つの小さなリアクションにまとめ、付けた人数を淡い太字で添える。
-    リアクションは枠の細い平らなピルで、自分も付けているリアクションは淡い青の面と青い縁・青い数にする。
-    押せるリアクションはホバーすると淡い面、押すと内側へへこむ（ActionTileと同じ手触り）。
-    追加の操作はリアクションの終わりに置くPopoverで、開く操作は枠も影もない青いアイコン（Buttonのlink）にTooltipで名前を出す。
+    リアクション。同じ絵文字や言葉を一つの小さなリアクションにまとめ、付けた人数を灰色の太字で添える。
+    リアクションそのものはBasecamp 2・Highriseの画面に手本が無い（推測。bc2-tour-2014-14-celebrate.jpg にも applause は写っていない）。
+    語彙は手本で測った部品から借りる。
+    - 押せるリアクション（button）は控えめなボタン（controls.md 1章）と同じ、平らな白、1px #ccc、下に1px #ddd の影、角丸5px。
+      ホバーは控えめなボタンと同じ #fafafa、押すと内側へへこむ。
+    - 読むだけのリアクション（span）は押せると見せないよう、入力欄と同じ淡い枠（controls.md 6a。1px #dedede）だけにして影を付けない。
+    - 自分も付けているリアクション（押した状態）は、オンの状態と同じ淡い青の縦の塗りに紺の縁と紺の文字（--rx-selected-*）。
+    - 高さは24px。ピルにはしない。
+    追加の操作はリアクションの終わりに置くPopoverで、開く操作は枠も影もない青緑のアイコン（Buttonのlink）にTooltipで名前を出す。
     中は短い言葉でリアクションする欄（開いた時に移る）とEmojiPicker。文字の指定はこのファイルが持つ（専用の操作）。
   */
   .rx-reactions {
@@ -27,28 +32,24 @@
         gap: 0.25rem;
         min-inline-size: 0;
         max-inline-size: 100%;
-        min-block-size: 1.75rem;
+        min-block-size: 1.5rem;
         margin: 0;
         /*
           Badgeと同じく、折り返した行の間（行の余り2つ分）と、縁から文字まで（余白＋行の余り）を同じにする。
           行の高さを「一行の高さと文字の大きさの間」に詰め、残りを上下に半分ずつ取る（縁の幅は一行の高さに含める）。
         */
-        padding-block: calc((1.75rem - 2 * var(--rx-stroke-width) - 1lh) / 2);
-        padding-inline: 0.5rem 0.625rem;
-        border: var(--rx-stroke-width) solid var(--rx-border);
-        /* 一行では高さの半分で止まってピルになり、折り返すとカードと同じ角丸になる。 */
-        border-radius: var(--rx-radius-surface);
+        padding-block: calc((1.5rem - 2 * var(--rx-stroke-width) - 1lh) / 2);
+        padding-inline: 0.4375rem 0.5rem;
+        border: var(--rx-stroke-width) solid var(--rx-gray-200);
+        /* ピルにせず、控えめなボタンと同じ5pxの角丸にする（ユーザーの指定）。 */
+        border-radius: var(--rx-radius-control);
         background: var(--rx-surface);
         color: var(--rx-text);
         font-family: inherit;
         font-size: var(--rx-small);
         font-weight: 400;
-        line-height: calc((1.75rem - 2 * var(--rx-stroke-width) + 1em) / 2);
+        line-height: calc((1.5rem - 2 * var(--rx-stroke-width) + 1em) / 2);
         text-align: start;
-        transition:
-          background-color var(--rx-duration) ease,
-          border-color var(--rx-duration) ease,
-          box-shadow var(--rx-duration) ease;
         /* 言葉のリアクションは太字で読ませる（絵文字は太さで変わらない）。 */
         & > .content {
           min-inline-size: 0;
@@ -64,26 +65,35 @@
           font-variant-numeric: tabular-nums;
         }
         &[data-mine="true"] {
-          border-color: color-mix(in srgb, var(--rx-link) 45%, var(--rx-surface));
-          background: var(--rx-cover);
+          border-color: var(--rx-selected-edge);
+          border-block-end-color: var(--rx-selected-edge-end);
+          background: var(--rx-selected-fill);
+          color: var(--rx-selected-text);
           & > .count {
-            color: var(--rx-link);
+            color: var(--rx-selected-text);
           }
         }
       }
       & > li > button.reaction {
+        border-color: var(--rx-control-border);
+        box-shadow: var(--rx-shadow-control);
         cursor: pointer;
         &:hover {
-          background: color-mix(in srgb, var(--rx-ink) 4%, var(--rx-surface));
+          background: var(--rx-fill-control-hover);
+          box-shadow: var(--rx-shadow-control-hover);
+        }
+        &[data-mine="true"] {
+          border-color: var(--rx-selected-edge);
+          border-block-end-color: var(--rx-selected-edge-end);
         }
         &[data-mine="true"]:hover {
-          background: color-mix(in srgb, var(--rx-link) 14%, var(--rx-surface));
+          background: var(--rx-selected-fill-hover);
         }
         &:active {
           box-shadow: var(--rx-shadow-control-pressed);
         }
         &:focus-visible {
-          outline: 0.125rem solid var(--rx-link);
+          outline: 0.125rem solid var(--rx-focus-border);
           outline-offset: 0.0625rem;
         }
       }

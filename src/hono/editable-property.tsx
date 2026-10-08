@@ -11,7 +11,7 @@ export type EditablePropertyProps = {
   name: string;
   /** 最初の値。確定した値は欄に残り、フォームで送れる。 */
   value?: string;
-  /** 値が空の時に表示の位置へ出す淡い文字。 */
+  /** 値が空の時に表示の位置へ出す灰色の文字。 */
   emptyLabel?: string;
   /** 空のままでは確定できなくする。確定の時に欄の標準の検証を行う。 */
   required?: boolean;

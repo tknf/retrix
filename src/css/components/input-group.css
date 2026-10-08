@@ -3,27 +3,36 @@
     container: rx-input-group / inline-size;
     display: flex;
     flex-wrap: wrap;
-    align-items: start;
+    align-items: center;
     gap: var(--rx-space-2);
     min-inline-size: 0;
 
+    /* 隣のButtonは欄と同じ高さ（24px、largeは32px）にし、上下の端をそろえる。文字の指定はButtonのまま。 */
     & > .rx-button {
+      --rx-button-size: calc(24em / 12);
       min-inline-size: 0;
       max-inline-size: 45%;
+      &[data-size="large"] {
+        --rx-button-large: calc(32em / 14);
+      }
     }
   }
 
+  /*
+    枠はInputと同じ（実測: controls.md 6a「BC2 の標準の入力欄」）。1px #dedede の枠、角丸 2px、内側の影なし、
+    12px の文字で高さ 24px。接頭辞と単位は枠の中に灰色の文字で置き、値と見分ける。
+  */
   .rx-input-group > .control {
-    --rx-input-group-size: var(--rx-button-size);
+    --rx-input-group-size: calc(24em / 12);
     display: flex;
     align-items: stretch;
     column-gap: 0.375rem;
     flex: 1;
     min-inline-size: 0;
     min-block-size: var(--rx-input-group-size);
-    padding-inline: 0.75em;
-    border: var(--rx-stroke-width) solid var(--rx-border);
-    border-radius: var(--rx-radius-control);
+    padding-inline: 0.5em;
+    border: var(--rx-stroke-width) solid var(--rx-input-border);
+    border-radius: var(--rx-radius-mark);
     background: var(--rx-surface);
     box-shadow: var(--rx-shadow-input);
     color: var(--rx-muted);
@@ -31,6 +40,14 @@
     font-size: var(--rx-label);
     font-weight: 400;
     line-height: calc(10 / 7);
+
+    /*
+      接頭辞・単位と値の文字を同じ行の箱に載せ、ベースラインをそろえる。行の高さを枠の内側の高さにし、
+      flexの中央寄せ（端数の位置になる）と入力欄の文字の中央寄せの違いでずれないようにする。
+    */
+    & > :is(.rx-input, .affix) {
+      line-height: calc(var(--rx-input-group-size) - 2 * var(--rx-stroke-width));
+    }
 
     & > .rx-input {
       --rx-input-size: calc(var(--rx-input-group-size) - 0.125rem);
@@ -49,35 +66,38 @@
       }
     }
 
+    /* Inputと同じく、Safariの入力欄の青い縁と外側の淡い青の輪（実測: controls.md 11）。 */
     &:has(> .rx-input:focus-visible) {
-      border-color: var(--rx-link);
+      border-color: var(--rx-focus-border);
       outline: 0.125rem solid transparent;
       outline-offset: 0;
-      box-shadow:
-        0 0 0 0.125rem var(--rx-focus-ring),
-        var(--rx-shadow-input);
+      box-shadow: var(--rx-focus-glow);
     }
 
     &:has(> .rx-input[data-invalid="true"]) {
       border-color: var(--rx-danger);
     }
 
-    &:has(> .rx-input:disabled),
+    /* 読み取り専用は面の色だけ変える。 */
     &:has(> .rx-input[readonly]) {
-      background: var(--rx-background);
+      background: var(--rx-gray-20);
     }
 
-    /* 隣に並ぶlargeのButtonと同じ文字の大きさ（操作の文字の8/7倍）にし、どの画面幅でも高さをそろえる。 */
+    /* 使えない欄はInputと同じく、形と面をそのままにし、接頭辞・単位も含めて文字だけを灰色にする。 */
+    &:has(> .rx-input:disabled) {
+      color: var(--rx-disabled-text);
+    }
+
+    /* 大きな入力はInputのlargeと同じく、14pxの文字で高さ32px（largeのButtonと同じ）。 */
     &[data-size="large"] {
-      --rx-input-group-size: 2.5em;
-      font-size: calc(var(--rx-button-font) * 8 / 7);
+      --rx-input-group-size: calc(32em / 14);
+      font-size: calc(var(--rx-label) * 7 / 6);
       line-height: var(--rx-control-leading);
     }
   }
 
   .rx-input-group > .control > .affix {
-    display: flex;
-    align-items: center;
+    display: block;
     flex: 0 1 auto;
     min-inline-size: 0;
     max-inline-size: 45%;

@@ -22,9 +22,9 @@ export type MessageListItem = {
   datetime?: string;
   /** 差出人のアバター（Avatarなど）。一覧のどれかの行に渡すと全ての行にアバターの列を設け、無い行には手紙のアイコンを置く。 */
   avatar?: Child;
-  /** 未読。件名と差出人を太字にし、時刻の後ろに青い点と読み上げ用の「未読」を添える。 */
+  /** 未読。差出人を太字にし、時刻の後ろに青緑の点と読み上げ用の「未読」を添える。 */
   unread?: boolean;
-  /** 今開いている連絡。行を淡い青の背景にし、aria-current="page"を付ける。 */
+  /** 今開いている連絡。行を黄色のハイライトで塗り、aria-current="page"を付ける。 */
   current?: boolean;
   /** 会話の件数。2以上の時だけ件名の後ろに数を出す。 */
   threadCount?: number;

@@ -1,8 +1,22 @@
 @layer components {
+  /*
+    段階の並び。実測: highrise-import-match-fields-2016.png (40, 57, 1938, 90)。2倍（CSSの値に直した）。
+    補助: highrise-import-choose-type-2016.png（同じ並び）。Highriseのインポートの「Step 1: Choose type / Step 2: Match Data / Step 3: Review」。
+    - 段階ごとに同じ幅の平らな面を並べ、面の間を2px空けて置いた場所の地を見せる。枠・角丸・影は無い。
+    - 面の高さは45px（13pxの一行を上下約13pxで挟む）。
+    - 他の段階の面は #e9e8e8 に灰色 #999999 の文字、今の段階の面は #dfe7eb に #333333 の文字。どちらも13pxの通常の太さ。
+    2016年の画面なので、Highrise 2011の作法に合わせて次を変える。
+    - 今の段階の名前は、今いる場所と同じ黒い太字にする（structure.md「左の列」の今いる行）。
+    - 他の段階の文字 #999999 は面の上で4.5:1に届かないため、同じ灰色の --rx-muted（#666）に濃くする（実測 #999999 → #666666）。
+    - Retrixは番号の後ろに状態の文言を添え、名前が折り返すので、面の中の文字は中央寄せにせず先頭側に揃え、上下は12pxにする。
+    - 番号は「Step 1:」と同じく名前と同じ色の地の文にし、四角で囲まない。済んだ段階は番号の代わりに緑のチェックにする。
+  */
   .rx-steps {
+    --rx-steps-face: #e9e8e8;
+    --rx-steps-current-face: #dfe7eb;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
-    gap: var(--rx-space-4);
+    gap: 0.125rem;
     padding: 0;
     list-style: none;
     & > li {
@@ -10,56 +24,61 @@
       grid-template-columns: auto minmax(0, 1fr);
       align-items: start;
       gap: var(--rx-space-2);
-      font-size: var(--rx-label);
-      line-height: var(--rx-label-leading);
+      min-inline-size: 0;
+      padding-block: var(--rx-space-3);
+      padding-inline: var(--rx-space-4);
+      background: var(--rx-steps-face);
+      color: var(--rx-muted);
+      font-size: var(--rx-body);
+      line-height: var(--rx-leading);
+      overflow-wrap: anywhere;
     }
-    /* 番号の円（24px）の中心を、題名の一行目（行の高さ）の中心に合わせる。 */
+    /* 番号は名前と同じ色・大きさの数字。チェックのアイコンは名前の一行目の中央に置く。 */
     & > li > .number {
       display: grid;
       place-items: center;
-      inline-size: 1.5rem;
-      block-size: 1.5rem;
-      margin-block-start: calc((1lh - 1.5rem) / 2);
-      border: var(--rx-stroke-width) solid var(--rx-border);
-      border-radius: 50%;
-      color: var(--rx-muted);
-      font-size: var(--rx-small);
-    }
-    /* 戻れる段階の題名は下線を引かず本文の色にし、ホバー時だけ青くする。 */
-    & > li > span > a {
-      color: inherit;
-      text-decoration: none;
-      transition: color var(--rx-duration) ease;
-      &:hover {
-        color: var(--rx-link);
+      min-inline-size: 1em;
+      block-size: 1lh;
+      font-variant-numeric: tabular-nums;
+      & > .rx-icon {
+        inline-size: 0.875rem;
+        block-size: 0.875rem;
       }
     }
+    /* 戻れる段階の名前は、本文のリンクと同じ青緑の文字に下線。ホバーで赤茶。 */
+    & > li > span > a {
+      color: var(--rx-link);
+      text-decoration-line: underline;
+      text-decoration-thickness: var(--rx-stroke-width);
+      text-underline-offset: 0.15em;
+      &:hover {
+        color: var(--rx-link-hover);
+      }
+    }
+    /* 状態の文言は名前の下の小さな補足。茶色（--rx-meta）は灰色の面の上で4.5:1に届かないため、--rx-mutedにする。 */
     & > li > span > small {
       display: block;
-      margin-block-start: var(--rx-space-1);
+      margin-block-start: 0.125rem;
       color: var(--rx-muted);
       font-size: var(--rx-small);
       font-weight: 400;
+      line-height: var(--rx-small-leading);
     }
     & > li[data-state="complete"] > .number {
-      background: var(--rx-success-soft);
       color: var(--rx-success);
-      border-color: var(--rx-success);
     }
-    & > li[data-state="current"] > .number {
-      background: var(--rx-link);
-      color: var(--rx-surface);
-      border-color: var(--rx-link);
-      box-shadow: 0 0 0 0.1875rem var(--rx-info-soft);
+    & > li[data-state="current"] {
+      background: var(--rx-steps-current-face);
+      color: var(--rx-ink);
+      font-weight: 700;
     }
-    & > li[data-state="current"] > span:last-child {
-      font-weight: 600;
+  }
+  @media (forced-colors: active) {
+    .rx-steps > li {
+      border: var(--rx-stroke-width) solid CanvasText;
     }
-    /* これからの段階はまだ確定していないので、番号の円を破線にする。 */
-    & > li:not([data-state]) > .number,
-    & > li[data-state="upcoming"] > .number {
-      border-style: dashed;
-      border-color: var(--rx-perforation);
+    .rx-steps > li[data-state="current"] {
+      border-width: 0.1875rem;
     }
   }
 }

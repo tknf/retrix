@@ -40,7 +40,7 @@ export default () => (
             {
               label: "秋の読書会",
               control: (
-                <Button variant="primary" data-icon-only="true" aria-label="通知を止める">
+                <Button data-current="true" data-icon-only="true" aria-label="通知を止める">
                   <Icon name="bell" />
                 </Button>
               ),

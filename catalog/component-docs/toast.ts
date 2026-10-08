@@ -13,10 +13,10 @@ export default {
   ],
   usage: [
     'Toastはページに置いておき、閉じた状態（`popover="manual"`）で描きます。開くのは、`popovertarget` にToastの `id` を指したボタンか、スクリプトからの `showPopover()` です。開いてもフォーカスは移しません。閉じるボタンも、Toastを指した `popovertarget` のボタンです。`ToastController` を `toast` として登録すると、`duration` と開閉のイベントが働きます。',
-    "`tone` で通知の種類を選び、背景をその色で塗ります。アイコンは `success` でチェック、`danger` で丸の中のバツ、他はiです。`actions` を渡すと、通知の文の後に操作を置きます。",
+    "ToastはBasecamp 2の黄色の案内と同じく、黄色（`--rx-mark`）の平らな面に1pxの濃い黄色（#eac73b）の枠を付け、下の枠だけを3pxにし、角丸4pxで、影は付けません。文は黒で、一行目を太字にします。`tone` で通知の種類を選びます。`info`（既定）と `success` は黄色の面のままで、`success` はアイコンを緑にします。`warning` と `danger` は面をそれぞれの役割の淡い色にし、枠とアイコンを琥珀色・赤にします。アイコンは `success` でチェック、`danger` で丸の中のバツ、他はiです。文と操作は一行に並べ、入らなければ文を先に折り返します。`actions` を渡すと、通知の文の後に操作を置きます。",
     '既定では閉じるボタンを押すまで残します。`duration` にミリ秒を渡すと、開いてからその時間で閉じます。フォーカスがToastの中にある間は数えず、外へ出てから数え直します。失敗の通知は `live="assertive"` にして自動で閉じず、重要なエラーは入力の近くや `ErrorSummary` にも残します。',
-    "単独のToastは、画面下部の末尾側（左から右に読む画面では右下）に浮かべます。",
-    "複数のToastは `ToastStack` で囲み、`ToastStackController` を `toast-stack` として登録します。開いた順に、新しいものを手前にして重ねます。二つ以上の時、スタックを押すと上へ広がり、外を押すかEscapeで畳みます。キーボードでフォーカスがスタックの中へ入った時も広がります。Toastの中のボタンやリンクを押しても、スタックは開閉しません。`placement` で置き場所を選びます。",
+    "単独のToastは、画面下部の末尾側（左から右に読む画面では右下）に浮かべます。開閉はその場で切り替え、動きは付けません。",
+    "複数のToastは `ToastStack` で囲み、`ToastStackController` を `toast-stack` として登録します。開いた順に、新しいものを手前にして重ねます。奥のToastは上へ少しずつずらして小さくし、上端へ向かって薄れる縁だけを見せます。二つ以上の時、スタックを押すと上へ広がり、外を押すかEscapeで畳みます。キーボードでフォーカスがスタックの中へ入った時も広がります。Toastの中のボタンやリンクを押しても、スタックは開閉しません。`placement` で置き場所を選びます。",
     "Toastを指した `popovertarget` のボタン（閉じるボタンを含む）を押して開閉した時は、`Dialog` と同じく、取り消せる `toast:beforeshow`・`toast:beforehide` と、`toast:show`・`toast:hide` を発火します。スクリプトからの `showPopover()`・`hidePopover()` と `duration` で開閉した時は発火しません。開き方に関わらず開閉を受け取る時は、標準の `toggle` を使います。",
     "JavaScriptが無い時も、`popovertarget` のボタンと閉じるボタンでToastを開閉できます。`duration`、開閉のイベント、重ねる動きは働きません。",
   ],

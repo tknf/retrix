@@ -1,101 +1,254 @@
 @layer components {
+  /*
+    机（クリーム色の地）の上に白いシートを置く画面構成。
+    ヘッダー・先頭側の列・作業面を同じ幅の中に収め、画面の中央に揃える。画面の端には何も固定しない。
+  */
   .rx-app-shell {
+    /*
+      先頭側の列の幅と、列と作業面の間。ヘッダーと本体はこの合計の幅に揃える。
+      実測: highrise/highrise-case-page-redesign-2011.jpg（1倍）の左の列は x 0〜232（232px）で、シートの縁に間を空けずに接する。
+      highrise-contacts-index-redesign-2011.jpg（0.81倍）の (10, 113, 177, 24) でも、今いる行の面がシートの枠まで届く。
+    */
+    --rx-shell-aside: 14.5rem;
+    --rx-shell-gap: 0rem;
+    --rx-shell-width: var(--rx-page);
+    /* ヘッダーの最小の幅。compactの画面でも移動先が折り返さないよう、既定の作業面の幅を保つ。 */
+    --rx-shell-bar-width: 61.25rem;
+    /*
+      背後に重ねたシート。Basecamp 2の実測（docs/visual-reference/structure.md）では、
+      手前のシートは親のシートと同じ幅のまま、右へ21px・下へ60pxずれて重なる。
+    */
+    --rx-trail-shift: 1.3125rem;
+    /* 上の帯の見えている高さ。手本は60pxだが、見出しを小さくしたので帯も詰める（ユーザーの指定）。 */
+    --rx-trail-visible: 2.75rem;
     container: rx-app-shell / inline-size;
     display: grid;
     justify-items: center;
     align-content: start;
-    /* バーの下のグラデーション（.bar::after）と同じ高さにし、スクロールしていない時にグラデーションが作業面にかからないようにする。 */
-    gap: var(--rx-space-6);
     min-inline-size: 0;
     min-block-size: 100dvh;
-    /*
-      Wingが開く時に行き過ぎたパネルや影が画面の外へ出て、一瞬だけ横スクロールが出ないよう、左右を画面の幅で切る。
-      clipはスクロールコンテナを作らないので、上端に留まるバー（sticky）はそのまま動く。
-    */
     overflow-x: clip;
-    padding-block-end: var(--rx-space-8);
-    background: var(--rx-surface);
+    padding-block-end: var(--rx-space-12);
+    background: var(--rx-desk-texture), var(--rx-background);
     color: var(--rx-text);
-    /* 作業面の幅の上限。compactは本文の幅を読みやすい行の長さ（--rx-measure）にそろえる。 */
     &[data-size="compact"] {
       --rx-page: calc(var(--rx-measure) + 2 * var(--rx-space-12));
     }
     &[data-size="wide"] {
-      --rx-page: 112rem;
+      --rx-page: 90rem;
     }
+    &:has(> .body[data-aside="true"]) {
+      --rx-shell-width: calc(var(--rx-page) + var(--rx-shell-aside) + var(--rx-shell-gap));
+    }
+    /*
+      ヘッダー。上の行の末尾側にアカウントへの小さなリンク、下の行にアプリの名前・主な移動先・検索を並べる。
+      背景を持たず、机の地の上にそのまま置く。
+    */
     & > .bar {
-      position: sticky;
-      inset-block-start: 0;
-      /*
-        作業面の中の要素（ButtonGroup、カレンダー、Wingの作業面など）より上、メニューより下に重ねる。
-        作業面はスタッキングコンテキストを作らないため、1のままだとスクロール時に作業面の中の要素がバーの上に表示される。
-      */
-      z-index: calc(var(--rx-z-menu) - 1);
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      column-gap: var(--rx-space-5);
+      grid-template-areas:
+        "account account account"
+        "start navigation commands";
       align-items: center;
-      gap: var(--rx-space-2);
-      inline-size: 100%;
+      row-gap: var(--rx-space-1);
+      inline-size: min(
+        calc(100% - var(--rx-space-8)),
+        max(var(--rx-shell-width), var(--rx-shell-bar-width))
+      );
       min-inline-size: 0;
-      padding-block: var(--rx-space-3);
-      padding-inline: var(--rx-space-4);
-      background: var(--rx-surface);
-      /*
-        バーの背景で作業面の影（--rx-shadow-sheet）が直線的に途切れないよう、バーの下に背景色から透明へのグラデーションを置く。
-        スクロールしていない時はバーと作業面の間に収まり、スクロール時はバーの下に入った内容を徐々に隠す。
-      */
-      &::after {
-        content: "";
-        position: absolute;
-        inset-inline: 0;
-        inset-block-start: 100%;
-        block-size: var(--rx-space-6);
-        background: linear-gradient(var(--rx-surface), transparent);
-        pointer-events: none;
+      /* 手本では、ページの上端から右上のリンクのベースラインまで約20px、シートの上端まで91px。 */
+      padding-block: var(--rx-space-2) var(--rx-space-6);
+      & > .account {
+        grid-area: account;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: end;
+        align-items: center;
+        gap: var(--rx-space-3);
+        min-inline-size: 0;
+        color: var(--rx-quiet);
+        font-size: var(--rx-small);
+        line-height: var(--rx-small-leading);
+        & > a {
+          color: var(--rx-quiet);
+          text-decoration: none;
+          &:hover {
+            color: var(--rx-link-hover);
+            text-decoration-line: underline;
+          }
+        }
       }
-      /* 左右の内容幅に影響されず、共通コマンドを画面の中央へ置く。 */
-      & > :is(.start, .end) {
+      /*
+        アプリの名前は20pxの太字の濃い灰色（手本の「Basecamp」は #3d3c37）。ロゴの画像やアイコンを並べてもよい。
+        名前と主な移動先の間に、1px #ded7c7・高さ21pxの縦の線を引く。
+      */
+      & > .start {
+        grid-area: start;
         display: flex;
         align-items: center;
         gap: var(--rx-space-2);
         min-inline-size: 0;
-        &:empty {
-          display: none;
+        padding-inline-end: var(--rx-space-5);
+        border-inline-end: var(--rx-stroke-width) solid var(--rx-header-rule);
+        font-size: 1.25rem;
+        font-weight: 700;
+        line-height: 1.05;
+        & > a {
+          display: inline-flex;
+          align-items: center;
+          gap: var(--rx-space-2);
+          color: var(--rx-logo);
+          text-decoration: none;
         }
       }
-      & > .end {
-        justify-content: end;
+      /* 主な移動先は灰色の文字を約20px空けて横に並べ、今いる項目だけを黒い太字にする（面・下線は付けない）。 */
+      & > .navigation {
+        grid-area: navigation;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        column-gap: var(--rx-space-5);
+        row-gap: var(--rx-space-1);
+        min-inline-size: 0;
+        font-size: var(--rx-body);
+        & > a {
+          display: inline-flex;
+          align-items: center;
+          gap: var(--rx-space-1);
+          color: var(--rx-quiet);
+          text-decoration: none;
+          &:hover {
+            color: var(--rx-ink);
+            text-decoration-line: underline;
+          }
+          &[data-current="true"] {
+            color: var(--rx-ink);
+            font-weight: 600;
+          }
+          & > .icon {
+            display: inline-flex;
+          }
+          & > small {
+            color: var(--rx-meta);
+            font-size: var(--rx-small);
+            font-variant-numeric: tabular-nums;
+          }
+        }
       }
       & > .commands {
+        grid-area: commands;
         display: flex;
-        justify-content: center;
+        justify-content: end;
         align-items: center;
+        gap: var(--rx-space-2);
         min-inline-size: 0;
-        max-inline-size: 60cqi;
       }
     }
-    & > .workspace,
-    & > .rx-wing > .layout > .main > .workspace {
-      container: rx-workspace / inline-size;
+    & > .body {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      align-items: start;
+      /* 狭い幅で列を作業面の上に積んだ時の間。横に並べた時は列と作業面の間を空けない（--rx-shell-gap）。 */
+      row-gap: var(--rx-space-6);
+      column-gap: var(--rx-shell-gap);
+      inline-size: min(calc(100% - var(--rx-space-8)), var(--rx-shell-width));
+      min-inline-size: 0;
+      /*
+        先頭側の列は机の上に直接置き、シートは持たない。文字はHighriseの左の列の名前と同じ13px（本文の段）。
+      */
+      & > .aside {
+        display: grid;
+        align-content: start;
+        gap: var(--rx-space-6);
+        min-inline-size: 0;
+        font-size: var(--rx-body);
+        line-height: var(--rx-leading);
+      }
+      & > .main {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        align-content: start;
+        min-inline-size: 0;
+      }
+    }
+    /*
+      背後に重ねたシート（BC2の実測、structure.md「背後に重ねた親のシート」）。
+      親のシートは手前のシートと同じ幅のまま左上へずれ、手前のシートの後ろを下端まで続く。
+      上の帯に上の階層へのリンクの見出しを置き、左の細い帯は下端まで見える。淡い灰色の面に1pxの枠で、影は付けない。
+      AppShellが.mainに--rx-trail-count（段の数）、各項目に--rx-trail-depth（今のページから数えた段）を置く。
+    */
+    & > .body > .main {
+      --rx-trail-count: 0;
+      position: relative;
+    }
+    & > .body > .main > .trail {
+      position: absolute;
+      inset: 0;
+      & > ol {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        & > li {
+          --rx-trail-depth: 1;
+          position: absolute;
+          inset-block: calc(
+              (var(--rx-trail-count) - var(--rx-trail-depth)) * var(--rx-trail-visible)
+            )
+            0;
+          inset-inline-start: calc(-1 * var(--rx-trail-depth) * var(--rx-trail-shift));
+          inline-size: 100%;
+          padding-block-start: var(--rx-space-3);
+          padding-inline: 1.9375rem;
+          border: var(--rx-stroke-width) solid var(--rx-sheet-behind-edge);
+          border-radius: var(--rx-radius-sheet);
+          background: var(--rx-sheet-behind);
+          /*
+            見出しは18pxの太字（手本は24px。シートの見出しより目立たないよう小さくする。ユーザーの指定）。
+            下線は手本の親のシートの名前と同じ2px（bc2-tour-2014-06-to-do-lists.jpg の y 110〜113。2倍）。
+          */
+          font-size: var(--rx-title);
+          font-weight: 700;
+          line-height: 1.2;
+          & > a {
+            color: var(--rx-link);
+            text-decoration-thickness: calc(var(--rx-stroke-width) * 2);
+            text-underline-offset: 0.15em;
+            &:hover {
+              color: var(--rx-link-hover);
+            }
+          }
+        }
+      }
+    }
+    /* 手前のシートは、段の数だけの帯を空けた下から置き、背後のシートに重ねる。 */
+    & > .body > .main > .trail ~ :is(.workspace, .rx-wing, .footer) {
+      position: relative;
+    }
+    & > .body > .main > .trail + :is(.workspace, .rx-wing) {
+      margin-block-start: calc(var(--rx-trail-count) * var(--rx-trail-visible));
+    }
+    & > .body > .main > .workspace,
+    & > .body > .main > .rx-wing > .layout > .main > .workspace {
+      /* Surfaceと同じ名前も持ち、作業面の幅で段組みを切り替える配置（.rx-workspaceなど）をAppShellの中でも効かせる。 */
+      container: rx-workspace rx-surface / inline-size;
       display: grid;
       /* 列は作業面の幅に収め、広い表などの最小幅で作業面を押し広げない（中身の側で横にスクロールする）。 */
       grid-template-columns: minmax(0, 1fr);
       align-content: start;
       gap: var(--rx-space-6);
-      inline-size: min(calc(100% - var(--rx-space-8)), var(--rx-page));
+      inline-size: 100%;
       min-inline-size: 0;
       /* 左右の余白は変数にし、横スクロールするコンテンツを作業面の端まで広げる時にも使う。 */
-      --rx-workspace-gutter: var(--rx-space-12);
-      padding-block: calc(var(--rx-space-12) + var(--rx-space-2));
+      /* 手本のシートの内側の余白は左右30px。上下も同じくらいにする。 */
+      --rx-workspace-gutter: 1.875rem;
+      padding-block: 1.875rem;
       padding-inline: var(--rx-workspace-gutter);
       /* 白い面・角丸・影は、Surfaceと共通の作業面の定義（layout.css）が持つ。 */
-      /*
-        先頭のContextBarはSurfaceと同じく、見出しと同じ左右の位置に置き、下の区切り線を消す。
-        上の余白を詰めてパンくずを作業面の上端に寄せ、見出しはパンくずのすぐ下から始める。
-        バーの高さは操作の高さに揃え、操作の有無で見出しの位置を変えない。
-      */
+      /* 先頭のContextBarは、見出しと同じ左右の位置に置き、下の区切り線を消す。 */
       &:has(> .rx-context-bar:first-child) {
-        padding-block-start: var(--rx-space-8);
+        padding-block-start: var(--rx-space-5);
       }
       & > .rx-context-bar:first-child {
         min-block-size: var(--rx-control-size);
@@ -105,7 +258,7 @@
       }
       /*
         枠や背景のない横スクロールのコンテンツは、作業面の左右の余白の分だけ外側へ広げ、作業面の端までスクロールできるようにする。
-        同じ幅を内側の余白に取るため、スクロールしていない時の表示位置は変わらない。枠や背景があるもの（CodeBlock・ChartFrame）は対象にしない。
+        同じ幅を内側の余白に取るため、スクロールしていない時の表示位置は変わらない。
       */
       & :is(.rx-board, .rx-table, .rx-grid, .rx-calendar > .viewport) {
         margin-inline: calc(-1 * var(--rx-workspace-gutter));
@@ -129,46 +282,69 @@
         --rx-workspace-gutter: 0rem;
       }
     }
-    /* Wingの左右列を含めた幅を使う。作業面の最大幅はWingの中央列が所有する。 */
-    & > .rx-wing {
-      inline-size: 100%;
-      padding-inline: var(--rx-space-4);
-      & > .layout > .main > .workspace {
-        inline-size: 100%;
+    /*
+      フッターはシートの下の机の上に置く。実測: highrise-case-page-redesign-2011.jpg (233, 1402, 400, 60)。
+      シートの下端から文字まで約20px、11pxの灰色（#5b545b）で、リンクも同じ灰色に下線を引く。
+    */
+    & > .body > .main > .footer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--rx-space-2) var(--rx-space-4);
+      padding-block-start: var(--rx-space-5);
+      padding-inline: var(--rx-space-2);
+      color: var(--rx-muted);
+      font-size: var(--rx-small);
+      line-height: var(--rx-small-leading);
+      & a {
+        color: inherit;
+        text-decoration-thickness: var(--rx-stroke-width);
+        &:hover {
+          color: var(--rx-link-hover);
+        }
+      }
+    }
+    @container rx-app-shell (inline-size >= 52rem) {
+      & > .body[data-aside="true"] {
+        grid-template-columns: var(--rx-shell-aside) minmax(0, 1fr);
+        /*
+          列の中の文字はシートの縁から20px離す。Navigationの行の面だけは、手本の今いる行と同じくシートの縁まで伸ばす。
+        */
+        & > .aside {
+          padding-inline-end: var(--rx-space-5);
+          & > .rx-navigation {
+            margin-inline-end: calc(-1 * var(--rx-space-5));
+          }
+        }
       }
     }
     @container rx-app-shell (inline-size < 45rem) {
-      & > .workspace {
+      & > .bar {
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+          "account account"
+          "start commands"
+          "navigation navigation";
+        inline-size: calc(100% - var(--rx-space-4));
+        row-gap: var(--rx-space-2);
+      }
+      & > .body {
         inline-size: calc(100% - var(--rx-space-4));
       }
-      & > .workspace,
-      & > .rx-wing > .layout > .main > .workspace {
+      & > .body > .main {
+        --rx-trail-shift: var(--rx-space-2);
+      }
+      & > .body > .main > .trail > ol > li {
+        padding-inline: var(--rx-space-4);
+        font-size: var(--rx-section-title);
+      }
+      & > .body > .main > .workspace,
+      & > .body > .main > .rx-wing > .layout > .main > .workspace {
         --rx-workspace-gutter: var(--rx-space-4);
-        padding-block: var(--rx-space-8);
+        padding-block: var(--rx-space-6);
         &:has(> .rx-context-bar:first-child) {
-          padding-block-start: var(--rx-space-6);
+          padding-block-start: var(--rx-space-4);
         }
-      }
-      & > .rx-wing {
-        padding-inline: var(--rx-space-2);
-      }
-      & > .bar {
-        padding-inline: var(--rx-space-2);
-      }
-    }
-    @container rx-app-shell (inline-size < 28rem) {
-      & > .bar > .commands {
-        grid-column: 1 / -1;
-        grid-row: 1;
-        max-inline-size: 100%;
-      }
-      & > .bar > .start {
-        grid-column: 1;
-        grid-row: 2;
-      }
-      & > .bar > .end {
-        grid-column: 3;
-        grid-row: 2;
       }
     }
   }

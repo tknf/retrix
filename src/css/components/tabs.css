@@ -1,13 +1,25 @@
 @layer components {
+  /*
+    タブ。実測: overlays.md「3b. Highrise 2011 のタブ（Notes & Emails / People / Deals）」。
+    - 並びの下に1px #e7e7e7の罫線を一本引き、その上に白いタブを約3pxずつ空けて並べる。
+    - タブは白、1px #e2e2e2の枠、上の角だけ約3pxの角丸、高さ21px。選んでいても文字の太さと色は変えない。
+    - 選んだタブだけ下の線を消し、下の白い本文とつなげる（下の枠を白にして罫線を切る）。
+    - 件数は名前と同じ文字で並べる（highrise-company-page-deals-tab-2011.png (16, 27, 225, 21) の「3 People」「3 Deals」。
+      件数は黒の地の文で、ピルにも別の色にもしない）。
+    - 文字は手本の約12px（大文字の高さ9px）と同じ--rx-label。上の枠から大文字の上端まで6px、ベースラインから下の線まで5px。
+    塗りは平ら。Classicの灰色のタブ（3a）は黒いヘッダーの上の部品なので使わない。
+  */
   .rx-tabs {
+    --rx-tabs-edge: #e2e2e2;
+    --rx-tabs-rule: #e7e7e7;
     container: rx-tabs / inline-size;
     display: grid;
-    gap: var(--rx-space-5);
+    gap: var(--rx-space-4);
     min-inline-size: 0;
     & > .panel {
       min-inline-size: 0;
       &:focus-visible {
-        outline: 0.125rem solid var(--rx-link);
+        outline: 0.125rem solid var(--rx-blue);
         outline-offset: 0.1875rem;
       }
     }
@@ -15,24 +27,28 @@
       display: flex;
       flex-wrap: wrap;
       align-items: end;
-      gap: var(--rx-space-3);
-      /* 並びの下に細い線を引き、今のタブの青いインジケーターをその上に重ねる。 */
-      box-shadow: inset 0 calc(var(--rx-stroke-width) * -1) var(--rx-border);
+      gap: 0.1875rem;
+      padding-inline: var(--rx-space-3);
+      /* 並びの下の罫線は背景として下端に描き、タブの下の枠をちょうどその上に重ねる。 */
+      background: linear-gradient(var(--rx-tabs-rule), var(--rx-tabs-rule)) 0 100% / 100%
+        var(--rx-stroke-width) no-repeat;
       & > button {
         appearance: none;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: var(--rx-space-2);
+        gap: var(--rx-space-1);
         min-inline-size: 0;
         max-inline-size: 100%;
-        min-block-size: var(--rx-control-size);
-        padding-block: var(--rx-space-2);
+        /* 手本と同じ高さ21px（枠を含む）。 */
+        min-block-size: 1.3125rem;
+        padding-block: 0;
         padding-inline: var(--rx-space-2);
-        border: 0;
-        border-radius: 0;
-        background: transparent;
-        color: var(--rx-muted);
+        /* 下の枠は並びの罫線と同じ位置に来る。選んだタブはこの枠を白にして罫線を切る。 */
+        border: var(--rx-stroke-width) solid var(--rx-tabs-edge);
+        border-radius: 0.1875rem 0.1875rem 0 0;
+        background: var(--rx-surface);
+        color: var(--rx-text);
         font-family: var(--rx-control-font-family);
         font-size: var(--rx-label);
         font-weight: 400;
@@ -41,54 +57,48 @@
         & > .icon {
           display: flex;
         }
-        /* 件数はSectionと同じ、淡い面の色の小さなピル。 */
+        /* 件数は手本の「3 People」と同じく、名前と同じ色・太さの数字にする。 */
         & > .count {
-          display: inline-grid;
-          place-items: center;
-          min-inline-size: 1.25rem;
-          block-size: 1.25rem;
-          padding-inline: 0.375rem;
-          border-radius: var(--rx-radius-pill);
-          background: var(--rx-background);
-          color: var(--rx-text);
-          font-size: var(--rx-small);
-          font-weight: 600;
-          line-height: 1;
           font-variant-numeric: tabular-nums;
         }
-        /* 今ではないタブは面を持たず、文字の色だけで応える。 */
+        /* ホバーの見た目は手本に無い（推測）。選んでいないタブの名前に下線を引く。 */
         &:hover:enabled:not([data-state="active"]) {
-          color: var(--rx-text);
-        }
-        &:active:enabled:not([data-state="active"]) {
-          color: var(--rx-link);
+          text-decoration-line: underline;
+          text-decoration-thickness: var(--rx-stroke-width);
+          text-underline-offset: 0.15em;
         }
         &:focus-visible {
-          outline: 0.125rem solid var(--rx-link);
+          outline: 0.125rem solid var(--rx-blue);
           outline-offset: 0.125rem;
         }
-        /* 今のタブは現在地。濃い色の太字と、下の青い2pxのインジケーター。 */
         &[data-state="active"] {
-          box-shadow: inset 0 calc(var(--rx-frame-width) * -1) var(--rx-link);
-          color: var(--rx-text);
-          font-weight: 600;
+          border-block-end-color: var(--rx-surface);
+          cursor: default;
         }
+        /* 選べないタブは、ほかの使えない操作と同じく形と塗りをそのままにし、文字だけを灰色にする。 */
         &:disabled {
-          color: var(--rx-muted);
-          opacity: 0.5;
-          cursor: not-allowed;
+          color: var(--rx-disabled-text);
+          cursor: default;
         }
       }
     }
     @container rx-tabs (inline-size < 24rem) {
       & > .list {
-        gap: var(--rx-space-1);
+        padding-inline: 0;
+        & > button {
+          padding-inline: var(--rx-space-1);
+        }
       }
     }
     @media (pointer: coarse) {
       & > .list > button {
         min-block-size: 2.75rem;
       }
+    }
+  }
+  @media (forced-colors: active) {
+    .rx-tabs > .list > button[data-state="active"] {
+      border-color: Highlight;
     }
   }
 }

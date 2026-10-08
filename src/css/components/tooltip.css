@@ -12,12 +12,18 @@
     inline-size: max-content;
     max-inline-size: min(20rem, calc(100vw - 1rem));
     margin: 0;
-    padding-block: var(--rx-space-2);
-    padding-inline: var(--rx-space-3);
+    /*
+      白い小さなパネル。短い名前を添えるだけなので、余白を詰める。
+      BC2の製品のツールチップは見つからず、ブラウザの標準のtitleだけを使っていたと推測される（overlays.md「6. ツールチップ」）。
+      そのため枠の色はポップオーバーと同じにし、角丸と影はtitleの小さな札に寄せて小さくする（推測）。
+    */
+    padding-block: var(--rx-space-1);
+    padding-inline: var(--rx-space-2);
+    border-radius: var(--rx-radius-mark);
+    box-shadow: 0 var(--rx-stroke-width) 0.1875rem rgb(0 0 0 / 20%);
     font-size: var(--rx-small);
     line-height: var(--rx-small-leading);
-    /* 操作の中央の下に出るため、上の中央を支点に膨らむ。 */
-    transform-origin: top center;
+    /* 操作の中央の下に出るため、上の中央を支点にする。 */
     /* 下のつなぎの領域を切り取らない。 */
     overflow: visible;
     /*

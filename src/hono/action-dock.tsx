@@ -12,7 +12,7 @@ export type ActionDockProps = ElementProps<"nav"> & {
 
 /**
  * 内容の下に浮かぶ操作バー。白いパネルを画面の下の中央に浮かべ、アイコン・名前・ショートカットキーの表示を縦に積んだ操作を横に並べる。
- * 操作はActionTileで、操作バーの中では浮き上がりを消して平らにする。
+ * 操作はActionTileで、操作バーの中では普段の面と枠を消して平らにする。
  */
 export const ActionDock = ({
   label,

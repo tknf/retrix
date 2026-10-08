@@ -1,12 +1,30 @@
 # Retrix
 
-Retrixは、管理画面・業務システム・一般利用者向けのサービスで再利用するデザインシステムです。メール、CRM、プロジェクト管理、文書、財務、チャットのような仕事の画面を、共通の文字・余白・操作の作法で組み立てます。
+Retrixは、マスタ管理・顧客管理・案件管理・設定のような業務の画面を組み立てるためのデザインシステムです。手本は2012年前後の37signalsの画面（Basecamp 2・Highrise）です。クリーム色の机の上に白いシートを置き、そこに表や一覧や文章を並べる見た目で、情報を多く並べても読み順が崩れないようにします。
 
-- **中央に作業面を置く画面構成**：上部中央のCommandMenuと中央の作業面。サイドバーを持たず、必要な時だけ左右に補助メニュー（Wing）を開きます。
-- **パネルとボタンの手触り**：パネルやカードは影で浮かび、ボタンは普段は平らで、押すと内側へへこみます。操作や状態が変わった瞬間だけ短く動きます。
+- **表を中心にしたマスタ画面が得意**：並べ替え・列の幅の変更・行の選択と一括操作を持つ`Table`を中心に、一覧・詳細・編集の画面を組めます。文書・予定・連絡・ボードの画面も同じ作法で組めます。
+- **中央に揃えた画面構成**：`AppShell`は、ヘッダー（アプリの名前・主な移動先・検索）と白いシートを画面の中央に揃えます。上の階層はシートの背後に重ねたシートで、分類ごとの移動先はシートの外の先頭側の列で示します。画面の端に固定するサイドバーは持ちません。
+- **平らな塗りと罫線と枠**：シートとカードは枠を持たず、四方へのぼかしの影で机から浮かせた白い面です。一覧と表の行は罫線で区切り、欄とボタンは1pxの枠を持ちます。控えめなボタンは高さ22px・角丸5pxの平らな白、主操作は平らな緑です。グラデーションとアニメーションは使いません。リンクは青緑の文字に下線を引き、今日・選んだ行・更新した行は黄色のハイライトで示します。
 - **フレームワークに依存しない基盤**：CSSとセマンティックHTMLが基盤です。同じHTMLを出力するHono JSXのSSRコンポーネントと、必要な動作を担うStimulus controllerも提供します。
 
-ButtonやInputなどの基本コンポーネントに加え、Toolbar・DangerZone・Board・Calendarなど、特定の用途で情報と操作をまとめるコンポーネントを含めて約90種類を提供します。業務データ・権限・通信・永続化は利用するアプリが持ち、Retrixは情報の読み順・配置・操作を共通化します。
+ButtonやInputなどの基本コンポーネントに加え、Table・Board・Calendar・DangerZoneなど、特定の用途で情報と操作をまとめるコンポーネントを含めて約90種類を提供します。業務データ・権限・通信・永続化は利用するアプリが持ち、Retrixは情報の読み順・配置・操作を共通化します。
+
+## コンポーネントの選び方
+
+| 画面の要素                     | 使うコンポーネント                                                                  |
+| ------------------------------ | ----------------------------------------------------------------------------------- |
+| アプリの画面構成               | `AppShell`（ヘッダー・シート・`trail`・`aside`）。`AppShell`を使わない時は`Surface` |
+| 名前で探す移動と操作           | `CommandMenu`（`AppShell`の`commands`に置く検索）                                   |
+| 同じ列で項目を見比べる一覧     | `Table`。セルを矢印キーで移動するなら`Grid`、親子の階層があるなら`Treegrid`         |
+| 題名と補足で読ませる一覧       | `DataList`。一つの対象の属性は`ValueList`                                           |
+| ページの見出しと操作           | `PageHeader`、まとまりの見出しは`Section`                                           |
+| 入力のフォーム                 | `Field`・`FieldGroup`・`Input`など。修正先の一覧は`ErrorSummary`                    |
+| 対象に対する操作               | `Button`・`ButtonGroup`・`SplitButton`・`DropdownMenu`                              |
+| 判断が必要な処理と近くの補足   | `Dialog`、`Popover`                                                                 |
+| 案内・結果・空の状態           | `Notice`、`Toast`、`EmptyState`                                                     |
+| 作業面に付属する開閉式のパネル | `Wing`（`AppShell`の`wings`）                                                       |
+
+全てのコンポーネントの使いどころは[コンポーネントのリファレンス](docs/components/README.md)にあります。
 
 ## インストール
 
@@ -39,6 +57,26 @@ CSSだけでも同じHTMLで使えます。
 <button class="rx-button" type="submit" data-variant="primary">保存する</button>
 ```
 
+開閉・選択・キーボード操作が必要なコンポーネントは、`@tknf/retrix/controllers`のcontrollerを決められた登録名で登録します。controllerは自動では登録しません。次はTableの並べ替え・行の選択・列の幅の変更を使う場合です。
+
+```ts
+import { Application } from "@hotwired/stimulus";
+import {
+  TableController,
+  TableResizeController,
+  TableSelectController,
+  TableSortController,
+} from "@tknf/retrix/controllers";
+
+const application = Application.start(); // 既存のApplicationがあればそれを使う
+application.register("table", TableController);
+application.register("table-sort", TableSortController);
+application.register("table-select", TableSelectController);
+application.register("table-resize", TableResizeController);
+```
+
+登録名の一覧は[controllerの登録名](docs/components/README.md#controllerの登録名)にあります。
+
 ## カタログ
 
 ```sh
@@ -48,9 +86,9 @@ vp run dev
 
 `http://127.0.0.1:5173`にカタログを表示します。DB・認証・外部サービスは不要です。
 
-- `/`：全コンポーネントを分類ごとに並べます。上部中央のコマンドメニューから名前で探せます。
+- `/`：全コンポーネントを分類ごとに並べます。ヘッダーの末尾側の検索（CommandMenu）から名前で探せます。
 - `/components/<名前>`：見本、使い方、同じ見本のHTMLとHonoのコード。
-- `/apps/project`など：コンポーネントだけで組んだ利用例のアプリ「つむぐ」（プロジェクト・受信トレイ・予定・文書・資料・売上・検索・メンバー・設定）。
+- `/apps/customers`など：コンポーネントだけで組んだ利用例のアプリ「つむぐ」（取引先のマスタ・プロジェクト・受信トレイ・予定・文書・資料・売上・検索・メンバー・設定）。
 
 ## パッケージ
 
@@ -66,7 +104,7 @@ vp run dev
 ## ドキュメント
 
 - [導入](docs/getting-started.md)：CSSだけで使う、Honoで使う、controllerを登録する
-- [デザインの原則](docs/principles.md)：形・面・色・状態・余白・動きの決まり
+- [デザインの原則](docs/principles.md)：画面構成・色・形・文字・状態・余白の決まり
 - [トークン](docs/tokens.md)：`--rx-*`の種類と使い方
 - [CSSの構造](docs/css.md)：読み込み順、レイヤー、クラス名の決まり
 - [コンポーネント](docs/components/README.md)：全コンポーネントのリファレンス。使いどころ、使い方、キーボード、props、controller、読み込むCSS、コード

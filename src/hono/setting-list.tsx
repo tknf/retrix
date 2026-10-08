@@ -8,7 +8,7 @@ export type SettingListItem = {
   description?: Child;
   /** 名前の前に置くアバターやアイコン。 */
   leading?: Child;
-  /** 行の末尾に置く操作（Switch・チェック・役割の丸など）。 */
+  /** 行の末尾に置く操作（Switch・チェックマーク・Buttonなど）。 */
   control: Child;
 };
 export type SettingListProps = ElementProps<"ul"> & {
@@ -19,8 +19,8 @@ export type SettingListProps = ElementProps<"ul"> & {
 };
 
 /**
- * 名前と行の末尾の操作を点線でつなぐ設定の行。
- * 「Everyone ……… スイッチ」「人の名前 ……… ✓」のように、どの名前にどの操作が付くかを目でたどれるようにする。
+ * 設定の名前と行の末尾の操作を並べ、行の間を罫線で区切る設定の一覧。
+ * 名前と操作の間は空けておき、線は引かない。
  */
 export const SettingList = ({
   label,

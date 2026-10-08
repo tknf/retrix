@@ -1,11 +1,17 @@
 @layer components {
   /*
-    スイッチは枠線を持たず、切っている溝は淡い黒、入れた溝は青にする。
-    溝は内側の影で沈め、つまみはボタンの影で浮かせる。高さは一行（20px）、つまみは高さの8割。
+    スイッチ。Basecamp 2・Highriseの画面に手本は無い（推測）。
+    隣に並ぶOSの標準のチェックボックス（実測: controls.md 9。13〜14px、1px #9c9c9c 前後の枠、角丸 約2px）に近い、
+    控えめな小さな溝とつまみにする。溝は高さ14px・幅26pxの灰色の角丸2pxの枠で、つまみは同じ枠の白い小さな四角。
+    入れると溝を青緑で塗り、つまみを終わり側へ動かす。塗りは平らにし、光沢や浮き彫りは付けない。
+    入力の箱は名前の一行と同じ高さにし（名前の一行目と上端をそろえる）、溝とつまみは擬似要素で中央に描く。
   */
   .rx-switch {
+    --rx-switch-edge: #9c9c9c;
+    --rx-switch-width: 1.625rem;
+    --rx-switch-height: 0.875rem;
     display: grid;
-    grid-template-columns: calc(18em / 7) minmax(0, 1fr);
+    grid-template-columns: var(--rx-switch-width) minmax(0, 1fr);
     align-items: start;
     column-gap: var(--rx-space-2);
     min-inline-size: 0;
@@ -16,60 +22,77 @@
     & > input {
       appearance: none;
       display: grid;
-      grid-template-columns: 0fr calc(8em / 7) 1fr;
+      grid-template-columns: minmax(0, 1fr);
       align-items: center;
-      inline-size: calc(18em / 7);
+      inline-size: var(--rx-switch-width);
       block-size: calc(10em / 7);
-      border: 0;
-      border-radius: var(--rx-radius-pill);
-      background: color-mix(in srgb, var(--rx-ink) 14%, var(--rx-surface));
-      color: var(--rx-muted);
-      box-shadow: var(--rx-shadow-input);
-      padding-block: calc(1em / 7);
-      padding-inline: calc(1em / 7);
       margin: 0;
+      padding: 0;
+      border: 0;
+      background: transparent;
       cursor: inherit;
-      transition: grid-template-columns var(--rx-duration) ease-in-out;
     }
 
-    & > input::before {
+    & > input::before,
+    & > input::after {
       content: "";
-      grid-column: 2;
-      inline-size: calc(8em / 7);
-      block-size: calc(8em / 7);
-      border-radius: 50%;
+      grid-area: 1 / 1;
+      box-sizing: border-box;
+      block-size: var(--rx-switch-height);
+      border: var(--rx-stroke-width) solid var(--rx-switch-edge);
+      border-radius: var(--rx-radius-mark);
       background: var(--rx-surface);
-      box-shadow: var(--rx-shadow-hardware);
     }
 
-    & > input:checked {
-      grid-template-columns: 1fr calc(8em / 7) 0fr;
-      background: var(--rx-fill-primary);
-      color: var(--rx-surface);
+    /* 溝。切っている間は、チェックボックスの中ほどの灰色（実測: controls.md 9。#ececec）で塗り、白いつまみと見分ける。 */
+    & > input::before {
+      inline-size: 100%;
+      background: var(--rx-gray-100);
     }
 
-    &:hover > input:not(:disabled, :checked) {
-      background: color-mix(in srgb, var(--rx-ink) 20%, var(--rx-surface));
+    /* つまみ。溝の枠に重ねた、溝と同じ高さの四角。 */
+    & > input::after {
+      justify-self: start;
+      inline-size: 0.75rem;
     }
 
-    /* 欄と同じく、青い縁の外に淡い青の輪を広げる。溝には枠線がないため、縁は影で描く。 */
+    /*
+      オンは、選ぶ操作の共通の見た目（チェックボックスの選んだ状態と同じ青の塗りと紺の縁）。
+      溝は14pxと細く、白いつまみが半分を覆うので、同じ塗りでは選んだ日のセル（24px）より淡く見える。
+      溝だけ同じ色合いで一段濃い塗りにし、選んだ日と同じくらいの濃さに見せる（ユーザーの指定）。
+    */
+    & > input:checked::before {
+      border-color: var(--rx-selected-edge);
+      border-block-end-color: var(--rx-selected-edge-end);
+      background: linear-gradient(#a9d3f9, #86bdf3 50%, #6eaeee);
+    }
+
+    & > input:checked::after {
+      justify-self: end;
+      border-color: var(--rx-selected-edge);
+    }
+
+    /* ホバーは手本が無い（推測）。枠を一段濃くする。 */
+    &:hover > input:not(:disabled, :checked)::before,
+    &:hover > input:not(:disabled, :checked)::after {
+      border-color: color-mix(in srgb, var(--rx-switch-edge) 70%, var(--rx-ink));
+    }
+
+    /* フォーカスは欄と同じ、青い縁と外側の淡い青の輪を溝に出す。 */
     & > input:focus-visible {
-      outline: 0.125rem solid var(--rx-focus-ring);
-      outline-offset: var(--rx-stroke-width);
-      box-shadow:
-        0 0 0 var(--rx-stroke-width) var(--rx-link),
-        var(--rx-shadow-input);
+      outline: 0.125rem solid transparent;
+      outline-offset: 0;
     }
 
-    & > input:disabled {
-      background: var(--rx-hatch), var(--rx-background);
-      box-shadow: none;
-      color: var(--rx-border);
+    & > input:focus-visible::before {
+      border-color: var(--rx-focus-border);
+      box-shadow: var(--rx-focus-glow);
     }
 
+    /* 使えないスイッチは、Buttonと同じく形と塗りをそのままにし、名前の文字だけを灰色にする。 */
     &:has(> input:disabled) {
-      color: var(--rx-muted);
-      cursor: not-allowed;
+      color: var(--rx-disabled-text);
+      cursor: default;
     }
 
     & > span {
@@ -82,6 +105,10 @@
       color: var(--rx-muted);
       font-size: var(--rx-small);
     }
+
+    &:has(> input:disabled) > span > small {
+      color: var(--rx-disabled-text);
+    }
   }
 
   @media (pointer: coarse) {
@@ -93,8 +120,10 @@
   @media (forced-colors: active) {
     .rx-switch > input {
       appearance: auto;
+      block-size: var(--rx-switch-height);
     }
-    .rx-switch > input::before {
+    .rx-switch > input::before,
+    .rx-switch > input::after {
       display: none;
     }
   }

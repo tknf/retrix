@@ -1,29 +1,45 @@
 @layer components {
+  /*
+    一件の発言。BC2のTo-doの「Discuss this to-do」のコメントを手本にする。
+    実測: basecamp2-official/bc2-tour-2014-06-to-do-lists.jpg (126, 460, 1400, 260)。2倍。
+    - アバターは直径59px前後の円（x 126〜243、y 460〜577）。アバターの右から名前まで20px。
+    - 名前は本文と同じ大きさの黒い太字で、アバターの上端のすぐ横に置き、本文はその下に続けて書く（名前と本文の行の間隔は同じ21px）。
+    - 本文は16〜17pxの黒、行の高さ21px。「Posted on Oct 26」は13pxの茶色（実測 #a99b7e。白地で4.5:1に届かないので --rx-meta）。
+    吹き出しにせず、シートの上にそのまま書く。
+    Retrixの文字の段に当てはめ、本文と名前は14px（--rx-reading）、日時は12px、アバターは48px（Avatarのlarge）、アバターと文字の間は16pxにする。
+    日時は名前の行の末尾に置く（手本は本文の下。HTMLの並びを変えないため）。返信のアバターは32pxにする（入れ子を浅く見せるため。推測）。
+    返信をつなぐ線は手本に無い（推測）。
+  */
   .rx-message {
     /* アバターの列の幅。アバターをこの大きさにそろえ、返信の線の位置もここから決める。 */
-    --rx-message-avatar: 2rem;
+    --rx-message-avatar: 3rem;
+    /* アバターと文字の間。返信の線の位置もここから決める。 */
+    --rx-message-gap: var(--rx-space-4);
     --rx-message-thread: color-mix(in srgb, var(--rx-ink) 16%, var(--rx-surface));
     container: rx-message / inline-size;
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: var(--rx-space-1) var(--rx-space-2);
+    gap: var(--rx-space-1) var(--rx-message-gap);
     min-inline-size: 0;
     max-inline-size: 48rem;
     padding-block: var(--rx-space-2);
     color: var(--rx-text);
-    font-size: var(--rx-label);
-    line-height: var(--rx-label-leading);
+    font-size: var(--rx-reading);
+    line-height: calc(21 / 16);
     &:has(> .avatar) {
       grid-template-columns: var(--rx-message-avatar) minmax(0, 1fr);
     }
-    /* アバターは名前の行の横に置き、列の幅にそろえる。本文・操作・返信はその下の行に積む。 */
+    /*
+      アバターは名前と本文の行の横に置き、列の幅にそろえる。名前はアバターの上端の横に置き、本文はそのすぐ下に続ける。
+      操作・返信はその下の行に積む。
+    */
     & > .avatar {
       grid-column: 1;
-      grid-row: 1;
+      grid-row: 1 / 3;
       & > .rx-avatar {
         inline-size: var(--rx-message-avatar);
         block-size: var(--rx-message-avatar);
-        font-size: var(--rx-small);
+        font-size: calc(var(--rx-message-avatar) / 3);
       }
     }
     & > .heading {
@@ -38,8 +54,10 @@
     & > .replies {
       grid-row: 4;
     }
+    /* 名前は本文と同じ大きさの黒い太字、日時は13pxの茶色にする。 */
     & > .heading > strong {
-      font-weight: 600;
+      color: var(--rx-ink);
+      font-weight: 700;
     }
     & > .heading {
       display: flex;
@@ -47,41 +65,39 @@
       flex-wrap: wrap;
       gap: var(--rx-space-2);
       & > time {
-        color: var(--rx-muted);
-        font-size: var(--rx-small);
+        color: var(--rx-meta);
+        font-size: var(--rx-label);
       }
     }
     &:has(> .avatar) > :is(.heading, .body, .actions, .replies) {
       grid-column: 2;
     }
-    /* アバターがある時は、名前の行をアバターの高さにして中央にそろえる。 */
-    &:has(> .avatar) > .heading {
-      align-content: center;
-      min-block-size: var(--rx-message-avatar);
-    }
-    /* 狭いMessageでは、アバターは名前の行の横だけに置き、本文・操作・返信はアバターの下から全幅で書く。 */
-    &:has(> .avatar) > :is(.body, .actions) {
-      @container rx-message (inline-size < 20rem) {
+    /*
+      狭いMessageでは、アバターは名前の行の横だけに置き、名前の行をアバターの高さにして中央にそろえる。
+      本文・操作・返信はアバターの下から全幅で書く。
+    */
+    @container rx-message (inline-size < 20rem) {
+      &:has(> .avatar) > .avatar {
+        grid-row: 1;
+      }
+      &:has(> .avatar) > .heading {
+        align-content: center;
+        min-block-size: var(--rx-message-avatar);
+      }
+      &:has(> .avatar) > :is(.body, .actions) {
         grid-column: 1 / -1;
       }
     }
     /*
-      会話の本文は吹き出しにする。人の側の上の角だけを立て、誰の言葉かを形で示す。
-      吹き出しは文の長さに合わせて縮む。
+      本文はHighriseのノートやBasecamp 2のコメントと同じく、吹き出しにせず紙の上にそのまま書く。
+      誰の言葉かは、左のアバターと上の名前の行で示す。
     */
     & > .body {
-      justify-self: start;
       min-inline-size: 0;
-      max-inline-size: 100%;
-      padding-block: var(--rx-space-3);
-      padding-inline: var(--rx-space-4);
-      border-radius: var(--rx-radius-surface);
-      border-start-start-radius: var(--rx-radius-mark);
-      background: var(--rx-background);
       overflow-wrap: anywhere;
-      /* 吹き出しの中の段落は、行の間（約6px）より少し広いだけの間にし、吹き出しの余白より狭く見せる。 */
+      /* 段落の間は、行の間より少し広いだけにする（推測）。 */
       & > * + * {
-        margin-block-start: var(--rx-space-1);
+        margin-block-start: var(--rx-space-2);
       }
       /* 本文に添えたファイルは、行の上下の余白を持ち込まず、本文から少しだけ離して添える。 */
       & > .rx-file-item {
@@ -97,17 +113,18 @@
       gap: var(--rx-space-2);
     }
     /*
-      文書の形は、一通を一枚のカードにする。日付は見出しの行の終わりに寄せる。
-      続くメッセージのカードは前のカードに少し重ねて積み、スレッドを重なったカードに見せる。
-      後ろのカードが前のカードの文字より上に来るよう、配置済みにしてDOMの順に重ねる。
+      文書の形は、一通を白い紙（BC2のプロジェクトのカードと同じ、枠なし・4〜5pxの影・角丸3px）に書く。日付は見出しの行の終わりに寄せる。
+      続くメッセージは同じ紙の続きにし、間に罫線を一本だけ引いてスレッドを一枚の紙に見せる。
+      後ろの紙が前の紙の影より上に来るよう、配置済みにしてDOMの順に重ねる。
     */
     &[data-layout="document"] {
       position: relative;
-      /* 本文の行高は1.75で行の余りが大きいので、段の間を詰めてカードの余白よりはっきり狭く見せる。 */
+      /* 本文の行の余りがあるので、段の間を詰めてカードの余白よりはっきり狭く見せる。 */
       row-gap: var(--rx-space-2);
       max-inline-size: none;
-      padding-block: var(--rx-space-6);
-      padding-inline: var(--rx-space-6);
+      /* カードと同じく、上下左右を16pxでそろえる。 */
+      padding-block: var(--rx-space-4);
+      padding-inline: var(--rx-space-4);
       border-radius: var(--rx-radius-surface);
       background: var(--rx-surface) var(--rx-fill-paper);
       box-shadow: var(--rx-shadow-paper);
@@ -127,22 +144,23 @@
         padding: 0;
         border-radius: 0;
         background: transparent;
-        font-size: var(--rx-body);
-        line-height: 1.75;
-        /* 行の間が12pxあるので、段落の間は4px足すだけで切れ目が分かる。 */
         & > * + * {
-          margin-block-start: var(--rx-space-1);
+          margin-block-start: var(--rx-space-2);
         }
       }
       /* 操作は本文と同じ書き始め（カードの内側の端）にそろえる。 */
       & > .actions {
         grid-column: 1 / -1;
       }
+      /* 続く紙とは角を立ててつなぎ、輪郭を1px重ねて、つなぎ目を一本の罫線にする。 */
       &:has(+ .rx-message[data-layout="document"]) {
-        padding-block-end: calc(var(--rx-space-6) + var(--rx-space-4));
+        border-end-start-radius: 0;
+        border-end-end-radius: 0;
       }
       & + .rx-message[data-layout="document"] {
-        margin-block-start: calc(-1 * var(--rx-space-4));
+        margin-block-start: calc(-1 * var(--rx-stroke-width));
+        border-start-start-radius: 0;
+        border-start-end-radius: 0;
       }
     }
     /*
@@ -154,6 +172,7 @@
       --rx-message-parent-avatar: var(--rx-message-avatar);
       min-inline-size: 0;
       & > .rx-message {
+        --rx-message-avatar: 2rem;
         position: relative;
         /* とても狭いMessage（文字を大きくした時など）の返信は、アバターを小さくして、入れ子が深くなっても名前の行の幅を残す。 */
         @container rx-message (inline-size < 16rem) {
@@ -171,7 +190,7 @@
     }
     &:has(> .avatar) > .replies > .rx-message:has(> .avatar) {
       --rx-message-branch-start: calc(
-        -1 * (var(--rx-message-parent-avatar) / 2 + var(--rx-space-2)) - var(--rx-stroke-width)
+        -1 * (var(--rx-message-parent-avatar) / 2 + var(--rx-message-gap)) - var(--rx-stroke-width)
       );
       &::after {
         content: "";
@@ -179,7 +198,7 @@
         inset-block-start: calc(-1 * var(--rx-space-1));
         inset-inline-start: var(--rx-message-branch-start);
         inline-size: calc(
-          var(--rx-message-parent-avatar) / 2 + var(--rx-space-2) + var(--rx-stroke-width)
+          var(--rx-message-parent-avatar) / 2 + var(--rx-message-gap) + var(--rx-stroke-width)
         );
         block-size: calc(
           var(--rx-space-1) + var(--rx-space-2) + var(--rx-message-avatar) / 2 +

@@ -14,9 +14,9 @@
 
 `label` と `icon` は必須です。アイコンは塗りつぶしで上、名前は下に置きます。`href` を渡すと移動のリンク（`current` で今いる場所）、渡さなければ `type="button"` のボタンになり、`onclick` や `data-*` で操作を結び付けます。残りの標準の属性は `a` または `button` に渡ります。
 
-`accent` は `blue`（既定）・`green`・`amber`・`coral` で、アイコンの色と、ホバー時の淡い背景色が変わります。
+`accent` は `blue`（既定、リンクと同じ青緑）・`green`・`amber`・`coral` で、アイコンの色が変わります。
 
-普段は影のない平らな淡い面で、ホバーするとアイコンの色を淡く敷き、押すと内側へへこみます。`disabled` はリンクなら移動しない要素（`href` の無い `span`）、ボタンなら押せない状態にし、どちらも半透明にします。
+普段はBasecamp 2のファイルを並べた格子のセルと同じく、白い面に淡い灰色（#e9e9e9 前後）の1pxの枠を付けた角の立った四角で、名前は12pxの黒い太字です。ホバーすると淡い黄色の面にし、押すと黄色の面で内側へへこみます。フォーカスすると内側に青い2pxの線を引きます。`disabled` はリンクなら移動しない要素（`href` の無い `span`）、ボタンなら押せない状態にし、どちらも形と面はそのままで名前とアイコンだけを灰色にします。
 
 `shortcut` は `Keycap` の小さい形で、アイコンの末尾側の上に添えます。キーの登録は利用側が行います。`badge` は `Badge` の小さい形で、アイコンの上に重ねます。バッジがある時は、ショートカットキーの表示をタイルの末尾側の角へ寄せます。
 
@@ -63,9 +63,9 @@
 
 ```tsx
 import { ActionTile, Disclosure, DisclosureGroup } from "@tknf/retrix/hono";
-// セルは5〜7.5remで、入る数だけ並べる（文字を大きくした狭い画面では一列になる）。
+// セルは4〜5.5remで、入る数だけ並べる（文字を大きくした狭い画面では一列になる）。
 const grid =
-  "display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 5rem), 7.5rem)); gap: 0.75rem";
+  "display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 4rem), 5.5rem)); gap: 0.5rem";
 export default () => (
   <div class="rx-stack">
     <div style={grid}>
@@ -127,8 +127,8 @@ export default () => (
   <div
     style="
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(min(100%, 5rem), 7.5rem));
-      gap: 0.75rem;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 4rem), 5.5rem));
+      gap: 0.5rem;
     "
   >
     <a class="rx-action-tile" data-accent="green" href="/" aria-current="page"
@@ -199,8 +199,8 @@ export default () => (
         <div
           style="
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(min(100%, 5rem), 7.5rem));
-            gap: 0.75rem;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 4rem), 5.5rem));
+            gap: 0.5rem;
           "
         >
           <button type="button" class="rx-action-tile">
@@ -259,8 +259,8 @@ export default () => (
         <div
           style="
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(min(100%, 5rem), 7.5rem));
-            gap: 0.75rem;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 4rem), 5.5rem));
+            gap: 0.5rem;
           "
         >
           <button type="button" class="rx-action-tile">
@@ -343,8 +343,8 @@ export default () => (
         <div
           style="
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(min(100%, 5rem), 7.5rem));
-            gap: 0.75rem;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 4rem), 5.5rem));
+            gap: 0.5rem;
           "
         >
           <span
@@ -454,8 +454,8 @@ export default () => (
         <div
           style="
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(min(100%, 5rem), 7.5rem));
-            gap: 0.75rem;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 4rem), 5.5rem));
+            gap: 0.5rem;
           "
           dir="rtl"
           lang="ar"

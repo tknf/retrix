@@ -38,10 +38,10 @@ test("選択済みCheckboxは状態だけでなく白いcheckを実際に描画�
   expect(white).toBeGreaterThanOrEqual(4);
 });
 
-test("基本色を変えてもhover・押下が既定の色へ戻らず、塗りと文字の位置を保つ", async ({ page }) => {
+test("主操作の色を変えてもhover・押下が既定の色へ戻らず、文字の位置を保つ", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/components/button");
-  await page.evaluate(() => document.documentElement.style.setProperty("--rx-brand", "#146f53"));
+  await page.evaluate(() => document.documentElement.style.setProperty("--rx-green", "#146f53"));
   const button = page.locator('[data-example="hono"] button[data-variant="primary"]').first();
   const color = () =>
     button.evaluate((element) => {
@@ -67,41 +67,28 @@ test("基本色を変えてもhover・押下が既定の色へ戻らず、塗り
     expect(green).toBeGreaterThan(red);
     expect(green).toBeGreaterThan(blue);
   }
-  // 塗りの色はホバーしても押しても変えず、影だけで応える。
-  expect(hover).toEqual(normal);
-  expect(active).toEqual(normal);
+  // ホバーと押下は、変えた緑を少し濃くするだけで、既定の色へは戻らない。
+  expect(normal).toEqual([0x14, 0x6f, 0x53]);
+  expect(hover).not.toEqual(normal);
 });
 
-test("選択中のButtonを無効にした場合も通常の無効状態として見分けられる", async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: "reduce" });
+test("選択中のButtonを無効にした場合は、選んだ状態の塗りを残して文字だけを灰色にする", async ({
+  page,
+}) => {
   await page.goto("/components/button");
   const button = page.locator('[data-example="hono"] button[data-variant="primary"]').first();
   await button.evaluate((element) => {
     element.setAttribute("data-current", "true");
     element.setAttribute("disabled", "");
   });
-  const expected = await page
-    .locator('[data-example="hono"]')
-    .getByRole("button", { name: "変更なし", exact: true })
-    .evaluate((element) => ({
-      background: getComputedStyle(element).backgroundColor,
-      color: getComputedStyle(element).color,
-      image: getComputedStyle(element).backgroundImage,
-    }));
+  // 使えない操作は、Highriseの「First」と同じく形と塗りをそのままにし、文字だけを灰色にする。
+  // 選んでいる状態の塗りは淡い青（選ぶ操作の共通の見た目）なので、白い面に戻さずそのまま残す。
   await expect
-    .poll(() =>
-      button.evaluate((element) => {
-        const style = getComputedStyle(element);
-        return {
-          background: style.backgroundColor,
-          color: style.color,
-          image: style.backgroundImage,
-          shadow: style.boxShadow,
-        };
-      }),
-    )
-    .toEqual({ ...expected, shadow: "none" });
-  // 使えない操作は斜線で示す。
-  expect(expected.image).toContain("repeating-linear-gradient");
+    .poll(() => button.evaluate((element) => getComputedStyle(element).color))
+    .toBe("rgb(154, 154, 154)");
+  expect(await button.evaluate((element) => getComputedStyle(element).backgroundImage)).toContain(
+    "linear-gradient",
+  );
+  await expect(button).toHaveCSS("border-inline-start-color", "rgb(94, 100, 179)");
   await expect(button).toBeDisabled();
 });

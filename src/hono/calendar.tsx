@@ -41,9 +41,9 @@ export type CalendarEvent = {
   start?: string;
   /** 終了時刻（HH:MM）。省略すると開始から1時間。 */
   end?: string;
-  /** 分類の色。予定の面をその色で淡く塗る。省略すると青。 */
+  /** 分類の色。月の日と一覧では点と題名の色、終日は帯の塗り、時間割では淡い面と先頭側の線の色にする。省略すると青。 */
   accent?: Accent;
-  /** 仮の予定。破線の縁と斜線で、まだ確定していないことを示す。 */
+  /** 仮の予定。塗らずに破線の縁で囲み、まだ確定していないことを示す。 */
   tentative?: boolean;
 };
 export type CalendarDay = {
@@ -55,7 +55,7 @@ export type CalendarDay = {
   label?: string;
   /** 日のページ。selectionが無い時、日付の数字をこのリンクにする。 */
   href?: string;
-  /** 今日。日付を蛍光ペンで塗り、aria-current="date"を付ける。現在時刻の線と、過去の予定を淡くする基準にもなる。 */
+  /** 今日。黄色のハイライトで塗り、aria-current="date"を付ける。現在時刻の線と、過去の予定を淡くする基準にもなる。 */
   current?: boolean;
   /** 選べない日。リンクにせず、選択のボタンを無効にする。 */
   disabled?: boolean;

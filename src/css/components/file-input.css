@@ -1,71 +1,78 @@
 @layer components {
   /*
-    ファイルを受け入れる場所。「ここに置ける」目印の破線の枠に、青から紫で塗った丸いアイコン・ドロップの案内・選ぶ操作を
-    一行に並べる。選んだファイルはFileItemの形で枠の中に並べ、解除の操作を添える。
-    ドロップを待つ間は枠を実線の青にして淡い青の面を敷く。標準の入力は隠し、フォーカスの輪は選ぶ操作に出す。
+    ファイルを受け入れる場所。BC2のファイルの追加の欄（実測: screenshots/basecamp2-official/bc2-help-files-03.png
+    (71, 34, 430, 238)。1倍）に合わせる。白い面に1px #d5d5d5 の破線（3画素描いて3画素空ける。Chromiumの1px dashedと同じ）、
+    角丸約3px。枠の内側から灰色のクリップのアイコン（#9b9b9b）まで約7px、案内の文字は#757575で約12px、
+    続けて「select files from your computer…」のリンク（#23485f、下線あり）を一行に並べる
+    （同じ形: bc2-whats-new-drag-drop.jpg・bc2-features-drag-and-drop-drag-zone.jpg・bc2-help-projects-101-04.png）。
+    内側の余白は段の12pxに丸め、アイコン・案内・リンクの間は8pxにする。
+    選んだファイルはFileItemの形で枠の中に並べて解除の操作を添える。
+    ドロップを待つ間の見た目は手本に無い（推測）。枠を実線の青緑にして淡い青緑の面を敷く。
+    標準の入力は隠し、フォーカスの輪は選ぶ操作に出す。
   */
   .rx-file-input {
+    --rx-file-input-edge: #d5d5d5;
+    --rx-file-input-hint: #757575;
+    --rx-file-input-symbol: #9b9b9b;
     container: rx-file-input / inline-size;
     position: relative;
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
+    /* 案内は文字の幅だけ取り、リンクをそのすぐ後ろに続ける（BC2の一文の並び）。狭い時は案内が折り返す。 */
+    grid-template-columns: auto minmax(0, max-content) minmax(0, 1fr);
     align-items: center;
-    gap: var(--rx-space-2) var(--rx-space-3);
+    gap: var(--rx-space-2);
     min-inline-size: 0;
     padding-block: var(--rx-space-3);
     padding-inline: var(--rx-space-3);
-    border: var(--rx-frame-width) dashed color-mix(in srgb, var(--rx-link) 30%, var(--rx-surface));
+    border: var(--rx-stroke-width) dashed var(--rx-file-input-edge);
     border-radius: var(--rx-radius-field);
-    background: color-mix(in srgb, var(--rx-link) 3%, var(--rx-surface));
+    background: var(--rx-surface);
     font-size: var(--rx-label);
     line-height: calc(10 / 7);
-    transition:
-      background-color var(--rx-duration) ease,
-      border-color var(--rx-duration) ease;
 
     &[data-state="dragover"] {
       border-style: solid;
-      border-color: var(--rx-link);
+      border-color: var(--rx-teal);
       background: var(--rx-cover);
     }
     &:has(> .rx-input[data-invalid="true"]) {
       border-color: color-mix(in srgb, var(--rx-danger) 60%, var(--rx-surface));
-      background: color-mix(in srgb, var(--rx-danger) 3%, var(--rx-surface));
+      background: var(--rx-danger-soft);
     }
-    &:has(> .rx-input:disabled) {
-      border-color: var(--rx-border);
-      background: var(--rx-hatch), var(--rx-surface);
+    /* 淡い赤の面の上では#757575が4.5:1に届かないので、案内を一段濃い灰色にする。 */
+    &:has(> .rx-input[data-invalid="true"]) > .hint {
       color: var(--rx-muted);
+    }
+    /* 使えない時は、Buttonと同じく形と面をそのままにし、文字とアイコンだけを灰色にする。 */
+    &:has(> .rx-input:disabled) {
+      color: var(--rx-disabled-text);
       outline: none;
+    }
+    &:has(> .rx-input:disabled) > .symbol {
+      color: var(--rx-disabled-text);
     }
     &:has(> .rx-input:disabled) > .hint {
       visibility: hidden;
     }
-    /* アイコン。EmptyStateのアイコンと同じ丸を、DropdownMenuと同じ青から紫で塗る。 */
+    /* アイコン。面は塗らず、灰色のクリップのアイコンだけを置く（手本は約16px）。エラーの時は危険の色にする。 */
     & > .symbol {
       display: grid;
       grid-column: 1;
       place-items: center;
-      inline-size: 2.25rem;
-      block-size: 2.25rem;
-      border-radius: 50%;
-      background: var(--rx-fill-menu);
-      color: var(--rx-surface);
-      font-size: 1.125rem;
+      inline-size: 1rem;
+      block-size: 1rem;
+      color: var(--rx-file-input-symbol);
+      font-size: 1rem;
     }
     &:has(> .rx-input[data-invalid="true"]) > .symbol {
-      background: var(--rx-fill-danger);
-    }
-    &:has(> .rx-input:disabled) > .symbol {
-      background: var(--rx-border);
-      color: var(--rx-muted);
+      color: var(--rx-danger);
     }
     & > .hint {
       grid-column: 2;
       min-inline-size: 0;
       margin: 0;
-      color: var(--rx-text);
-      font-weight: 600;
+      color: var(--rx-file-input-hint);
+      font-weight: 400;
       overflow-wrap: anywhere;
       /* 日本語は文節の切れ目で折り返し、行末に一、二文字だけを残さない。 */
       word-break: auto-phrase;
@@ -78,9 +85,11 @@
       JavaScriptが有効なら標準入力を画面上は隠し、ラベルを共通Buttonとして見せる。
       入力はフォーカスとキーボード操作のため残し、フォーカスの輪はラベルに出す。
     */
+    /* 選ぶ操作は案内のすぐ後ろに置き、文字の操作の左右の余白を打ち消して案内との間を8pxにする。 */
     & > .choose {
       grid-column: 3;
-      justify-self: end;
+      justify-self: start;
+      margin-inline-start: calc(-4em / 7);
       cursor: pointer;
     }
     /* 案内が隠れている時（JavaScriptの読み込み前・タッチの画面）は、選ぶ操作をアイコンの隣へ寄せる。 */
@@ -91,14 +100,14 @@
       margin-inline-start: calc(-4em / 7);
     }
     &:has(> .rx-input:focus-visible) > .choose {
-      outline: 0.125rem solid var(--rx-link);
+      outline: 0.125rem solid var(--rx-focus-border);
       outline-offset: 0.125rem;
     }
-    /* 選ぶ操作は枠のない青い文字（Buttonのlink）。使えない時は淡い文字にし、斜線は枠の面に任せる。 */
+    /* 選ぶ操作は枠のない青い文字（Buttonのlink）。使えない時は文字だけを灰色にする。 */
     &:has(> .rx-input:disabled) > .choose {
       background: transparent;
-      color: var(--rx-muted);
-      cursor: not-allowed;
+      color: var(--rx-disabled-text);
+      cursor: default;
     }
     & > .rx-input[type="file"] {
       block-size: auto;
@@ -111,35 +120,42 @@
       font-size: inherit;
       line-height: var(--rx-button-size);
 
+      /* JavaScriptが無い時に見える標準の選ぶ操作。控えめなボタン（実測: controls.md 1）と同じ形にする。 */
       &::file-selector-button {
         box-sizing: border-box;
         max-inline-size: 100%;
         min-block-size: var(--rx-button-size);
-        padding-block: calc((var(--rx-button-size) - 10em / 7 - 0.125rem) / 2);
-        padding-inline: 0.75em;
+        padding-block: 0;
+        padding-inline: calc(11em / 12);
         margin-inline-end: var(--rx-space-2);
-        border: var(--rx-stroke-width) solid var(--rx-border);
-        border-radius: var(--rx-radius-pill);
-        background: var(--rx-surface) var(--rx-fill-control);
-        box-shadow: none;
+        border: var(--rx-stroke-width) solid var(--rx-control-border);
+        border-radius: var(--rx-radius-control);
+        background: var(--rx-surface);
+        box-shadow: var(--rx-shadow-control);
         color: var(--rx-text);
-        font: inherit;
+        font-family: var(--rx-control-font-family);
+        font-size: var(--rx-button-font);
+        font-weight: 400;
         line-height: calc(10 / 7);
         white-space: normal;
         cursor: pointer;
-        transition: background-color var(--rx-duration) ease;
       }
+      /* 押す操作の手触りは共通Buttonと同じ（推測）。ホバーで面を少し灰色にし、押すと内側へへこむ。 */
       &::file-selector-button:hover {
-        background: var(--rx-info-soft);
+        border-color: color-mix(in srgb, var(--rx-control-border) 75%, var(--rx-ink));
+        background: #fafafa;
+        box-shadow: var(--rx-shadow-control-hover);
       }
       &::file-selector-button:active {
-        background: color-mix(in srgb, var(--rx-link) 14%, var(--rx-surface));
+        background: var(--rx-gray-50);
+        box-shadow: var(--rx-shadow-control-pressed);
       }
       &:disabled::file-selector-button {
-        border-color: var(--rx-border);
-        background: var(--rx-hatch), var(--rx-surface);
-        color: var(--rx-muted);
-        cursor: not-allowed;
+        border-color: var(--rx-control-border);
+        background: var(--rx-surface);
+        box-shadow: var(--rx-shadow-control);
+        color: var(--rx-disabled-text);
+        cursor: default;
       }
     }
   }
@@ -149,8 +165,7 @@
     margin: 0;
     padding-block: var(--rx-space-1) 0;
     padding-inline: 0;
-    border-block-start: var(--rx-stroke-width) solid
-      color-mix(in srgb, var(--rx-link) 15%, var(--rx-surface));
+    border-block-start: var(--rx-stroke-width) solid var(--rx-border);
     list-style: none;
     & > li {
       min-inline-size: 0;

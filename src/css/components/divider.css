@@ -1,7 +1,15 @@
 @layer components {
-  /* 線は背景として描き、実線と破線を同じ位置と太さの規則で切り替える。 */
+  /*
+    線は背景として描き、実線と破線を同じ位置と太さの規則で切り替える。
+    実線はシートの見出しの下の罫線と同じ1px #dedede（structure.md「見出しの下の罫線」）。
+    名前はBC2のCatch upの区分の見出し（「15 people contributed」「3 to-dos were started…」。lists.md「BC2 Catch up」、
+    bc2-features-progress-catch-up.jpg。1倍）と同じ、茶色がかった灰色の11pxの太字。
+    実測の#a2967eは白地で4.5:1に届かないため、日付と同じ茶色の--rx-metaに濃くする（実測 #a2967e → #7b6f54）。
+    線は名前の行の上下の中央に引き、名前・操作との間を8px空ける（bc2-svn-3118-group-bubble-context.png の「Groups」の線も
+    見出しの行の中央を通る）。
+  */
   .rx-divider {
-    --rx-divider-color: var(--rx-border);
+    --rx-divider-color: var(--rx-gray-200);
     --rx-divider-size: var(--rx-stroke-width);
     --rx-divider-paint: linear-gradient(var(--rx-divider-color), var(--rx-divider-color));
     display: flex;
@@ -14,7 +22,7 @@
     & > span {
       flex: 0 1 auto;
       min-inline-size: 0;
-      color: var(--rx-muted);
+      color: var(--rx-meta);
       font-size: var(--rx-small);
       font-weight: 600;
       line-height: var(--rx-small-leading);

@@ -12,15 +12,15 @@
 
 ## 使い方
 
-`items` の各行を標準のcheckboxで描き、`label` を題名、`detail` を題名の下の補足、`end` を行の終わりに置きます。`end` には担当の `Avatar` や期日の `Badge` を置けます。完了した題名は、先頭側からペンで引く線で消します。
+`items` の各行を標準のcheckboxで描き、`label` を題名、`detail` を題名の後ろの補足、`end` を題名の後ろの末尾に置きます。`end` には担当の `Avatar` や期日の `Badge` を置けます。行はBasecamp 2のTo-doと同じく枠で囲まず、罫線も引かずに詰めて並べ、OSの標準のチェックボックスの隣に題名を13pxの黒の通常の太さで書きます。`detail` は題名のすぐ後ろに、担当者・期日と同じ灰色のピル（#eeeeeeの地に灰色の11pxの文字）で続けます。押せる行にホバーすると、行を淡い黄色で塗ります。完了した行はBasecamp 2の完了したTo-doと同じく、取り消し線を引かずに題名を一段小さい灰色の文字（12px）にし、`detail` もピルを外して同じ灰色で続けます。
 
 各行の `name` と `value` は、囲むフォームで送る名前と値になります。完了の保存は、フォームの送信か、`change` を受ける利用側のcontrollerで行います。標準のcheckboxと同じく、チェックの無い行は送られません。
 
 `title` を渡すと、行の一覧の先頭に一覧の名前を見出し（`h3`）で置きます。
 
-`heading` を渡すと、一覧を開閉できる `details`（最初は開いた状態）で包み、見出しに完了した割合を示す円グラフと「完了数/全体」を添えます。`TaskListController` を `task-list` として登録すると、チェックに合わせて数え直し、全て完了すると円グラフを緑にしてチェックを表示します。この時、渡した `data-controller` と `data-action` は `task-list` のものに追加して付けます。
+`heading` を渡すと、一覧を開閉できる `details`（最初は開いた状態）で包み、見出しに完了した割合だけ緑で塗る小さな円グラフと「完了数/全体」を添えます。`TaskListController` を `task-list` として登録すると、チェックに合わせて数え直し、全て完了すると円グラフを緑で塗りきって白いチェックを表示し、数を緑にします。この時、渡した `data-controller` と `data-action` は `task-list` のものに追加して付けます。
 
-`add` を渡すと、最後の行に項目を追加する入力欄を置きます。入力欄は `name` で文字を送るだけで、行を増やす処理は利用側のフォームと応答で行います。一覧の外にあるフォームへ送る時は、`form` にそのフォームのidを渡します。
+`add` を渡すと、最後の行に項目を追加する入力欄を、追加のアイコンと青緑のプレースホルダーの文字で置きます（Basecamp 2の「Add a to-do」）。入力している間は、行を淡い青緑の面にし、アイコンを青緑の丸にします。入力欄は `name` で文字を送るだけで、行を増やす処理は利用側のフォームと応答で行います。一覧の外にあるフォームへ送る時は、`form` にそのフォームのidを渡します。
 
 JavaScriptが無い時も、checkboxとフォームの送信は働きます。見出しの数と円グラフは描画時の値のままです。
 
@@ -59,15 +59,15 @@ JavaScriptが無い時も、checkboxとフォームの送信は働きます。�
 
 #### `items`の項目
 
-| 名前            | 型        | 既定値 | 説明                                         |
-| --------------- | --------- | ------ | -------------------------------------------- |
-| `name`（必須）  | `string`  |        | checkboxをフォームで送る名前。               |
-| `label`（必須） | `string`  |        | 項目の題名。checkboxのラベルになる。         |
-| `checked`       | `boolean` |        | 終えた項目。チェックを付け、題名に線を引く。 |
-| `disabled`      | `boolean` |        | 操作できない項目。                           |
-| `detail`        | `Child`   |        | 題名の下に添える補足（担当・期日など）。     |
-| `value`         | `string`  |        | checkboxの値。省くと標準どおり`on`を送る。   |
-| `end`           | `Child`   |        | 行の末尾に置く要素（AvatarやBadgeなど）。    |
+| 名前            | 型        | 既定値 | 説明                                                                 |
+| --------------- | --------- | ------ | -------------------------------------------------------------------- |
+| `name`（必須）  | `string`  |        | checkboxをフォームで送る名前。                                       |
+| `label`（必須） | `string`  |        | 項目の題名。checkboxのラベルになる。                                 |
+| `checked`       | `boolean` |        | 終えた項目。チェックを付け、題名と補足を一段小さい灰色の文字にする。 |
+| `disabled`      | `boolean` |        | 操作できない項目。                                                   |
+| `detail`        | `Child`   |        | 題名の後ろに灰色のピルで添える補足（担当・期日など）。               |
+| `value`         | `string`  |        | checkboxの値。省くと標準どおり`on`を送る。                           |
+| `end`           | `Child`   |        | 行の末尾に置く要素（AvatarやBadgeなど）。                            |
 
 ## コード
 
@@ -133,7 +133,7 @@ export default () => (
             {
               name: "snack",
               label: "お茶と菓子を用意する",
-              end: <Badge>10月3日</Badge>,
+              detail: "10月3日",
             },
           ]}
         />
@@ -377,12 +377,9 @@ export default () => (
             <li>
               <label class="rx-choice" data-kind="plain"
                 ><input name="snack" type="checkbox" /><span
-                  ><strong>お茶と菓子を用意する</strong></span
+                  ><strong>お茶と菓子を用意する</strong><small>10月3日</small></span
                 ></label
               >
-              <div class="end">
-                <span class="rx-badge" data-tone="neutral">10月3日</span>
-              </div>
             </li>
           </ul>
         </details>

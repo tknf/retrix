@@ -15,7 +15,7 @@
 
 `DialogController` を `dialog` として登録します。`id` は画面内で一意にします。閉じたネイティブの `dialog` と開く操作を出力し、開く操作を押すとモーダルで開きます。
 
-パネルは見出し・本文・操作欄に分け、長い本文は本文だけをスクロールします。見出しの行の末尾に閉じる操作を置き、`closeLabel` はその名前です。`actions` を渡すと、操作欄の先頭に `closeLabel` の文言の閉じる操作を置き、その後ろに `actions` を並べます。
+パネルは白いパネル（1px #bbb の枠、角丸5px、外への柔らかい影）で、見出し・本文・操作欄に分け、長い本文は本文だけをスクロールします。見出しは問いの形の赤茶（#a52a2a）の太字で、本文の大きさ（13px）です。見出しと本文の間に罫線は引きません。`description` は見出しの下に12pxの灰色の文字で置きます。操作欄は末尾側に揃えます。見出しの行の末尾の角に、枠も塗りも持たない灰色の×の閉じる操作を置き、`closeLabel` はその名前です。`actions` を渡すと、操作欄の先頭に `closeLabel` の文言の閉じる操作を置き、その後ろに `actions` を並べます。
 
 操作欄の操作で閉じるには `data-dialog-target="close"` を付けます。確認の後の保存・削除・通信は利用側が行い、`dialog:close` などのイベントや、操作の `onclick` で受け取ります。
 
@@ -23,9 +23,9 @@
 
 `size` はパネルの幅の上限で、`compact` は26rem、`default` は32rem、`wide` は52remです。画面が狭い時は、画面の幅から余白を引いた幅に収めます。
 
-幅40rem以下のタッチ画面では、下端に付くシートとして出します。上端のハンドルと見出しを下へ引くと閉じます（少し動かしただけでは閉じません）。
+幅40rem以下のタッチ画面では、画面の下端に付くシートとして出し、上端に灰色の短いハンドルを置きます。上端のハンドルと見出しを下へ引くと閉じます（少し動かしただけでは閉じません）。
 
-開いている間は背後を暗くし、Escape・閉じる操作・背景を押すと閉じ、フォーカスを開いた操作へ戻します。JavaScriptなしでは開きません。
+開閉はその場で切り替え、アニメーションはしません。開いている間は背後を濃い灰色（#323136）の80%で覆って暗くし、Escape・閉じる操作・背景を押すと閉じ、フォーカスを開いた操作へ戻します。JavaScriptなしでは開きません。
 
 ## キーボード
 
@@ -77,7 +77,7 @@
 
 #### `ButtonVariant`
 
-操作の見た目の役割。primaryは青の塗り、secondaryは白い面と枠、dangerは赤の塗り、 linkは面も枠も持たない青い文字。形はどれもピルで、違いは塗りの色で出す。
+操作の見た目の役割。primaryは平らな緑の塗りに白い太字（角丸4px）、secondaryは平らな白い面と1pxの灰色の枠（角丸5px）、 dangerは平らな赤の塗りに白い文字（角丸4px）、linkは面も枠も持たない青緑の文字に下線。
 
 値：`"primary" | "secondary" | "danger" | "link"`
 
@@ -230,7 +230,7 @@ export default () => (
         size="wide"
       >
         {Array.from({ length: 12 }, (_, index) => (
-          <section class="rx-stack" data-space="small">
+          <section>
             <h3>確認事項 {index + 1}</h3>
             <p>
               本文が長い場合は、この領域をスクロールして確認します。見出しの閉じる操作から戻れます。
@@ -981,73 +981,73 @@ export default () => (
             </div>
           </header>
           <div class="body">
-            <section class="rx-stack" data-space="small">
+            <section>
               <h3>確認事項 1</h3>
               <p>
                 本文が長い場合は、この領域をスクロールして確認します。見出しの閉じる操作から戻れます。
               </p>
             </section>
-            <section class="rx-stack" data-space="small">
+            <section>
               <h3>確認事項 2</h3>
               <p>
                 本文が長い場合は、この領域をスクロールして確認します。見出しの閉じる操作から戻れます。
               </p>
             </section>
-            <section class="rx-stack" data-space="small">
+            <section>
               <h3>確認事項 3</h3>
               <p>
                 本文が長い場合は、この領域をスクロールして確認します。見出しの閉じる操作から戻れます。
               </p>
             </section>
-            <section class="rx-stack" data-space="small">
+            <section>
               <h3>確認事項 4</h3>
               <p>
                 本文が長い場合は、この領域をスクロールして確認します。見出しの閉じる操作から戻れます。
               </p>
             </section>
-            <section class="rx-stack" data-space="small">
+            <section>
               <h3>確認事項 5</h3>
               <p>
                 本文が長い場合は、この領域をスクロールして確認します。見出しの閉じる操作から戻れます。
               </p>
             </section>
-            <section class="rx-stack" data-space="small">
+            <section>
               <h3>確認事項 6</h3>
               <p>
                 本文が長い場合は、この領域をスクロールして確認します。見出しの閉じる操作から戻れます。
               </p>
             </section>
-            <section class="rx-stack" data-space="small">
+            <section>
               <h3>確認事項 7</h3>
               <p>
                 本文が長い場合は、この領域をスクロールして確認します。見出しの閉じる操作から戻れます。
               </p>
             </section>
-            <section class="rx-stack" data-space="small">
+            <section>
               <h3>確認事項 8</h3>
               <p>
                 本文が長い場合は、この領域をスクロールして確認します。見出しの閉じる操作から戻れます。
               </p>
             </section>
-            <section class="rx-stack" data-space="small">
+            <section>
               <h3>確認事項 9</h3>
               <p>
                 本文が長い場合は、この領域をスクロールして確認します。見出しの閉じる操作から戻れます。
               </p>
             </section>
-            <section class="rx-stack" data-space="small">
+            <section>
               <h3>確認事項 10</h3>
               <p>
                 本文が長い場合は、この領域をスクロールして確認します。見出しの閉じる操作から戻れます。
               </p>
             </section>
-            <section class="rx-stack" data-space="small">
+            <section>
               <h3>確認事項 11</h3>
               <p>
                 本文が長い場合は、この領域をスクロールして確認します。見出しの閉じる操作から戻れます。
               </p>
             </section>
-            <section class="rx-stack" data-space="small">
+            <section>
               <h3>確認事項 12</h3>
               <p>
                 本文が長い場合は、この領域をスクロールして確認します。見出しの閉じる操作から戻れます。

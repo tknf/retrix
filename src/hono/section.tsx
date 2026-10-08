@@ -7,7 +7,7 @@ export type SectionProps = PropsWithChildren<
     title: string;
     /** 見出しの横に出す件数。0も表示し、省略すると出さない。 */
     count?: number;
-    /** 見出しの前の丸いマークの色。色だけでは意味が伝わらないので、状態は見出しの文言でも示す。 */
+    /** 見出しの文字の色（neutralは赤）。入れ子の中で黒い太字にした見出しには効かない。色だけでは意味が伝わらないので、状態は見出しの文言でも示す。 */
     tone?: Tone;
     /** 見出しの行の末尾側に置く操作（ActionLinkやButtonなど）。 */
     actions?: Child;

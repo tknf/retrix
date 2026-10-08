@@ -11,7 +11,7 @@
 
 ## 使い方
 
-`legend` と、送信する名前の接頭辞 `name` を渡します。`start`・`end` には初めの `date`（`YYYY-MM-DD`）と `time`（`HH:MM`）を渡します。開始と終了を淡い背景の一つの枠に並べて矢印でつなぎ、それぞれ小さな名前の下に日付と時刻の欄を縦に並べます。欄は標準の日付・時刻入力（`DateField`・`TimeField`）です。
+`legend` と、送信する名前の接頭辞 `name` を渡します。`start`・`end` には初めの `date`（`YYYY-MM-DD`）と `time`（`HH:MM`）を渡します。Basecamp 2の予定のパネルの「Starts: / Ends:」と同じく、枠も面も持たずに開始と終了を縦に積み、それぞれ先頭側の列に欄の側へ寄せた黒い名前（12px）を置き、その後ろに日付の欄と時刻の欄を一行に並べます。名前の列の幅は開始と終了でそろえます。欄は標準の日付・時刻入力（`DateField`・`TimeField`）です。
 
 送信する値：`name="event"` なら、各欄の値を `event[start_date]`・`event[start_time]`・`event[end_date]`・`event[end_time]` で送ります。終日のSwitchはオンの時だけ `event[all_day]` に `1` を送り、オフの時は送りません。
 
@@ -19,7 +19,7 @@
 
 `timezone` を渡すと、枠の下に地球のアイコンとタイムゾーンを添えます。表示だけで、送信はしません。
 
-枠の幅が26rem未満の狭い場所では、開始と終了を縦に並べ、矢印を下に向けます。
+置き場所の幅が26rem未満の狭い場所では、時刻の欄を日付の欄の下に回し、欄を名前の後ろの幅いっぱいに広げます。
 
 開始と終了の前後関係や、未入力の検証は行いません。利用側とサーバー側で検証します。各欄の変更は `DateField`・`TimeField` のcontrollerが発火する `date-field:change`・`time-field:change` で受け取れます。
 
@@ -28,7 +28,7 @@ JavaScriptが無い時も、標準の日付・時刻入力とチェックボッ�
 ## アクセシビリティ
 
 - 枠は `fieldset` で、`legend` がまとまりの名前です。日付と時刻の欄は「開始の日付」「終了の時刻」のように、`startLabel`・`endLabel` を先頭に付けた名前を持ちます。
-- つなぎの矢印は読み上げません。終日のSwitchは `role="switch"` のcheckboxです。
+- 終日のSwitchは `role="switch"` のcheckboxです。
 
 ## イベント
 
@@ -43,7 +43,7 @@ JavaScriptが無い時も、標準の日付・時刻入力とチェックボッ�
 
 ### DateTimeRange
 
-開始と終了の日付と時刻を矢印でつないで一つの枠に並べる。終日にすると時刻の欄を隠す。日付と時刻の欄は共通のDateField・TimeField。
+開始と終了を縦に積み、それぞれ名前の後ろに日付と時刻の欄を一行に並べる。終日にすると時刻の欄を隠す。日付と時刻の欄は共通のDateField・TimeField。
 
 | 名前             | 型        | 既定値   | 説明                                                                                                             |
 | ---------------- | --------- | -------- | ---------------------------------------------------------------------------------------------------------------- |
@@ -95,7 +95,7 @@ export default () => (
           allDay
         />
       </Disclosure>
-      <Disclosure summary="狭い場所：開始と終了を縦に積む">
+      <Disclosure summary="狭い場所：時刻の欄を日付の欄の下に回す">
         <div style="max-inline-size: 20rem">
           <DateTimeRange
             legend="取材"
@@ -300,7 +300,7 @@ export default () => (
           >
             <use href="/assets/rx-icons.svg#rx-caret"></use></svg></span
         ><span class="label"
-          ><span class="title">狭い場所：開始と終了を縦に積む</span></span
+          ><span class="title">狭い場所：時刻の欄を日付の欄の下に回す</span></span
         >
       </summary>
       <div class="body">

@@ -29,7 +29,7 @@ export type CodeBlockProps = ElementProps<"figure"> & {
   copy?: boolean;
   /** 行の先頭に番号を振る。番号はコピーする内容に含めない。 */
   lineNumbers?: boolean;
-  /** 淡い黄色の地で目印にする行（1から数える）。 */
+  /** 黄色のハイライトで目印にする行（1から数える）。 */
   highlight?: readonly number[];
 };
 

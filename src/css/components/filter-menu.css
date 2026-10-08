@@ -1,9 +1,9 @@
 @layer components {
   /*
-    絞り込めるメニュー。DropdownMenuと同じ青い面のパネルに、
-    上に白い絞り込みの欄と「新しく作る」、その下に淡い大文字の見出しと候補を並べる。
-    候補は選んだものに白いチェックを置き、上下の矢印キーで選んでいる候補とホバーした候補は白を薄く重ねる。
-    位置と出入りの動きは、Popoverと同じoverlay.cssの共通の定義に任せる。
+    絞り込めるメニュー。実測: overlays.md「1c. 絞り込みのメニュー」「1d. ラベルの選択のパネル」。
+    枠と影はポップオーバーと同じ（overlay.css）。上に絞り込みの欄と「新しく作る」、その下に小さな灰色の見出しと候補を並べる。
+    候補の間隔は28px。選んだ候補は#244960の太字にしてチェックを置き、上下の矢印キーで選んでいる候補とホバーした候補は
+    BC2の淡い青のピル（#dde4f5）で塗る。位置はPopoverと同じoverlay.cssの共通の定義に任せる。
   */
   .rx-filter-menu {
     display: grid;
@@ -14,17 +14,21 @@
     }
     & > .panel.rx-overlay {
       --rx-overlay-width: 17rem;
-      padding-block: var(--rx-space-2);
-      padding-inline: var(--rx-space-2);
-      background: var(--rx-link);
+      /*
+        パネルの内側の余白は1cと同じ12px。下端は候補の行が上下の余白を持つので、
+        その分を引いて、最後の候補の文字から縁までを上の余白とそろえる。
+      */
+      padding-block: var(--rx-space-3) var(--rx-space-2);
+      padding-inline: var(--rx-space-3);
+      background: var(--rx-surface);
       background-image: var(--rx-fill-menu);
-      color: var(--rx-surface);
+      color: var(--rx-text);
       &:popover-open {
         display: grid;
         grid-template-rows: auto auto minmax(0, 1fr) auto;
         gap: var(--rx-space-1);
       }
-      /* 絞り込みの欄。枠のない白い面のピルにする。 */
+      /* 絞り込みの欄。一行の入力欄（controls.md 6a章）と同じく、1px #dedede・角丸2px・内側の影なし。 */
       & > .search {
         display: flex;
         align-items: center;
@@ -36,14 +40,16 @@
           align-items: center;
           gap: var(--rx-space-2);
           min-inline-size: 0;
-          padding-inline: var(--rx-space-3);
-          border-radius: var(--rx-radius-pill);
+          padding-inline: var(--rx-space-2);
+          border: var(--rx-stroke-width) solid var(--rx-input-border);
+          border-radius: var(--rx-radius-mark);
           background: var(--rx-surface);
           color: var(--rx-muted);
+          box-shadow: var(--rx-shadow-input);
           & > input {
             flex: 1 1 auto;
             min-inline-size: 0;
-            block-size: var(--rx-button-size);
+            block-size: calc(var(--rx-button-size) - 2 * var(--rx-stroke-width));
             padding: 0;
             border: 0;
             background: transparent;
@@ -52,11 +58,12 @@
             line-height: var(--rx-label-leading);
             outline: 0;
             &::placeholder {
-              color: var(--rx-muted);
+              color: var(--rx-placeholder);
             }
           }
           &:has(> input:focus-visible) {
-            box-shadow: 0 0 0 0.125rem color-mix(in srgb, var(--rx-surface) 60%, transparent);
+            border-color: var(--rx-focus-border);
+            box-shadow: var(--rx-focus-glow);
           }
         }
         & > .create {
@@ -67,12 +74,16 @@
         margin: 0;
         padding-block: var(--rx-space-2) 0;
         padding-inline: var(--rx-space-2);
-        color: color-mix(in srgb, var(--rx-surface) 75%, transparent);
+        color: var(--rx-muted);
         font-size: var(--rx-small);
-        font-weight: 700;
+        font-weight: 600;
         line-height: var(--rx-small-leading);
       }
+      /* 候補は高さ28pxの行を隙間なく並べる（DropdownMenuの項目と同じ間隔）。 */
       & > .options {
+        display: grid;
+        align-content: start;
+        row-gap: 0;
         min-block-size: 0;
         margin: 0;
         padding: 0;
@@ -84,21 +95,24 @@
           align-items: center;
           gap: var(--rx-space-2);
           min-inline-size: 0;
-          padding-block: var(--rx-space-2);
+          min-block-size: calc(28em / 12);
+          padding-block: 0.125rem;
           padding-inline: var(--rx-space-2);
-          border-radius: var(--rx-radius-control);
+          border-radius: 0;
           cursor: pointer;
-          transition: background-color var(--rx-duration) ease;
           &[hidden] {
             display: none;
           }
           &:hover,
           &[data-active="true"] {
-            background: color-mix(in srgb, var(--rx-surface) 16%, transparent);
+            background: var(--rx-menu-active);
+            color: var(--rx-option-active-text);
           }
+          /* 使えない候補は形をそのままにし、文字だけを灰色にする。 */
           &[data-disabled="true"] {
-            opacity: 0.5;
-            cursor: not-allowed;
+            background: transparent;
+            color: var(--rx-disabled-text);
+            cursor: default;
           }
           /* アイコンの枠。アイコンのない候補は、選んだ時だけチェックを見せる。 */
           & > .mark {
@@ -126,8 +140,12 @@
         & > .option:not(:has(> .check)) > .mark > .rx-icon {
           visibility: hidden;
         }
+        /* 選んだ候補は1cの選んだ項目と同じ#244960の太字。 */
+        & > .option[data-selected="true"]:not([data-disabled="true"]) {
+          color: var(--rx-option-active-text);
+        }
         & > .option[data-selected="true"] {
-          font-weight: 700;
+          font-weight: 600;
           & > .check {
             display: grid;
           }
@@ -140,7 +158,7 @@
         margin: 0;
         padding-block: var(--rx-space-2);
         padding-inline: var(--rx-space-2);
-        color: color-mix(in srgb, var(--rx-surface) 75%, transparent);
+        color: var(--rx-muted);
       }
     }
   }

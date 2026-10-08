@@ -2,7 +2,7 @@
 
 # Countdown
 
-期限や残りの数を、大きな数字の丸いバッジで示します。
+期限や残りの数を、大きな数字の丸いマークで示します。
 
 ## 使いどころ
 
@@ -12,9 +12,9 @@
 
 ## 使い方
 
-白い丸に `value` を大きな太字の数字で置き、`before` を数字の上、`after` を数字の下に小さく添えます。数字の代わりに「完」のような一文字も置けます。
+Basecamp 2のProgressの日付の丸と同じ形で、直径88pxの白い丸に `value` を18pxの太字の数字で置き、`before` を数字の上、`after` を数字の下に11pxの灰色の通常の太さの文字で添えます。数字の代わりに「完」のような一文字も置けます。
 
-役割の色（`tone`）の細いリングで縁取り、カードと同じ影で浮かせます。期限が迫る時は `danger`、単なる残数は `info` など、意味に合わせて選びます。
+丸は暖かい灰色（`#dcd9d2`）の5pxの輪で縁取り、影は付けません。数字は役割の色（`tone`、既定は `warning`）で書きます。期限が迫る時は `danger`、単なる残数は `info` など、意味に合わせて選びます。
 
 残りの数は利用側で数えて渡します。Countdownは時間の経過で数を変えません。
 
@@ -23,21 +23,21 @@
 ## アクセシビリティ
 
 - 全体を `role="img"` にし、`label` を読み上げ名にします。中の数字と文言は読み上げないので、`label` に「締め切りまであと3日」のような全文を書きます。
-- リングの色は補助です。急ぎかどうかは `label` と `before`・`after` の文言で伝えます。
+- 数字の色は補助です。急ぎかどうかは `label` と `before`・`after` の文言で伝えます。
 
 ## API
 
 ### Countdown
 
-期限や残りを大きな数で示す丸いバッジ。役割の色の細い輪で縁取り、カードと同じ影で浮かせる。カードの縁にまたがせる時は、置く側で位置を決める。
+期限や残りを大きな数で示す丸いマーク。白い丸を暖かい灰色の輪で縁取り、数字を役割の色で書く。影は付けない。カードの縁にまたがせる時は、置く側で位置を決める。
 
-| 名前            | 型                 | 既定値      | 説明                                                                           |
-| --------------- | ------------------ | ----------- | ------------------------------------------------------------------------------ |
-| `value`（必須） | `string \| number` |             | 大きく表示する数。                                                             |
-| `before`        | `string`           |             | 数の上に小さく表示する言葉（「あと」「閉じるまで」など）。                     |
-| `after`         | `string`           |             | 数の下に小さく表示する単位（「日」など）。                                     |
-| `label`（必須） | `string`           |             | 読み上げの全文（「自動で閉じるまであと70日」など）。                           |
-| `tone`          | `Tone`             | `"warning"` | 輪の役割の色。期限が迫る時はdanger、ただの残数はinfoなど、意味に合わせて選ぶ。 |
+| 名前            | 型                 | 既定値      | 説明                                                                             |
+| --------------- | ------------------ | ----------- | -------------------------------------------------------------------------------- |
+| `value`（必須） | `string \| number` |             | 大きく表示する数。                                                               |
+| `before`        | `string`           |             | 数の上に小さく表示する言葉（「あと」「閉じるまで」など）。                       |
+| `after`         | `string`           |             | 数の下に小さく表示する単位（「日」など）。                                       |
+| `label`（必須） | `string`           |             | 読み上げの全文（「自動で閉じるまであと70日」など）。                             |
+| `tone`          | `Tone`             | `"warning"` | 数字の役割の色。期限が迫る時はdanger、ただの残数はinfoなど、意味に合わせて選ぶ。 |
 
 ほかに、`<span>`へ標準のHTML属性を渡せます。
 
@@ -73,7 +73,7 @@ export default () => (
     </div>
     <DisclosureGroup label="置き場所の違い">
       <Disclosure summary="カードの縁にまたがせる（置く側で位置を決める）" open>
-        <div style="position: relative; max-inline-size: 24rem; padding-inline-end: 1.5rem">
+        <div style="position: relative; max-inline-size: 24rem; padding-block-end: 1.25rem; padding-inline-end: 1.5rem">
           <Card title="会場を予約する">
             <p>第二会議室を18時から21時まで。</p>
           </Card>
@@ -148,7 +148,12 @@ export default () => (
       </summary>
       <div class="body">
         <div
-          style="position: relative; max-inline-size: 24rem; padding-inline-end: 1.5rem"
+          style="
+            position: relative;
+            max-inline-size: 24rem;
+            padding-block-end: 1.25rem;
+            padding-inline-end: 1.5rem;
+          "
         >
           <article class="rx-card">
             <h3 class="title">会場を予約する</h3>
