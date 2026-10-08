@@ -106,7 +106,7 @@
 
 - [Badge](badge.md)：短い状態を、文言と役割の色で示します。
 - [Notice](notice.md)：事実・影響・次の操作を、画面に残る形で示します。
-- [Prompt](prompt.md)：質問をカードの見出しの帯に置き、回答の選択肢を行に並べます。
+- [Prompt](prompt.md)：質問をパネルの上に置き、回答の選択肢を全幅のボタンで並べます。
 - [ErrorSummary](error-summary.md)：送信時のエラーと、修正する欄へのリンクをまとめます。
 - [EmptyState](empty-state.md)：表示する情報がない理由と、次の操作を示します。
 - [Progress](progress.md)：処理の進み具合を示します。終わりが分からない処理にも使えます。
