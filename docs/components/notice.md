@@ -44,7 +44,7 @@ Noticeは描いた時の内容を示すだけで、自動では消えません�
 
 ほかに、`<aside>`へ標準のHTML属性を渡せます。
 
-読み込むCSS：`layers.css`、`reset.css`、`tokens.css`、`base.css`、`layout.css`、`components/icon.css`、`components/notice.css`
+読み込むCSS：`layers.css`、`reset.css`、`tokens.css`、`base.css`、`layout.css`、`components/icon.css`、`components/notice.css`、`components/error-summary.css`
 
 #### `Tone`
 

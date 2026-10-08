@@ -309,6 +309,13 @@
       }
     }
     /*
+      月の表の予定は、日付の数字より一段大きい文字にする。
+      実測: bc2-tour-2014-11-calendar.jpg（2倍）。予定「Install」の字の高さ8px、日付の数字の高さ7px。数字の11pxに対して予定は --rx-label（12px）。
+    */
+    & > .viewport > table > tbody > tr > td > .events > li > .event {
+      font-size: var(--rx-label);
+    }
+    /*
       終日の予定は、Basecamp 2の複数日の予定の帯（lists.md）。高さ16px・角丸8px（両端が丸い）、分類の色の塗りに、
       白の太字の12px、左の余白9px。
       仮の予定は塗らずに分類の色の破線で囲み、過去の予定は淡い面に分類の色の文字にする。
@@ -975,17 +982,21 @@
       outline: 0.125rem solid var(--rx-link);
       outline-offset: 0.0625rem;
     }
-    /* 月の始まりは、日の先頭側の上に赤茶の小さな太字で月の名前を書く（「10月　…　1」）。 */
+    /*
+      月の始まりは、手本の「November 1」と同じく、日付の数字の前に同じ灰色・同じ太さで月の名前を続ける（「10月 1」）。
+      実測: bc2-tour-2014-11-calendar.jpg (1700, 390, 140, 30)。2倍。月の名前と数字は同じ #666666 の通常の太さ。
+    */
     & > .month-start {
-      position: absolute;
-      inset-block-start: var(--rx-space-1);
-      inset-inline-start: 0.375rem;
-      z-index: 1;
-      color: var(--rx-heading);
-      font-size: var(--rx-calendar-meta-size);
-      font-weight: 600;
+      color: var(--rx-muted);
+      font-size: var(--rx-small);
+      font-weight: 400;
       line-height: 1.5rem;
+      vertical-align: middle;
       pointer-events: none;
+    }
+    & > .month-start + :is(a, time).day {
+      min-inline-size: 0;
+      padding-inline-start: 0.25em;
     }
   }
   /*

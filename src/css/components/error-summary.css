@@ -1,9 +1,19 @@
 @layer components {
   /*
-    修正が必要な箇所のまとめ。淡い赤の面と枠、アイコンと見出しはNoticeの危険の役割（.rx-notice[data-tone="danger"]）がそのまま描き、
-    ここでは本文に置く、各欄へ移動するリンクの一覧だけを持つ。
-    BC2のプロジェクトの中のフォームのエラーは見つからなかった（overlays.md「4d」）。リンクの形は推測。
+    修正が必要な箇所のまとめ。形（余白・アイコンと見出しの並び）はNoticeがそのまま描き、ここでは色と、各欄へ移動するリンクの一覧を持つ。
+    実測: basecamp2-official/bc2-help-login-troubleshooting-04.png (168, 578, 758, 150)。2倍。overlays.md「4d. フォームのエラー」。
+    - 塗り #fffae6、1px #ffea9e の枠（四辺とも同じ1px。黄色の案内のような下だけ3pxの枠ではない）。
+    - 1行目は赤 #e3533d の太字、2行目は黒の通常の太さに、リンクの色の下線のリンク（「Reset it here」）。
+    - 赤 #e3533d は #fffae6 の上で4.5:1に届かないので、色合いを保って暗くした #d6371f（実測 #e3533d → #d6371f）。
+    BC2のプロジェクトの中のフォームのエラーの箱は見つからなかったので、ログインの画面の箱を使う（2015年前後の画面）。
   */
+  .rx-notice.rx-error-summary[data-tone] {
+    --rx-notice-face: #fffae6;
+    --rx-notice-edge: #ffea9e;
+    --rx-notice-accent: #d6371f;
+    --rx-notice-icon: #d6371f;
+    box-shadow: none;
+  }
   .rx-error-summary > .body > ul {
     display: grid;
     /* 一覧の項目の間は、面の余白よりはっきり狭くする。 */
@@ -12,7 +22,7 @@
     padding: 0;
     padding-inline-start: calc(0.375rem + var(--rx-space-2));
     list-style: none;
-    /* 修正する欄へ移動するリンク。危険の色の文字に下線を引き、先頭に危険の色の小さな点を置く。ホバーすると濃い赤にする。 */
+    /* 修正する欄へ移動するリンク。本文のリンクと同じ青緑の文字に下線を引き（ホバーで赤）、先頭に見出しと同じ赤の小さな点を置く。 */
     & > li {
       position: relative;
       &::before {
@@ -23,13 +33,7 @@
         inline-size: 0.375rem;
         block-size: 0.375rem;
         border-radius: 50%;
-        background: var(--rx-danger);
-      }
-    }
-    & > li > a {
-      color: var(--rx-danger);
-      &:hover {
-        color: var(--rx-red-dark);
+        background: var(--rx-notice-accent);
       }
     }
   }

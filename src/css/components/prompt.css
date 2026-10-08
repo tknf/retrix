@@ -1,20 +1,24 @@
 @layer components {
   /*
-    判断を依頼する問いかけ。形はLayerCardのまま（沈んだ層に問いの見出し、白いカードに中身）で、
-    カードの中に選択肢の行を並べる。行は丸いマーク・太字の要点・灰色の説明・進む矢印で、ActionListの行と同じく
-    普段は平らにし、ホバーするとBC2のメニューの選んだ項目と同じ淡い青（overlays.md「1c」の#dde4f5）の面を出して
-    マークを青緑で塗り、押すと内側へへこむ。
+    判断を依頼する問いかけ。実測: basecamp2-official/bc2-help-wb-calendar-recurring-change-prompt.png (114, 13, 296, 212)。1倍。
+    補助: bc2-help-recurring-events-08.png（overlays.md「2a. ポップオーバーで確認する」）。
+    - 枠: 白、1px #bbbbbb、外へ約8pxの柔らかい影（BC2のポップオーバーの共通の枠。--rx-popover-*）。角丸5px。
+    - 余白: 枠から問いの文まで、問いの書き始めまで、最後のボタンから枠まで、どれも約20px（--rx-space-5）。
+    - 問い: #a52a2a の太字、行の間隔18px。見出しの帯は無く、白い面に直接書く。Retrixでは見出しの赤（--rx-heading）の13pxの太字。
+    - 選択肢: 全幅の控えめなボタン。白、1px #cccccc、下に1px #dddddd、黒の通常の太さの文字を中央寄せ。一行で高さ27px。
+      問いの最後の行からボタンまで約12px、ボタンの間は下の影から約5px。
+    形はLayerCardを使うので、Promptの中だけ帯の塗りと罫線を外して一枚の白いパネルにする。
     尾（下向きの三角）は、BC2のポップオーバーのしっぽ（overlays.md「1d」）と同じ45°で、深さ11px・付け根22px。
-    手本と同じく、カードの1pxの枠がそのまま尾の縁へつながる形にする。カードは影ではなく1px #bbb の枠で描き、
-    影は尾も含めた輪郭に沿って落とす（drop-shadow）。すぐ下の対象を指す。
-    選択肢の行の文字の指定はこのファイルが持つ（共通Buttonとは別の専用の操作）。
+    パネルの1pxの枠がそのまま尾の縁へつながる形にし、影は尾も含めた輪郭に沿って落とす（drop-shadow）。すぐ下の対象を指す。
+    選択肢の行の文字の指定はこのファイルが持つ（共通Buttonとは別の専用の操作。要点と説明の複数行を持つ）。
   */
   .rx-prompt {
-    --rx-prompt-edge: #bbbbbb;
+    --rx-prompt-edge: var(--rx-popover-edge);
     position: relative;
     border: var(--rx-stroke-width) solid var(--rx-prompt-edge);
+    border-radius: var(--rx-popover-radius);
     box-shadow: none;
-    filter: drop-shadow(0 var(--rx-stroke-width) 0.1875rem rgb(0 0 0 / 14%));
+    filter: drop-shadow(var(--rx-popover-shadow));
     /* 尾は層の外へ出るので、下の要素との間は置く側の間隔（16px以上）で空ける。 */
     &[data-pointer="true"]::before,
     &[data-pointer="true"]::after {
@@ -26,8 +30,8 @@
       border-block-start: 0.6875rem solid var(--rx-surface);
     }
     /*
-      縁の三角はカードの下の枠のすぐ外から始め、白い三角はそれより1px上（下の枠の上）から重ねて枠を切る。
-      こうすると、カードの枠と尾の縁が一本の線でつながる。
+      縁の三角はパネルの下の枠のすぐ外から始め、白い三角はそれより1px上（下の枠の上）から重ねて枠を切る。
+      こうすると、パネルの枠と尾の縁が一本の線でつながる。
     */
     &[data-pointer="true"]::before {
       inset-block-start: calc(100% + var(--rx-stroke-width));
@@ -36,120 +40,90 @@
       border-block-start-width: calc(0.6875rem + var(--rx-stroke-width));
       border-block-start-color: var(--rx-prompt-edge);
     }
-    /* カードは行の面を端近くまで広げ、行の要点を層の見出しと同じ書き始めにそろえる。 */
+    /* 問いは帯に載せず、白い面に赤の太字で書く。題名の上下の余白（操作の高さにそろえる分）を引いて、枠から約20pxにする。 */
+    & > .heading {
+      padding-block: var(--rx-space-4) 0;
+      padding-inline: var(--rx-space-5) var(--rx-space-4);
+      border-block-end: 0;
+      background: var(--rx-surface);
+      & > .title {
+        color: var(--rx-heading);
+        font-size: var(--rx-body);
+        font-weight: 700;
+      }
+    }
     & > .body {
-      padding-block: var(--rx-space-2);
-      padding-inline: calc(var(--rx-layer-card-inline) - var(--rx-space-3));
+      padding-block: var(--rx-space-2) var(--rx-space-5);
+      padding-inline: var(--rx-space-5);
     }
   }
   .rx-prompt > .body > .choices {
     display: grid;
+    gap: var(--rx-space-1);
     min-inline-size: 0;
     & > .choice {
       appearance: none;
-      position: relative;
       display: grid;
-      grid-template-columns: 1.25rem minmax(0, 1fr) auto;
-      align-items: start;
-      column-gap: var(--rx-space-3);
+      grid-template-columns: minmax(0, 1fr);
+      justify-items: center;
       min-inline-size: 0;
       margin: 0;
-      padding-block: var(--rx-space-3);
+      padding-block: 0.3125rem;
       padding-inline: var(--rx-space-3);
-      border: 0;
+      border: var(--rx-stroke-width) solid var(--rx-control-border);
       border-radius: var(--rx-radius-control);
-      background: transparent;
+      background-color: var(--rx-surface);
+      background-image: var(--rx-fill-control);
+      box-shadow: var(--rx-shadow-control);
       color: var(--rx-text);
       font-family: var(--rx-font);
       font-size: var(--rx-label);
       font-weight: 400;
       line-height: var(--rx-label-leading);
-      text-align: start;
+      text-align: center;
       text-decoration: none;
       overflow-wrap: anywhere;
       word-break: auto-phrase;
       cursor: pointer;
-      /* 丸いマーク。題名の一行目の高さにそろえ、答える前は淡い青緑の輪にする。 */
-      & > .mark {
-        display: grid;
-        place-items: center;
-        block-size: 1lh;
-        &::before {
-          content: "";
-          inline-size: 1rem;
-          block-size: 1rem;
-          border: var(--rx-frame-width) solid
-            color-mix(in srgb, var(--rx-link) 35%, var(--rx-surface));
-          border-radius: 50%;
-        }
+      /* 手本のボタンは文字だけ。輪のマークと進む矢印は出さない。 */
+      & > :is(.mark, .go) {
+        display: none;
       }
       & > .text {
         display: grid;
         gap: 0.125rem;
         min-inline-size: 0;
         & > strong {
-          font-weight: 600;
+          font-weight: 400;
         }
         & > .description {
           color: var(--rx-muted);
+          font-size: var(--rx-small);
+          line-height: var(--rx-small-leading);
         }
       }
-      & > .go {
-        display: grid;
-        place-items: center;
-        block-size: 1lh;
-        color: var(--rx-muted);
-        opacity: 0;
-        &:dir(rtl) > .rx-icon {
-          rotate: 180deg;
-        }
-      }
+      /* ホバー・押した時・フォーカスは、控えめなButtonと同じ。 */
       &:hover {
-        background: var(--rx-option-active);
-        & > .mark::before {
-          border-color: var(--rx-selected-edge);
-          background: var(--rx-selected-fill);
-        }
-        & > .go {
-          color: var(--rx-link);
-          opacity: 1;
-        }
+        border-color: color-mix(in srgb, var(--rx-control-border) 75%, var(--rx-ink));
+        background-image: var(--rx-fill-control-hover);
+        box-shadow: var(--rx-shadow-control-hover);
       }
       &:active {
-        background: color-mix(in srgb, var(--rx-option-active) 85%, var(--rx-option-active-text));
+        background-color: var(--rx-gray-50);
+        background-image: var(--rx-fill-control-pressed);
         box-shadow: var(--rx-shadow-control-pressed);
       }
       &:focus-visible {
-        outline: 0.125rem solid var(--rx-link);
-        outline-offset: -0.125rem;
-        & > .go {
-          opacity: 1;
-        }
+        outline: 0.125rem solid transparent;
+        outline-offset: 0;
+        border-color: var(--rx-focus-border);
+        box-shadow: var(--rx-focus-glow), var(--rx-shadow-control);
       }
-    }
-    /* 行の間は、ActionListと同じく要点の書き始めから細い線で区切り、ホバーした行の前後は線を消す。 */
-    & > .choice + .choice::before {
-      content: "";
-      position: absolute;
-      inset-block-start: 0;
-      inset-inline: calc(var(--rx-space-3) * 2 + 1.25rem) var(--rx-space-3);
-      block-size: var(--rx-stroke-width);
-      background: var(--rx-border);
-    }
-    & > .choice:hover::before,
-    & > .choice:hover + .choice::before {
-      opacity: 0;
-    }
-  }
-  @media (hover: none) {
-    .rx-prompt > .body > .choices > .choice > .go {
-      opacity: 1;
     }
   }
   @media (forced-colors: active) {
-    .rx-prompt > .body > .choices > .choice:hover > .mark::before {
-      forced-color-adjust: none;
-      background: Highlight;
+    .rx-prompt > .body > .choices > .choice {
+      border-color: ButtonText;
     }
   }
 }

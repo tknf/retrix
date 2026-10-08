@@ -11,7 +11,10 @@
     - 担当者と期日（detail）は題名の後ろに続ける灰色のピル（高さ18px・角丸9px・12px）。
     - 「Add a to-do」は青緑の15pxの文字で、題名の書き始めにそろえる。
     外側の見出しの進み具合の円は手本に無い（推測）。
-    終えた項目は、Catch upの完了と同じく題名に取り消し線を引く。2014年版の一覧の中で完了した項目の見た目は不明なので、文字は灰色にする（推測）。
+    終えた項目: 実測 basecamp2-thirdparty/bc2-archived-project-todolist-getapp-2014.png (110, 240, 780, 570)。1倍。
+    - 一覧の中で終えた項目は、未完了の行（約15px）より一段小さい文字（約12px）で、題名も補足も #999999。取り消し線は引かない。
+    - 補足「(Completed by … on 17 Nov)」はピルにせず、題名に続けて同じ灰色の文字で書く。
+    - 実測 #999999 → #737373（白地とホバーの淡い黄色の上で4.5:1に届かないため、色合いを保って暗くした）。Retrixの段では --rx-label（12px）に当てる。
   */
   .rx-task-list {
     --rx-task-progress: 0;
@@ -196,10 +199,18 @@
             line-height: 1.125rem;
             vertical-align: 0.0625rem;
           }
-          & > input:checked + span > strong {
-            color: var(--rx-muted);
-            text-decoration-line: line-through;
-            text-decoration-thickness: var(--rx-stroke-width);
+          /* 終えた項目は一段小さい灰色の文字にし、補足もピルを外して同じ灰色で続ける。 */
+          & > input:checked + span {
+            --rx-task-done: #737373;
+            font-size: var(--rx-label);
+            & > strong {
+              color: var(--rx-task-done);
+            }
+            & > small {
+              padding-inline: 0;
+              background: none;
+              color: var(--rx-task-done);
+            }
           }
         }
       }

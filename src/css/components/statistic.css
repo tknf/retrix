@@ -1,16 +1,20 @@
 @layer components {
   /*
-    集計の値。手本に同じ部品は無い（推測）。数字はBC2のカードのタイトルと同じ20pxの黒い太字（structure.md）、
-    名前と単位は抜粋と同じ #666、期間などの補足は日付と同じ茶色（--rx-meta）の小さな文字で添える。
+    集計の値。実測: highrise/highrise-deals-list-sidebar-2016.png（2倍）。
+    - 集計の行「Pending deals — 1,537 worth $2,838,288」(533, 425, 460, 25): 名前は黒 #000000 の太字、値は #222222 の通常の太さ。
+    - 案件の金額「$1,000,000」(682, 610, 135, 30): 黒の太字。補足「Lynette Kontny is responsible」は #888888。
+    名前は手本の集計の行と同じ黒の太字（Retrixの段の --rx-label）にする。数字だけを大きく書く形は手本に無いので、
+    BC2のプロジェクトのカードのタイトル（20pxの黒い太字。structure.md）を段に当てはめた18pxの太字にする（推測）。
+    単位と補足は、手本の補足の #888888 を4.5:1まで暗くした --rx-muted（#666666）の通常の太さ。
   */
   .rx-statistic {
     min-inline-size: 0;
     max-inline-size: 100%;
     color: var(--rx-text);
     & > dt {
-      color: var(--rx-muted);
-      font-size: var(--rx-small);
-      font-weight: var(--rx-label-weight);
+      color: var(--rx-ink);
+      font-size: var(--rx-label);
+      font-weight: 700;
       line-height: var(--rx-label-leading);
     }
     & > .value {
@@ -31,7 +35,7 @@
     }
     & > .note {
       margin-block-start: var(--rx-space-1);
-      color: var(--rx-meta);
+      color: var(--rx-muted);
       font-size: var(--rx-small);
       line-height: var(--rx-small-leading);
     }

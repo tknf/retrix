@@ -19,9 +19,12 @@
       }
     }
     /*
-      手本は無い（推測）。BC2のProgressの縦線と見出しの下の帯（lists.md「BC2 Progress」）と同じ、
-      暖かい灰色（#dcd9d2）の7pxの平らな帯を溝にし、進んだ分だけ平らな青緑を重ねる。終わると成功の緑にする。
-      溝もバーも、BC2のピルやカレンダーの帯と同じく両端を丸める。沈んだ影とグラデーションは使わない。
+      進み具合のバーの手本は、BC2・Highrise・Classicのどれにも見つからなかった（推測）。
+      溝は、BC2のProgressの見出しの下の帯（lists.md「BC2 Progress」。basecamp2-official/bc2-features-progress-timeline.png、
+      7px #dcd9d2、端は四角）と同じ、暖かい灰色の7pxの平らな帯にする。進んだ分は平らな青緑を重ね、
+      終わるとClassicのMilestonesの「Completed」の帯（37signals-others/classic-milestones-list-2008.png、#208a00 前後）と同じ系統の緑にする。
+      ピルの形は件数・担当者・期日とカレンダーの終日の帯だけに使うので、溝もバーも手本の帯と同じく端を四角にする。
+      沈んだ影とグラデーションは使わない。
     */
     & > .track {
       display: block;
@@ -29,29 +32,31 @@
       block-size: 0.4375rem;
       margin-block-start: var(--rx-space-1);
       overflow: hidden;
-      border-radius: var(--rx-radius-pill);
       background: var(--rx-calendar-rule);
       & > .fill {
         display: block;
         block-size: 100%;
-        border-radius: inherit;
         background: var(--rx-teal);
       }
       &[data-state="complete"] > .fill {
         background: var(--rx-green);
       }
       /*
-        終わりが分からない処理は、動きを使えないので、溝いっぱいに青緑の短い区切りを等間隔に並べた止まった帯にする。
-        進んだ量を示す一本のバーと形を変え、量が分からないことを止まった表示のまま読めるようにする。
+        終わりが分からない処理は、37signalsのサインインの待ちの帯（basecamp2-thirdparty/unsure-signing-in-loading-youtube-2016.jpg
+        (560, 356, 380, 44)）と同じ緑と淡い緑（#ecf8e8 前後）で描く。手本の縞は斜めだが、Retrixでは斜線を
+        使えない操作の印と見分けにくいので使わず（ユーザーの指定）、溝いっぱいに緑の短い横の破線を並べる。
+        手本の光沢と動きも使わない。進んだ量を示す一本のバーと形を変え、量が分からないことを止まった表示で読ませる。
       */
-      &[data-state="indeterminate"] > .fill {
-        inline-size: 100%;
-        border-radius: 0;
-        background: repeating-linear-gradient(
-          to right,
-          var(--rx-teal) 0 0.75rem,
-          transparent 0.75rem 1.125rem
-        );
+      &[data-state="indeterminate"] {
+        background: #ecf8e8;
+        & > .fill {
+          inline-size: 100%;
+          background: repeating-linear-gradient(
+            to right,
+            var(--rx-green) 0 0.75rem,
+            transparent 0.75rem 1.125rem
+          );
+        }
       }
     }
   }

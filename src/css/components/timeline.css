@@ -5,7 +5,12 @@
       手本の線の幅7pxは画面全体の大きさなので、一覧の部品では2pxに縮める（推測）。出来事の印は日付の丸を小さくした白い丸に同じ色の輪。
     - 項目は「Jonas D. commented on」の太字の黒の名前に、何をしたかを続ける。時刻は茶色の小さな文字（実測 #aa9d83 は4.5:1に届かないので --rx-meta）。
     - システムの出来事は、Highrise 2016のLatest activityと同じく #f8f8f8 の帯にする。
-    節目は、終えたものを緑のマーク、今のものを青緑のマーク、これからを破線にし（推測）、今の時はCalendarの今日と同じ黄色の面を敷く。
+    - 日の区切りは、手本のプロジェクトの見出し「BCX: Building BCX」（黒の太字、約14px）と、その下に縦の線と同じ色で横へ伸びる帯の形にする。
+      帯は縦の線とつなげ、太さは縦の線と同じ2pxに縮める（手本は7px。推測）。文字はRetrixの段の --rx-body（13px）の太字の黒。
+    節目: 実測 37signals-others/classic-milestones-list-2008.png（Basecamp Classic のMilestones。縮小）。
+    - 終えたものは緑（帯 #208a00、日付 #158000 前後）、これからのものの日付と「Today」は橙がかった茶色（#b7790f 前後）。
+    - 終えた節目は緑の丸に白いチェック、今の節目はその茶色を4.5:1まで暗くした --rx-amber の丸、これからは破線（線の描き分けは推測）。
+      今の時はCalendarの今日と同じ黄色の面を敷く（手本の今日のマス #ffffcc 前後）。
   */
   .rx-timeline {
     --rx-timeline-rule: var(--rx-calendar-rule);
@@ -116,26 +121,36 @@
       }
     }
     /*
-      日の区切り。線をまたぐラベルにはせず、Dividerの名前の付いた線を出来事の列に引く。
-      縦の線はそのまま通り、区切りの横線は縦の線から始まって日の名前の後ろへ伸びる。
+      日の区切り。手本のプロジェクトの見出しと同じく、黒の太字の名前の下に、縦の線から横へ伸びる同じ色の帯を引く。
+      名前は出来事の時刻の書き始めにそろえる。DividerはこのTimelineの中だけ名前と帯の形に置き換える。
     */
     & > li.day {
-      display: flex;
-      align-items: center;
-      /* 横線から名前までは、Dividerの名前から線までと同じ間隔にする。 */
-      gap: var(--rx-space-2);
-      padding-block: var(--rx-space-4) var(--rx-space-1);
+      display: grid;
+      grid-template-columns: var(--rx-space-4) minmax(0, 1fr);
+      gap: var(--rx-space-1) 0;
+      padding-block: var(--rx-space-5) 0;
       padding-inline-start: 0;
       &::before {
         content: "";
-        flex: none;
-        inline-size: var(--rx-space-3);
+        grid-row: 2;
+        grid-column: 1 / -1;
         block-size: var(--rx-frame-width);
         background: var(--rx-timeline-rule);
       }
       & > .rx-divider {
-        flex: 1 1 auto;
+        grid-row: 1;
+        grid-column: 2;
+        display: block;
         min-inline-size: 0;
+        &::after {
+          display: none;
+        }
+        & > span {
+          color: var(--rx-ink);
+          font-size: var(--rx-body);
+          font-weight: 700;
+          line-height: var(--rx-label-leading);
+        }
       }
       &:first-child {
         padding-block-start: 0;
@@ -159,8 +174,8 @@
         }
       }
       &[data-state="current"] > .marker {
-        border-color: var(--rx-teal);
-        background: var(--rx-teal);
+        border-color: var(--rx-amber);
+        background: var(--rx-amber);
         box-shadow: 0 0 0 0.125rem var(--rx-surface);
       }
       /* 今の節目の時（「今日」など）は、Calendarの今日と同じ黄色の面を敷く。 */
@@ -192,6 +207,9 @@
     /* アバターを置く時は、アバターの中心を線に合わせ、本文をアバターの分だけ離す。一覧の始まりもアバターの半分だけ空け、外へはみ出さない。 */
     &[data-avatars="true"] {
       padding-inline-start: 0.875rem;
+    }
+    &[data-avatars="true"] > li.day {
+      grid-template-columns: var(--rx-space-6) minmax(0, 1fr);
     }
     &[data-avatars="true"] > li:not(.day) {
       padding-inline-start: var(--rx-space-6);

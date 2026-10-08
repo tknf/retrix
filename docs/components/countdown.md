@@ -12,9 +12,9 @@
 
 ## 使い方
 
-直径68pxの白い丸に `value` を22pxの太字の数字で置き、`before` を数字の上、`after` を数字の下に9pxの灰色の太字で添えます。数字の代わりに「完」のような一文字も置けます。
+Basecamp 2のProgressの日付の丸と同じ形で、直径88pxの白い丸に `value` を18pxの太字の数字で置き、`before` を数字の上、`after` を数字の下に11pxの灰色の通常の太さの文字で添えます。数字の代わりに「完」のような一文字も置けます。
 
-丸は暖かい灰色（`#dcd9d2`）の4pxの輪で縁取り、影は付けません。数字は役割の色（`tone`、既定は `warning`）で書きます。期限が迫る時は `danger`、単なる残数は `info` など、意味に合わせて選びます。
+丸は暖かい灰色（`#dcd9d2`）の5pxの輪で縁取り、影は付けません。数字は役割の色（`tone`、既定は `warning`）で書きます。期限が迫る時は `danger`、単なる残数は `info` など、意味に合わせて選びます。
 
 残りの数は利用側で数えて渡します。Countdownは時間の経過で数を変えません。
 
@@ -73,7 +73,7 @@ export default () => (
     </div>
     <DisclosureGroup label="置き場所の違い">
       <Disclosure summary="カードの縁にまたがせる（置く側で位置を決める）" open>
-        <div style="position: relative; max-inline-size: 24rem; padding-inline-end: 1.5rem">
+        <div style="position: relative; max-inline-size: 24rem; padding-block-end: 1.25rem; padding-inline-end: 1.5rem">
           <Card title="会場を予約する">
             <p>第二会議室を18時から21時まで。</p>
           </Card>
@@ -148,7 +148,12 @@ export default () => (
       </summary>
       <div class="body">
         <div
-          style="position: relative; max-inline-size: 24rem; padding-inline-end: 1.5rem"
+          style="
+            position: relative;
+            max-inline-size: 24rem;
+            padding-block-end: 1.25rem;
+            padding-inline-end: 1.5rem;
+          "
         >
           <article class="rx-card">
             <h3 class="title">会場を予約する</h3>

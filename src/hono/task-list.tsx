@@ -25,7 +25,7 @@ export type TaskListProps = ElementProps<"div"> & {
     name: string;
     /** 項目の題名。checkboxのラベルになる。 */
     label: string;
-    /** 終えた項目。チェックを付け、題名を灰色にして取り消し線を引く。 */
+    /** 終えた項目。チェックを付け、題名と補足を一段小さい灰色の文字にする。 */
     checked?: boolean;
     /** 操作できない項目。 */
     disabled?: boolean;

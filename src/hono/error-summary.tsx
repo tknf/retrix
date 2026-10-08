@@ -16,8 +16,8 @@ export type ErrorSummaryProps = ElementProps<"aside"> & {
   }[];
 };
 /**
- * 直すところを、各欄へ移るリンクの一覧にまとめる。見た目はNoticeの危険の役割そのもの（淡い赤の面と枠、アイコンと太字の見出し）で、
- * ErrorSummaryが持つのは直す欄への一覧だけ。
+ * 直すところを、各欄へ移るリンクの一覧にまとめる。形はNoticeの危険の役割（アイコンと太字の見出し）で、色はBC2のログインの画面のエラーの箱
+ * （淡い黄色の面、1pxの黄色の枠、赤い見出し）。ErrorSummaryが持つのは色と直す欄への一覧。
  * tabindex="-1"を持つので、送信後に再描画したページではautofocusを渡すと、読み込んだ時にフォーカスが移る。
  */
 export const ErrorSummary = ({

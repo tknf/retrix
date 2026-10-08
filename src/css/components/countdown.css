@@ -1,20 +1,22 @@
 @layer components {
   /*
-    期限や残りを示す丸いマーク。手本はBC2のProgressの日付の丸（lists.md「BC2 Progress」）で、
-    白い丸を暖かい灰色（#dcd9d2）の太い輪で囲み、日付と同じく数字を役割の色の太字にする（推測で縮小と色の割り当てを決めた）。
-    輪の太さは実測の外径112px・輪7pxの比を68pxの丸に当てはめて4px。影は付けない。
-    上下の小さな文言は灰色（実測の曜日の#bbbabcは4.5:1に届かないので、補足の灰色）。既定は注意の色（期限が近いことを示す）。
+    期限や残りを示す丸いマーク。実測: basecamp2-official/bc2-features-progress-timeline.png (195, 70, 112, 112)。1倍。
+    - BC2のProgressの日付の丸。外径約112px、輪7px #dcd9d2（--rx-calendar-rule）、中は白、影なし。
+    - 主の文字「Feb 15」は #497a99 の太字15px前後、その下の「Wednesday」は #bbbabc の通常の太さ11px前後。
+    丸は上下の文言（「閉じるまで」の5文字）が輪に触れない88pxにし、輪の太さは手本の比（外径の1/16）を丸めた5px。数字は役割の色の太字で、Retrixの段の --rx-title（18px）に当てる（推測）。
+    上下の文言は手本の曜日と同じ通常の太さの11px（--rx-small）。#bbbabc は4.5:1に届かないので --rx-muted（#666666）。
+    既定は注意の色（期限が近いことを示す）。
   */
   .rx-countdown {
     --rx-countdown-ink: var(--rx-warning);
     display: inline-grid;
     place-content: center;
     justify-items: center;
-    inline-size: 4.25rem;
-    block-size: 4.25rem;
+    inline-size: 5.5rem;
+    block-size: 5.5rem;
     border-radius: 50%;
     background: var(--rx-surface);
-    box-shadow: inset 0 0 0 0.25rem var(--rx-calendar-rule);
+    box-shadow: inset 0 0 0 0.3125rem var(--rx-calendar-rule);
     color: var(--rx-muted);
     font-family: var(--rx-control-font-family);
     line-height: 1;
@@ -33,16 +35,17 @@
     }
     & > .value {
       color: var(--rx-countdown-ink);
-      font-size: 1.375rem;
+      font-size: var(--rx-title);
       font-weight: 700;
+      line-height: var(--rx-label-leading);
       font-variant-numeric: tabular-nums;
     }
-    /* 上下の文言は丸の内側に収め、長い時は丸の幅の7割で折り返す。 */
+    /* 上下の文言は丸の内側に収め、長い時は輪の内側の幅の8割ほどで折り返す。 */
     & > :is(.before, .after) {
-      max-inline-size: 3rem;
-      font-size: 0.5625rem;
-      font-weight: 700;
-      line-height: 1.2;
+      max-inline-size: 3.5rem;
+      font-size: var(--rx-small);
+      font-weight: 400;
+      line-height: var(--rx-small-leading);
     }
   }
   @media (forced-colors: active) {
