@@ -38,6 +38,9 @@ export default () => (
         <DataList items={items} />
       </Section>
     </Surface>
+    <p class="catalog-footnote">
+      内容が短い時も、作業面の高さは画面の高さまで伸びます。長い本文はページをスクロールして読みます。
+    </p>
     <DisclosureGroup label="作業面の使い方">
       <Disclosure summary="文書：本文を読みやすい行長に収める">
         <Surface

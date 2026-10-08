@@ -11,6 +11,8 @@
 
 ## 使い方
 
+作業面の最小の高さは画面の高さ（100dvh）です。内容が短くても画面の下端まで白い面を伸ばし、長い内容はページのスクロールで読みます。高さを制限した領域に置く場合は、利用側のCSSで`min-block-size`を上書きします。
+
 `children`を本文として、シートの内側の余白（上下24px・左右32px）を取って置きます。本文の段の間は16pxです。
 
 `context`に`ContextBar`を渡すと、シートの上端にパンくずと補助操作のバーを置き、本文をそのすぐ下から始めます。バーは区切り線を持たず、本文と同じ左右の余白に揃います。
@@ -83,6 +85,9 @@ export default () => (
         <DataList items={items} />
       </Section>
     </Surface>
+    <p class="catalog-footnote">
+      内容が短い時も、作業面の高さは画面の高さまで伸びます。長い本文はページをスクロールして読みます。
+    </p>
     <DisclosureGroup label="作業面の使い方">
       <Disclosure summary="文書：本文を読みやすい行長に収める">
         <Surface
@@ -194,6 +199,9 @@ export default () => (
       </section>
     </div>
   </div>
+  <p class="catalog-footnote">
+    内容が短い時も、作業面の高さは画面の高さまで伸びます。長い本文はページをスクロールして読みます。
+  </p>
   <div class="rx-disclosure-group" role="group" aria-label="作業面の使い方">
     <details class="rx-disclosure">
       <summary>

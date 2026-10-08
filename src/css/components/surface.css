@@ -1,7 +1,7 @@
 @layer components {
   /*
     作業面（シート）。白い面・角丸・影は、AppShellの作業面と共通の定義（layout.css）が持つ。
-    ここでは中の余白だけを決める。実測: structure.md「シート」の内側の余白は左右30px。
+    ここでは高さと中の余白を決める。実測: structure.md「シート」の内側の余白は左右30px。
     「余白の段」の表のとおり4pxの段に寄せて左右32pxにし、上下は左右より狭い24pxにする（check-cssの規則）。
     上下は行の高さの余りと合わせ、上端から題名の大文字の上までが手本の35.5pxに近くなる。
   */
@@ -9,6 +9,7 @@
     --rx-surface-gutter: var(--rx-space-8);
     container: rx-surface / inline-size;
     min-inline-size: 0;
+    min-block-size: 100dvh;
     /* 寸法を保つため枠の幅は残し、線は見せない。輪郭は影が描く。 */
     border: var(--rx-stroke-width) solid transparent;
     /* パンくずの行は区切り線を持たず、面の上端から本文と同じだけ離し、本文と同じ左右の位置に揃える。 */

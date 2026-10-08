@@ -23,14 +23,17 @@
     --rx-trail-visible: 2.75rem;
     container: rx-app-shell / inline-size;
     display: grid;
+    grid-template-rows: auto 1fr;
     justify-items: center;
-    align-content: start;
     min-inline-size: 0;
     min-block-size: 100dvh;
     overflow-x: clip;
-    padding-block-end: var(--rx-space-12);
     background: var(--rx-desk-texture), var(--rx-background);
     color: var(--rx-text);
+    /* フッターがある画面だけ、机の下の余白を取る。作業面だけの画面は下端まで伸ばす。 */
+    &:has(> .body > .main > .footer) {
+      padding-block-end: var(--rx-space-12);
+    }
     &[data-size="compact"] {
       --rx-page: calc(var(--rx-measure) + 2 * var(--rx-space-12));
     }
@@ -149,12 +152,16 @@
     & > .body {
       display: grid;
       grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: 1fr;
       align-items: start;
       /* 狭い幅で列を作業面の上に積んだ時の間。横に並べた時は列と作業面の間を空けない（--rx-shell-gap）。 */
       row-gap: var(--rx-space-6);
       column-gap: var(--rx-shell-gap);
       inline-size: min(calc(100% - var(--rx-space-8)), var(--rx-shell-width));
       min-inline-size: 0;
+      &[data-aside="true"] {
+        grid-template-rows: auto 1fr;
+      }
       /*
         先頭側の列は机の上に直接置き、シートは持たない。文字はHighriseの左の列の名前と同じ13px（本文の段）。
       */
@@ -167,10 +174,22 @@
         line-height: var(--rx-leading);
       }
       & > .main {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr);
-        align-content: start;
+        display: flex;
+        flex-direction: column;
+        align-self: stretch;
         min-inline-size: 0;
+        & > :is(.workspace, .rx-wing) {
+          flex: 1;
+        }
+        & > .rx-wing {
+          display: grid;
+          & > .layout {
+            grid-template-rows: 1fr;
+            & > .main {
+              display: grid;
+            }
+          }
+        }
       }
     }
     /*
@@ -307,6 +326,7 @@
     @container rx-app-shell (inline-size >= 52rem) {
       & > .body[data-aside="true"] {
         grid-template-columns: var(--rx-shell-aside) minmax(0, 1fr);
+        grid-template-rows: 1fr;
         /*
           列の中の文字はシートの縁から20px離す。Navigationの行の面だけは、手本の今いる行と同じくシートの縁まで伸ばす。
         */
