@@ -1,14 +1,19 @@
 @layer components {
   /*
-    人物の見出し。実測: structure.md「Me ページのシートの上部の帯」（名前は太字の#000、補足の行は灰色、帯の下に1px #ebebeb）と
-    「Highrise 2011 の構成 / 左の列」の写真（白い縁取り付きの四角い写真）。
-    写真を先頭側に置き、その横に太字の黒い名前、灰色の肩書きや連絡先、所属のバッジを積む。操作は末尾側の上に置く。
-    名前は手本の24pxではなく、PageHeaderの見出しと同じ--rx-title（20px）にする（ユーザーの指定）。
-    補足の行の実測#979994は白地で4.5:1に届かないため、本文の補足の灰色（--rx-muted）に濃くする。
+    人物の見出し。実測: BC2のMeのページの上部（basecamp2-official/bc2-tour-2014-12-me.jpg (321, 289, 1920, 254)。2倍）。
+    - アバターは直径90pxの円で、枠も影も無い。シートの左の余白（30px）から置き、帯の上端から20px下げる。
+    - 名前はアバターの右21pxから始まる太字の#000（24px）。下に「Last active…」の灰色（#979994）の補足を置く。
+    - 帯の下に1px #ebebeb。
+    名前は手本の24pxではなく、PageHeaderの見出しと同じ--rx-title（18px）にし、アバターも同じ比で64pxにする。
+    アバターと名前の間は21pxを4pxの段に丸めた20px。
+    補足の行の実測#979994は白地で4.5:1に届かないため、同じ色合いのまま#767773に濃くする（2.9 → 4.5）。
+    帯の#f5f5f5の面は、シートの左右の縁まで広げる画面の側の配置なので、このコンポーネントは持たない。
+    写真を先頭側に置き、その横に名前、補足、所属のバッジを積む。操作は末尾側の上に置く。
     この人への設定は、Meの帯の下の線と同じ1px #ebebebの罫線の後ろに、面を持たない操作として並べる。
   */
   .rx-profile-header {
     --rx-profile-header-rule: #ebebeb;
+    --rx-profile-header-detail: #767773;
     container: rx-profile-header / inline-size;
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
@@ -19,20 +24,17 @@
       "preferences preferences preferences";
     grid-template-rows: auto auto 1fr auto;
     align-items: start;
-    column-gap: var(--rx-space-4);
+    column-gap: var(--rx-space-5);
     min-inline-size: 0;
     color: var(--rx-text);
     overflow-wrap: anywhere;
-    /* 写真はHighriseの写真と同じく、白い縁取りと四方への浅い影の四角に収める。丸くしない。 */
+    /* アバターは手本と同じく枠も影も無い円（Avatarの形のまま）。 */
     & > .avatar {
       grid-area: avatar;
       display: flex;
       & > .rx-avatar {
         inline-size: 4rem;
         block-size: 4rem;
-        border: 0.1875rem solid var(--rx-surface);
-        border-radius: var(--rx-radius-mark);
-        box-shadow: var(--rx-shadow-paper);
         font-size: 1.5rem;
       }
     }
@@ -48,7 +50,7 @@
       grid-area: detail;
       margin: 0;
       margin-block-start: var(--rx-space-1);
-      color: var(--rx-muted);
+      color: var(--rx-profile-header-detail);
       font-size: var(--rx-label);
       line-height: var(--rx-label-leading);
     }
@@ -99,11 +101,6 @@
       & > .name {
         font-size: var(--rx-section-title);
       }
-    }
-  }
-  @media (forced-colors: active) {
-    .rx-profile-header > .avatar > .rx-avatar {
-      border-color: CanvasText;
     }
   }
 }

@@ -1,19 +1,22 @@
 @layer components {
   /*
-    Wingは作業面の後ろへ差し込む固定幅の白いパネル。カードと同じ四方へのぼかし影（--rx-shadow-paper）を持つ。
-    影の長さは structure.md「BC2 のプロジェクトのカード」（枠なし、四方に4〜5px）の実測に合わせる。
+    Wingは作業面の後ろへ差し込む固定幅のパネル。手本に同じコンポーネントは無いので、作業面の後ろに重ねる物として
+    BC2の背後に重ねた親のシートと同じ見た目にする。実測: basecamp2-official/bc2-tour-2014-06-to-do-lists.jpg
+    (24, 26, 1923, 200)。2倍。塗り #f9f9f9（--rx-sheet-behind）、枠 1px #e5e5e5（--rx-sheet-behind-edge）、影なし。
+    見出しの下の罫線は、Highriseの右の列の見出しの下の罫線（highrise-case-page-redesign-2011.jpg (880, 215, 184, 1)）と同じく
+    列の幅いっぱいに引く。色はパネルの枠と同じにする。
     広い配置では開閉に関わらず作業面に合わせた全長の高さを持ち、閉じている間は作業面の縁からハンドルの幅だけを出す。
     閉じたハンドルはアイコンと開閉のマークだけを載せ、名前はツールチップで示す。開くと幅が伸び、上端に横書きの見出しが並ぶ。
   */
   .rx-wing {
-    /* ハンドルの行の高さ。30pxのボタンを上下4pxで挟む。 */
+    /* ハンドルの行の高さ。24pxのボタンを上下4pxで挟む。 */
     --rx-wing-handle: calc(var(--rx-control-size) + 2 * var(--rx-space-1));
     --rx-wing-panel: 14rem;
     --rx-wing-tuck: var(--rx-radius-surface);
     --rx-wing-inset: var(--rx-space-6);
-    /* 見出しの帯の色。実測: overlays.md「1b. カレンダーの予定のパネル」の見出しの帯 #f7f7f7 と、下の1px #dedede。 */
-    --rx-wing-band: #f7f7f7;
-    --rx-wing-band-rule: var(--rx-gray-200);
+    /* 見出しは帯の塗りを持たず、下に罫線だけを引く。 */
+    --rx-wing-band: transparent;
+    --rx-wing-band-rule: var(--rx-sheet-behind-edge);
     /* 開閉はその場で切り替える（アニメーションは使わない）。 */
     container: rx-wing / inline-size;
     min-inline-size: 0;
@@ -35,26 +38,23 @@
         overflow: hidden;
         /* ツールチップの基準を、Wingごとのハンドルに限る。 */
         anchor-scope: --rx-wing-tab;
-        /* 寸法を保つため枠の幅は残し、線は見せない。輪郭は影が描く。 */
-        border: var(--rx-stroke-width) solid transparent;
+        border: var(--rx-stroke-width) solid var(--rx-sheet-behind-edge);
         border-radius: var(--rx-radius-surface);
-        background: var(--rx-surface);
-        /* パネルの白は透明な枠の内側だけに塗り、見出しの背景とパネルの縁の間に白い縁を残さない。 */
-        background-clip: padding-box;
-        box-shadow: var(--rx-shadow-paper);
+        background: var(--rx-sheet-behind);
         color: var(--rx-text);
         & > summary {
           display: flex;
           align-items: center;
           gap: var(--rx-space-3);
-          /* 30pxのボタンを上下4pxで挟み、38pxの行にする。 */
+          /* 24pxのボタンを上下4pxで挟み、32pxの行にする。 */
           padding-block: var(--rx-space-1);
           padding-inline: var(--rx-space-1) var(--rx-space-4);
           color: var(--rx-muted);
           font-family: var(--rx-control-font-family);
-          font-size: var(--rx-label);
-          font-weight: 600;
-          /* 流体の文字サイズでも38pxの計算を崩さないよう、行は20pxに固定する。 */
+          /* 見出しは、カードや右の列の中の見出しと同じ13pxの太字。 */
+          font-size: var(--rx-body);
+          font-weight: 700;
+          /* 文字の大きさが変わっても32pxの計算を崩さないよう、行は20pxに固定する。 */
           line-height: 1.25rem;
           list-style: none;
           overflow-wrap: anywhere;
@@ -64,7 +64,7 @@
           position: relative;
           isolation: isolate;
           /*
-            見出しの帯。LayerCardの見出しと同じく、平らな淡い灰色に下の罫線を引く。開いている間だけ見せる。
+            見出しの下の罫線。開いている間だけ見せる。
             角丸は上の角だけで、罫線は角丸の無い下の辺に引くので、線の端は欠けない。
           */
           &::before {
@@ -91,8 +91,8 @@
             outline-offset: -0.125rem;
           }
           /*
-            ハンドルは共通Buttonのアイコンだけの形。閉じている間は控えめな白いボタン、開いている間はオンの平らな青緑の塗りにする
-            （controls.md の BC2 のボタンは平らな塗り）。
+            ハンドルは共通Buttonのアイコンだけの形。閉じている間は控えめな白いボタン、開いている間は選んだ状態と同じ
+            淡い青の縦の塗り（--rx-selected-*）にする。
             Buttonの主操作の印を持つので、塗りの変数ごと置き換え、ホバーと押した時の濃さもButtonの規則のまま効かせる。
             アイコンがない時は開閉のマークで、向きで開閉を示す。
           */
@@ -118,8 +118,8 @@
           min-inline-size: 0;
           padding-block: var(--rx-space-4);
           padding-inline: var(--rx-space-4);
-          font-size: var(--rx-label);
-          line-height: var(--rx-label-leading);
+          font-size: var(--rx-body);
+          line-height: var(--rx-leading);
           overflow-wrap: anywhere;
         }
         /* 閉じると中身を隠し、高さを0にする。 */
@@ -269,7 +269,7 @@
           grid-column: 1;
           justify-self: end;
           margin-inline-end: calc(var(--rx-wing-tuck) * -1);
-          /* ボタンの中心（外側の縁から4px＋半径15px）をパネルの外側の縁に合わせる。 */
+          /* ボタンの中心（外側の縁から4px＋半径12px）をパネルの外側の縁に合わせる。 */
           &:not([open]) > summary {
             inset-inline-start: calc((var(--rx-space-1) + var(--rx-control-size) / 2) * -1);
           }

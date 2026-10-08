@@ -1,6 +1,7 @@
 @layer components {
   /*
-    縦並びのナビゲーション。実測: structure.md「Highrise 2011 の構成 / 左の列」。
+    縦並びのナビゲーション。実測: structure.md「Highrise 2011 の構成 / 左の列」
+    （highrise-case-page-redesign-2011.jpg (12, 90, 220, 200)。1倍。今いる行は highrise-contacts-index-redesign-2011.jpg (10, 113, 177, 24)。0.81倍）。
     背景のパネルを持たず、置いた場所の地（机の地や紙）の上に、淡い灰色のアイコン・名前・灰色の件数を並べる。
     - 名前: 13px・#51504c。行の間隔 28〜29px。行の間に線は引かない。
     - アイコン: 18×17px・#c5c5c5の単色。アイコンの左端は面の左端から9px、名前はアイコンの右13px。
@@ -16,8 +17,9 @@
     align-content: start;
     /* 並べた先の高さに引き伸ばさず、中身の高さにする。 */
     align-self: start;
-    font-size: var(--rx-label);
-    line-height: var(--rx-label-leading);
+    /* 名前は手本と同じ13px（本文の段）。行の高さ18px。 */
+    font-size: var(--rx-body);
+    line-height: var(--rx-leading);
     & > a {
       display: flex;
       align-items: center;

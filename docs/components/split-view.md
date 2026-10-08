@@ -12,7 +12,7 @@
 
 ## 使い方
 
-`primary`・`secondary`を渡します。DOMの読み順は常に`primary`、`secondary`の順です。二つの領域は、枠を持たず四方へぼかしの影を落とす白いカードの中に並べ、境目に1pxの淡い灰色の罫線を一本引きます。各領域の内側の余白はカードと同じ上下16px・左右20pxです（幅32rem未満では左右16px）。
+`primary`・`secondary`を渡します。DOMの読み順は常に`primary`、`secondary`の順です。二つの領域は、枠を持たず四方へぼかしの影を落とす白いカードの中に並べ、境目に1pxの淡い灰色の罫線を一本引きます。各領域の内側の余白は`Card`と同じ上下左右16pxです。罫線はHighriseの本文の列と右の列の間の線と同じ1px `#eeeeee` です。
 
 `SplitView`自身の幅が52rem以上で左右に並べます。`inspector`は`primary`を広く（おおよそ2:1）、`reader`は`primary`を狭く（おおよそ3:5）取ります。52rem未満では`primary`を上、`secondary`を下に積み、境目の罫線は横になります。
 

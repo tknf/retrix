@@ -10,7 +10,7 @@ export type PageHeaderProps = ElementProps<"header"> & {
   icon?: Child;
   /** 見出しの末尾側に並べる操作。狭い場所では見出しの下の行へ回す。 */
   actions?: Child;
-  /** startは先頭側に揃える。centerは見出しを中央に置き、左右から線を伸ばして作業面の主題として示す。 */
+  /** startは先頭側に揃える。centerは見出しを中央に置き、作業面の主題として示す（左右に線は伸ばさない）。 */
   align?: "center" | "start";
 };
 export const PageHeader = ({

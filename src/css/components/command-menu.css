@@ -59,7 +59,8 @@
         角丸はポップオーバーと同じ（overlay.css）。
       */
       --rx-command-rule: #f5f5f5;
-      --rx-command-active: #ddeefe;
+      --rx-command-active: var(--rx-option-active);
+      --rx-command-group: #767676;
       border: 0;
       border-radius: var(--rx-popover-radius);
       background: var(--rx-surface);
@@ -110,31 +111,51 @@
         padding-block: var(--rx-space-2) 0;
         padding-inline: var(--rx-space-3);
       }
+      /*
+        候補の一覧。実測: basecamp2-official/bc2-help-searching-in-07.png (43, 58, 320, 113)。1倍。
+        - まとまりの名前は左の列（幅72px）に右寄せで置き、名前の右端から列の境まで13px。#888888の通常の太さ。
+        - 列の境は1px #f5f5f5。候補は右の列に高さ25pxで隙間なく並べ、文字は左の境から13px。
+        - 選んでいる候補は右の列だけを #ddeefe で塗る。パネルの左右の縁まで余白を空けない。
+        - まとまりの間と、最後の行（help）の上は1px #f5f5f5。
+        13pxの余白は12px（--rx-space-3）に丸める。和文のまとまりの名前は英字より長いので、左の列は72pxを112pxに広げ、
+        名前は文節の切れ目で折り返す。
+      */
       & > .results {
         min-inline-size: 0;
-        padding-block-end: var(--rx-space-3);
+        margin-block-start: var(--rx-space-3);
+        border-block-start: var(--rx-stroke-width) solid var(--rx-command-rule);
         & > .group {
-          padding-block-start: var(--rx-space-3);
-          padding-inline: var(--rx-space-3);
-          /* まとまりの境は1px #f5f5f5（1fの分類の列の境）。線の上下は8pxずつ。 */
+          display: grid;
+          grid-template-columns: 7rem minmax(0, 1fr);
+          align-items: start;
           & + .group {
-            margin-block-start: var(--rx-space-2);
-            padding-block-start: var(--rx-space-2);
             border-block-start: var(--rx-stroke-width) solid var(--rx-command-rule);
           }
-          /* まとまりの名前は小さな灰色の太字。 */
+          /*
+            まとまりの名前。実測の#888888は白地で4.5:1に届かないため、同じ灰色のまま#767676に濃くする（3.5 → 4.5）。
+            候補の1行目と同じ高さの行に置き、文字の上下の位置をそろえる。
+          */
           & > h2 {
-            color: var(--rx-muted);
-            font-size: var(--rx-small);
-            font-weight: 600;
-            line-height: var(--rx-small-leading);
+            display: flex;
+            justify-content: end;
+            align-items: center;
+            min-block-size: 1.5625rem;
+            padding-inline: var(--rx-space-2) var(--rx-space-3);
+            color: var(--rx-command-group);
+            font-size: var(--rx-label);
+            font-weight: 400;
+            line-height: calc(10 / 7);
+            text-align: end;
+            word-break: auto-phrase;
+            overflow-wrap: anywhere;
           }
-          /* 候補の行は高さ25pxで隙間なく並べる（1f）。 */
+          /* 候補の行は高さ25pxで隙間なく並べる。左の列との境に1px #f5f5f5 を引く。 */
           & > .list {
             display: grid;
             gap: 0;
-            margin-block-start: var(--rx-space-1);
+            align-self: stretch;
             padding: 0;
+            border-inline-start: var(--rx-stroke-width) solid var(--rx-command-rule);
             list-style: none;
             & > .entry {
               --rx-command-accent: var(--rx-muted);
@@ -165,11 +186,11 @@
                 min-inline-size: 0;
                 min-block-size: 1.5625rem;
                 padding-block: 0.1875rem;
-                padding-inline: var(--rx-space-2);
+                padding-inline: var(--rx-space-3);
                 color: var(--rx-text);
                 font-size: var(--rx-label);
-                /* 項目はMedium。アイコンは塗りつぶし版。 */
-                font-weight: 500;
+                /* 手本の候補の名前は通常の太さ。アイコンは塗りつぶし版。 */
+                font-weight: 400;
                 line-height: calc(10 / 7);
                 text-decoration: none;
                 & > .icon {
@@ -208,6 +229,7 @@
                 inline-size: 100%;
                 justify-content: start;
                 gap: var(--rx-space-2);
+                padding-inline: var(--rx-space-3);
                 border-color: transparent;
                 border-radius: 0;
                 background: transparent;
@@ -230,7 +252,7 @@
           }
         }
         & > .empty {
-          padding-block: var(--rx-space-6);
+          padding-block: var(--rx-space-3);
           padding-inline: var(--rx-space-3);
           color: var(--rx-muted);
           font-size: var(--rx-label);
@@ -256,6 +278,22 @@
       @container rx-command-panel (inline-size < 26rem) {
         & > .shortcuts {
           grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      /* とても狭いパネルでは、まとまりの名前を候補の上に積み、左の列の境を引かない。 */
+      @container rx-command-panel (inline-size < 20rem) {
+        & > .results > .group {
+          grid-template-columns: minmax(0, 1fr);
+          & > h2 {
+            justify-content: start;
+            min-block-size: 0;
+            padding-block-start: var(--rx-space-2);
+            padding-inline: var(--rx-space-3);
+            text-align: start;
+          }
+          & > .list {
+            border-inline-start: 0;
+          }
         }
       }
     }
