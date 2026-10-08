@@ -102,7 +102,7 @@ const frame = "block-size: 34rem; overflow: auto; isolation: isolate";
 export default () => (
   <div class="rx-stack">
     <section class="rx-stack" data-space="small">
-      <h3>既定の幅（default）</h3>
+      <h3>既定の幅とフッター（default）</h3>
       <div style={frame}>
         <AppShell
           home={home}
@@ -187,6 +187,23 @@ export default () => (
               </Button>
             </div>
           </form>
+        </AppShell>
+      </div>
+    </section>
+    <section class="rx-stack" data-space="small">
+      <h3>補助パネルを付ける（wings）</h3>
+      <div style={frame}>
+        <AppShell
+          home={home}
+          navigation={navigation}
+          account={account}
+          wings={{
+            start: { label: "取引先の分類", content: <p>見込み・取引中・休眠で分類します。</p> },
+            end: { label: "最近の動き", content: <p>今日の更新はありません。</p>, open: false },
+          }}
+        >
+          <PageHeader title="取引先の概要" />
+          <p>内容が短い時も作業面を画面の下端まで伸ばし、補助パネルをその高さに合わせます。</p>
         </AppShell>
       </div>
     </section>

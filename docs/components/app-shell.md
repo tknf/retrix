@@ -13,6 +13,8 @@
 
 ## 使い方
 
+内容が短い画面でも、ヘッダーの下から画面の下端まで作業面を伸ばします。`aside`を縦に積む時や`trail`がある時も、残りの高さを作業面に使います。`footer`がある場合はフッターと外側の余白を除き、狭い画面で`Wing`のパネルが作業面の下に並ぶ場合はパネルの高さを除きます。長い内容は高さを固定せず、ページのスクロールで読みます。
+
 `home`にアプリの名前やロゴのリンク、`navigation`に主な移動先、`commands`に検索や`CommandMenu`を渡します。ヘッダーは背景を持たず、机の地の上にそのまま並びます。アプリの名前は20pxの太字の濃い灰色で、名前と移動先の間に1pxの縦の線を引きます。移動先は13pxの灰色の文字で、`navigation`の今いる項目は`current`にすると、面や下線を付けずに黒い太字で示し、`aria-current="page"`を付けます。
 
 `account`はヘッダーの上の行の末尾側に、11pxの灰色の文字で置きます。利用者の名前・アカウントの設定・ログアウトへのリンクなどを並べます。
@@ -212,7 +214,7 @@ const frame = "block-size: 34rem; overflow: auto; isolation: isolate";
 export default () => (
   <div class="rx-stack">
     <section class="rx-stack" data-space="small">
-      <h3>既定の幅（default）</h3>
+      <h3>既定の幅とフッター（default）</h3>
       <div style={frame}>
         <AppShell
           home={home}
@@ -310,6 +312,32 @@ export default () => (
       </div>
     </section>
     <section class="rx-stack" data-space="small">
+      <h3>補助パネルを付ける（wings）</h3>
+      <div style={frame}>
+        <AppShell
+          home={home}
+          navigation={navigation}
+          account={account}
+          wings={{
+            start: {
+              label: "取引先の分類",
+              content: <p>見込み・取引中・休眠で分類します。</p>,
+            },
+            end: {
+              label: "最近の動き",
+              content: <p>今日の更新はありません。</p>,
+              open: false,
+            },
+          }}
+        >
+          <PageHeader title="取引先の概要" />
+          <p>
+            内容が短い時も作業面を画面の下端まで伸ばし、補助パネルをその高さに合わせます。
+          </p>
+        </AppShell>
+      </div>
+    </section>
+    <section class="rx-stack" data-space="small">
       <h3>横に広い画面（wide）</h3>
       <div style={frame}>
         <AppShell size="wide" home={home} navigation={navigation} account={account}>
@@ -350,7 +378,7 @@ export default () => (
 ```html
 <div class="rx-stack">
   <section class="rx-stack" data-space="small">
-    <h3>既定の幅（default）</h3>
+    <h3>既定の幅とフッター（default）</h3>
     <div style="block-size: 34rem; overflow: auto; isolation: isolate">
       <div class="rx-app-shell" data-size="default">
         <header class="bar">
@@ -1329,6 +1357,94 @@ export default () => (
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="rx-stack" data-space="small">
+    <h3>補助パネルを付ける（wings）</h3>
+    <div style="block-size: 34rem; overflow: auto; isolation: isolate">
+      <div class="rx-app-shell" data-size="default">
+        <header class="bar">
+          <div class="account">
+            <span
+              class="rx-avatar"
+              data-size="small"
+              data-tone="coral"
+              role="img"
+              aria-label="田中 遥"
+              ><span class="initials">遥</span></span
+            ><a href="/apps/settings">田中 遥</a><a href="/">ログアウト</a>
+          </div>
+          <div class="start"><a href="/apps/project">つむぐ商会</a></div>
+          <nav class="navigation" aria-label="アプリの移動">
+            <a href="/apps/project"><span>ホーム</span></a
+            ><a href="/apps/people" aria-current="page" data-current="true"
+              ><span>取引先</span></a
+            ><a href="/apps/sales"><span>案件</span></a
+            ><a href="/apps/schedule"><span>予定</span></a
+            ><a href="/apps/settings"><span>設定</span></a>
+          </nav>
+        </header>
+        <div class="body">
+          <div class="main">
+            <div class="rx-wing">
+              <div class="layout">
+                <div class="main">
+                  <div class="workspace">
+                    <header class="rx-page-header" data-align="start">
+                      <hgroup class="heading"><h1>取引先の概要</h1></hgroup>
+                    </header>
+                    <p>
+                      内容が短い時も作業面を画面の下端まで伸ばし、補助パネルをその高さに合わせます。
+                    </p>
+                  </div>
+                </div>
+                <details class="start" open="">
+                  <summary>
+                    <span
+                      class="handle rx-button"
+                      data-variant="primary"
+                      data-icon-only="true"
+                      data-fallback="caret"
+                      aria-hidden="true"
+                      ><svg
+                        class="rx-icon"
+                        viewBox="0 0 256 256"
+                        fill="currentColor"
+                        aria-hidden="true"
+                        focusable="false"
+                      >
+                        <use href="/assets/rx-icons.svg#rx-caret"></use></svg></span
+                    ><span class="label">取引先の分類</span
+                    ><span class="tip rx-overlay" aria-hidden="true">取引先の分類</span>
+                  </summary>
+                  <div class="body"><p>見込み・取引中・休眠で分類します。</p></div>
+                </details>
+                <details class="end">
+                  <summary>
+                    <span
+                      class="handle rx-button"
+                      data-variant="primary"
+                      data-icon-only="true"
+                      data-fallback="caret"
+                      aria-hidden="true"
+                      ><svg
+                        class="rx-icon"
+                        viewBox="0 0 256 256"
+                        fill="currentColor"
+                        aria-hidden="true"
+                        focusable="false"
+                      >
+                        <use href="/assets/rx-icons.svg#rx-caret"></use></svg></span
+                    ><span class="label">最近の動き</span
+                    ><span class="tip rx-overlay" aria-hidden="true">最近の動き</span>
+                  </summary>
+                  <div class="body"><p>今日の更新はありません。</p></div>
+                </details>
+              </div>
             </div>
           </div>
         </div>
