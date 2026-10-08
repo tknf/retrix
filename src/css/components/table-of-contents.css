@@ -1,7 +1,8 @@
 @layer components {
   /*
     目次。行は Navigation と同じく structure.md「Highrise 2011 の構成 / 左の列」に合わせる
-    （13px・#51504c、行の間隔28px、今いる行は面 #e6e3de と太字の黒）。
+    （highrise-case-page-redesign-2011.jpg (12, 90, 220, 200)。1倍。13px・#51504c、行の間隔28px、
+    今いる行は highrise-contacts-index-redesign-2011.jpg (10, 113, 177, 24) の面 #e6e3de と太字の黒）。
   */
   .rx-table-of-contents {
     --rx-table-of-contents-text: #51504c;
@@ -62,8 +63,8 @@
       /* Navigationと同じく、今いる行の面は角丸の無い四角。 */
       border-radius: 0;
       color: var(--rx-table-of-contents-text);
-      font-size: var(--rx-label);
-      line-height: var(--rx-label-leading);
+      font-size: var(--rx-body);
+      line-height: var(--rx-leading);
       text-decoration: none;
       overflow-wrap: anywhere;
       & > .number {
@@ -96,9 +97,9 @@
     & > ol > li[data-level="3"] > a {
       grid-template-columns: 2em minmax(0, 1fr);
       /* 二段目の番号を、一段目の題名の書き始めに揃える（一段目の文字の大きさで計算する）。 */
-      padding-inline-start: calc(var(--rx-space-2) + var(--rx-label) * 1.25 + var(--rx-space-2));
-      font-size: var(--rx-small);
-      line-height: var(--rx-small-leading);
+      padding-inline-start: calc(var(--rx-space-2) + var(--rx-body) * 1.25 + var(--rx-space-2));
+      font-size: var(--rx-label);
+      line-height: var(--rx-label-leading);
     }
   }
 

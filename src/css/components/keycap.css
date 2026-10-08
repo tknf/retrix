@@ -1,8 +1,9 @@
 @layer components {
   /*
     ショートカットキーの表示。キーボードの操作を表す所は、どのコンポーネントでもこの表示を使う。
-    キーの表示はBasecamp 2・Highriseの画面に手本が無い（推測）。控えめなボタン（実測: controls.md 1。平らな白、
-    1px #ccc の枠、下に 1px #ddd の影）と同じ作りの小さな四角にし、影でキーの厚みを見せる。光沢は付けない。
+    キーの表示はBasecamp 2・Highriseの画面に手本が無い（推測。screenshots/ に keyboard・shortcut の画面は無い）。
+    控えめなボタン（実測: controls.md 1。平らな白、1px #ccc の枠、下に 1px #ddd の影、角丸5px）と同じ作りを
+    11pxの文字に縮めて使い、下の影でキーの厚みを見せる。光沢は付けない。
   */
   .rx-keycap {
     display: inline-flex;
@@ -18,7 +19,7 @@
       min-inline-size: 1.5em;
       padding-inline: 0.35em;
       border: var(--rx-stroke-width) solid var(--rx-control-border);
-      border-radius: var(--rx-radius-field);
+      border-radius: var(--rx-radius-control);
       background: var(--rx-surface);
       box-shadow: var(--rx-shadow-control);
       color: var(--rx-text);
@@ -36,7 +37,7 @@
         padding-inline: 0.1875rem;
       }
     }
-    /* 青緑で塗ったメニューの行や塗った面の上では地を塗らず、文字と同じ色の淡い枠にする。 */
+    /* メニューの行の中（DropdownMenu・FilterMenu）では地を塗らず、文字と同じ色の淡い枠にする。行の淡い青の面の上でも浮かない。 */
     &[data-inverse="true"] > kbd {
       border-color: color-mix(in srgb, currentColor 45%, transparent);
       background: transparent;

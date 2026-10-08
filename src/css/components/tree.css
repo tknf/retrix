@@ -7,17 +7,22 @@
   }
 
   /*
-    行の間隔はHighriseの左の列と同じ28px（structure.md「左の列」）。小さな角丸の面で、ホバーするとTableの行と同じ淡い灰色（推測）。
-    選んだ行は37signalsの黄色のハイライト（#ffffcc）に塗り、黒い太字にする。項目のリンクは本文と同じ青緑の文字と下線。
+    行は Navigation と同じく structure.md「Highrise 2011 の構成 / 左の列」に合わせる
+    （highrise-case-page-redesign-2011.jpg (12, 90, 220, 200)。1倍。今いる行は highrise-contacts-index-redesign-2011.jpg (10, 113, 177, 24)）。
+    - 名前は13px・#51504c、行の間隔28px（13pxの行18pxを上下5pxで挟む）。行の間に線は引かない。
+    - 選んだ行は、左の列の今いる行と同じ角の無い面 #e6e3de に、黒い太字の名前。
+    - 矢印キーで動かしている行は、メニューや候補の一覧と同じ角の無い淡い青（--rx-option-active）。
+    - 項目のリンクは本文と同じ青緑の文字と下線（backpack-sidebar-reorder-2009.png のページの一覧も下線付きのリンクを並べる）。
     階層はガイド線を引かず、字下げだけで示す。開閉のアイコンは24pxにし、子の行のアイコンを親の名前の書き始めの下に置く。
   */
   .rx-tree {
-    --rx-tree-hover: #f5f5f5;
+    --rx-tree-text: #51504c;
+    --rx-tree-current: #e6e3de;
     display: grid;
     gap: 0;
     min-inline-size: 0;
-    font-size: var(--rx-label);
-    line-height: var(--rx-label-leading);
+    font-size: var(--rx-body);
+    line-height: var(--rx-leading);
     &:focus-visible {
       outline: 0.125rem solid var(--rx-link);
       outline-offset: 0.125rem;
@@ -35,17 +40,21 @@
     align-items: center;
     gap: var(--rx-space-1);
     min-inline-size: 0;
-    min-block-size: var(--rx-control-size);
+    min-block-size: 1.75rem;
     padding-inline-end: var(--rx-space-3);
-    border-radius: var(--rx-radius-mark);
-    &:hover {
-      background: var(--rx-tree-hover);
-    }
+    border-radius: 0;
     & > :is(a, .label) {
       min-inline-size: 0;
       padding-block: 0.3125rem;
-      color: var(--rx-text);
+      color: var(--rx-tree-text);
       overflow-wrap: anywhere;
+    }
+    /* ホバーの見た目は手本に無い（推測）。Navigationと同じく、名前を黒くして下線を引く。 */
+    & > .label:hover {
+      color: var(--rx-ink);
+      text-decoration-line: underline;
+      text-decoration-thickness: var(--rx-stroke-width);
+      text-underline-offset: 0.15em;
     }
     & > a {
       color: var(--rx-link);
@@ -80,20 +89,20 @@
     display: none;
   }
 
-  /* 選んだ行は黄色、操作中（キーボードで移動中）の行は淡い青緑。文字は黒い太字にして現在地を示す。 */
+  /* 選んだ行と、矢印キーで動かしている行は、文字を黒い太字にして現在地を示す。 */
   .rx-tree li[data-state="selected"] > .row,
   .rx-tree li[data-state="active"] > .row {
-    font-weight: 600;
+    font-weight: 700;
     & > :is(a, .label) {
       color: var(--rx-ink);
       text-decoration-line: none;
     }
   }
   .rx-tree li[data-state="selected"] > .row {
-    background: var(--rx-mark);
+    background: var(--rx-tree-current);
   }
   .rx-tree li[data-state="active"] > .row {
-    background: var(--rx-cover);
+    background: var(--rx-option-active);
   }
 
   /* 使えない項目は、他の使えない操作と同じく文字だけを灰色にする。 */

@@ -1,15 +1,18 @@
 @layer components {
   /*
-    取り返しのつかない操作の範囲。危険の区画そのものは手本に無い（推測）。
-    BC2の注意の箱（実測: overlays.md 2b「お客さんに見せる確認」。淡いピンク #faeeee、縁は1pxの線、角丸なし、
-    題は赤の太字で 2a の #a52a2a 系）に合わせ、ほかの設定と見分ける。
-    説明は灰色にし、危険の色で塗ったButtonを添える。
+    取り返しのつかない操作の範囲。実測: bc2-help-leave-an-account-01.png (56, 188, 645, 184)。1倍。
+    BC2の「Leave this Basecamp account」で、取り消せない操作の確認（「Are you sure you want to permanently remove yourself…」）を
+    囲む箱。
+    - 塗り #ffffe0、四方に1px #ebdabe、角丸約3px（角の画素 (57〜60, 188〜191) が丸い）、影なし。
+    - 内側の余白は約16px（文字の左端まで15px、問いの文の上端まで19px、ボタンの下端から下の枠まで21px）。
+    - 問いの文は黒の太字（約15px）。その下に入力欄と、控えめなボタン「Yes, remove me from this account」と「or No, I want to stay!」のリンク。
+    Retrixの題名は、カードの中の見出しと同じ本文の大きさ（13px）の黒い太字にする。説明は抜粋と同じ灰色。
+    操作は危険の色で塗ったButtonを利用側が渡し、ほかの設定と見分ける。
     本文がなく幅もある時は、題名と説明の末尾側に操作を置き、狭い時や本文がある時は下の段へ回す。
   */
   .rx-danger-zone {
-    --rx-danger-zone-face: #faeeee;
-    --rx-danger-zone-edge: color-mix(in srgb, var(--rx-danger) 30%, var(--rx-surface));
-    --rx-danger-zone-title: #a52a2a;
+    --rx-danger-zone-face: #ffffe0;
+    --rx-danger-zone-edge: #ebdabe;
     /* 題名・本文・操作を内容幅で並べ、入らない時に次の段へ折り返すためFlex。 */
     display: flex;
     flex-wrap: wrap;
@@ -18,9 +21,9 @@
     gap: var(--rx-space-3) var(--rx-space-6);
     min-inline-size: 0;
     padding-block: var(--rx-space-4);
-    padding-inline: var(--rx-space-5);
+    padding-inline: var(--rx-space-4);
     border: var(--rx-stroke-width) solid var(--rx-danger-zone-edge);
-    border-radius: 0;
+    border-radius: var(--rx-radius-surface);
     background: var(--rx-danger-zone-face);
     color: var(--rx-text);
     font-size: var(--rx-label);
@@ -35,9 +38,9 @@
     min-inline-size: 0;
     & > h2 {
       margin: 0;
-      color: var(--rx-danger-zone-title);
+      color: var(--rx-ink);
       font-size: var(--rx-body);
-      font-weight: 600;
+      font-weight: 700;
       line-height: var(--rx-control-leading);
     }
     & > p {
@@ -78,9 +81,6 @@
 
   @media (forced-colors: active) {
     .rx-danger-zone {
-      --rx-danger-zone-face: #faeeee;
-      --rx-danger-zone-edge: color-mix(in srgb, var(--rx-danger) 30%, var(--rx-surface));
-      --rx-danger-zone-title: #a52a2a;
       border-color: CanvasText;
       background: Canvas;
     }

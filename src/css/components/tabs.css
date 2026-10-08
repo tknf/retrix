@@ -4,6 +4,9 @@
     - 並びの下に1px #e7e7e7の罫線を一本引き、その上に白いタブを約3pxずつ空けて並べる。
     - タブは白、1px #e2e2e2の枠、上の角だけ約3pxの角丸、高さ21px。選んでいても文字の太さと色は変えない。
     - 選んだタブだけ下の線を消し、下の白い本文とつなげる（下の枠を白にして罫線を切る）。
+    - 件数は名前と同じ文字で並べる（highrise-company-page-deals-tab-2011.png (16, 27, 225, 21) の「3 People」「3 Deals」。
+      件数は黒の地の文で、ピルにも別の色にもしない）。
+    - 文字は手本の約12px（大文字の高さ9px）と同じ--rx-label。上の枠から大文字の上端まで6px、ベースラインから下の線まで5px。
     塗りは平ら。Classicの灰色のタブ（3a）は黒いヘッダーの上の部品なので使わない。
   */
   .rx-tabs {
@@ -37,9 +40,7 @@
         gap: var(--rx-space-1);
         min-inline-size: 0;
         max-inline-size: 100%;
-        /*
-          手本は約12pxの文字で高さ21px。日本語の名前が読める13pxにし、枠を除いた内側の高さと文字の差を偶数に保つ（21 − 2 − 13 = 6）。
-        */
+        /* 手本と同じ高さ21px（枠を含む）。 */
         min-block-size: 1.3125rem;
         padding-block: 0;
         padding-inline: var(--rx-space-2);
@@ -51,24 +52,13 @@
         font-family: var(--rx-control-font-family);
         font-size: var(--rx-label);
         font-weight: 400;
-        line-height: calc(17 / 13);
+        line-height: var(--rx-label-leading);
         cursor: pointer;
         & > .icon {
           display: flex;
         }
-        /* 件数は一覧の件数の札と同じ、淡い青のピルに青緑の文字（推測。タブの中の件数は手本では地の文）。 */
+        /* 件数は手本の「3 People」と同じく、名前と同じ色・太さの数字にする。 */
         & > .count {
-          display: inline-grid;
-          place-items: center;
-          min-inline-size: 1.125rem;
-          block-size: 1rem;
-          padding-inline: 0.3125rem;
-          border-radius: var(--rx-radius-pill);
-          background: var(--rx-info-soft);
-          color: var(--rx-teal);
-          font-size: var(--rx-small);
-          font-weight: 400;
-          line-height: 1;
           font-variant-numeric: tabular-nums;
         }
         /* ホバーの見た目は手本に無い（推測）。選んでいないタブの名前に下線を引く。 */

@@ -1,9 +1,13 @@
 @layer components {
   /*
-    折りたたみは控えめな灰色の矢印と、小さな太字の名前だけにする。白い紙の上にそのまま置き、
-    枠付きの開閉ボタンや中身の縦線は引かず、中身は名前の書き始めに揃え、入れ子は字下げだけで示す（Treeと同じ）。
-    ホバーすると名前がリンクと同じ青緑の下線付きになり、押せることを示す。開閉はその場で切り替える。
-    手本に同じ部品は無い（推測）。矢印の灰色は本文の補足の灰色（--rx-muted、structure.md「抜粋」の #666）にそろえる。
+    開閉の見出しは、37signalsの「続きを開くリンク」と同じく、青緑の文字に1pxの下線を引いた12pxのリンクの形にする。
+    実測: highrise-help-note-show-options-2007.png (18, 210, 240, 20)。1倍。「Show options (files, cases, permissions)」は
+    約12pxの通常の太さで下線付き、矢印や枠は無い（文字 #444446）。BC2の「1 completed to-do」（lists.md「BC2 の To-do」）は
+    #1c5c77に下線、backpack-list-completed-collapsed-2009.png の「View all 9 completed items」も小さな下線付きの文字。
+    色はRetrixのリンク（--rx-link、ホバーで赤）にそろえる。
+    手本は開閉で文言を変える（Show → Hide）が、Retrixの見出しは文言を変えないので、開閉の状態を示す小さな矢印を見出しと同じ色で前に置く。
+    白い紙の上にそのまま置き、枠や中身の縦線は引かない。中身は見出しの書き始めに揃え、入れ子は字下げだけで示す（Treeと同じ）。
+    開閉はその場で切り替える。
   */
   .rx-disclosure {
     min-inline-size: 0;
@@ -11,17 +15,19 @@
     font-size: var(--rx-label);
     line-height: calc(11 / 7);
     & > summary {
+      --rx-disclosure-marker: 0.875rem;
       display: grid;
-      grid-template-columns: 1.5rem minmax(0, 1fr);
+      grid-template-columns: var(--rx-disclosure-marker) minmax(0, 1fr);
       align-items: start;
-      gap: var(--rx-space-2);
+      gap: var(--rx-space-1);
       padding-block: var(--rx-space-2);
       padding-inline: 0;
       border-radius: var(--rx-radius-control);
+      color: var(--rx-link);
       font-family: var(--rx-control-font-family);
-      font-size: var(--rx-body);
-      font-weight: var(--rx-label-weight);
-      line-height: 1.5;
+      font-size: var(--rx-label);
+      font-weight: 400;
+      line-height: var(--rx-label-leading);
       list-style: none;
       cursor: pointer;
       &:focus-visible {
@@ -35,28 +41,24 @@
         grid-row: 1;
         display: grid;
         place-items: center;
-        inline-size: 1.5rem;
+        inline-size: var(--rx-disclosure-marker);
         block-size: 1lh;
-        color: var(--rx-muted);
         & > .rx-icon {
-          inline-size: 0.875rem;
-          block-size: 0.875rem;
+          inline-size: 0.75rem;
+          block-size: 0.75rem;
           rotate: -90deg;
         }
       }
       &:dir(rtl) > .marker > .rx-icon {
         rotate: 90deg;
       }
+      & > .label > .title {
+        text-decoration-line: underline;
+        text-decoration-thickness: var(--rx-stroke-width);
+        text-underline-offset: 0.15em;
+      }
       &:hover {
-        color: var(--rx-link);
-        & > .marker {
-          color: var(--rx-link);
-        }
-        & > .label > .title {
-          text-decoration-line: underline;
-          text-decoration-thickness: var(--rx-stroke-width);
-          text-underline-offset: 0.15em;
-        }
+        color: var(--rx-link-hover);
       }
       & > .label {
         grid-column: 2;
@@ -73,11 +75,8 @@
         }
       }
     }
-    &[open] > summary > .marker {
-      color: var(--rx-text);
-      & > .rx-icon {
-        rotate: 0deg;
-      }
+    &[open] > summary > .marker > .rx-icon {
+      rotate: 0deg;
     }
     /* 閉じると高さを0にして隠す。切り取りの余白（中の操作の影の分）からはみ出さないよう、閉じている間は透明にする。 */
     &::details-content {
@@ -98,7 +97,7 @@
       min-inline-size: 0;
       /* 中身の下は見出しの上と同じ余白にし、罫線で囲まれても上下の空きをそろえる。 */
       padding-block: 0 var(--rx-space-2);
-      padding-inline: calc(1.5rem + var(--rx-space-2)) 0;
+      padding-inline: calc(0.875rem + var(--rx-space-1)) 0;
       overflow-wrap: anywhere;
       & > p {
         max-inline-size: 44em;
