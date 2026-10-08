@@ -79,6 +79,9 @@ application.register("table-resize", TableResizeController);
 
 ## カタログ
 
+見本と利用例は[公開カタログ](https://retrix-catalog-preview.tknf.workers.dev)で確認できます。
+ローカルでカタログを起動する場合は、リポジトリで次のコマンドを実行します。
+
 ```sh
 vp install
 vp run dev
