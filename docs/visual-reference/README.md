@@ -15,27 +15,33 @@ Retrixの見た目は、雰囲気ではなく、Basecamp 2（2012〜2015）とHi
 
 ## 採用した主な値
 
-| 対象                     | 値                                                                                         | 根拠                                   |
-| ------------------------ | ------------------------------------------------------------------------------------------ | -------------------------------------- |
-| 机                       | `#f6f2e8`に明るさだけの細かいノイズ                                                        | structure.md「机」                     |
-| シート                   | 幅960px、内側の左右30px、角丸3px、枠なし、`0 0 6px rgb(0 0 0 / 28%)`                       | structure.md「シート」                 |
-| 背後のシート             | `#f9f9f9`、1px `#e5e5e5`、影なし。手前のシートは右へ21px・下へ60pxずれる                   | structure.md「背後に重ねた親のシート」 |
-| ヘッダー                 | 帯なし。名前20pxの太字`#3d3c37`、縦の線1px `#ded7c7`、移動先14〜15px、今いる項目は黒い太字 | structure.md「ヘッダー」               |
-| 検索欄                   | 326×33px、白、枠なし、シートと同じ影、角丸3px                                              | structure.md「ヘッダー」               |
-| 文字                     | 本文の黒`#000`、リンク`#1c5c77`と1pxの下線、抜粋`#666`、見出しの赤`#990000`（18px・400）   | structure.md「文字」                   |
-| 控えめなボタン           | 平らな白、1px `#ccc`、下に1px `#ddd`の影、角丸5px、高さ22px、12pxの黒                      | controls.md 1章                        |
-| 主ボタン                 | 平らな緑、1pxの濃い緑`#016c43`と下に同じ色の1px、角丸4px、白の太字                         | controls.md 3章                        |
-| 一行の入力欄             | 1px `#dedede`、角丸2px、内側の影なし、高さ24px、12px                                       | controls.md 6a章                       |
-| 複数行の入力欄           | 1px `#c1c1c1`、角丸5px                                                                     | controls.md 7a章                       |
-| 選択欄・チェック・ラジオ | OSの標準の部品のまま                                                                       | controls.md 8〜10章                    |
-| 無効                     | 形と塗りはそのまま、文字だけ灰色`#9a9a9a`                                                  | controls.md 13・15章                   |
-| ポップオーバー           | 白、1px `#bbb`、角丸5〜6px、外へ約8pxの柔らかい影、45°のしっぽ                             | overlays.md                            |
-| 選んだ項目               | 手本は淡い青のピル（`#dde4f5`）。ユーザーの指定でピルにせず、角の無い`#ddeefe`に黒い文字   | overlays.md                            |
-| 状態のラベル（Badge）    | 濃い塗りに白い太字、角丸2〜3px、高さ16〜21px（WON `#51913b`、CREATED `#323232`ほか）       | lists.md「Highrise Latest activity」   |
-| ピル                     | 高さ18px・角丸9px・12px。件数は`#e1e8f8`に`#1c5c77`、担当者と期日は`#eeeeee`に灰色         | lists.md「BC2 のピル」                 |
-| 黄色のハイライト         | `#ffffcc`（今日・選んだ行・新着。各所の値は±3以内）                                        | lists.md「黄色のハイライト」           |
-| 罫線                     | 一覧の行1px `#ececec`、見出しの下1px `#dedede`、カレンダー1px `#dcd9d2`                    | structure.md・lists.md                 |
-| 黄色の案内               | `#ffffcc`、1px `#eac73b`で下だけ3px、角丸4px                                               | overlays.md                            |
+| 対象                       | 値                                                                                                 | 根拠                                                     |
+| -------------------------- | -------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| 机                         | `#f6f2e8`に明るさだけの細かいノイズ                                                                | structure.md「机」                                       |
+| シート                     | 幅960px、内側の左右30px、角丸3px、枠なし、`0 0 6px rgb(0 0 0 / 28%)`                               | structure.md「シート」                                   |
+| 背後のシート               | `#f9f9f9`、1px `#e5e5e5`、影なし。手前のシートは右へ21px・下へ60pxずれる                           | structure.md「背後に重ねた親のシート」                   |
+| ヘッダー                   | 帯なし。名前20pxの太字`#3d3c37`、縦の線1px `#ded7c7`、移動先14〜15px、今いる項目は黒い太字         | structure.md「ヘッダー」                                 |
+| 検索欄                     | 326×33px、白、枠なし、シートと同じ影、角丸3px                                                      | structure.md「ヘッダー」                                 |
+| 文字                       | 本文の黒`#000`、リンク`#1c5c77`と1pxの下線、抜粋`#666`、見出しの赤`#990000`（18px・400）           | structure.md「文字」                                     |
+| 控えめなボタン             | 平らな白、1px `#ccc`、下に1px `#ddd`の影、角丸5px、高さ22px、12pxの黒                              | controls.md 1章                                          |
+| 主ボタン                   | 平らな緑、1pxの濃い緑`#016c43`と下に同じ色の1px、角丸4px、白の太字                                 | controls.md 3章                                          |
+| 一行の入力欄               | 1px `#dedede`、角丸2px、内側の影なし、高さ24px、12px                                               | controls.md 6a章                                         |
+| 複数行の入力欄             | 1px `#c1c1c1`、角丸5px                                                                             | controls.md 7a章                                         |
+| 選択欄・チェック・ラジオ   | OSの標準の部品のまま                                                                               | controls.md 8〜10章                                      |
+| 無効                       | 形と塗りはそのまま、文字だけ灰色`#9a9a9a`                                                          | controls.md 13・15章                                     |
+| ポップオーバー             | 白、1px `#bbb`、角丸5〜6px、外へ約8pxの柔らかい影、45°のしっぽ                                     | overlays.md                                              |
+| 選んだ項目                 | 手本は淡い青のピル（`#dde4f5`）。ユーザーの指定でピルにせず、角の無い`#ddeefe`に黒い文字           | overlays.md                                              |
+| 表                         | 見出しの帯`#e9e9e9`に12pxの黒い太字、下に1px `#acacac`、行の間1px `#e7e7e7`、合計の上1px `#8c8b8b` | 37signals-others/classic-tour-time-tracking-2008.png     |
+| 確認の箱（DangerZone）     | `#ffffe0`、四方1px `#ebdabe`、角丸3px、黒の太字の問い                                              | basecamp2-official/bc2-help-leave-an-account-01.png      |
+| 段階（Steps）              | 同じ幅の平らな面を2px空けて並べる。他`#e9e8e8`、今`#dfe7eb`                                        | highrise/highrise-import-match-fields-2016.png           |
+| 入力の誤りの一覧           | `#fffae6`、四方1px `#ffea9e`、見出しは赤（実測`#e3533d`→`#d6371f`）の太字                          | basecamp2-official/bc2-help-login-troubleshooting-04.png |
+| 版の比較（Comparison）     | 変更後は`#ccffcc`に1px `#99cc99`、現在は`#eeeeee`に1px `#cccccc`                                   | 37signals-others/writeboard-version-compare-2006.gif     |
+| 開閉の見出し（Disclosure） | 12pxの青緑のリンクの文字に1pxの下線（「Show options」「1 completed to-do」）                       | highrise/highrise-help-note-show-options-2007.png        |
+| 状態のラベル（Badge）      | 濃い塗りに白い太字、角丸2〜3px、高さ16〜21px（WON `#51913b`、CREATED `#323232`ほか）               | lists.md「Highrise Latest activity」                     |
+| ピル                       | 高さ18px・角丸9px・12px。件数は`#e1e8f8`に`#1c5c77`、担当者と期日は`#eeeeee`に灰色                 | lists.md「BC2 のピル」                                   |
+| 黄色のハイライト           | `#ffffcc`（今日・選んだ行・新着。各所の値は±3以内）                                                | lists.md「黄色のハイライト」                             |
+| 罫線                       | 一覧の行1px `#ececec`、見出しの下1px `#dedede`、カレンダー1px `#dcd9d2`                            | structure.md・lists.md                                   |
+| 黄色の案内                 | `#ffffcc`、1px `#eac73b`で下だけ3px、角丸4px                                                       | overlays.md                                              |
 
 ## 実測から変えた値
 
