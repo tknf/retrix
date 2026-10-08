@@ -1,4 +1,11 @@
 @layer components {
+  /*
+    色を選ぶ欄。手本はBackpackの配色の設定（実測: screenshots/37signals-others/backpack-color-scheme-customizer-2009.jpg、1倍）。
+    - 色の面 (295, 20, 190, 185): 枠も角丸も無い四角。BC2のポップオーバーではなくページの中に置く欄なので、面の外側は
+      BC2の通知する人を選ぶ箱（overlays.md 1e）の淡い灰色の箱にする（手本の#999の濃い灰色の面は、灰色の文字が4.5:1に届かないので使わない）。
+    - 色の面の中の位置 (458, 73, 11, 11): 白い輪の内と外に暗い縁を付けた直径約11pxの輪。ぼかしの影は無い。
+    - 色相は手本では面の右の縦の帯だが、ここではRangeの溝とつまみ（range.css）の中を色の移り変わりにしたスライダーにする。
+  */
   .rx-color-picker {
     --color-picker-hue: 215;
     --color-picker-saturation: 0.68;
@@ -52,10 +59,14 @@
       aspect-ratio: 8 / 5;
       overflow: hidden;
       padding: 0;
-      border-radius: var(--rx-radius-control);
+      /* 手本の色の面は枠も角丸も無い。Buttonの枠は透かし、色を縁まで敷く。 */
+      border-color: transparent;
+      border-radius: 0;
       background:
         linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, transparent),
         var(--color-picker-hue-color, var(--rx-link));
+      /* 透かした枠の下まで色を一続きに敷き、縁に繰り返しの線を出さない。 */
+      background-origin: border-box;
       box-shadow: var(--rx-shadow-input);
       cursor: crosshair;
       touch-action: none;
@@ -69,14 +80,14 @@
       position: absolute;
       inset-inline-start: calc(var(--color-picker-saturation, 0.68) * 100%);
       inset-block-start: calc((1 - var(--color-picker-brightness, 0.84)) * 100%);
-      inline-size: 0.875rem;
-      block-size: 0.875rem;
+      inline-size: 0.75rem;
+      block-size: 0.75rem;
       border: 0.125rem solid white;
       border-radius: 50%;
       background: transparent;
       box-shadow:
-        0 0 0 var(--rx-stroke-width) rgb(38 38 36 / 45%),
-        0 0.0625rem 0.1875rem rgb(38 38 36 / 18%);
+        0 0 0 var(--rx-stroke-width) rgb(0 0 0 / 55%),
+        inset 0 0 0 var(--rx-stroke-width) rgb(0 0 0 / 55%);
       translate: -50% -50%;
       pointer-events: none;
     }
@@ -130,80 +141,52 @@
       margin-block-start: 0;
     }
 
+    /*
+      四本のスライダーはRange（range.css）の溝とつまみをそのまま使い、溝の中だけを各値の色の移り変わりにする。
+      色そのものが値を示すので、進んだ側の淡い青の塗りは敷かない。
+    */
+    & > .editor > .channels > .rx-field > .rx-range {
+      --rx-range-lead: 0%;
+      --rx-range-rest: linear-gradient(transparent, transparent);
+    }
+
     & > .editor > .channels > .rx-field > .rx-range[data-channel="hue"] {
-      --rx-range-color: var(--color-picker-hue-color, var(--rx-link));
       --slider-value: calc(var(--color-picker-hue, 215) / 360);
+      --rx-range-fill: linear-gradient(
+        to right,
+        #f33,
+        #fc3,
+        #59c966,
+        #35bdc8,
+        #487edc,
+        #c05bc4,
+        #f33
+      );
     }
 
     & > .editor > .channels > .rx-field > .rx-range[data-channel="saturation"] {
-      --rx-range-color: var(--color-picker-hue-color, var(--rx-link));
       --slider-value: var(--color-picker-saturation, 0.68);
+      --rx-range-fill: linear-gradient(
+        to right,
+        white,
+        var(--color-picker-hue-color, var(--rx-link))
+      );
     }
 
     & > .editor > .channels > .rx-field > .rx-range[data-channel="brightness"] {
-      --rx-range-color: var(--color-picker-hue-color, var(--rx-link));
       --slider-value: var(--color-picker-brightness, 0.84);
+      --rx-range-fill: linear-gradient(
+        to right,
+        black,
+        var(--color-picker-hue-color, var(--rx-link))
+      );
     }
 
     & > .editor > .channels > .rx-field > .rx-range[data-channel="alpha"] {
-      --rx-range-color: var(--color-picker-hue-color, var(--rx-link));
       --slider-value: var(--color-picker-alpha, 1);
-    }
-
-    & > .editor > .channels > .rx-field > .rx-range > .controls > .native > .input {
-      background: linear-gradient(var(--rx-range-color), var(--rx-range-color)) center /
-        calc(100% - 9em / 7) calc(2em / 7) no-repeat;
-    }
-
-    &
-      > .editor
-      > .channels
-      > .rx-field
-      > .rx-range[data-channel="hue"]
-      > .controls
-      > .native
-      > .input {
-      background: linear-gradient(to right, #f33, #fc3, #59c966, #35bdc8, #487edc, #c05bc4, #f33)
-        center / calc(100% - 9em / 7) calc(2em / 7) no-repeat;
-    }
-
-    &
-      > .editor
-      > .channels
-      > .rx-field
-      > .rx-range[data-channel="saturation"]
-      > .controls
-      > .native
-      > .input {
-      background: linear-gradient(to right, white, var(--color-picker-hue-color, var(--rx-link)))
-        center / calc(100% - 9em / 7) calc(2em / 7) no-repeat;
-    }
-
-    &
-      > .editor
-      > .channels
-      > .rx-field
-      > .rx-range[data-channel="brightness"]
-      > .controls
-      > .native
-      > .input {
-      background: linear-gradient(to right, black, var(--color-picker-hue-color, var(--rx-link)))
-        center / calc(100% - 9em / 7) calc(2em / 7) no-repeat;
-    }
-
-    &
-      > .editor
-      > .channels
-      > .rx-field
-      > .rx-range[data-channel="alpha"]
-      > .controls
-      > .native
-      > .input {
-      background:
-        linear-gradient(to right, transparent, var(--color-picker-hue-color, var(--rx-link))) center
-          / calc(100% - 9em / 7) calc(2em / 7) no-repeat,
-        repeating-conic-gradient(var(--rx-border) 0 25%, white 0 50%) center / calc(100% - 9em / 7)
-          calc(2em / 7) no-repeat;
+      --rx-range-fill:
+        linear-gradient(to right, transparent, var(--color-picker-hue-color, var(--rx-link))),
+        repeating-conic-gradient(var(--rx-border) 0 25%, white 0 50%) 0 0 / 0.5rem 0.5rem;
     }
 
     /* 使えない時は形と塗りをそのままにし、文字だけを灰色にする（controls.md 13・15章）。 */
@@ -255,9 +238,8 @@
       box-shadow: none;
     }
 
-    .rx-color-picker > .editor > .channels > .rx-field > .rx-range > .controls > .native > .input {
-      background: linear-gradient(Highlight, Highlight) center / calc(100% - 9em / 7) calc(2em / 7)
-        no-repeat;
+    .rx-color-picker > .editor > .channels > .rx-field > .rx-range {
+      --rx-range-fill: linear-gradient(Highlight, Highlight);
     }
   }
 }

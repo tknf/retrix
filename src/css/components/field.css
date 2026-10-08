@@ -122,8 +122,8 @@
     max-block-size: 16rem;
     overflow: auto;
     overscroll-behavior: contain;
+    /* BC2のラベルやジャンプの候補（overlays.md 1f）と同じく、入力欄のすぐ下に隙間なく続ける。 */
     margin: 0;
-    margin-block-start: var(--rx-space-1);
     padding-block: var(--rx-space-1);
     padding-inline: var(--rx-space-1);
     /*

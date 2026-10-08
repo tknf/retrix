@@ -1,9 +1,12 @@
 @layer components {
   /*
-    必要な時だけ追加する欄。追加した欄を上に積み、追加できる項目を控えめなボタン（実測: controls.md 1）で下に並べる。
-    追加する操作の並べ方そのものは手本に無い（推測）。
+    必要な時だけ追加する欄。追加した欄を上に積み、追加できる項目を下に並べる。
+    手本はHighriseの人の編集（実測: screenshots/highrise/highrise-edit-person-form-green-2009.jpg、1倍）。
+    値の無い項目は「Add another」「Add an instant message account」(205, 435, 195, 14) のような灰色の文字
+    （実測 #8f918e。白地で4.5:1に届かないので、色合いを保って --rx-muted #666666 まで濃くする）で並べ、押すと欄が現れる。
+    - inline: 項目を控えめなボタン（実測: controls.md 1。平らな白、1px #ccc、下に 1px #ddd、角丸5px、黒い文字）で横に並べる。
+    - stack: 手本と同じく、枠も面も無い灰色の文字で縦に並べ、ホバーすると本文の黒にする。
     追加した欄の終わりには削除の操作を置き、入力の行の下端にそろえる。
-    ボタンは灰色の文字で、ホバーすると本文の黒にする。stackは枠を外したボタンを縦に並べ、ホバーで淡い灰色の面を出す。
   */
   .rx-optional-fields {
     display: grid;
@@ -35,23 +38,22 @@
       display: flex;
       flex-wrap: wrap;
       gap: var(--rx-space-2);
-      & > .rx-button.chip {
-        color: var(--rx-muted);
-        &:hover:not(:disabled) {
-          color: var(--rx-text);
-        }
-      }
     }
     &[data-layout="stack"] > .chips {
       flex-direction: column;
       align-items: start;
       gap: var(--rx-space-1);
       & > .rx-button.chip {
+        /* 枠も面も無いので、文字の頭を上の欄の名前とそろえる。 */
+        padding-inline: 0;
         border-color: transparent;
         background: transparent;
         box-shadow: none;
+        color: var(--rx-muted);
         &:hover:not(:disabled) {
-          background: var(--rx-gray-50);
+          background: transparent;
+          box-shadow: none;
+          color: var(--rx-text);
         }
       }
     }

@@ -31,13 +31,18 @@
       padding-block-end: var(--rx-space-2);
       font-weight: var(--rx-label-weight);
     }
-    /* 目盛りとつまみの位置は円の上の角度で決まり、書字方向に関係しないので、面の中は左から右に固定する。 */
+    /*
+      目盛りとつまみの位置は円の上の角度で決まり、書字方向に関係しないので、面の中は左から右に固定する。
+      弧は真上から左下・右下の45度までなので、面の高さは真上の目盛り（半径）と下端の目盛り（半径×cos45°）に、
+      目盛りの文字の高さの半分ずつを足した分にする。上下に余る空きをそろえ、見出し・単位との間を詰める。
+    */
     & > .face {
+      --rx-dial-center: calc(var(--rx-dial-radius) + 0.75rem);
       position: relative;
       direction: ltr;
       max-inline-size: 100%;
       inline-size: calc(var(--rx-dial-radius) * 2 + 3rem);
-      block-size: calc(var(--rx-dial-radius) * 2 + 1.5rem);
+      block-size: calc(var(--rx-dial-radius) * 1.7071 + 1.5rem);
       &:has(> .stop:nth-of-type(1) > input:checked) {
         --rx-dial-at: 0;
       }
@@ -71,7 +76,7 @@
         --rx-dial-i: 0;
         --rx-dial-angle: calc(-135deg + var(--rx-dial-i) * var(--rx-dial-step));
         position: absolute;
-        inset-block-start: 50%;
+        inset-block-start: var(--rx-dial-center);
         inset-inline-start: 50%;
         translate: calc(-50% + sin(var(--rx-dial-angle)) * var(--rx-dial-radius))
           calc(-50% - cos(var(--rx-dial-angle)) * var(--rx-dial-radius));
@@ -105,7 +110,7 @@
       /* つまみ。控えめなボタンと同じ平らな白、1px #ccc の枠、下に 1px #ddd の影。光沢は付けない。 */
       & > .knob {
         position: absolute;
-        inset-block-start: 50%;
+        inset-block-start: var(--rx-dial-center);
         inset-inline-start: 50%;
         inline-size: var(--rx-dial-size);
         block-size: var(--rx-dial-size);

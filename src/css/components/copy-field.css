@@ -3,6 +3,8 @@
     コピーして使う値の欄。読み取り専用のInput（field.css。実測: controls.md 6a、高さ 24px）の末尾に、
     控えめなボタン（実測: controls.md 1、高さ 22px）を置き、高さの違う二つの上下の中央をそろえる。
     コピーするとアイコンがチェックに変わり、しばらくして元のアイコンに戻る。コピーできなかった時は欄の下に理由を出す。
+    手本に同じ部品は無い（推測）。BC2はメールで追加する宛先を太字のリンクで見せ、下に灰色の注意を置くだけ
+    （screenshots/basecamp2-official/bc2-help-adding-items-through-email-02.png）。ここでは選んでコピーしやすいよう欄に入れる。
   */
   .rx-copy-field {
     min-inline-size: 0;

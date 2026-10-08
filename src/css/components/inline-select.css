@@ -1,22 +1,26 @@
 @layer components {
   /*
-    文の中の選択。前後の文と同じ大きさ・行高のまま、選べる語をInputと同じ欄で囲み、終わりに小さな▾を添える。
-    枠はInputと同じ（実測: controls.md 6a。1px #dedede、角丸 2px、内側の影なし）。
-    フォーカスはInputと同じ青い縁と外側の淡い青の輪（実測: controls.md 11）。幅は選んだ語に合わせる。
+    文の中の選択。手本はBC2の検索の条件の文（実測: screenshots/basecamp2-official/bc2-help-searching-in-03.png、1倍。
+    「All matches by anyone in all projects…」の「anyone」(148, 60, 68, 23)）。選べる語を枠の無い淡い青の面
+    （実測 #dde4f5。BC2の件数と同じ #e1e8f8 の範囲なので --rx-pill-count）に、青緑の太字（実測 #244960 →
+    リンクの --rx-pill-count-text）で置く。左右の余白は実測 9px（14pxの文字で約0.65em）。
+    手本の形はピルだが、ピルの形は件数・担当者・期日だけに使う決まりなので、小さな要素と同じ角丸2pxにする。
+    手本に▾は無いが、選べることを示すため終わりに小さな▾を添える（推測）。前後の文と同じ大きさ・行高のまま置く。
   */
   .rx-inline-select {
     position: relative;
     display: inline-flex;
     min-inline-size: 0;
     align-items: baseline;
-    /* 日本語の文は語の間に空白を置かないので、枠と前後の文字が触れないよう少し離す。 */
+    /* 日本語の文は語の間に空白を置かないので、面と前後の文字が触れないよう少し離す。 */
     margin-inline: 0.2em;
     max-inline-size: calc(100% - 0.4em);
-    border: var(--rx-stroke-width) solid var(--rx-input-border);
+    /* 枠は透明にし、強制カラーの時だけ線として見せる。 */
+    border: var(--rx-stroke-width) solid transparent;
     border-radius: var(--rx-radius-mark);
-    background: var(--rx-surface);
-    box-shadow: var(--rx-shadow-input);
-    color: var(--rx-text);
+    background: var(--rx-pill-count);
+    color: var(--rx-pill-count-text);
+    font-weight: 700;
     vertical-align: baseline;
     & > select {
       appearance: none;
@@ -25,7 +29,7 @@
       max-inline-size: 100%;
       margin: 0;
       padding-block: 0;
-      padding-inline: 0.375em 1.35em;
+      padding-inline: 0.5em 1.35em;
       border: 0;
       border-radius: inherit;
       background: transparent;
@@ -43,25 +47,30 @@
         color: var(--rx-disabled-text);
         cursor: default;
       }
+      /* 開いた一覧の選択肢は、面の太字と青緑を引き継がず、本文の黒い文字にする。 */
+      & > option {
+        color: var(--rx-text);
+        font-weight: 400;
+      }
     }
     & > .rx-icon {
       position: absolute;
       inset-block-start: 50%;
       inset-inline-end: 0.45em;
       translate: 0 -50%;
-      color: var(--rx-muted);
+      color: inherit;
       font-size: 0.7em;
       pointer-events: none;
     }
-    /* ホバーは手本が無い（推測）。枠をボタンと同じ灰色まで濃くする。 */
+    /* ホバーは手本が無い（推測）。BC2のリンクと同じく、文字と▾を赤にする。 */
     &:has(> select:enabled):hover {
-      border-color: var(--rx-control-border);
+      color: var(--rx-link-hover);
     }
     &:has(> select:focus-visible) {
       border-color: var(--rx-focus-border);
       box-shadow: var(--rx-focus-glow);
     }
-    /* 使えない選択はInputと同じく、形と面をそのままにし、文字と▾だけを灰色にする。 */
+    /* 使えない選択は、形と面をそのままにし、文字と▾だけを灰色にする。 */
     &:has(> select:disabled) {
       color: var(--rx-disabled-text);
       & > .rx-icon {
