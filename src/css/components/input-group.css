@@ -3,14 +3,18 @@
     container: rx-input-group / inline-size;
     display: flex;
     flex-wrap: wrap;
-    /* 欄（24px）と隣のButton（22px）は高さが違うので、上下の中央をそろえる。 */
     align-items: center;
     gap: var(--rx-space-2);
     min-inline-size: 0;
 
+    /* 隣のButtonは欄と同じ高さ（24px、largeは32px）にし、上下の端をそろえる。文字の指定はButtonのまま。 */
     & > .rx-button {
+      --rx-button-size: calc(24em / 12);
       min-inline-size: 0;
       max-inline-size: 45%;
+      &[data-size="large"] {
+        --rx-button-large: calc(32em / 14);
+      }
     }
   }
 
@@ -36,6 +40,14 @@
     font-size: var(--rx-label);
     font-weight: 400;
     line-height: calc(10 / 7);
+
+    /*
+      接頭辞・単位と値の文字を同じ行の箱に載せ、ベースラインをそろえる。行の高さを枠の内側の高さにし、
+      flexの中央寄せ（端数の位置になる）と入力欄の文字の中央寄せの違いでずれないようにする。
+    */
+    & > :is(.rx-input, .affix) {
+      line-height: calc(var(--rx-input-group-size) - 2 * var(--rx-stroke-width));
+    }
 
     & > .rx-input {
       --rx-input-size: calc(var(--rx-input-group-size) - 0.125rem);
@@ -85,8 +97,7 @@
   }
 
   .rx-input-group > .control > .affix {
-    display: flex;
-    align-items: center;
+    display: block;
     flex: 0 1 auto;
     min-inline-size: 0;
     max-inline-size: 45%;

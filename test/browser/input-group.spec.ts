@@ -96,3 +96,33 @@ for (const width of [375, 1280]) {
     await example.screenshot({ path: testInfo.outputPath(`input-group-${width}-200.png`) });
   });
 }
+
+test("接頭辞と値の文字を同じ行の箱に載せ、隣のButtonを欄と同じ高さにそろえる", async ({ page }) => {
+  await page.goto("/components/input-group");
+  const control = page.locator('[data-example="hono"] .rx-input-group > .control').first();
+  const lines = await control.evaluate((element) => {
+    const affix = element.querySelector(":scope > .affix");
+    const input = element.querySelector(":scope > .rx-input");
+    if (!affix || !input) return null;
+    return {
+      affix: getComputedStyle(affix).lineHeight,
+      input: getComputedStyle(input).lineHeight,
+      inner: element.clientHeight,
+    };
+  });
+  expect(lines).not.toBeNull();
+  // flexの中央寄せと入力欄の中央寄せの違いで、接頭辞が値より上へずれないようにする。
+  if (lines) {
+    expect(lines.affix).toBe(lines.input);
+    expect(Number.parseFloat(lines.input)).toBe(lines.inner);
+  }
+  const group = page.locator('[data-example="hono"] .rx-input-group:has(> .rx-button)').first();
+  const field = await group.locator(":scope > .control").boundingBox();
+  const button = await group.locator(":scope > .rx-button").boundingBox();
+  expect(field).not.toBeNull();
+  expect(button).not.toBeNull();
+  if (field && button) {
+    expect(button.height).toBe(field.height);
+    expect(button.y).toBe(field.y);
+  }
+});
