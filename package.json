@@ -1,6 +1,6 @@
 {
   "name": "@tknf/retrix",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Basecamp 2の頃の37signalsの画面を手本にした、管理画面・業務システム向けのデザインシステム。CSSを基盤に、Hono JSXのSSRコンポーネントとStimulus controllerを提供する",
   "keywords": [
     "css",
