@@ -172,3 +172,21 @@ test("列を指定しないセルは折り返さず、表が囲みより広い�
   await table.evaluate((element) => element.scrollBy({ left: 100 }));
   expect(await table.evaluate((element) => element.scrollLeft)).toBeGreaterThan(0);
 });
+
+test("見出しを固定し列の幅も変えられる表は、スクロールしても全ての見出しを上に留める", async ({
+  page,
+}) => {
+  await page.goto("/components/table");
+  const table = page.getByRole("region", { name: "記事の公開状況", exact: true });
+  await expect(table.locator("thead th > .resize").first()).toBeAttached();
+  // ハンドルを持つ見出しがposition: relativeになり、その列の見出しだけが流れていた。
+  const offsets = await table.evaluate((element) => {
+    element.style.maxBlockSize = "7.5rem";
+    element.scrollTop = 60;
+    const top = element.getBoundingClientRect().top;
+    return Array.from(element.querySelectorAll("thead th"), (header) =>
+      Math.round(header.getBoundingClientRect().top - top),
+    );
+  });
+  expect(offsets.every((offset) => offset === 0)).toBe(true);
+});

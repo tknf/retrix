@@ -26,6 +26,9 @@
     &[data-sticky="true"] {
       max-block-size: 28rem;
     }
+    &:not([data-sticky="true"]) > table > thead > tr > th:has(> .resize) {
+      position: relative;
+    }
     &[data-sticky="true"] > table > thead > tr > th {
       position: sticky;
       inset-block-start: 0;
@@ -167,10 +170,6 @@
         font-weight: 400;
         white-space: nowrap;
       }
-      /* セルの中に置いたPopoverなどのパネルは、セルの1行の指定を引き継がず、ふつうに折り返す。 */
-      & > :is(thead, tbody, tfoot) > tr > :is(th, td) :is([popover], dialog) {
-        white-space: normal;
-      }
       /*
         列の見出しは、Classicのグループの見出しの帯と同じ平らな#e9e9e9に、表の本文と同じ12pxの黒い太字。
         12pxの文字（行高17px）に上下3pxと線1pxで24px。帯の下端には、時間の記録の表と同じ1px #acacacの濃い線を引く。
@@ -308,9 +307,11 @@
         列の幅を変えるハンドル。見出しの末尾側の縁をまたぐ細い帯で、ホバーとフォーカスの時に青緑の線を出す。
         TableResizeControllerが接続時に置く。
       */
-      /* ハンドルの基準にするため見出しを配置すると、見出しの面が罫線（border）を覆うので、見出しの下の濃い線を影で描く。 */
+      /*
+        ハンドルの基準にするため見出しを配置すると、見出しの面が罫線（border）を覆うので、見出しの下の濃い線を影で描く。
+        見出しを固定する表は、見出しがstickyのままハンドルの基準になるので、relativeにしない（下の:not([data-sticky])）。
+      */
       & > thead > tr > th:has(> .resize) {
-        position: relative;
         box-shadow: 0 var(--rx-stroke-width) var(--rx-table-head-rule);
       }
       & > thead > tr > th > .resize {
@@ -350,6 +351,14 @@
         border-block-end: 0;
       }
     }
+  }
+  /*
+    セルの中に置いたPopoverなどのパネルは、セルの1行の指定を引き継がず、ふつうに折り返す。
+    詳細度を持たせず、パネルのコンポーネントが自分で決めた折り返しを妨げない。
+  */
+  :where(.rx-table > table > :is(thead, tbody, tfoot) > tr > :is(th, td))
+    :where([popover], dialog) {
+    white-space: normal;
   }
   /* 選択バーは、開き始めを少し下に置いて出す。 */
   @media (forced-colors: active) {
