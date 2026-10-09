@@ -105,11 +105,11 @@ const PropTable = ({
               <span class="catalog-required">{requiredLabel[prop.required]}</span>
             )}
           </th>
-          <td>
+          <td data-cell="text">
             <code>{prop.type}</code>
           </td>
-          <td>{prop.defaultValue && <code>{prop.defaultValue}</code>}</td>
-          <td>{inline(propDescription(doc, component, prop))}</td>
+          <td data-cell="text">{prop.defaultValue && <code>{prop.defaultValue}</code>}</td>
+          <td data-cell="text">{inline(propDescription(doc, component, prop))}</td>
         </tr>
       ))}
     </tbody>
@@ -187,7 +187,7 @@ const Reference = ({ doc }: { doc: ComponentDoc }) => {
               {doc.keyboard.map(([key, action]) => (
                 <tr>
                   <th scope="row">{inline(key)}</th>
-                  <td>{inline(action)}</td>
+                  <td data-cell="text">{inline(action)}</td>
                 </tr>
               ))}
             </tbody>
@@ -218,7 +218,7 @@ const Reference = ({ doc }: { doc: ComponentDoc }) => {
                   <th scope="row">
                     <code>{name}</code>
                   </th>
-                  <td>{inline(detail)}</td>
+                  <td data-cell="text">{inline(detail)}</td>
                 </tr>
               ))}
             </tbody>

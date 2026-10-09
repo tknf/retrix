@@ -51,7 +51,7 @@ peer dependencyは、使う機能に必要なものだけをインストール�
 
 ## コンポーネントの選び方
 
-- 同じ列で項目を見比べる一覧（マスタの一覧など）は`Table`にします。並べ替えは`sort`、行の選択と一括操作は`selectable`と`selectionActions`、列の幅の変更は`resizable`です。セルを矢印キーで移動するなら`Grid`、親子の階層があるなら`Treegrid`にします。
+- 同じ列で項目を見比べる一覧（マスタの一覧など）は`Table`にします。並べ替えは`sort`、行の選択と一括操作は`selectable`と`selectionActions`、列の幅の変更は`resizable`です。セルは既定で1行にし、収まらない表は横にスクロールするので、メモや説明など長い文の列だけに`data-cell="text"`を付けて折り返します。セルを矢印キーで移動するなら`Grid`、親子の階層があるなら`Treegrid`にします。
 - 一件ずつを題名と補足で読ませる一覧は`DataList`、一つの対象の属性は`ValueList`にします。
 - ページの見出しと主な操作は`PageHeader`、シートの中のまとまりの見出しは`Section`にします。主操作（緑の`primary`のボタン）は一つの画面に一つか二つにします。
 - アプリ全体の移動は`AppShell`のヘッダー、名前で探す移動と操作は`CommandMenu`、対象に対する操作は`DropdownMenu`、判断が必要な処理は`Dialog`、対象の近くの補足は`Popover`にします。

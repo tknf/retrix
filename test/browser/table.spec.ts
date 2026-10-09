@@ -160,3 +160,15 @@ test("JavaScriptがなくてもTableの一括操作を表の下に置き、選�
   expect(sent).toEqual([await item.inputValue()]);
   await context.close();
 });
+
+test("列を指定しないセルは折り返さず、表が囲みより広い時は横にスクロールする", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 800 });
+  await page.goto("/components/table");
+  const table = page.getByRole("region", { name: "Tableのprops", exact: true });
+  // bodyのoverflow-wrap: anywhereを引き継ぐと、名前の列が1文字の幅まで縮み「selectionA / ctions」と割れて、表が溢れなかった。
+  const name = table.locator("tbody > tr > th code", { hasText: /^selectionActions$/ });
+  expect(await name.evaluate((element) => element.getClientRects().length)).toBe(1);
+  expect(await table.evaluate((element) => element.scrollWidth > element.clientWidth)).toBe(true);
+  await table.evaluate((element) => element.scrollBy({ left: 100 }));
+  expect(await table.evaluate((element) => element.scrollLeft)).toBeGreaterThan(0);
+});
